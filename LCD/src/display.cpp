@@ -1020,7 +1020,7 @@ void DisplayDevice::Test()
   }
 }
 
-BOOL DisplayDevice::OpenSerial(BOOL asynch)
+BOOL DisplayDevice::OpenSerial(BOOL asynch, BOOL parity)
 {
   CloseSerial();
 
@@ -1043,11 +1043,10 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
   }
   dcb.BaudRate = m_portSpeed;
   dcb.ByteSize = 8;
-#if 0
-  // Leave as set in control panel.
-  dcb.Parity = NOPARITY;
-  dcb.StopBits = ONESTOPBIT;
-#endif
+  if (parity) {
+    dcb.Parity = NOPARITY;
+    dcb.StopBits = ONESTOPBIT;
+  }
   dcb.fRtsControl = (m_portRTS) ? RTS_CONTROL_ENABLE : RTS_CONTROL_DISABLE;
   dcb.fDtrControl = (m_portDTR) ? DTR_CONTROL_ENABLE : DTR_CONTROL_DISABLE;
   if (!SetCommState(m_portHandle, &dcb)) {

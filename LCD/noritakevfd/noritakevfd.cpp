@@ -55,7 +55,7 @@ DisplayDevice *NoritakeVFDDisplay::Duplicate() const
 
 BOOL NoritakeVFDDisplay::DeviceOpen()
 {
-  if (!OpenSerial())
+  if (!OpenSerial(FALSE, FALSE)) // Parity according to Control Panel.
     return FALSE;
 
   BYTE buf[128];

@@ -549,7 +549,7 @@ protected:
 
   void MapInput(LPCSTR input);
 
-  BOOL OpenSerial(BOOL asynch = FALSE);
+  BOOL OpenSerial(BOOL asynch = FALSE, BOOL parity = TRUE);
   BOOL WriteSerial(LPBYTE data, DWORD len);
   BOOL ReadSerial(LPBYTE data, DWORD len, LPDWORD plen, DWORD timeout = INFINITE);
   BOOL EnableSerialInput();
