@@ -613,16 +613,20 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
         int selidx = ComboBox_GetCurSel(combo);
         DisplayAction *action = (DisplayAction *)
           ComboBox_GetItemData(combo, selidx);
-        combo = GetDlgItem(hwnd, IDC_DISPLAY);
-        selidx = ComboBox_GetCurSel(combo);
-        LPARAM devdata = ComboBox_GetItemData(combo, selidx);
         DisplayDevice *commandDevice;
-        if (DEFAULT_DEVICE == devdata)
-          commandDevice = g_devices.GetDefault();
-        else if (ALL_DEVICE == devdata)
-          commandDevice = NULL;
+        if (g_bMultipleDevices) {
+          combo = GetDlgItem(hwnd, IDC_DISPLAY);
+          selidx = ComboBox_GetCurSel(combo);
+          LPARAM devdata = ComboBox_GetItemData(combo, selidx);
+          if (DEFAULT_DEVICE == devdata)
+            commandDevice = g_devices.GetDefault();
+          else if (ALL_DEVICE == devdata)
+            commandDevice = NULL;
+          else
+            commandDevice = (DisplayDevice *)devdata;
+        }
         else
-          commandDevice = (DisplayDevice *)devdata;
+          commandDevice = g_devices.GetDefault();
         ShowCommandInputs(hwnd, commandDevice, action, FALSE);
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), (NULL != action));
       }
