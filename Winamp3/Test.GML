@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Test Winamp3 plug-in: events and actions. -->
+<Girder>
+  <Group Name="Display" Identifier="58" Enabled="TRUE">
+    <Command Name="OSD" Identifier="59" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>100</ActionType>
+      <ActionSubType>33</ActionSubType>
+      <sValue1>[treg10]ÿþ[treg11] [treg12]ÿþ[treg13]/[treg14]ÿþ[treg15]</sValue1>
+      <iValue1>1500</iValue1>
+      <iValue2>42</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>8454016</lValue1>
+      <lValue2>65280</lValue2>
+    </Command>
+    <MultiGroup Name="Title" Identifier="60" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp3.Name" Identifier="10161" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Name"/>
+      <Command Name="Set Register" Identifier="70" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>10</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="71" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Position" Identifier="72" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp3.Position" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Position"/>
+      <Command Name="Set Register" Identifier="75" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>11</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="76" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Length" Identifier="10146" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp3.Length" Identifier="10110" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Length"/>
+      <Command Name="Set Register" Identifier="10111" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>/[pld1]</sValue1>
+        <iValue2>12</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10112" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Elapsed" Identifier="10147" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp3.Elapsed" Identifier="10122" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Elapsed"/>
+      <Command Name="Set Register" Identifier="10123" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>13</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10124" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Duration" Identifier="10148" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp3.Duration" Identifier="10132" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Duration"/>
+      <Command Name="Set Register" Identifier="10133" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>14</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10134" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Status" Identifier="10094" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp3.Start" Identifier="10140" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Start"/>
+      <EventString Name="Winamp3.Stop" Identifier="10169" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Stop"/>
+      <EventString Name="Winamp3.Pause" Identifier="10170" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Pause"/>
+      <EventString Name="Winamp3.Resume" Identifier="10160" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Resume"/>
+      <Command Name="Set Register" Identifier="10141" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>15</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10142" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+  </Group>
+  <Group Name="Control" Identifier="10172" Enabled="TRUE">
+    <Command Name="Play" Identifier="10211" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>1</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10212" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Stop" Identifier="10213" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>2</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10214" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Pause" Identifier="10215" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>3</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10216" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Resume" Identifier="10217" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10218" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Pause / Resume" Identifier="10219" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>5</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10220" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Set position abs" Identifier="10221" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>2000</sValue1>
+      <iValue1>6</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10222" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Set position rel" Identifier="10223" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>500</sValue1>
+      <iValue1>7</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10224" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Next" Identifier="10225" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>8</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10226" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Previous" Identifier="10227" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>9</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10228" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Set next playstring" Identifier="10229" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>c:\Program Files\Winamp3\demo.mp3</sValue1>
+      <iValue1>10</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10230" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <Command Name="Set playlist pos" Identifier="10246" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>49</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>2</sValue1>
+      <iValue1>11</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="10247" Enabled="TRUE" Invert="FALSE"/>
+    </Command>
+    <MultiGroup Name="Get" Identifier="10245" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <Command Name="Get state" Identifier="10231" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>wa3State</sValue2>
+        <iValue1>100</iValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10232" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get playstring" Identifier="10233" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>wa3Playstring</sValue2>
+        <iValue1>101</iValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10234" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get meta-data" Identifier="10235" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>Genre</sValue1>
+        <sValue2>wa3Genre</sValue2>
+        <iValue1>102</iValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10236" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get position" Identifier="10237" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>wa3Position</sValue2>
+        <iValue1>103</iValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10238" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get length" Identifier="10239" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>wa3Length</sValue2>
+        <iValue1>103</iValue1>
+        <iValue2>1</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10240" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get duration" Identifier="10241" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>wa3Duration</sValue2>
+        <iValue1>104</iValue1>
+        <iValue2>1</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10242" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get elapsed" Identifier="10243" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>wa3Elapsed</sValue2>
+        <iValue1>104</iValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10244" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+      <Command Name="Get playlist item" Identifier="10248" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>49</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>1</sValue1>
+        <sValue2>wa3Playitem</sValue2>
+        <iValue1>105</iValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <EventString Name="EventString" Identifier="10249" Enabled="TRUE" Invert="FALSE"/>
+      </Command>
+    </MultiGroup>
+  </Group>
+</Girder>
