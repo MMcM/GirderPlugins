@@ -14,9 +14,6 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name DisplaySpyHook
     End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name mediaspy
-    End Project Dependency
 }}}
 
 ###############################################################################
@@ -33,7 +30,19 @@ Package=<4>
 
 ###############################################################################
 
-Project: "mediaspy"=".\Media\MediaSpy.dsp" - Package Owner=<4>
+Project: "MediaSpy"=".\Media\MediaSpy.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "WMPSpy"=".\WMP\WMPSpy.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
