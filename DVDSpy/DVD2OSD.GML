@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- DVD Spy to OSD sample -->
 <Girder>
   <Group Name="Display" Identifier="58" Enabled="TRUE">
     <Command Name="OSD" Identifier="59" Enabled="TRUE">
