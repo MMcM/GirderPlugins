@@ -21,6 +21,10 @@
 extern CComModule _Module;
 #include <atlcom.h>
 
+// WMP 9 SDK
+#include <wmp.h>
+#include <wmpplug.h>
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
