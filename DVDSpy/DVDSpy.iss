@@ -3,11 +3,11 @@
 
 [Setup] 
 AppName=DVDSpy
-AppVerName=DVDSpy 1.65
+AppVerName=DVDSpy 1.66
 AppID=DVDSpy
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=1.65
+AppVersion=1.66
 DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
 DirExistsWarning=no 
 ;LicenseFile=plugins\DVDSpy\license.txt
@@ -44,6 +44,7 @@ Name: "foobar"; Description: "Foobar2000"; Types: full
 Name: "weather"; Description: "Weather data download"; Types: full
 Name: "dvdtitles"; Description: "DVD titles flat file"
 Name: "dvddata"; Description: "DVD titles download"; Types: full compact
+Name: "mixer"; Description: "Mixer controls"; Types: full
 Name: "readme"; Description: "Readme File"; Types: full compact
 Name: "sample"; Description: "Samples"; Types: full
 
@@ -85,6 +86,7 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\Plugins"; ValueName: 215; ValueType: dword
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "False"
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "True"; Components: windvd powerdvd adtv zp tt cineplayer ati ssf bsplay powerdivx radlight eugenes dvdstation
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "MixerMonitor"; ValueType: dword; ValueData: 1; Components: mixer
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "DVDTitles"; ValueType: string; ValueData: "{app}\DVDTitles.csv"; Components: dvdtitles; Flags: createvalueifdoesntexist
 ; Events: wmp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.PlayState"; ValueType: string; Components: wmp
@@ -168,6 +170,8 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Fo
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Elapsed"; ValueType: string; Components: foobar
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Status"; ValueType: string; Components: foobar
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Title"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Mixer.Master Mute"; ValueType: string; Components: mixer
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Mixer.Master Volume"; ValueType: string; Components: mixer
 
 [Run]
 Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s ShowShifter.reg"; Components: ssf

@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.65"
+#define PLUGINVERSION "1.66"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
@@ -28,3 +28,6 @@ extern void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow);
 extern void ZoomPlayerLCD(WPARAM wParam, LPARAM lParam);
 extern void EugenesInit(LPCSTR data, HWND hwndMonitor);
 extern void EugenesClose();
+extern void MixerMonitorInit(HWND hwndMonitor);
+extern void MixerMonitorMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+extern void MixerMonitorClose();

@@ -1,3 +1,5 @@
+1.66    03/27/2005      shura_k Add mixer control monitoring.
+
 1.65    12/04/2004      kyle    Add support for MyHD.
 
 1.64    11/25/2004      MMcM    Update for TheaterTek 2.0.

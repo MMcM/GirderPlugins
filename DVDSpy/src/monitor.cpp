@@ -12,7 +12,8 @@ $Header$
 HANDLE g_hMonitorThread = NULL;
 DWORD g_dwMonitorThreadId = 0;
 HWND g_hMonitorWindow = NULL;
-BOOL g_bRunning = FALSE, g_bStartHook = TRUE, g_bOleInited = FALSE;
+BOOL g_bStartHook = TRUE, g_bMixerMonitor = FALSE;
+BOOL g_bRunning = FALSE, g_bOleInited = FALSE;
 
 void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 {
@@ -72,7 +73,7 @@ size_t GetDVDPayload(char cd, PCHAR payload)
   return (pb - payload);
 }
 
-const UINT CONTENTS_TIMER = 1001;
+const UINT FINISH_INIT_TIMER = 1001;
 
 LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, 
                                WPARAM wParam, LPARAM lParam)
@@ -98,7 +99,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
     PostQuitMessage(0); 
     break;
   case WM_TIMER:
-    if (CONTENTS_TIMER == wParam) {
+    if (FINISH_INIT_TIMER == wParam) {
       KillTimer(hwnd, wParam);
 
       DWORD dwMask = GetLogicalDrives();
@@ -125,6 +126,9 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
             GirderEvent(event, payload, pllen);
         }
       }
+
+      if (g_bMixerMonitor)
+        MixerMonitorInit(hwnd);
 
       return 0;
     }
@@ -202,6 +206,10 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
   case WM_APP+444:
     ZoomPlayerLCD(wParam, lParam);
     return 0;
+  case MM_MIXM_LINE_CHANGE:
+  case MM_MIXM_CONTROL_CHANGE:
+    MixerMonitorMessage(uMsg, wParam, lParam);
+    return 0;
   }
   return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
@@ -238,8 +246,8 @@ DWORD WINAPI MonitorThread(LPVOID param)
 
   g_hMonitorWindow = CreateWindow(WCNAME, WCNAME, 0, 0, 0, 0, 0, 0, 0, g_hInstance, NULL);
 
-  // Check current disc contents in a second.
-  SetTimer(g_hMonitorWindow, CONTENTS_TIMER, 1000, NULL);
+  // Finish initialization in a second.
+  SetTimer(g_hMonitorWindow, FINISH_INIT_TIMER, 1000, NULL);
 
   MSG msg;
   while (GetMessage(&msg, NULL, 0, 0)) {
@@ -295,9 +303,21 @@ BOOL StartMonitor()
         break;
       }
     }
+    len = sizeof(buf);
+    if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MixerMonitor", NULL, 
+                                         &dtype, (LPBYTE)buf, &len)) {
+      switch (dtype) {
+      case REG_SZ:
+        g_bMixerMonitor = !_stricmp(buf, "True");
+        break;
+      case REG_DWORD:
+        g_bMixerMonitor = !!*(DWORD*)buf;
+        break;
+      }
+    }
     RegCloseKey(hkey);
   }
-  
+
   if (g_bStartHook)
     DS_StartHook(g_dwMonitorThreadId);
 
@@ -310,6 +330,9 @@ void StopMonitor()
 {
   if (!g_bRunning)
     return;
+
+  if (g_bMixerMonitor)
+    MixerMonitorClose();
 
   if (g_bStartHook)
     DS_EndHook(g_dwMonitorThreadId);
