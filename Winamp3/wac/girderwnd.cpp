@@ -322,6 +322,14 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
     logreq = "prev playlist";
     nextPlaylist(-1);
     break;
+  case IPC_C_START_PLAYLIST:
+    {
+      logreq = "start playlist";
+      Playlist *playlist = getPlaylist();
+      if (NULL != playlist)
+        playlist->startPlayback(playlist->getCurrent());
+    }
+    break;
 
   case IPC_R_STATE:
     {

@@ -25,6 +25,7 @@ enum IPC_OPCODE {
   IPC_C_TRACK,                  // (pos)
   IPC_C_NEXT_PLAYLIST,          // ()
   IPC_C_PREV_PLAYLIST,          // ()
+  IPC_C_START_PLAYLIST,         // ()
   
   // Requests (synchronous) Girder -> Winamp -> Girder
   IPC_R_STATE = 100,            // () -> (state)
