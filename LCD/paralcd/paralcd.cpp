@@ -17,7 +17,7 @@ class ParallelLCD : public DisplayDevice
 public:
   ParallelLCD(HWND parent, LPCSTR devname);
   ~ParallelLCD();
-  
+
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
@@ -28,11 +28,12 @@ public:
   virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
-  void WriteIR(BYTE b);
-  void WriteDR(BYTE b);
+  void WriteIR(BYTE b, int dev);
+  void WriteDR(BYTE b, int dev);
 
   int m_portAddr;
   int m_strobeDelay, m_commandDelay;
+  int m_ndevs;
 };
 
 ParallelLCD::ParallelLCD(HWND parent, LPCSTR devname)
@@ -43,6 +44,7 @@ ParallelLCD::ParallelLCD(HWND parent, LPCSTR devname)
   strcpy(m_port, "LPT1");
   m_strobeDelay = 2;
   m_commandDelay = 5;
+  m_ndevs = 1;
 }
 
 ParallelLCD::~ParallelLCD()
@@ -58,48 +60,61 @@ BOOL ParallelLCD::DeviceOpen()
   else if (!strcmp(m_port, "LPT3"))
     m_portAddr = 0x3BC;
 
-  WriteIR(0x38);        // Function set: DL=1 (b-bit), N=1 (2 lines), F=0 (5x8)
-  WriteIR(0x38);        // again
-  WriteIR(0x06);        // Entry mode set: I/D=1 (incr), S=0 (no shift)
-  WriteIR(0x0C);        // Display control: D=1 (on), C=0 (cursor off), B=0 (blink off)
-  WriteIR(0x01);        // Clear display
+  m_ndevs = ((m_rows * m_cols) + 79) / 80; // 80 chars / device, round up.
+
+  for (int dev = 0; dev < m_ndevs; dev++) {
+    WriteIR(0x38, dev); // Function set: DL=1 (b-bit), N=1 (2 lines), F=0 (5x8)
+    WriteIR(0x38, dev); // again
+    WriteIR(0x06, dev); // Entry mode set: I/D=1 (incr), S=0 (no shift)
+    WriteIR(0x0C, dev); // Display control: D=1 (on), C=0 (cursor off), B=0 (blink off)
+    WriteIR(0x01, dev); // Clear display
+  }
 
   return TRUE;
 }
 
 void ParallelLCD::DeviceClose()
 {
-  WriteIR(0x01);        // Clear display
-  WriteIR(0x08);        // Display control: D=0 (off), C=0 (cursor off), B=0 (blink off)
+  for (int dev = 0; dev < m_ndevs; dev++) {
+    WriteIR(0x01, dev); // Clear display
+    WriteIR(0x08, dev); // Display control: D=0 (off), C=0 (cursor off), B=0 (blink off)
+  }
 }
 
 void ParallelLCD::DeviceClear()
 {
-  WriteIR(0x01);        // Clear display
+  for (int dev = 0; dev < m_ndevs; dev++) {
+    WriteIR(0x01, dev); // Clear display
+  }
 }
 
 void ParallelLCD::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
+  int dev = (row * m_cols) / 80;
+  if (dev > 0)
+    row -= (dev * 80) / m_cols;
   if ((row == 0) && (col == 0)) {
-    WriteIR(0x02);      // Return home
+    WriteIR(0x02, dev);         // Return home
   }
   else {
     int d = col + (row % 2) * 0x40;
-    if ((row % 4) >= 2)
-      d += m_cols;
+    if (row >= 2)
+      d += m_cols;              // 4x20 is folded: bottom rows take right cols.
     if (m_rows == 1)
       d += (col % 8) * (0x40 - 8);
-    WriteIR(0x80 + d);  // Set DDRAM address
+    WriteIR(0x80 + d, dev);     // Set DDRAM address
   }
   for (int i = 0; i < length; i++)
-    WriteDR(str[i]);
+    WriteDR(str[i], dev);
 }
 
 void ParallelLCD::DeviceDefineCustomCharacter(int index, const CustomCharacter& cust)
 {
-  WriteIR(0x40 + (index * NCUSTROWS)); // Set CGRAM address
-  for (int i = 0; i < NCUSTROWS; i++)
-    WriteDR(cust.GetBits()[i]);
+  for (int dev = 0; dev < m_ndevs; dev++) {
+    WriteIR(0x40 + (index * NCUSTROWS), dev); // Set CGRAM address
+    for (int i = 0; i < NCUSTROWS; i++)
+      WriteDR(cust.GetBits()[i], dev);
+  }
 }
 
 BOOL ParallelLCD::DeviceHasSetSize()
@@ -140,21 +155,31 @@ inline static void delay(int ms)
   Sleep(ms);
 }
 
-void ParallelLCD::WriteIR(BYTE b)
+inline static BYTE eBit(int dev)
+{
+  switch (dev) {
+  case 0:
+    return STROBE;
+  case 1:
+    return SELE;
+  }
+}
+
+void ParallelLCD::WriteIR(BYTE b, int dev)
 {
   outport(PDR, b);
   outport(PCR, AF);
   delay(m_strobeDelay);
-  outport(PCR, AF | STROBE);
+  outport(PCR, AF | eBit(dev));
   delay(m_commandDelay);
 }
 
-void ParallelLCD::WriteDR(BYTE b)
+void ParallelLCD::WriteDR(BYTE b, int dev)
 {
   outport(PDR, b);
   outport(PCR, AF | INIT);
   delay(m_strobeDelay);
-  outport(PCR, AF | INIT | STROBE);
+  outport(PCR, AF | INIT | eBit(dev));
   delay(m_commandDelay);
 }
 
@@ -165,7 +190,7 @@ DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
 }
 
 /* Called by windows */
-BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)
+BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
 {
   switch(dwReason) {
   case DLL_PROCESS_ATTACH:
