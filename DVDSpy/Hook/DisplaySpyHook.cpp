@@ -302,6 +302,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(Directory, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
     BEGIN_NMATCH(Media)
@@ -1853,6 +1854,18 @@ BOOL MatchMediaSpy(UINT nClass)
           (ULONG&)g_dvdLocation.TimeCode = 0xFFFFFFFF;
           (ULONG&)g_dvdTotalTime = 0xFFFFFFFF;
         }
+      }
+      {
+        OLECHAR wszPath[MAX_PATH];
+        ULONG lLen = 0;
+        hr = pDVD->GetDVDDirectory(wszPath, countof(wszPath), &lLen);
+        if (SUCCEEDED(hr)) {
+          hr = MediaSpyConvertOle(wszPath, 
+                                  g_szfgFileName, sizeof(g_szfgFileName),
+                                  FALSE);
+        }
+        if (FAILED(hr))
+          g_szfgFileName[0] = '\0';
       }
       IBaseFilter *pBF = NULL;
       hr = pDVD->QueryInterface(IID_IBaseFilter, (void**)&pBF);
