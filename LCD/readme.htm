@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 3.2. &nbsp;MMcM 05/04
+Version 3.3. &nbsp;MMcM 05/04
 
 <h3>Supported displays</h3>
 These displays are believed to work with this plug-in.  Often similar displays
@@ -19,7 +19,7 @@ as well.
 <table border>
 <tr><th>Manufacturer</th><th>Display</th><th>Rows</th><th>Cols</th><th>Notes</th></tr>
 
-<tr><td rowspan=4><a href="http://www.crystalfontz.com">Crystalfontz</a></td>
+<tr><td rowspan=5><a href="http://www.crystalfontz.com">Crystalfontz</a></td>
 <td><a href="http://www.crystalfontz.com/products/632/index.html">632</a></td>
 <td>16</td><td>2</td>
 <td>With or without backlight.</td></tr>
@@ -29,9 +29,12 @@ as well.
 <tr><td><a href="http://www.crystalfontz.com/products/633/index.html">633</a></td>
 <td>16</td><td>2</td>
 <td>Has a 6 button lighted keypad.</td></tr>
-<tr><td><a href="http://www.crystalfontz.com/products/631/index.html">631</a></td>
+<tr><td rowspan=2><a href="http://www.crystalfontz.com/products/631/index.html">631</a></td>
 <td>20</td><td>2</td>
 <td>Has a 4 button lighted keypad.</td></tr>
+<tr>
+<td>17</td><td>2</td>
+<td>When settable keypad legends are used.</td></tr>
 
 <tr><td rowspan=17><a href="http://www.matrixorbital.com">Matrix Orbital</a></td>
 <td>LCD2021</td><td>20</td><td>2</td>
@@ -53,10 +56,10 @@ as well.
 <tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=8">LK204-25</a></td>
 <td>20</td><td>4</td>
 <td>Four line version of the LK-202-25.</td></tr>
-<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=93">LK202-24-USB</a></td>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=93">LK202-24-USB</a> / <a href="http://www.matrixorbital.com/pages/products.asp?CatID=5&mx=2">MX2</a></td>
 <td>20</td><td>2</td>
 <td>USB version of the LK-202-25.</td></tr>
-<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=102">LK204-24-USB</a></td>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=102">LK204-24-USB</a> / <a href="http://www.matrixorbital.com/pages/products.asp?CatID=5&mx=4">MX4</a></td>
 <td>20</td><td>4</td>
 <td>USB version of the LK-204-25.</td></tr>
 <tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=9">LK402-12</a></td>
@@ -76,10 +79,10 @@ as well.
 <tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=24">VK204-25</a></td>
 <td>20</td><td>4</td>
 <td>Four line version of the VK202-25.</td></tr>
-<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=100">VK202-24-USB</a></td>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=100">VK202-24-USB</a> / <a href="http://www.matrixorbital.com/pages/products.asp?CatID=5&mx=3">MX3</a></td>
 <td>20</td><td>2</td>
 <td>USB version of the VK202-25.</td></tr>
-<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=103">VK204-24-USB</a></td>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=103">VK204-24-USB</a> / <a href="http://www.matrixorbital.com/pages/products.asp?CatID=5&mx=5">MX5</a></td>
 <td>20</td><td>4</td>
 <td>USB version of the VK204-25.</td></tr>
 
@@ -465,6 +468,24 @@ Translate keypad button presses into Girder events.
 <td>
 This is actually a subkey.  Each of its values maps a raw keypad input to an event.
 If the default value is <kbd>*</kbd>, unknown inputs are sent through as is.
+</td>
+
+<tr><td><kbd>EnableFans</kbd></td>
+<td>
+Translate fan RPM changes into Girder events.
+</td>
+
+<tr><td><kbd>FanInterval</kbd></td>
+<td>
+The interval in milliseconds between checks of the fans.
+</td>
+
+<tr><td><kbd>Fans</kbd></td>
+<td>
+This is actually a subkey.  Each of its values gives the name for a
+fan.  If the fan number starts with <kbd>*</kbd>, the fan is disabled.
+The default value specifies the number of pulses per revolution needed
+to calculate RPM.
 </td>
 
 <tr><td><kbd>EnableSensors</kbd></td>

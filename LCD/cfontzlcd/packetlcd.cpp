@@ -1016,19 +1016,17 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
       }
       break;
     case 0x82:
-      if (3 == rpkt->GetDataLength()) {
+      if (4 == rpkt->GetDataLength()) {
         int n = *rpkt->GetData();
         if (n >= NSENSORS) break;
         DOWSensor *sensor = m_sensorsIndexed[n];
         if (NULL == sensor) break;
-        BYTE counts[2];
-        counts[0] = rpkt->GetData()[2]; // MSB first
-        counts[1] = rpkt->GetData()[1];
         BOOL changed;
         if (rpkt->GetData()[3] == 0) // CRC mismatch?
           changed = sensor->SetValue(NULL);
         else
-          changed = sensor->LoadFromScratchpad(counts, 2);
+          // LSB first, contrary to data sheet.
+          changed = sensor->LoadFromScratchpad(rpkt->GetData()+1, 2);
         if (changed && m_enableSensors && m_inputEnabled) {
           DisplaySendEvent(sensor->GetName(), sensor->GetValue());
         }
