@@ -402,6 +402,26 @@
       <lValue1>10012</lValue1>
       <EventString Name="PowerDVD.Title" Identifier="10030" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Title"/>
     </Command>
+    <Command Name="Close" Identifier="20874" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10013</lValue1>
+      <EventString Name="PowerDVD.Close" Identifier="20875" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Close"/>
+    </Command>
   </Group>
   <Group Name="ZoomPlayer Display" Identifier="10031" Enabled="TRUE">
     <Command Name="Domain" Identifier="10032" Enabled="TRUE">
@@ -991,7 +1011,7 @@
       <lValue1>10011</lValue1>
       <EventString Name="ShowShifter.File" Identifier="10090" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.File"/>
     </Command>
-    <Command Name="Close" Identifier="10091" Enabled="FALSE">
+    <Command Name="Close" Identifier="10091" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
