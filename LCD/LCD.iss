@@ -12,6 +12,7 @@ DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=LCD
 OutputDir=.
+SetupIconFile=plugins\LCD\src\plugin.ico
 SourceDir=..\..
 UninstallDisplayName=Girder LCD 3.7
 
@@ -50,4 +51,5 @@ Source: "plugins\LCD\license.txt"; DestDir: "{app}\plugins\LCD"; Components: rea
 Source: "plugins\LCD\LCDTests.gml"; DestDir: "{app}\plugins\LCD"; Components: sample
 
 [Registry] 
-Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; ValueType: string; ValueData: "LCD"; Components: multdev
+Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; ValueType: string; ValueData: "LCD"; Components: multdev; Flags: createvalueifdoesntexist
