@@ -1,4 +1,6 @@
 
+2.6     01/19/2003      Adam Klotblixt  Add FutabaVFD support.
+
 2.5     01/07/2003      MMcM    First SourceForge release.
 
 2.4     11/29/2002      MMcM    Fix 4x40 parallel addressing.
