@@ -33,22 +33,12 @@ DWORD HookThreadId=0;
 HWND hMonitorWindow=NULL;
 bool Running=FALSE;
 
-void GirderEvent(PCHAR event, PCHAR sarg, long iarg)
+void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 {
-  int nreg = 1;
-  if (NULL != sarg) {
-    LPCSTR ps = strrchr(event, '.');
-    if ((NULL != ps) &&
-        ('0' <= *++ps) &&
-        ('9' >= *ps))
-      nreg = atoi(ps);
-  }
-
 #ifdef _DEBUG
   {
     char dbuf[1024];
-    sprintf(dbuf, "Girder event: '%s' reg=%d sarg='%s' iarg=%d.\n", 
-            event, nreg, sarg, iarg);
+    sprintf(dbuf, "Girder event: '%s' pld='%s'.\n", event, payload);
     OutputDebugString(dbuf);
   }
 #endif
@@ -59,13 +49,14 @@ void GirderEvent(PCHAR event, PCHAR sarg, long iarg)
   SendMessage(hTargetWindow, WM_COPYDATA, PLUGINNUM, (LPARAM)&cd);
 #else
   if (WaitForSingleObject(hSMSem, 2500)==WAIT_OBJECT_0) {
-    if (NULL != sarg) {
-      HFunctions.SetGirderStrReg(sarg, nreg);
-      if (0 != iarg)
-        HFunctions.SetGirderReg(iarg, nreg);
+    strncpy(pMessageBuffer, event, 1024);
+    if (NULL != payload) {
+      size_t elen = strlen(pMessageBuffer) + 1;
+      if (elen + pllen > 1024)
+        pllen = 1024 - elen;
+      memcpy(pMessageBuffer + elen, payload, pllen);
     }
-    strncpy(pMessageBuffer, event, 250);
-    PostMessage(hTargetWindow, WM_USER+1030, PLUGINNUM, 0);
+    PostMessage(hTargetWindow, WM_USER+1030, PLUGINNUM, pllen);
   }
 #ifdef _DEBUG
   else {
@@ -133,30 +124,34 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
       for (int i = 0; i < 26; i++) {
         if (lpdbv->dbcv_unitmask & (1<<i)) {
           char cd = 'A' + i;
-          char buf[256], *pb;
+          char event[16], payload[1024], *pb;
           DWORD volser = 0;
           char volnam[MAX_PATH] = {'\0'};
           switch(wParam) {
           case DBT_DEVICEARRIVAL:
-            buf[0] = cd;
-            buf[1] = ':';
-            buf[2] = '\\';
-            buf[3] = '\0';
-            GetDVDTitle(buf, volnam, sizeof(volnam), &volser);
-            strcpy(buf, "Disc.Insert.");
-            pb = buf + strlen(buf);
+            event[0] = cd;
+            event[1] = ':';
+            event[2] = '\\';
+            event[3] = '\0';
+            GetDVDTitle(event, volnam, sizeof(volnam), &volser);
+            strcpy(event, "Disc.Insert.");
+            pb = event + strlen(event);
             *pb++ = cd;
-            *pb++ = '.';
-            *pb++ = '9';
             *pb++ = '\0';
-            GirderEvent(buf, volnam, (long)volser);
+            pb = payload;
+            *pb++ = 2;
+            strcpy(pb, volnam);
+            pb += strlen(pb) + 1;
+            sprintf(pb, "%08X", volser);
+            pb += strlen(pb) + 1;
+            GirderEvent(event, payload, pb - payload);
             break;
           case DBT_DEVICEREMOVECOMPLETE:
-            strcpy(buf, "Disc.Eject.");
-            pb = buf + strlen(buf);
+            strcpy(event, "Disc.Eject.");
+            pb = event + strlen(event);
             *pb++ = cd;
             *pb++ = '\0';
-            GirderEvent(buf, NULL);
+            GirderEvent(event);
             break;
           }
         }
@@ -168,11 +163,12 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
       // This allows another process to cause an event to come from this plug-in.
       PCOPYDATASTRUCT pcd = (PCOPYDATASTRUCT)lParam;
       LPSTR event = (LPSTR)pcd->lpData;
-      size_t elen = strlen(event);
-      LPSTR sarg = NULL;
-      if (elen + 1 < pcd->cbData)
-        sarg = event + elen + 1;
-      GirderEvent(event, sarg, pcd->dwData);
+      size_t elen = strlen(event) + 1;
+      LPSTR payload = NULL;
+      size_t pllen = pcd->cbData - elen;
+      if (pllen > 0)
+        payload = event + elen;
+      GirderEvent(event, payload, pllen);
       return 0;
     }
   }
@@ -196,25 +192,13 @@ DWORD WINAPI HookThread(LPVOID param)
   while (GetMessage(&msg, NULL, 0, 0)) {
     if (WM_NEWDISPLAY == msg.message) {
       size_t nMatch, nIndex;
-      char szVal[128];
-      while (DS_GetNext(&nMatch, &nIndex, szVal, sizeof(szVal))) {
-        PCHAR pszVal = szVal;
-        char szName[128];
-        DS_GetMatchName(nMatch, szName, sizeof(szName));
-        int nReg = DS_GetMatchRegister(nMatch);
+      char szVal[129];
+      PCHAR pszVal = szVal;
+      *pszVal++ = 1;
+      while (DS_GetNext(&nMatch, &nIndex, pszVal, sizeof(szVal)-1)) {
         char szEvent[256];
-        memset(szEvent, 0, sizeof(szEvent));
-        strcpy(szEvent, szName);
-        LPSTR ep = szEvent + strlen(szEvent);
-        if (nReg == 0) {
-          pszVal = NULL;
-        }
-        else {
-          sprintf(ep, ".%d", nReg + nIndex);
-          ep = ep + strlen(ep);
-        }
-        *ep++ = '\0';
-        GirderEvent(szEvent, pszVal);
+        DS_GetName(nMatch, nIndex, szEvent, sizeof(szEvent));
+        GirderEvent(szEvent, szVal, strlen(pszVal) + 2);
       }
     }
     else
@@ -225,21 +209,21 @@ DWORD WINAPI HookThread(LPVOID param)
 
 extern "C" int WINAPI h_support_functions(void *sf)
 {
-  sHFunctions1 *h;
+  sHFunctions2 *h;
 
   if ( sf == NULL )
     {
-      return 1;                 // we want version 1 hardware support functions
+      return 2;                 // we want version 2 hardware support functions
     }
   else
     {
-      h = (sHFunctions1 *)sf;
-      if ( h->dwSize != sizeof( sHFunctions1 ) )
+      h = (sHFunctions2 *)sf;
+      if ( h->dwSize != sizeof( sHFunctions2 ) )
         {
           return GIR_ERROR;
         }
 		
-      memcpy((void *)&HFunctions, sf, sizeof ( sHFunctions1));
+      memcpy((void *)&HFunctions, sf, sizeof ( sHFunctions2));
     }	
 
   return 0;
@@ -334,7 +318,7 @@ extern "C" void WINAPI support_device(PCHAR Buffer, BYTE Length)
 
 extern "C" void WINAPI version_device(PCHAR Buffer, BYTE Length)
 {
-  strncpy(Buffer, "1.13", Length);
+  strncpy(Buffer, "1.15", Length);
 }
 
 extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)
@@ -342,10 +326,9 @@ extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)
   return (strcmp(Orig, Comp)==0);
 }
 
-extern "C" void WINAPI init_device(HWND hWindow, TranslateFunct p)
+extern "C" void WINAPI init_device(HWND hWindow, void *p)
 {
   hTargetWindow=hWindow;	
-  I18NTranslate=p;
 }
 
 void init_dll()
