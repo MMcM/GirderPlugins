@@ -73,12 +73,10 @@ End If
 If IsEmpty(girderEvent) Then
   Wscript.echo text
 Else
-  ' Girder itself has -eventstring, but no payload.  This control
-  ' sends an event through DVDSpy.  It has no particular dependencies
-  ' on its environment, even though it was designed for use in WMP
-  ' skins.
   Dim dvdspy
-  Set dvdspy = CreateObject("WMPSpy.SpyCtrl")
-  dvdspy.event = girderEvent
-  dvdspy.value = text
+  Set dvdspy = CreateObject("Girder.GirderEvent")
+  dvdspy.Device = 215
+  dvdspy.EventString = girderEvent
+  dvdspy.Payload(1) = text
+  dvdspy.Send
 End If

@@ -13,8 +13,9 @@ var HttpReq = WScript.CreateObject("WinHttp.WinHttpRequest.5.1");
 
 // This can be converted to the Girder event object as soon as that is
 // fully supported.
-var GirderEvent = WScript.CreateObject("WMPSpy.SpyCtrl");
-GirderEvent.event = "NewWeather";
+var GirderEvent = WScript.CreateObject("Girder.GirderEvent");
+GirderEvent.Device = 215;
+GirderEvent.EventString = "NewWeather";
 
 function addVar(pld, name, val) {
   if (pld == null)
@@ -63,7 +64,8 @@ for (var i = 0; i < args.Length; i++) {
     payload = addVarStr(payload, "Forecast", weather.swFore);
     payload = addVarStr(payload, "Accid", weather.swAcid);
 
-    GirderEvent.value = payload;
+    GirderEvent.Payload(1) = payload;
+    GirderEvent.Send();
   }
   catch (ex) {
     Debug.writeln(ex);
