@@ -1339,8 +1339,8 @@ PlayerTitle = pld1
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>PlayerTitle</sValue1>
-        <sValue2>v</sValue2>
+        <sValue1>[PlayerTitle]  </sValue1>
+        <sValue2>s</sValue2>
         <iValue1>2</iValue1>
         <iValue2>-1</iValue2>
         <iValue3>-1</iValue3>
@@ -1363,8 +1363,8 @@ PlayerTitle = pld1
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>PlayerTitle</sValue1>
-        <sValue2>v</sValue2>
+        <sValue1>[PlayerTitle]  </sValue1>
+        <sValue2>s</sValue2>
         <iValue1>1</iValue1>
         <iValue2>-1</iValue2>
         <iValue3>-1</iValue3>
@@ -3767,8 +3767,8 @@ result = idx
           <StateBegin>1</StateBegin>
           <StateCurrent>1</StateCurrent>
           <StateInvert>FALSE</StateInvert>
-          <Binary Encoding="Base64">hQAAAAIAAAAjAQAABgAAAAAAAAAFAAAACAAAACYAAAAQAAAAKgAAABoAAAA5AAAAIQAAABcAAAAp
-AAAAIwEAADEAAAA6AAAAcGxkMgA9PQAiVGl0bGUiACJDaGFwdGVyIgAiVGltZSIAIlN0YXRlIgAi
+          <Binary Encoding="Base64">hQAAAAIAAAAjAQAABgAAAAAAAAAFAAAACAAAACYAAAAQAAAAKgAAABoAAAA5AAAAIQAAABcAAAAp&#13;
+AAAAIwEAADEAAAA6AAAAcGxkMgA9PQAiVGl0bGUiACJDaGFwdGVyIgAiVGltZSIAIlN0YXRlIgAi&#13;
 QW5nbGUiACJUb3RhbCIAAAAAAA==</Binary>
           <OSD>FALSE</OSD>
           <Submatch>FALSE</Submatch>
@@ -4052,8 +4052,8 @@ result = (pld1 ~= PlayerTitle)
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>pld1</sValue1>
-        <sValue2>v</sValue2>
+        <sValue1>[pld1]  </sValue1>
+        <sValue2>s</sValue2>
         <iValue1>2</iValue1>
         <iValue2>-1</iValue2>
         <iValue3>-1</iValue3>
@@ -4099,8 +4099,8 @@ result = (pld1 ~= PlayerTitle)
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>pld1</sValue1>
-        <sValue2>v</sValue2>
+        <sValue1>[pld1]  </sValue1>
+        <sValue2>s</sValue2>
         <iValue1>1</iValue1>
         <iValue2>-1</iValue2>
         <iValue3>-1</iValue3>
