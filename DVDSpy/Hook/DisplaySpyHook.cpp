@@ -712,7 +712,7 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
       sprintf(szBuf, "%d:%02d:%02d", ((lParam >> 24) & 0xFF), 
               ((lParam >> 16) & 0xFF), ((lParam >> 8) & 0xFF));
     else
-      sprintf(szBuf, "%02d:%02d", 
+      sprintf(szBuf, "%d:%02d", 
               ((lParam >> 16) & 0xFF), ((lParam >> 8) & 0xFF));
     break;
   case EXTRACT_MEDIA_SPY:
