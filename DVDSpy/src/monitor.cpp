@@ -168,7 +168,7 @@ DWORD WINAPI HookThread(LPVOID param)
   while (GetMessage(&msg, NULL, 0, 0)) {
     if (WM_NEWDISPLAY == msg.message) {
       size_t nMatch, nIndex;
-      char szVal[129];
+      char szVal[512];
       PCHAR pszVal = szVal;
       *pszVal++ = 1;
       while (DS_GetNext(&nMatch, &nIndex, pszVal, sizeof(szVal)-1)) {
