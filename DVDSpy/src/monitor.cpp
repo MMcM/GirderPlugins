@@ -22,6 +22,54 @@ void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
   SF.send_event(event, payload, pllen, PLUGINNUM);
 }
 
+size_t GetDVDPayload(char cd, PCHAR payload)
+{
+  char cdpath[4], *pb;
+
+  DWORD volser = 0;
+  ULONGLONG discid = 0;
+  char volnam[MAX_PATH] = {'\0'};
+  const char *aspect, *display, *standard;
+  char regions[9];
+  BOOL attribs;
+
+  cdpath[0] = cd;
+  cdpath[1] = ':';
+  cdpath[2] = '\\';
+  cdpath[3] = '\0';
+  GetDVDTitle(cdpath, volnam, sizeof(volnam), &volser);
+  if (volser == 0) return 0;
+  attribs = GetDVDAttribs(cdpath, aspect, display, standard, regions);
+  if (attribs) {
+    if (!g_bOleInited)
+      CoInitialize(NULL);
+    GetDVDDiscID(cdpath, &discid);
+  }
+
+  pb = payload;
+  *pb++ = ((attribs) ? 7 : 2);
+  strcpy(pb, volnam);
+  pb += strlen(pb) + 1;
+  sprintf(pb, "%08X", volser);
+  pb += strlen(pb) + 1;
+  if (attribs) {
+    strcpy(pb, aspect);
+    pb += strlen(pb) + 1;
+    strcpy(pb, display);
+    pb += strlen(pb) + 1;
+    strcpy(pb, standard);
+    pb += strlen(pb) + 1;
+    strcpy(pb, regions);
+    pb += strlen(pb) + 1;
+    sprintf(pb, "%016I64X", discid);
+    pb += strlen(pb) + 1;
+  }
+
+  return (pb - payload);
+}
+
+const UINT CONTENTS_TIMER = 1001;
+
 LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, 
                                WPARAM wParam, LPARAM lParam)
 {
@@ -44,6 +92,38 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
   }
 #endif
     PostQuitMessage(0); 
+    break;
+  case WM_TIMER:
+    if (CONTENTS_TIMER == wParam) {
+      KillTimer(hwnd, wParam);
+
+      DWORD dwMask = GetLogicalDrives();
+      for (int i = 0; i < 26; i++) {
+        if (dwMask & (1<<i)) {
+          char cd = 'A' + i;
+          char cdpath[4];
+
+          cdpath[0] = cd;
+          cdpath[1] = ':';
+          cdpath[2] = '\\';
+          cdpath[3] = '\0';
+          if (DRIVE_CDROM != GetDriveType(cdpath))
+            continue;
+        
+          char event[16], payload[1024], *pend;
+          size_t pllen = 0;
+          strcpy(event, "Disc.Contents.");
+          pend = event + strlen(event);
+          *pend++ = cd;
+          *pend++ = '\0';
+          pllen = GetDVDPayload(cd, payload);
+          if (pllen > 0)
+            GirderEvent(event, payload, pllen);
+        }
+      }
+
+      return 0;
+    }
     break;
   case WM_DEVICECHANGE:
     {
@@ -79,55 +159,22 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
       for (int i = 0; i < 26; i++) {
         if (lpdbv->dbcv_unitmask & (1<<i)) {
           char cd = 'A' + i;
-          char event[16], payload[1024], *pb;
-          DWORD volser = 0;
-          ULONGLONG discid = 0;
-          char volnam[MAX_PATH] = {'\0'};
-          const char *aspect, *display, *standard;
-          char regions[9];
-          BOOL attribs;
+          char event[16], payload[1024], *pend;
+          size_t pllen = 0;
           switch(wParam) {
           case DBT_DEVICEARRIVAL:
-            event[0] = cd;
-            event[1] = ':';
-            event[2] = '\\';
-            event[3] = '\0';
-            GetDVDTitle(event, volnam, sizeof(volnam), &volser);
-            attribs = GetDVDAttribs(event, aspect, display, standard, regions);
-            if (attribs) {
-              if (!g_bOleInited)
-                CoInitialize(NULL);
-              GetDVDDiscID(event, &discid);
-            }
             strcpy(event, "Disc.Insert.");
-            pb = event + strlen(event);
-            *pb++ = cd;
-            *pb++ = '\0';
-            pb = payload;
-            *pb++ = ((attribs) ? 7 : 2);
-            strcpy(pb, volnam);
-            pb += strlen(pb) + 1;
-            sprintf(pb, "%08X", volser);
-            pb += strlen(pb) + 1;
-            if (attribs) {
-              strcpy(pb, aspect);
-              pb += strlen(pb) + 1;
-              strcpy(pb, display);
-              pb += strlen(pb) + 1;
-              strcpy(pb, standard);
-              pb += strlen(pb) + 1;
-              strcpy(pb, regions);
-              pb += strlen(pb) + 1;
-              sprintf(pb, "%016I64X", discid);
-              pb += strlen(pb) + 1;
-            }
-            GirderEvent(event, payload, pb - payload);
+            pend = event + strlen(event);
+            *pend++ = cd;
+            *pend++ = '\0';
+            pllen = GetDVDPayload(cd, payload);
+            GirderEvent(event, payload, pllen);
             break;
           case DBT_DEVICEREMOVECOMPLETE:
             strcpy(event, "Disc.Eject.");
-            pb = event + strlen(event);
-            *pb++ = cd;
-            *pb++ = '\0';
+            pend = event + strlen(event);
+            *pend++ = cd;
+            *pend++ = '\0';
             GirderEvent(event);
             break;
           }
@@ -186,6 +233,9 @@ DWORD WINAPI HookThread(LPVOID param)
   RegisterClass(&wclass);
 
   g_hMonitorWindow = CreateWindow(WCNAME, WCNAME, 0, 0, 0, 0, 0, 0, 0, g_hInstance, NULL);
+
+  // Check current disc contents in a second.
+  SetTimer(g_hMonitorWindow, CONTENTS_TIMER, 1000, NULL);
 
   MSG msg;
   while (GetMessage(&msg, NULL, 0, 0)) {

@@ -170,7 +170,10 @@ BOOL LookupDVDTitle(DWORD volser, LPSTR title, size_t tsize)
 // Try various strategies to find the title of this disc.
 void GetDVDTitle(LPCSTR disc, LPSTR title, size_t tsize, LPDWORD volser)
 {
-  GetVolumeInformation(disc, title, tsize, volser, NULL, NULL, NULL, 0);
+  UINT omode = SetErrorMode(SEM_FAILCRITICALERRORS); // No insert dialog box.
+  BOOL ok = GetVolumeInformation(disc, title, tsize, volser, NULL, NULL, NULL, 0);
+  SetErrorMode(omode);
+  if (!ok) return;
 
   if (LookupDVDTitle(*volser, title, tsize))
     return;

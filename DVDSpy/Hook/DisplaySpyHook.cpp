@@ -387,7 +387,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
-#if 1
+#if 0
     // Calls to TextOut / DrawText at some point perhaps through bitmap.
     BEGIN_NMATCH(TextImage)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
@@ -638,7 +638,7 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(MyHD)
 
-#if 1
+#if 0
     BEGIN_NMATCH(TextImage)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
      BEGIN_EXTRACT()
