@@ -51,5 +51,6 @@ Source: "plugins\LCD\license.txt"; DestDir: "{app}\plugins\LCD"; Components: rea
 Source: "plugins\LCD\LCDTests.gml"; DestDir: "{app}\plugins\LCD"; Components: sample
 
 [Registry] 
+Root: HKLM; Subkey: "SOFTWARE\girder3\Plugins"; ValueName: 118; ValueType: dword; ValueData: 1
 Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; ValueType: string; ValueData: "LCD"; Components: multdev; Flags: createvalueifdoesntexist

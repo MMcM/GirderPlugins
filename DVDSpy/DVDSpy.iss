@@ -78,6 +78,7 @@ Source: "plugins\DVDSpy\DVDInsert.GML"; DestDir: "{app}\plugins\DVDSpy"; Compone
 Name: "DVDData"; Components: dvddata
 
 [Registry] 
+Root: HKLM; Subkey: "SOFTWARE\girder3\Plugins"; ValueName: 215; ValueType: dword; ValueData: 1
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "False"
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "True"; Components: windvd powerdvd adtv zp tt cineplayer ati ssf bsplay powerdivx radlight eugenes dvdstation
