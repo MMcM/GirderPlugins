@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 #define UI_CPP
-#include "girder.h"
+#include "plugin.h"
 #include "ui.h"
 #include "resource.h"
 
@@ -34,11 +34,12 @@ BOOL CALLBACK ConfigDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lP
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      HFunctions.I18NTranslateEx("Ok", trans, sizeof(trans));
+      SF.i18n_translate("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      HFunctions.I18NTranslateEx("Cancel", trans, sizeof(trans));
+      SF.i18n_translate("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
+
       return FALSE;
     }
 
@@ -92,10 +93,10 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      HFunctions.I18NTranslateEx("Learn", trans, sizeof(trans));
+      SF.i18n_translate("Learn", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_LEARN), trans);
 
-      HFunctions.I18NTranslateEx("Close", trans, sizeof(trans));
+      SF.i18n_translate("Close", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCLOSE), trans);
 
       HWND events = GetDlgItem(hwnd, IDC_EVENTS);

@@ -30,17 +30,17 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="Disc.Insert.I" Identifier="61" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Disc.Insert.I"/>
-      <EventString Name="PowerDVD.Title" Identifier="62" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Title"/>
-      <EventString Name="ZoomPlayer.Media.File" Identifier="63" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Media.File"/>
-      <EventString Name="ATI.MMC.File" Identifier="64" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.MMC.File"/>
-      <EventString Name="ShowShifter.File" Identifier="65" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.File"/>
-      <EventString Name="WMP.URL" Identifier="66" Enabled="FALSE" Invert="FALSE" Device="15" IrStr="WMP.URL"/>
-      <EventString Name="WMP.Title" Identifier="67" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Title"/>
-      <EventString Name="Winamp.File" Identifier="68" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.File"/>
-      <EventString Name="Winamp.Title" Identifier="69" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Title"/>
-      <EventString Name="BSPlayer.File" Identifier="10149" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.File"/>
-      <EventString Name="PowerDivX.File" Identifier="10150" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDivX.File"/>
+      <EventString Name="Disc.Insert.I" Identifier="61" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Disc.Insert.I"/>
+      <EventString Name="PowerDVD.Title" Identifier="62" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Title"/>
+      <EventString Name="ZoomPlayer.Media.File" Identifier="63" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
+      <EventString Name="ATI.MMC.File" Identifier="64" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.File"/>
+      <EventString Name="ShowShifter.File" Identifier="65" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.File"/>
+      <EventString Name="WMP.URL" Identifier="66" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
+      <EventString Name="WMP.Title" Identifier="67" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
+      <EventString Name="Winamp.File" Identifier="68" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
+      <EventString Name="Winamp.Title" Identifier="69" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
+      <EventString Name="BSPlayer.File" Identifier="10149" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
+      <EventString Name="PowerDivX.File" Identifier="10150" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
       <Command Name="Set Register" Identifier="70" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -86,8 +86,8 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="accessDTV.Channel" Identifier="73" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.Channel"/>
-      <EventString Name="Winamp.Position" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Position"/>
+      <EventString Name="accessDTV.Channel" Identifier="73" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
+      <EventString Name="Winamp.Position" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
       <Command Name="Set Register" Identifier="75" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -133,8 +133,8 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="accessDTV.ChanText" Identifier="10095" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.ChanText"/>
-      <EventString Name="accessDTV.ChanNoText" Identifier="10096" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.ChanNoText"/>
+      <EventString Name="accessDTV.ChanText" Identifier="10095" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChanText"/>
+      <EventString Name="accessDTV.ChanNoText" Identifier="10096" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChanNoText"/>
       <Command Name="Set Register" Identifier="10097" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -180,9 +180,9 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="10099" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.TitleNo"/>
-      <EventString Name="TheaterTek.TitleNo" Identifier="10100" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.TitleNo"/>
-      <EventString Name="ATI.DVD.TitleNo" Identifier="10101" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.TitleNo"/>
+      <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="10099" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.TitleNo"/>
+      <EventString Name="TheaterTek.TitleNo" Identifier="10100" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.TitleNo"/>
+      <EventString Name="ATI.DVD.TitleNo" Identifier="10101" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.TitleNo"/>
       <Command Name="Set Register" Identifier="10102" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -228,10 +228,10 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="WinDVD.Chapter" Identifier="10104" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Chapter"/>
-      <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10105" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Chapter"/>
-      <EventString Name="TheaterTek.Chapter" Identifier="10106" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Chapter"/>
-      <EventString Name="ATI.DVD.Chapter" Identifier="10107" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Chapter"/>
+      <EventString Name="WinDVD.Chapter" Identifier="10104" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Chapter"/>
+      <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10105" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Chapter"/>
+      <EventString Name="TheaterTek.Chapter" Identifier="10106" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Chapter"/>
+      <EventString Name="ATI.DVD.Chapter" Identifier="10107" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Chapter"/>
       <Command Name="Set Register" Identifier="10108" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -277,7 +277,7 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="Winamp.Length" Identifier="10110" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Length"/>
+      <EventString Name="Winamp.Length" Identifier="10110" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
       <Command Name="Set Register" Identifier="10111" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -323,18 +323,18 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="WinDVD.Elapsed" Identifier="10113" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Elapsed"/>
-      <EventString Name="PowerDVD.Elapsed" Identifier="10114" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Elapsed"/>
-      <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10115" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Elapsed"/>
-      <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="10116" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Media.Elapsed"/>
-      <EventString Name="TheaterTek.Elapsed" Identifier="10117" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Elapsed"/>
-      <EventString Name="ATI.DVD.Elapsed" Identifier="10118" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Elapsed"/>
-      <EventString Name="ATI.MMC.Elapsed" Identifier="10119" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.MMC.Elapsed"/>
-      <EventString Name="ShowShifter.Elapsed" Identifier="10120" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.Elapsed"/>
-      <EventString Name="WMP.Elapsed" Identifier="10121" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Elapsed"/>
-      <EventString Name="Winamp.Elapsed" Identifier="10122" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Elapsed"/>
-      <EventString Name="BSPlayer.Elapsed" Identifier="10151" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Elapsed"/>
-      <EventString Name="PowerDivX.Elapsed" Identifier="10152" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDivX.Elapsed"/>
+      <EventString Name="WinDVD.Elapsed" Identifier="10113" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Elapsed"/>
+      <EventString Name="PowerDVD.Elapsed" Identifier="10114" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Elapsed"/>
+      <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10115" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Elapsed"/>
+      <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="10116" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Elapsed"/>
+      <EventString Name="TheaterTek.Elapsed" Identifier="10117" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Elapsed"/>
+      <EventString Name="ATI.DVD.Elapsed" Identifier="10118" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Elapsed"/>
+      <EventString Name="ATI.MMC.Elapsed" Identifier="10119" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Elapsed"/>
+      <EventString Name="ShowShifter.Elapsed" Identifier="10120" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Elapsed"/>
+      <EventString Name="WMP.Elapsed" Identifier="10121" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
+      <EventString Name="Winamp.Elapsed" Identifier="10122" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
+      <EventString Name="BSPlayer.Elapsed" Identifier="10151" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
+      <EventString Name="PowerDivX.Elapsed" Identifier="10152" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
       <Command Name="Set Register" Identifier="10123" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -380,16 +380,16 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="ZoomPlayer.DVD.Duration" Identifier="10125" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Duration"/>
-      <EventString Name="ZoomPlayer.Media.Duration" Identifier="10126" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Media.Duration"/>
-      <EventString Name="TheaterTek.Duration" Identifier="10127" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Duration"/>
-      <EventString Name="ATI.DVD.Duration" Identifier="10128" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Duration"/>
-      <EventString Name="ATI.MMC.Duration" Identifier="10129" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.MMC.Duration"/>
-      <EventString Name="ShowShifter.Duration" Identifier="10130" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.Duration"/>
-      <EventString Name="WMP.Duration" Identifier="10131" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Duration"/>
-      <EventString Name="Winamp.Duration" Identifier="10132" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Duration"/>
-      <EventString Name="BSPlayer.Duration" Identifier="10153" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Duration"/>
-      <EventString Name="PowerDivX.Duration" Identifier="10154" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDivX.Duration"/>
+      <EventString Name="ZoomPlayer.DVD.Duration" Identifier="10125" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Duration"/>
+      <EventString Name="ZoomPlayer.Media.Duration" Identifier="10126" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Duration"/>
+      <EventString Name="TheaterTek.Duration" Identifier="10127" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Duration"/>
+      <EventString Name="ATI.DVD.Duration" Identifier="10128" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Duration"/>
+      <EventString Name="ATI.MMC.Duration" Identifier="10129" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Duration"/>
+      <EventString Name="ShowShifter.Duration" Identifier="10130" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Duration"/>
+      <EventString Name="WMP.Duration" Identifier="10131" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
+      <EventString Name="Winamp.Duration" Identifier="10132" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
+      <EventString Name="BSPlayer.Duration" Identifier="10153" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
+      <EventString Name="PowerDivX.Duration" Identifier="10154" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
       <Command Name="Set Register" Identifier="10133" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -435,12 +435,12 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10135" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Domain"/>
-      <EventString Name="TheaterTek.Domain" Identifier="10136" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Domain"/>
-      <EventString Name="ATI.DVD.Domain" Identifier="10137" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Domain"/>
-      <EventString Name="ZoomPlayer.OSD" Identifier="10138" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.OSD"/>
-      <EventString Name="WMP.Status" Identifier="10139" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Status"/>
-      <EventString Name="Winamp.Status" Identifier="10140" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Status"/>
+      <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10135" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Domain"/>
+      <EventString Name="TheaterTek.Domain" Identifier="10136" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Domain"/>
+      <EventString Name="ATI.DVD.Domain" Identifier="10137" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Domain"/>
+      <EventString Name="ZoomPlayer.OSD" Identifier="10138" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
+      <EventString Name="WMP.Status" Identifier="10139" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
+      <EventString Name="Winamp.Status" Identifier="10140" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
       <Command Name="Set Register" Identifier="10141" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
