@@ -13,7 +13,11 @@
 // Insert your headers here
 #include <windows.h>
 #include <winioctl.h>
+
+extern "C" {
 #include <setupapi.h>
+#include <hidsdi.h>
+}
 
 #include <stdio.h>
 #include <stdlib.h>
