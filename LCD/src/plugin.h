@@ -11,7 +11,7 @@
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "1.9"
+#define PLUGINVERSION "1.10"
 
 
 #include <girder.h>
