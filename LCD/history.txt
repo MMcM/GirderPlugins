@@ -1,4 +1,4 @@
-2.10    01/31/2004      MMcM    New Matrix Orbital and Crystalfontz displays.
+2.10    01/31/2004      MMcM    New display models and device specific improvements.
 
 2.9     01/22/2004      MMcM    Add suspend / resume handling.
 

@@ -43,7 +43,7 @@ other device driver DLLs that may not be installed at all.<p>
 </li>
 
 <li><kbd>LCDTests.gml</kbd><br/>
-A Girder script for testing basic drawing capabilities.
+A Girder script for basic testing of drawing and command capabilities.
 It includes commands for displaying all possible characters sixteen at a
 time.  This is useful for working out a custom character map.<p>
 </li>
@@ -90,7 +90,8 @@ driver.<p>
 </li>
 
 <li>Click the Test... button.  Some simple text should be displayed.
-If not, double check the hardware connections and settings.<p>
+If not, or if there is an error opening the device, double check the
+hardware connections and settings.<p>
 </li>
 
 <li>The plug-in is now ready for use with Girder.<p>
@@ -188,8 +189,11 @@ is shaped like a capital R.<p>
 
 Some Matrix Orbital displays have a keypad row/column matrix, which
 can be wired to a keypad membrane overlay (or a bunch of push buttons).  
+Some Crystalfontz displays have lighted push buttons.
 If enabled in the plug-in Settings dialog, pressing a keypad button will
-generate a Girder event.<p>
+generate a Girder event.  No attempt is made to make the events compatible
+from one display to another.  Furthermore, some displays generate separate press
+and release events.<p>
 </li>
 
 <li>General purpose output<br>
@@ -336,14 +340,25 @@ when using LCDriver with a display other than Crystalfontz.
 
 <tr><td><kbd>ParallelStrobeDelay</kbd></td>
 <td>
-The interval, in milliseconds, to wait for the HD44780 to notice a signal transition.
-If you have a slow HD44780, try increasing this number.
+The <a href="#interval">delay interval</a> to wait for the HD44780 to
+notice a signal transition.  If you have a slow HD44780, try
+increasing this number.  If you have a fast HD44780, you may be able
+to decrease this number to a fraction of a millisecond.
 </td>
 
 <tr><td><kbd>ParallelCommandDelay</kbd></td>
 <td>
-The interval, in milliseconds, to wait for the HD44780 to process a command or shift the
-data register.  If you have a slow HD44780, try increasing this number.
+The <a href="#interval">delay interval</a> to wait for the HD44780 to
+process a command or shift the data register.  If you have a slow
+HD44780, try increasing this number.  If you have a fast HD44780, try
+decreasing it.
+</td>
+
+<tr><td><kbd>ParallelExtraDelay</kbd></td>
+<td>
+The <a href="#interval">delay interval</a> to wait for the HD44780 to initialize
+or clear the screen.  If you have set the command delay very small, you may need to
+increase this number.
 </td>
 
 <tr><td><kbd>SimLCDFontSize</kbd></td>
@@ -394,6 +409,11 @@ The debounce time for a keypad in milliseconds.  The default for Matrix Orbital 
 </td>
 
 </table>
+
+<a name="interval">
+Delay intervals can be specified as an integer number of milliseconds or a floating
+point fraction of a second.  The fractional format supports intervals less than one
+millisecond.<p>
 
 <h3>Terms</h3>
 This plug-in is released as open source under 

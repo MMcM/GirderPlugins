@@ -117,6 +117,43 @@ void DisplayDevice::SetSettingBinary(HKEY hkey, LPCSTR valkey,
     RegSetValueEx(hkey, valkey, NULL, REG_BINARY, value, vallen);
 }
 
+BOOL Delay::LoadSetting(HKEY hkey, LPCSTR valkey)
+{
+  BYTE buf[64];
+  DWORD dwType, dwLen;
+  dwLen = sizeof(buf);
+  if (ERROR_SUCCESS == RegQueryValueEx(hkey, valkey, NULL, &dwType, buf, &dwLen)) {
+    switch (dwType) {
+    case REG_DWORD:
+      // For compatibility and simplicity, an integer setting is a
+      // number of milliseconds.
+      SetDelay(((double)*(DWORD*)&buf) / 1000.0);
+      return TRUE;
+    case REG_SZ:
+      if (NULL == strchr((LPCSTR)buf, '.')) {
+        // Again for compatibility, a string without a decimal point
+        // is milliseconds.
+        SetDelay(strtod((LPCSTR)buf, NULL) / 1000.0);
+      }
+      else {
+        // A fraction of a second.
+        SetDelay(strtod((LPCSTR)buf, NULL));
+      }
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+void Delay::SaveSetting(HKEY hkey, LPCSTR valkey) const
+{
+  char buf[64];
+  sprintf(buf, "%g", m_delay);
+  if (NULL == strchr(buf, '.'))
+    strcat(buf, ".0");          // See compatibility interpretation above.
+  RegSetValueEx(hkey, valkey, NULL, REG_SZ, (LPBYTE)buf, strlen(buf));
+}
+
 BOOL DisplayDevice::Create(DisplayDevice*& device, HMODULE& devlib,
                            HWND parent, LPCSTR lib, LPCSTR dev)
 {
@@ -788,6 +825,48 @@ void DisplayDevice::Restore(PVOID state)
       if (width > 0)
         DisplayInternal(row, col, buf, width);
     }
+  }
+}
+
+void Delay::Wait() const
+{
+  if (UNKNOWN == m_method) {
+    if (m_delay <= 0)
+      m_method = NONE;          // No wait.
+    else {
+      if (m_delay < .001) {     // Fraction of a millisecond.
+        LONGLONG llFreq;
+        if (QueryPerformanceFrequency((LARGE_INTEGER*)&llFreq)) {
+          m_arg.llCount = (LONGLONG)ceil((double)llFreq * m_delay);
+          m_method = HIRES_COUNTER;
+        }
+        // TODO: Need some alternatives here for short delays without
+        // hardware support.
+      }
+      if (UNKNOWN == m_method) {
+        m_arg.dwMillis = (DWORD)ceil(m_delay * 1000.0);
+        m_method = SLEEP;
+      }
+    }
+  }
+
+  switch (m_method) {
+  case NONE:
+    break;
+  case SLEEP:
+    Sleep(m_arg.dwMillis);
+    break;
+  case HIRES_COUNTER:
+    {
+      LONGLONG llCounter, llEnd;
+      QueryPerformanceCounter((LARGE_INTEGER*)&llCounter);
+      llEnd = llCounter + m_arg.llCount;
+      do {
+        QueryPerformanceCounter((LARGE_INTEGER*)&llCounter);
+      }
+      while (llCounter < llEnd);
+    }
+    break;
   }
 }
 

@@ -19,6 +19,12 @@ public:
   virtual BOOL DeviceHasBrightness();
   virtual BOOL DeviceHasBacklight();
 
+#if 0
+  virtual void DeviceLoadSettings(HKEY hkey);
+  virtual void DeviceSaveSettings(HKEY hkey);
+#endif
+
 protected:
   BOOL m_backlight;
+  Delay m_bootDelay;
 };

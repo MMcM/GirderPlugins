@@ -184,13 +184,13 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
   else {
 #if _DEBUG
     {
-      char dbgbuf[128], *dbp;
-      strcpy(dbgbuf, "PKTLCD: Version: ");
-      dbp = dbgbuf + strlen(dbgbuf);
+      char dbuf[128], *dbp;
+      strcpy(dbuf, "PKTLCD: Version: ");
+      dbp = dbuf + strlen(dbuf);
       memcpy(dbp, (LPCSTR)rpkt->GetData(), rpkt->GetDataLength());
       dbp += rpkt->GetDataLength();
       strcpy(dbp, "\n");
-      OutputDebugString(dbgbuf);
+      OutputDebugString(dbuf);
     }
 #endif
     delete rpkt;
@@ -401,9 +401,9 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
       // Timeout.  Pending read can remain, but data should start a new packet.
 #if _DEBUG
       {
-        char dbgbuf[128];
-        sprintf(dbgbuf, "PKTLCD: Timeout waiting for input.\n");
-        OutputDebugString(dbgbuf);
+        char dbuf[128];
+        sprintf(dbuf, "PKTLCD: Timeout waiting for input.\n");
+        OutputDebugString(dbuf);
       }
 #endif
       if (NULL != rpkt) {
@@ -416,9 +416,9 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
         if (spkt->IncrementRetries() > NRETRIES) {
 #if _DEBUG
           {
-            char dbgbuf[128];
-            sprintf(dbgbuf, "PKTLCD: %d command timed out.\n", spkt->GetType());
-            OutputDebugString(dbgbuf);
+            char dbuf[128];
+            sprintf(dbuf, "PKTLCD: %d command timed out.\n", spkt->GetType());
+            OutputDebugString(dbuf);
           }
 #endif
           spkt->SetState(SendPacket::TIMED_OUT);
@@ -434,9 +434,9 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
         else {
 #if _DEBUG
           {
-            char dbgbuf[128];
-            sprintf(dbgbuf, "PKTLCD: Retransmitting %d command.\n", spkt->GetType());
-            OutputDebugString(dbgbuf);
+            char dbuf[128];
+            sprintf(dbuf, "PKTLCD: Retransmitting %d command.\n", spkt->GetType());
+            OutputDebugString(dbuf);
           }
 #endif
           spkt->SetState(SendPacket::TRANSMIT_NEEDED);
@@ -475,10 +475,10 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
           DWORD offset = FailureIndex - rindex;
           if (offset < nbInput) {
             {
-              char dbgbuf[128];
-              sprintf(dbgbuf, "PKTLCD: Simulating communications failure at byte %d.\n", 
+              char dbuf[128];
+              sprintf(dbuf, "PKTLCD: Simulating communications failure at byte %d.\n", 
                       offset);
-              OutputDebugString(dbgbuf);
+              OutputDebugString(dbuf);
             }
             switch (FailureSimulation) {
             case CORRUPT:
@@ -511,10 +511,10 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
               PurgeComm(portHandle, PURGE_RXCLEAR);
 #if _DEBUG
               {
-                char dbgbuf[128];
-                sprintf(dbgbuf, "PKTLCD: Received %d packet with impossible length %d.\n",
+                char dbuf[128];
+                sprintf(dbuf, "PKTLCD: Received %d packet with impossible length %d.\n",
                         rtype, rlen);
-                OutputDebugString(dbgbuf);
+                OutputDebugString(dbuf);
               }
 #endif
               break;
@@ -527,8 +527,8 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
           default:
             {
               DWORD nb = rpkt->GetTotalLength() - rindex;
-              if (nb > nbInput)
-                nb = nbInput;
+              if (nb > nbInput - i)
+                nb = nbInput - i;
               memcpy(rpkt->GetBytes() + rindex, inputBuf + i, nb);
               i += nb;
               rindex += nb;
@@ -544,10 +544,10 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
                   PurgeComm(portHandle, PURGE_RXCLEAR);
 #if _DEBUG
                   {
-                    char dbgbuf[128];
-                    sprintf(dbgbuf, "PKTLCD: Received packet with bad CRC %X.\n", 
+                    char dbuf[128];
+                    sprintf(dbuf, "PKTLCD: Received packet with bad CRC %X.\n", 
                             rpkt->GetCRC());
-                    OutputDebugString(dbgbuf);
+                    OutputDebugString(dbuf);
                   }
 #endif
                   delete rpkt;
@@ -602,9 +602,9 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
     // Might indicate some kind of loopback.  Maybe compare against send head?
 #if _DEBUG
     {
-      char dbgbuf[128];
-      sprintf(dbgbuf, "PKTLCD: Command %d received.\n", rpkt->GetType());
-      OutputDebugString(dbgbuf);
+      char dbuf[128];
+      sprintf(dbuf, "PKTLCD: Command %d received.\n", rpkt->GetType());
+      OutputDebugString(dbuf);
     }
 #endif          
     break;
@@ -636,10 +636,10 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
           if (rpkt->GetType() & 0x80) {
 #if _DEBUG
             {
-              char dbgbuf[128];
-              sprintf(dbgbuf, "PKTLCD: Error reply for one-way command %d.\n", 
+              char dbuf[128];
+              sprintf(dbuf, "PKTLCD: Error reply for one-way command %d.\n", 
                       spkt->GetType());
-              OutputDebugString(dbgbuf);
+              OutputDebugString(dbuf);
             }
 #endif          
           }
@@ -799,10 +799,10 @@ SendPacket::~SendPacket()
   case AWAITING_ACK:
     // Only happens if device closed right after a command.
     {
-      char dbgbuf[128];
-      sprintf(dbgbuf, "PKTLCD: SendPacket in unexpected state %d for delete.\n", 
+      char dbuf[128];
+      sprintf(dbuf, "PKTLCD: SendPacket in unexpected state %d for delete.\n", 
               m_state);
-      OutputDebugString(dbgbuf);
+      OutputDebugString(dbuf);
     }
     break;
   }

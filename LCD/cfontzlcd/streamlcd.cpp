@@ -12,6 +12,7 @@ CrystalfontzStreamLCD::CrystalfontzStreamLCD(LPCSTR devname,
   m_cols = cols;
   m_rows = rows;
   m_backlight = backlight;
+  m_bootDelay = 1.5;
 
   m_portType = portSERIAL;
   strcpy(m_port, "COM1");
@@ -60,9 +61,8 @@ BOOL CrystalfontzStreamLCD::DeviceOpen()
   if (!OpenSerial())
     return FALSE;
 
-  // Wait while boot screen is displayed.  Another possibility would
-  // be to buffer a bunch of spaces to make up the time.
-  Sleep(1500);
+  // Wait while boot screen is displayed.
+  m_bootDelay.Wait();
 
   BYTE buf[128];
   int nb = 0;
@@ -180,3 +180,15 @@ BOOL CrystalfontzStreamLCD::DeviceHasBacklight()
 {
   return m_backlight;
 }
+
+#if 0
+void CrystalfontzStreamLCD::DeviceLoadSettings(HKEY hkey)
+{
+  m_bootDelay.LoadSetting(hkey, "BootDelay");
+}
+
+void CrystalfontzStreamLCD::DeviceSaveSettings(HKEY hkey)
+{
+  m_bootDelay.SaveSetting(hkey, "BootDelay");
+}
+#endif

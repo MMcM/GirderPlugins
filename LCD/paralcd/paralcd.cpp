@@ -34,7 +34,7 @@ protected:
   void WriteDR(BYTE b, int dev);
 
   int m_portAddr;
-  int m_strobeDelay, m_commandDelay;
+  Delay m_strobeDelay, m_commandDelay, m_extraDelay;
   int m_ndevs;
 };
 
@@ -44,8 +44,9 @@ ParallelLCD::ParallelLCD(HWND parent, LPCSTR devname)
   m_rows = 4;
   m_portType = portPARALLEL;
   strcpy(m_port, "LPT1");
-  m_strobeDelay = 2;
-  m_commandDelay = 5;
+  m_strobeDelay = .002;
+  m_commandDelay = .005;
+  m_extraDelay = 0;
   m_ndevs = 1;
 }
 
@@ -71,7 +72,9 @@ BOOL ParallelLCD::DeviceOpen()
     WriteIR(0x38, dev); // again
     WriteIR(0x06, dev); // Entry mode set: I/D=1 (incr), S=0 (no shift)
     WriteIR(0x0C, dev); // Display control: D=1 (on), C=0 (cursor off), B=0 (blink off)
+    m_extraDelay.Wait();
     WriteIR(0x01, dev); // Clear display
+    m_extraDelay.Wait();
   }
 
   return TRUE;
@@ -81,6 +84,7 @@ void ParallelLCD::DeviceClose()
 {
   for (int dev = 0; dev < m_ndevs; dev++) {
     WriteIR(0x01, dev); // Clear display
+    m_extraDelay.Wait();
     WriteIR(0x08, dev); // Display control: D=0 (off), C=0 (cursor off), B=0 (blink off)
   }
 }
@@ -89,6 +93,7 @@ void ParallelLCD::DeviceClear()
 {
   for (int dev = 0; dev < m_ndevs; dev++) {
     WriteIR(0x01, dev); // Clear display
+    m_extraDelay.Wait();
   }
 }
 
@@ -128,14 +133,16 @@ BOOL ParallelLCD::DeviceHasSetSize()
 
 void ParallelLCD::DeviceLoadSettings(HKEY hkey)
 {
-  GetSettingInt(hkey, "ParallelStrobeDelay", m_strobeDelay);
-  GetSettingInt(hkey, "ParallelCommandDelay", m_commandDelay);
+  m_strobeDelay.LoadSetting(hkey, "ParallelStrobeDelay");
+  m_commandDelay.LoadSetting(hkey, "ParallelCommandDelay");
+  m_extraDelay.LoadSetting(hkey, "ParallelExtraDelay");
 }
 
 void ParallelLCD::DeviceSaveSettings(HKEY hkey)
 {
-  SetSettingInt(hkey, "ParallelStrobeDelay", m_strobeDelay);
-  SetSettingInt(hkey, "ParallelCommandDelay", m_commandDelay);
+  m_strobeDelay.SaveSetting(hkey, "ParallelStrobeDelay");
+  m_commandDelay.SaveSetting(hkey, "ParallelCommandDelay");
+  m_extraDelay.SaveSetting(hkey, "ParallelExtraDelay");
 }
 
 // Printer port definitions
@@ -154,9 +161,9 @@ inline static void outport(int a, BYTE b)
   DlPortWritePortUchar(a, b);
 }
 
-inline static void delay(int ms)
+inline static void delay(const Delay& delay)
 {
-  Sleep(ms);
+  delay.Wait();
 }
 
 inline static BYTE eBit(int dev)

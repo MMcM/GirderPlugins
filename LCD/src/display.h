@@ -306,6 +306,53 @@ protected:
   HANDLE m_inputThread, m_inputStopEvent, m_outputEvent;
 };
 
+class LCD_API Delay
+{
+public:
+  Delay() {
+    m_delay = 0;
+    m_method = NONE;
+  }
+  Delay(double secs) {
+    SetDelay(secs);
+  }
+  Delay(const Delay& other) {
+    SetDelay(other.m_delay);
+  }
+  Delay& operator=(const Delay& other) {
+    SetDelay(other.m_delay);
+    return *this;
+  }
+  double operator=(double secs) {
+    SetDelay(secs);
+    return secs;
+  }
+
+  double GetDelay() const { 
+    return m_delay;
+  }
+  void SetDelay(double secs) {
+    m_delay = secs;
+    m_method = UNKNOWN;
+  }
+
+  BOOL LoadSetting(HKEY hkey, LPCSTR valkey);
+  void SaveSetting(HKEY hkey, LPCSTR valkey) const;
+  
+  void Wait() const;
+
+protected:
+  double m_delay;
+  mutable enum { 
+    UNKNOWN, NONE, SLEEP, HIRES_COUNTER 
+    // Busy waiting in a loop would be another possibility.
+  } m_method;
+  mutable union {
+    DWORD dwMillis;
+    LONGLONG llCount;
+  } m_arg;
+};
+
 extern "C" {
 LCD_API void LCD_DECL DisplayWin32Error(HWND parent, DWORD dwErr);
 LCD_API void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload = NULL);
