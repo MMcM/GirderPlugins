@@ -15,6 +15,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "LcdHype"=".\LcdHype\LcdHype.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "cfontzlcd"=".\cfontzlcd\cfontzlcd.dsp" - Package Owner=<4>
 
 Package=<5>

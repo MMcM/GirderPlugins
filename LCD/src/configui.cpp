@@ -44,6 +44,21 @@ struct DisplayDeviceEntry {
   { "Futaba VFD (20x4)", "FutabaVFD", "M204" },
   { "Futaba VFD (40x2)", "FutabaVFD", "M402" },
   { "Noritake CU20045SCPB (20x4, vfd)", "NoritakeVFD", "CU20045SCPB" },
+  { "LCDHype LC7981 240x128", "LCDHYPE", "LC798124128" },
+  { "LCDHype LC7981 240x64", "LCDHYPE", "LC798124064" },
+  { "LCDHype LC7981 256x64", "LCDHYPE", "LC798125664" },
+  { "LCDHype T6963C 240x128", "LCDHYPE", "T6963C24128" },
+  { "LCDHype T6963C 240x64", "LCDHYPE", "T6963C24064" },
+  { "LCDHype T6963C 128x128", "LCDHYPE", "T6963C12128" },
+  { "LCDHype T6963C 128x64", "LCDHYPE", "T6963C12864" },
+  { "LCDHype KS0108 128x64", "LCDHYPE", "KS010812864" },
+  { "LCDHype GU7000 112x16", "LCDHYPE", "GU700011216" },
+  { "LCDHype GU7000 126x32", "LCDHYPE", "GU700012632" },
+  { "LCDHype GU7000 140x32", "LCDHYPE", "GU700014032" },
+  { "LCDHype SED1530 96x32", "LCDHYPE", "SED15309632" },
+  { "LCDHype SED1520 122x32", "LCDHYPE", "SED152012232" },
+  { "LCDHype SED133x 320x240", "LCDHYPE", "SED133x32240" },
+  { "LCDHype SED133x 240x128", "LCDHYPE", "SED133x24128" },
   { "HD44780 (parallel)", "PARALCD", NULL }
 };
 
@@ -540,8 +555,8 @@ static BOOL CALLBACK DisplayPageDialogProc(HWND hwnd, UINT uMsg,
       }
       ComboBox_SetCurSel(combo, selidx);
 
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), 4, 1);
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), 40, 1);
+      UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), 30, 1);
+      UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), 60, 1);
 
       TrackBar_SetRange(GetDlgItem(hwnd, IDC_CONTRAST), 0, 100);
       TrackBar_SetRange(GetDlgItem(hwnd, IDC_BRIGHTNESS), 0, 100);

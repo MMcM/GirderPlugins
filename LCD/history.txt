@@ -1,3 +1,5 @@
+3.5     06/01/2004      Shura_k Add graphics device support using LcdHype.
+
 3.4     05/31/2004      MMcM    Add NoritakeVFD support.
 
 3.3     05/25/2004      MMcM    Fix Crystalfontz temperature sensors.
