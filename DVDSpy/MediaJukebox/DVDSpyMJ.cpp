@@ -92,7 +92,7 @@ STDAPI DllRegisterServer(void)
     // Stuff for MJ.
     reg.SetValue(OLE2T(wszCLSID), "CLSID");
     reg.SetValue(1, "IVersion");
-    reg.SetValue("1.59 (32)", "Version");
+    reg.SetValue("1.60 (33)", "Version");
     reg.SetValue("www.girder.nl", "URL");
     reg.SetValue(1, "PluginMode");
 

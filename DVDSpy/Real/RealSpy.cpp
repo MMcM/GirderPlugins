@@ -93,7 +93,7 @@ STDMETHODIMP CRealSpy::GetPluginInfo(REF(BOOL) bLoadMultiple,
   pDescription  = "Girder DVDSpy plug-in";
   pCopyright = NULL;
   pMoreInfoURL = "http://www.girder.nl";
-  versionNumber = 59;           // 1.59
+  versionNumber = 60;           // 1.60
 
   return PNR_OK;
 }
