@@ -14,7 +14,6 @@ size_t DISPLAYSPYHOOK_API DS_GetMatchCount();
 size_t DISPLAYSPYHOOK_API DS_GetMatchIndexCount(size_t nCurrent);
 void DISPLAYSPYHOOK_API DS_GetName(size_t nMatch, size_t nIndex, 
                                    char *szBuf, size_t nSize);
-void DISPLAYSPYHOOK_API DS_EnableMatch(size_t nIndex, BOOL bEnabled);
 BOOL DISPLAYSPYHOOK_API DS_GetNext(size_t *nMatch, size_t *nIndex,
                                    char *szBuf, size_t nSize);
 void DISPLAYSPYHOOK_API DS_Reset();
