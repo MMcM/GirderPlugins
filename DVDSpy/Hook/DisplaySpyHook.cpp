@@ -1382,7 +1382,7 @@ BOOL PatchFunction(LPCSTR szModule, LPCSTR szFunction, LPCSTR szCallModule,
   return TRUE;
 }
 
-PROC *TextOutIAT = NULL;
+PROC *TextOutIAT = NULL, *TextOutIATM = NULL;
 BOOL (WINAPI *OrigTextOut)(HDC, int, int, LPCSTR, int) = NULL;
 BOOL WINAPI PatchTextOut(HDC hDC, int nX, int nY, LPSTR lpString, int nCount)
 {
@@ -1397,7 +1397,7 @@ BOOL WINAPI PatchTextOut(HDC hDC, int nX, int nY, LPSTR lpString, int nCount)
   return bResult;
 }
 
-PROC *DrawTextIAT = NULL;
+PROC *DrawTextIAT = NULL, *DrawTextIATM = NULL;
 int (WINAPI *OrigDrawText)(HDC, LPCSTR, int, LPRECT, UINT) = NULL;
 int WINAPI PatchDrawText(HDC hDC, LPSTR lpString, int nCount, 
                          LPRECT lpRect, UINT uFormat)
@@ -1540,28 +1540,34 @@ void InstallPatches()
       switch (g_pMatches[i].pMatches[0].dwVal) {
       case PATCH_TEXTOUT:
         if (NULL == TextOutIAT) {
-          if (!PatchFunction("GDI32.DLL", "TextOutA", szDefMod,
-                             (PROC)PatchTextOut, &TextOutIAT, (PROC*)&OrigTextOut))
-            PatchFunction("GDI32.DLL", "TextOutA", "MFC42",
-                          (PROC)PatchTextOut, &TextOutIAT, (PROC*)&OrigTextOut);
+          PatchFunction("GDI32.DLL", "TextOutA", szDefMod,
+                        (PROC)PatchTextOut, &TextOutIAT, (PROC*)&OrigTextOut);
+        }
+        if (NULL == TextOutIATM) {
+          PatchFunction("GDI32.DLL", "TextOutA", "MFC42",
+                        (PROC)PatchTextOut, &TextOutIATM, (PROC*)&OrigTextOut);
         }
         break;
       case PATCH_DRAWTEXT:
         if (NULL == DrawTextIAT) {
-          if (!PatchFunction("GDI32.DLL", "DrawTextA", szDefMod,
-                             (PROC)PatchDrawText, &DrawTextIAT, (PROC*)&OrigDrawText))
-            PatchFunction("GDI32.DLL", "DrawTextA", "MFC42",
-                          (PROC)PatchDrawText, &DrawTextIAT, (PROC*)&OrigDrawText);
+          PatchFunction("GDI32.DLL", "DrawTextA", szDefMod,
+                        (PROC)PatchDrawText, &DrawTextIAT, (PROC*)&OrigDrawText);
+        }
+        if (NULL == DrawTextIATM) {
+          PatchFunction("GDI32.DLL", "DrawTextA", "MFC42",
+                        (PROC)PatchDrawText, &DrawTextIATM, (PROC*)&OrigDrawText);
         }
         break;
       case PATCH_TEXTIMAGE:
         if (!_stricmp(g_pMatches->szModule, "ATI"))
           szDefMod = "ATICORE.DLL";
         if (NULL == TextOutIAT) {
-          if (!PatchFunction("GDI32.DLL", "TextOutA", szDefMod,
-                             (PROC)PatchTITextOut, &TextOutIAT, (PROC*)&OrigTextOut))
-            PatchFunction("GDI32.DLL", "TextOutA", "MFC42",
-                          (PROC)PatchTITextOut, &TextOutIAT, (PROC*)&OrigTextOut);
+          PatchFunction("GDI32.DLL", "TextOutA", szDefMod,
+                        (PROC)PatchTITextOut, &TextOutIAT, (PROC*)&OrigTextOut);
+        }
+        if (NULL == TextOutIATM) {
+          PatchFunction("GDI32.DLL", "TextOutA", "MFC42",
+                        (PROC)PatchTITextOut, &TextOutIATM, (PROC*)&OrigTextOut);
         }
         if (NULL == ExtTextOutIAT) {
           PatchFunction("GDI32.DLL", "ExtTextOutA", szDefMod,
@@ -1572,10 +1578,12 @@ void InstallPatches()
                         (PROC)PatchTITabbedTextOut, &TabbedTextOutIAT, (PROC*)&OrigTabbedTextOut);
         }
         if (NULL == DrawTextIAT) {
-          if (!PatchFunction("GDI32.DLL", "DrawTextA", szDefMod,
-                             (PROC)PatchTIDrawText, &DrawTextIAT, (PROC*)&OrigDrawText))
-            PatchFunction("GDI32.DLL", "DrawTextA", "MFC42",
-                          (PROC)PatchTIDrawText, &DrawTextIAT, (PROC*)&OrigDrawText);
+          PatchFunction("GDI32.DLL", "DrawTextA", szDefMod,
+                        (PROC)PatchTIDrawText, &DrawTextIAT, (PROC*)&OrigDrawText);
+        }
+        if (NULL == DrawTextIATM) {
+          PatchFunction("GDI32.DLL", "DrawTextA", "MFC42",
+                        (PROC)PatchTIDrawText, &DrawTextIATM, (PROC*)&OrigDrawText);
         }
         if (NULL == BitBltIAT) {
           PatchFunction("GDI32.DLL", "BitBlt", szDefMod,
@@ -1627,11 +1635,25 @@ void RemovePatches()
       VirtualProtect(TextOutIAT, sizeof(PROC), dwOldProt, &dwOldProt);
     }
   }
+  if (NULL != TextOutIATM) {
+    DWORD dwOldProt;
+    if (VirtualProtect(TextOutIATM, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *TextOutIATM = (PROC)*OrigTextOut;
+      VirtualProtect(TextOutIATM, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
   if (NULL != DrawTextIAT) {
     DWORD dwOldProt;
     if (VirtualProtect(DrawTextIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
       *DrawTextIAT = (PROC)*OrigDrawText;
       VirtualProtect(DrawTextIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
+  if (NULL != DrawTextIATM) {
+    DWORD dwOldProt;
+    if (VirtualProtect(DrawTextIATM, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *DrawTextIATM = (PROC)*OrigDrawText;
+      VirtualProtect(DrawTextIATM, sizeof(PROC), dwOldProt, &dwOldProt);
     }
   }
   if (NULL != BitBltIAT) {

@@ -142,28 +142,6 @@ Idle = 1
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="Time (2 line)" Identifier="11" Enabled="TRUE">
-        <Comments>*2L*</Comments>
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>%#I:%M</sValue1>
-        <sValue2>t</sValue2>
-        <iValue3>5</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
       <Command Name="Check idle" Identifier="12" Enabled="TRUE">
         <Comments>Update idle display if idle</Comments>
         <StateCount>1</StateCount>
@@ -193,6 +171,28 @@ Idle = 1
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
+      <Command Name="Time (2 line)" Identifier="11" Enabled="TRUE">
+        <Comments>*2L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>%#I:%M</sValue1>
+        <sValue2>t</sValue2>
+        <iValue3>5</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
       <Command Name="MBM" Identifier="14" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
