@@ -1,6 +1,6 @@
 /***************************************************************************************/
 /*                                                                                     */
-/*  Girder 3.1 Plugin                                                                  */
+/*  Girder 3.2 Plugin                                                                  */
 /*  User interface                                                                     */
 /*                                                                                     */
 /*  Copyright 2000 (c) Ron Bessems                                                     */
@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "resource.h"
-#include "girder.h"
+#include "plugin.h"
 #include <lcdriver.h>
 
 /* Local variables */
@@ -38,10 +38,15 @@ BOOL SaveUISettings(HWND hwnd)
 {
   char buf[256];
 
+  if ( CurCommand == NULL ) 
+     return FALSE;
+
+  EnterCriticalSection(&CurCommand->critical_section);
+
   CurCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
 
   GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
-  SF.ReallocPchar(&(CurCommand->svalue1), buf);
+  SF.realloc_pchar(&(CurCommand->svalue1), buf);
 
   CurCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_GETPOS, 0, 0);
 
@@ -53,9 +58,12 @@ BOOL SaveUISettings(HWND hwnd)
     CurCommand->lvalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
   
   CurCommand->actiontype=PLUGINNUM;
-  SF.SetCommand(CurCommand);
+  SF.set_command(CurCommand);
 
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
+
+  LeaveCriticalSection(&CurCommand->critical_section);
+
   return TRUE;
 }
      
@@ -81,6 +89,9 @@ void EmptyUI(HWND hwnd)
 static
 void LoadUISettings(HWND hwnd)
 {
+  
+  EnterCriticalSection(&CurCommand->critical_section);
+
   SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_SETCURSEL, CurCommand->ivalue1, 0);
   SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), CurCommand->svalue1);
   SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_SETPOS, 0, CurCommand->ivalue2);
@@ -100,6 +111,8 @@ void LoadUISettings(HWND hwnd)
   SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, CurCommand->lvalue3);
   EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !!CurCommand->lvalue3);
   EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !!CurCommand->lvalue3);
+
+  LeaveCriticalSection(&CurCommand->critical_section);
 }
 
 static
@@ -117,31 +130,31 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      SF.I18NTranslateEx("Ok", trans, sizeof(trans));
+      SF.i18n_translate("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      SF.I18NTranslateEx("Cancel", trans, sizeof(trans));
+      SF.i18n_translate("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
 
-      SF.I18NTranslateEx("Apply", trans, sizeof(trans));
+      SF.i18n_translate("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      SF.I18NTranslateEx("Type:", trans, sizeof(trans));
+      SF.i18n_translate("Type:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_TYPEL), trans);
 
-      SF.I18NTranslateEx("Value:", trans, sizeof(trans));
+      SF.i18n_translate("Value:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
 
-      SF.I18NTranslateEx("Row:", trans, sizeof(trans));
+      SF.i18n_translate("Row:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_ROWL), trans);
 
-      SF.I18NTranslateEx("Column:", trans, sizeof(trans));
+      SF.i18n_translate("Column:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_COLL), trans);
 
-      SF.I18NTranslateEx("Rest of line", trans, sizeof(trans));
+      SF.i18n_translate("Rest of line", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_USE_REST), trans);
 
-      SF.I18NTranslateEx("Width:", trans, sizeof(trans));
+      SF.i18n_translate("Width:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_USE_WIDTH), trans);
 
       HWND combo = GetDlgItem(hwnd, IDC_TYPE);
@@ -290,7 +303,9 @@ void Enable_Config(BOOL bValue)
 void Show_Config()
 {
    DWORD dwThreadId;
-   HANDLE ConfigThreadHandle;
+   // this was an error left over from a API example, causes a nice crash on exit if the
+   // plugin dialog is still open.
+   // HANDLE ConfigThreadHandle; 
    
    if (hDialog != 0)   
    {
