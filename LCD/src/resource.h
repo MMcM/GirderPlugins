@@ -22,6 +22,19 @@
 #define IDC_USE_WIDTH                   1015
 #define IDC_WIDTH                       1016
 #define IDC_WIDTH_SPIN                  1017
+#define IDC_SCREENL                     1018
+#define IDC_ENABLE_LINE1                1019
+#define IDC_ENABLE_LINE2                1020
+#define IDC_ENABLE_LINE3                1021
+#define IDC_ENABLE_LINE4                1022
+#define IDC_LINE1                       1023
+#define IDC_LINE2                       1024
+#define IDC_LINE3                       1025
+#define IDC_LINE4                       1026
+#define IDC_MARQUEE_LINE1               1027
+#define IDC_MARQUEE_LINE2               1028
+#define IDC_MARQUEE_LINE3               1029
+#define IDC_MARQUEE_LINE4               1030
 
 // Next default values for new objects
 // 
@@ -30,7 +43,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        103
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1017
+#define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
