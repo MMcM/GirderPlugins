@@ -239,14 +239,14 @@ abcdefghijklmnopqrstuvwxyz
       <bValue3>FALSE</bValue3>
     </Command>
   </Group>
-  <Group Name="Custom" Identifier="14" Enabled="TRUE">
+  <Group Name="Custom" Identifier="13" Enabled="TRUE">
     <Comments>Test custom characters</Comments>
-    <MultiGroup Name="00-0F" Identifier="15" Enabled="TRUE">
+    <MultiGroup Name="00-0F" Identifier="14" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="Legend" Identifier="16" Enabled="TRUE">
+      <Command Name="Legend" Identifier="15" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -267,7 +267,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="00" Identifier="17" Enabled="TRUE">
+      <Command Name="00" Identifier="16" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -298,7 +298,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="01" Identifier="18" Enabled="TRUE">
+      <Command Name="01" Identifier="17" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -330,7 +330,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="02" Identifier="19" Enabled="TRUE">
+      <Command Name="02" Identifier="18" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -362,7 +362,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="03" Identifier="20" Enabled="TRUE">
+      <Command Name="03" Identifier="19" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -394,7 +394,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="04" Identifier="21" Enabled="TRUE">
+      <Command Name="04" Identifier="20" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -426,7 +426,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="05" Identifier="22" Enabled="TRUE">
+      <Command Name="05" Identifier="21" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -458,7 +458,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="06" Identifier="23" Enabled="TRUE">
+      <Command Name="06" Identifier="22" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -490,7 +490,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="07" Identifier="24" Enabled="TRUE">
+      <Command Name="07" Identifier="23" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -524,14 +524,14 @@ abcdefghijklmnopqrstuvwxyz
       </Command>
     </MultiGroup>
   </Group>
-  <Group Name="All Chars" Identifier="25" Enabled="TRUE">
+  <Group Name="All Chars" Identifier="24" Enabled="TRUE">
     <Comments>Test every possible character code</Comments>
-    <MultiGroup Name="00-0F" Identifier="26" Enabled="TRUE">
+    <MultiGroup Name="00-0F" Identifier="25" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="Legend" Identifier="27" Enabled="TRUE">
+      <Command Name="Legend" Identifier="26" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -552,7 +552,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="00" Identifier="28" Enabled="TRUE">
+      <Command Name="00" Identifier="27" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -574,7 +574,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="01" Identifier="29" Enabled="TRUE">
+      <Command Name="01" Identifier="28" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -597,7 +597,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="02" Identifier="30" Enabled="TRUE">
+      <Command Name="02" Identifier="29" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -620,7 +620,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="03" Identifier="31" Enabled="TRUE">
+      <Command Name="03" Identifier="30" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -643,7 +643,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="04" Identifier="32" Enabled="TRUE">
+      <Command Name="04" Identifier="31" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -666,7 +666,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="05" Identifier="33" Enabled="TRUE">
+      <Command Name="05" Identifier="32" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -689,7 +689,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="06" Identifier="34" Enabled="TRUE">
+      <Command Name="06" Identifier="33" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -712,7 +712,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="07" Identifier="35" Enabled="TRUE">
+      <Command Name="07" Identifier="34" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -735,7 +735,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="08" Identifier="36" Enabled="TRUE">
+      <Command Name="08" Identifier="35" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -758,7 +758,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="09" Identifier="37" Enabled="TRUE">
+      <Command Name="09" Identifier="36" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -781,7 +781,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="0A" Identifier="38" Enabled="TRUE">
+      <Command Name="0A" Identifier="37" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -804,7 +804,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="0B" Identifier="39" Enabled="TRUE">
+      <Command Name="0B" Identifier="38" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -827,7 +827,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="0C" Identifier="40" Enabled="TRUE">
+      <Command Name="0C" Identifier="39" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -850,7 +850,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="0D" Identifier="41" Enabled="TRUE">
+      <Command Name="0D" Identifier="40" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -873,7 +873,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="0E" Identifier="42" Enabled="TRUE">
+      <Command Name="0E" Identifier="41" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -896,7 +896,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="0F" Identifier="43" Enabled="TRUE">
+      <Command Name="0F" Identifier="42" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -920,12 +920,12 @@ abcdefghijklmnopqrstuvwxyz
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
-    <MultiGroup Name="10-1F" Identifier="44" Enabled="TRUE">
+    <MultiGroup Name="10-1F" Identifier="43" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="Legend" Identifier="45" Enabled="TRUE">
+      <Command Name="Legend" Identifier="44" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -946,7 +946,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="10" Identifier="46" Enabled="TRUE">
+      <Command Name="10" Identifier="45" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -968,7 +968,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="11" Identifier="47" Enabled="TRUE">
+      <Command Name="11" Identifier="46" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -991,7 +991,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="12" Identifier="48" Enabled="TRUE">
+      <Command Name="12" Identifier="47" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1014,7 +1014,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="13" Identifier="49" Enabled="TRUE">
+      <Command Name="13" Identifier="48" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1037,7 +1037,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="14" Identifier="50" Enabled="TRUE">
+      <Command Name="14" Identifier="49" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1060,7 +1060,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="15" Identifier="51" Enabled="TRUE">
+      <Command Name="15" Identifier="50" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1083,7 +1083,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="16" Identifier="52" Enabled="TRUE">
+      <Command Name="16" Identifier="51" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1106,7 +1106,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="17" Identifier="53" Enabled="TRUE">
+      <Command Name="17" Identifier="52" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1129,7 +1129,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="18" Identifier="54" Enabled="TRUE">
+      <Command Name="18" Identifier="53" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1152,7 +1152,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="19" Identifier="55" Enabled="TRUE">
+      <Command Name="19" Identifier="54" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1175,7 +1175,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="1A" Identifier="56" Enabled="TRUE">
+      <Command Name="1A" Identifier="55" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1198,7 +1198,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="1B" Identifier="57" Enabled="TRUE">
+      <Command Name="1B" Identifier="56" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1221,7 +1221,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="1C" Identifier="58" Enabled="TRUE">
+      <Command Name="1C" Identifier="57" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1244,7 +1244,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="1D" Identifier="59" Enabled="TRUE">
+      <Command Name="1D" Identifier="58" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1267,7 +1267,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="1E" Identifier="60" Enabled="TRUE">
+      <Command Name="1E" Identifier="59" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1290,7 +1290,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="1F" Identifier="61" Enabled="TRUE">
+      <Command Name="1F" Identifier="60" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1314,7 +1314,7 @@ abcdefghijklmnopqrstuvwxyz
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
-    <Command Name="20-2F" Identifier="62" Enabled="TRUE">
+    <Command Name="20-2F" Identifier="61" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -1336,7 +1336,7 @@ abcdefghijklmnopqrstuvwxyz
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="30-3F" Identifier="63" Enabled="TRUE">
+    <Command Name="30-3F" Identifier="62" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -1358,7 +1358,7 @@ abcdefghijklmnopqrstuvwxyz
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="40-4F" Identifier="64" Enabled="TRUE">
+    <Command Name="40-4F" Identifier="63" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -1380,7 +1380,7 @@ abcdefghijklmnopqrstuvwxyz
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="50-5F" Identifier="65" Enabled="TRUE">
+    <Command Name="50-5F" Identifier="64" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -1402,7 +1402,7 @@ PQRSTUVWXYZ[[\]^_</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="60-6F" Identifier="66" Enabled="TRUE">
+    <Command Name="60-6F" Identifier="65" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -1424,12 +1424,12 @@ PQRSTUVWXYZ[[\]^_</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <MultiGroup Name="70-7F" Identifier="67" Enabled="TRUE">
+    <MultiGroup Name="70-7F" Identifier="66" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="70-7E" Identifier="68" Enabled="TRUE">
+      <Command Name="70-7E" Identifier="67" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1451,7 +1451,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="7F" Identifier="69" Enabled="TRUE">
+      <Command Name="7F" Identifier="68" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1475,12 +1475,12 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
-    <MultiGroup Name="80-8F" Identifier="70" Enabled="TRUE">
+    <MultiGroup Name="80-8F" Identifier="69" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="Legend" Identifier="71" Enabled="TRUE">
+      <Command Name="Legend" Identifier="70" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1501,7 +1501,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="80" Identifier="72" Enabled="TRUE">
+      <Command Name="80" Identifier="71" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1523,7 +1523,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="81" Identifier="73" Enabled="TRUE">
+      <Command Name="81" Identifier="72" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1546,7 +1546,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="82" Identifier="74" Enabled="TRUE">
+      <Command Name="82" Identifier="73" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1569,7 +1569,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="83" Identifier="75" Enabled="TRUE">
+      <Command Name="83" Identifier="74" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1592,7 +1592,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="84" Identifier="76" Enabled="TRUE">
+      <Command Name="84" Identifier="75" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1615,7 +1615,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="85" Identifier="77" Enabled="TRUE">
+      <Command Name="85" Identifier="76" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1638,7 +1638,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="86" Identifier="78" Enabled="TRUE">
+      <Command Name="86" Identifier="77" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1661,7 +1661,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="87" Identifier="79" Enabled="TRUE">
+      <Command Name="87" Identifier="78" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1684,7 +1684,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="88" Identifier="80" Enabled="TRUE">
+      <Command Name="88" Identifier="79" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1707,7 +1707,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="89" Identifier="81" Enabled="TRUE">
+      <Command Name="89" Identifier="80" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1730,7 +1730,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="8A" Identifier="82" Enabled="TRUE">
+      <Command Name="8A" Identifier="81" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1753,7 +1753,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="8B" Identifier="83" Enabled="TRUE">
+      <Command Name="8B" Identifier="82" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1776,7 +1776,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="8C" Identifier="84" Enabled="TRUE">
+      <Command Name="8C" Identifier="83" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1799,7 +1799,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="8D" Identifier="85" Enabled="TRUE">
+      <Command Name="8D" Identifier="84" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1822,7 +1822,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="8E" Identifier="86" Enabled="TRUE">
+      <Command Name="8E" Identifier="85" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1845,7 +1845,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="8F" Identifier="87" Enabled="TRUE">
+      <Command Name="8F" Identifier="86" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1869,12 +1869,12 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
-    <MultiGroup Name="90-9F" Identifier="88" Enabled="TRUE">
+    <MultiGroup Name="90-9F" Identifier="87" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="Legend" Identifier="89" Enabled="TRUE">
+      <Command Name="Legend" Identifier="88" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1895,7 +1895,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="90" Identifier="90" Enabled="TRUE">
+      <Command Name="90" Identifier="89" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1917,7 +1917,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="91" Identifier="91" Enabled="TRUE">
+      <Command Name="91" Identifier="90" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1940,7 +1940,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="92" Identifier="92" Enabled="TRUE">
+      <Command Name="92" Identifier="91" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1963,7 +1963,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="93" Identifier="93" Enabled="TRUE">
+      <Command Name="93" Identifier="92" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -1986,7 +1986,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="94" Identifier="94" Enabled="TRUE">
+      <Command Name="94" Identifier="93" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2009,7 +2009,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="95" Identifier="95" Enabled="TRUE">
+      <Command Name="95" Identifier="94" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2032,7 +2032,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="96" Identifier="96" Enabled="TRUE">
+      <Command Name="96" Identifier="95" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2055,7 +2055,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="97" Identifier="97" Enabled="TRUE">
+      <Command Name="97" Identifier="96" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2078,7 +2078,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="98" Identifier="98" Enabled="TRUE">
+      <Command Name="98" Identifier="97" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2101,7 +2101,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="99" Identifier="99" Enabled="TRUE">
+      <Command Name="99" Identifier="98" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2124,7 +2124,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="9A" Identifier="100" Enabled="TRUE">
+      <Command Name="9A" Identifier="99" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2147,7 +2147,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="9B" Identifier="101" Enabled="TRUE">
+      <Command Name="9B" Identifier="100" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2170,7 +2170,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="9C" Identifier="102" Enabled="TRUE">
+      <Command Name="9C" Identifier="101" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2193,7 +2193,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="9D" Identifier="103" Enabled="TRUE">
+      <Command Name="9D" Identifier="102" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2216,7 +2216,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="9E" Identifier="104" Enabled="TRUE">
+      <Command Name="9E" Identifier="103" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2239,7 +2239,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="9F" Identifier="105" Enabled="TRUE">
+      <Command Name="9F" Identifier="104" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2263,7 +2263,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
-    <Command Name="A0-AF" Identifier="106" Enabled="TRUE">
+    <Command Name="A0-AF" Identifier="105" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2285,7 +2285,7 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="B0-BF" Identifier="107" Enabled="TRUE">
+    <Command Name="B0-BF" Identifier="106" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2307,7 +2307,7 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="C0-CF" Identifier="108" Enabled="TRUE">
+    <Command Name="C0-CF" Identifier="107" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2329,7 +2329,7 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="D0-DF" Identifier="109" Enabled="TRUE">
+    <Command Name="D0-DF" Identifier="108" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2351,7 +2351,7 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="E0-EF" Identifier="110" Enabled="TRUE">
+    <Command Name="E0-EF" Identifier="109" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2373,7 +2373,7 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="F0-FF" Identifier="111" Enabled="TRUE">
+    <Command Name="F0-FF" Identifier="110" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2396,9 +2396,10 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue3>FALSE</bValue3>
     </Command>
   </Group>
-  <Group Name="GPO" Identifier="124" Enabled="TRUE">
-    <Command Name="Simple" Identifier="13" Enabled="TRUE">
-      <Comments>General purpose output</Comments>
+  <Group Name="GPO" Identifier="111" Enabled="TRUE">
+    <Comments>Test General Purpose Output</Comments>
+    <Command Name="Simple" Identifier="112" Enabled="TRUE">
+      <Comments>Turn on low-power GPO</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2419,7 +2420,7 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="Start Counter" Identifier="129" Enabled="TRUE">
+    <Command Name="Start Counter" Identifier="113" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2438,17 +2439,13 @@ pqrstuvwxyz{|}~</sValue1>
       <bValue1>TRUE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue3>130</lValue3>
+      <lValue3>114</lValue3>
     </Command>
-    <Command Name="Counter" Identifier="130" Enabled="TRUE">
+    <Command Name="Counter" Identifier="114" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Binary Encoding="Base64">G0x1YUABBAQEIAYJCBLmW6GwubJBCAAAAD0obm9uZSkAAAAAAAAAAAAABQAAAAAAAAAAAAAAAwAA&#xD;
-AAsAAABHUE9Db3VudGVyAAgAAABMQ0RfR1BPAAUAAABiYW5kAAAAAAAAAAAAGwAAAAwAAAAoAACA&#xD;
-xv//fxgAAIATAAAATAAAAAYBAICMAAAADAAAAAYAAIDCPwEAAgAAAEwAAABGAQCAjAAAAAwAAABG&#xD;
-AACAwj8BAAIAAABMAAAAhgEAgIwAAAAMAAAAxgAAgMI/AQACAAAAAAAAAA==</Binary>
       <OSD>FALSE</OSD>
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
@@ -2467,7 +2464,7 @@ LCD_GPO(7, band(GPOCounter,4))
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-    <Command Name="End Counter" Identifier="131" Enabled="TRUE">
+    <Command Name="End Counter" Identifier="115" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -2487,8 +2484,9 @@ LCD_GPO(7, band(GPOCounter,4))
       <bValue3>FALSE</bValue3>
     </Command>
   </Group>
-  <Group Name="Fans" Identifier="125" Enabled="TRUE">
-    <Command Name="Simple" Identifier="126" Enabled="TRUE">
+  <Group Name="Fans" Identifier="116" Enabled="TRUE">
+    <Comments>Test fan power and monitoring</Comments>
+    <Command Name="Simple" Identifier="117" Enabled="TRUE">
       <Comments>General purpose output</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
@@ -2511,15 +2509,265 @@ LCD_GPO(7, band(GPOCounter,4))
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
-  </Group>
-  <Group Name="Keypad" Identifier="112" Enabled="TRUE">
-    <MultiGroup Name="LCD Event" Identifier="113" Enabled="TRUE">
+    <MultiGroup Name="Initialize Feedback" Identifier="118" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="I" Identifier="114" Enabled="TRUE" Invert="FALSE" Device="-2" IrStr="On LCD Event"/>
-      <Command Name="Display" Identifier="115" Enabled="TRUE">
+      <Command Name="Define functions" Identifier="119" Enabled="TRUE">
+        <Comments>Define Lua functions for feedback handling</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>34</ActionSubType>
+        <sValue1>
+-- Map from event to fan,sensor entry.
+FanSensors = {}
+
+-- Add a new fan,sensor entry with the given target temperature.
+function AddFanSensor(fan, sensor, target)
+  local entry = {}
+  entry.fan = fan
+  entry.fanEvent = "Fan"..fan
+  entry.sensor = sensor
+  entry.sensorEvent = "Sensor"..sensor
+
+  entry.minPower = .1
+  entry.maxPower = 1.0
+  entry.power = 0.75
+  entry.powerIncrement = .05
+  entry.failsafePower = entry.maxPower
+
+  entry.hysteresis = .5
+  entry.target = target
+
+  function entry:OnEvent(event, payload)
+    if event == self.fanEvent then
+      self.rpm = tonumber(payload)
+    elseif event == self.sensorEvent then
+      self.temp = tonumber(payload)
+      self:CheckTemp()
+    end
+  end
+
+  function entry:CheckTemp()
+    if not self.temp then return end
+    local changed
+    if self.failsafeTemp and (self.temp &gt;= self.failsafeTemp) then
+      -- If the temperature is too high, immediately switch the power
+      -- up to max rather than stepping gradually.
+      self.power = self.failsafePower
+      changed = 1
+    elseif self.temp &gt;= self.target + self.hysteresis then
+      self.power = self.power + self.powerIncrement
+      if self.power &gt; self.maxPower then
+        self.power = self.maxPower
+      end
+      changed = 1
+    elseif self.temp &lt;= self.target - self.hysteresis then
+      self.power = self.power - self.powerIncrement
+      if self.power &lt; self.minPower then
+        self.power = self.minPower
+      end
+      changed = 1
+    end
+    if changed then
+      LCD_FanPower(self.fan, self.power)
+      print(self.fanEvent .. " power now " .. self.power)
+    end
+  end
+
+  FanSensors[entry.fanEvent] = entry
+  FanSensors[entry.sensorEvent] = entry
+  return entry
+end
+</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1/>
+      </Command>
+      <Command Name="Setup Feedback" Identifier="120" Enabled="TRUE">
+        <Comments>Define a feedback entry</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>34</ActionSubType>
+        <sValue1>-- Note: this test is for a room temperature fan, not one inside the case.
+AddFanSensor(1, 1, 23).failsafeTemp = 30
+</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1/>
+      </Command>
+      <Command Name="Enable Event" Identifier="121" Enabled="TRUE">
+        <Comments>Enable feedback event</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>123</lValue1>
+      </Command>
+      <Command Name="Start Timer" Identifier="122" Enabled="TRUE">
+        <Comments>Start periodic timer for unchanging temperature</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>122</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <iValue1>5000</iValue1>
+        <iValue2>2</iValue2>
+        <bValue1>TRUE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue3>125</lValue3>
+      </Command>
+    </MultiGroup>
+    <Command Name="Feedback" Identifier="123" Enabled="FALSE">
+      <Comments>Check for feedback related event</Comments>
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>34</ActionSubType>
+      <sValue1>local entry
+entry = FanSensors[EventString]
+if entry then
+  entry:OnEvent(EventString, pld1)
+end
+</sValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="On LCD Event" Identifier="124" Enabled="TRUE" Invert="FALSE" Device="-2" IrStr="On LCD Event"/>
+    </Command>
+    <Command Name="Timer" Identifier="125" Enabled="TRUE">
+      <Comments>Called periodically because temperature might not change</Comments>
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>34</ActionSubType>
+      <sValue1>for key,entry in FanSensors do
+  entry:CheckTemp()
+end
+</sValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+    </Command>
+    <MultiGroup Name="Disable Feedback" Identifier="126" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <Command Name="Stop Timer" Identifier="127" Enabled="TRUE">
+        <Comments>Stop periodic timer</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>122</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <iValue2>2</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Disable Event" Identifier="128" Enabled="TRUE">
+        <Comments>Disable feedback event</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>2</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>123</lValue1>
+      </Command>
+    </MultiGroup>
+  </Group>
+  <Group Name="Keypad" Identifier="129" Enabled="TRUE">
+    <Comments>Test keypad button input</Comments>
+    <MultiGroup Name="LCD Event" Identifier="130" Enabled="TRUE">
+      <Comments>Display LCD event and payload</Comments>
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="On LCD Event" Identifier="131" Enabled="TRUE" Invert="FALSE" Device="-2" IrStr="On LCD Event"/>
+      <Command Name="Display" Identifier="132" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2540,7 +2788,7 @@ LCD_GPO(7, band(GPOCounter,4))
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="OSD" Identifier="116" Enabled="TRUE">
+      <Command Name="OSD" Identifier="133" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2560,12 +2808,13 @@ LCD_GPO(7, band(GPOCounter,4))
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
-    <MultiGroup Name="Set Legends" Identifier="117" Enabled="TRUE">
+    <MultiGroup Name="Set Legends" Identifier="134" Enabled="TRUE">
+      <Comments>Set Crystalfontz button legends</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <Command Name="UL" Identifier="118" Enabled="TRUE">
+      <Command Name="UL" Identifier="135" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2587,7 +2836,7 @@ LCD_GPO(7, band(GPOCounter,4))
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="UR" Identifier="119" Enabled="TRUE">
+      <Command Name="UR" Identifier="136" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2609,7 +2858,7 @@ LCD_GPO(7, band(GPOCounter,4))
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="LL" Identifier="120" Enabled="TRUE">
+      <Command Name="LL" Identifier="137" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2631,7 +2880,7 @@ LCD_GPO(7, band(GPOCounter,4))
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="LR" Identifier="121" Enabled="TRUE">
+      <Command Name="LR" Identifier="138" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2655,9 +2904,9 @@ LCD_GPO(7, band(GPOCounter,4))
       </Command>
     </MultiGroup>
   </Group>
-  <Group Name="Functions" Identifier="122" Enabled="TRUE">
+  <Group Name="Functions" Identifier="139" Enabled="TRUE">
     <Comments>Test LCD LUA extension functions</Comments>
-    <Command Name="Script" Identifier="123" Enabled="TRUE">
+    <Command Name="Script" Identifier="140" Enabled="TRUE">
       <Comments>Open in script editor</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
