@@ -32,6 +32,13 @@ CDVDSpyMJCtrl::CDVDSpyMJCtrl()
 
 CDVDSpyMJCtrl::~CDVDSpyMJCtrl()
 {
+  if (NULL != g_hwndDVDSpy) {
+    COPYDATASTRUCT cd;
+    cd.dwData = 0;
+    cd.lpData = "MediaJukebox.Close\0";
+    cd.cbData = 20;
+    SendMessage(g_hwndDVDSpy, WM_COPYDATA, 0, (LPARAM)&cd);
+  }
 }
 
 STDMETHODIMP CDVDSpyMJCtrl::Init(LPDISPATCH pDisp)

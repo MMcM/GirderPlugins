@@ -1,4 +1,6 @@
 
+1.34    08/19/2002      MMcM    Update DVD2LCD.GML.
+
 1.33    08/11/2002      MMcM    Clean up code.
 
 1.32    07/29/2002  sshumate    Add DVD main title info to disc insert event.

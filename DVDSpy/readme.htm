@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.33. &nbsp;MMcM 08/02
+Version 1.34. &nbsp;MMcM 08/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -117,7 +117,8 @@ A sample Girder script.<p>
 
 This file shows how to use the DVDSpy plug-in with the LCD plug-in to
 display player status on a 4x20 display.  It requires the LCD and
-Alarm Timer plug-ins.<p>
+Alarm Timer plug-ins.  If the Winamp3 group is enabled, that plug-in
+is needed.  Likewise MBM.<p>
 </li>
 
 <li><kbd>DVD2OSD.GML</kbd><br/>
@@ -132,6 +133,20 @@ Another sample Girder script.<p>
 
 This file shows how to use the DVD title information in the
 Disc.Insert event to switch resolutions.<p>
+</li>
+
+<li><kbd>weather.js</kbd><br/>
+A JScript program for getting weather information and putting it into
+Girder variables.<p>
+
+The Weather group in <kbd>DBD2LCD.GML</kbd> uses this.<p>
+</li>
+
+<li><kbd>initvars.xml</kbd><br/>
+A variable (register) file.<p>
+
+This is also used by Weather group in <kbd>DBD2LCD.GML</kbd>.  Adjust
+its settings for you location.<p>
 </li>
 
 </ul>
@@ -283,6 +298,19 @@ If you do see events, then double check the OSD PopUp settings.
 
 <tr></tr>
 
+<tr><td><code>ZoomPlayer.DVD.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.DVD.VideoPosition</code></td>
+<td>Video window position changed</td>
+<td width="250">New sizes (window width, window height, window left,
+window top; destination width, destination height, destination left,
+destination top; source width, source height, source left, source
+top)</td>
+</tr>
+
 <tr><td><code>ZoomPlayer.DVD.Domain</code></td>
 <td>Domain changed</td>
 <td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
@@ -308,12 +336,12 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>ZoomPlayer.DVD.State</code></td>
+<tr><td><code>ZoomPlayer.Media.State</code></td>
 <td>Playback state changed</td>
 <td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
-<tr><td><code>ZoomPlayer.DVD.VideoPosition</code></td>
+<tr><td><code>ZoomPlayer.Media.VideoPosition</code></td>
 <td>Video window position changed</td>
 <td width="250">New sizes (window width, window height, window left,
 window top; destination width, destination height, destination left,
@@ -334,19 +362,6 @@ top)</td>
 <tr><td><code>ZoomPlayer.Media.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
-</tr>
-
-<tr><td><code>ZoomPlayer.Media.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
-</tr>
-
-<tr><td><code>ZoomPlayer.Media.VideoPosition</code></td>
-<td>Video window position changed</td>
-<td width="250">New sizes (window width, window height, window left,
-window top; destination width, destination height, destination left,
-destination top; source width, source height, source left, source
-top)</td>
 </tr>
 
 <tr><td><code>ZoomPlayer.OSD</code></td>
@@ -414,6 +429,19 @@ top)</td>
 
 <tr></tr>
 
+<tr><td><code>TheaterTek.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>TheaterTek.VideoPosition</code></td>
+<td>Video window position changed</td>
+<td width="250">New sizes (window width, window height, window left,
+window top; destination width, destination height, destination left,
+destination top; source width, source height, source left, source
+top)</td>
+</tr>
+
 <tr><td><code>TheaterTek.Domain</code></td>
 <td>Domain changed</td>
 <td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
@@ -439,24 +467,16 @@ top)</td>
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>TheaterTek.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
-</tr>
-
-<tr><td><code>TheaterTek.VideoPosition</code></td>
-<td>Video window position changed</td>
-<td width="250">New sizes (window width, window height, window left,
-window top; destination width, destination height, destination left,
-destination top; source width, source height, source left, source
-top)</td>
-</tr>
-
 <tr><td><code>TheaterTek.Close</code></td>
 <td>TT application closed</td>
 </tr>
 
 <tr></tr>
+
+<tr><td><code>ATI.DVD.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
 
 <tr><td><code>ATI.DVD.Domain</code></td>
 <td>Domain changed</td>
@@ -483,7 +503,7 @@ top)</td>
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>ATI.DVD.State</code></td>
+<tr><td><code>ATI.MMC.State</code></td>
 <td>Playback state changed</td>
 <td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
@@ -501,11 +521,6 @@ top)</td>
 <tr><td><code>ATI.MMC.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
-</tr>
-
-<tr><td><code>ATI.MMC.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
 <tr><td><code>ATI.Close</code></td>
@@ -586,6 +601,11 @@ top)</td>
 
 <tr></tr>
 
+<tr><td><code>ShowShifter.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
 <tr><td><code>ShowShifter.Duration</code></td>
 <td>Duration changed</td>
 <td>New total duration (<code>HH:MM:SS</code>)</td>
@@ -601,16 +621,16 @@ top)</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td><code>ShowShifter.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
-</tr>
-
 <tr><td><code>ShowShifter.Close</code></td>
 <td>ShowShifter application closed</td>
 </tr>
 
 <tr></tr>
+
+<tr><td><code>BSPlayer.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
 
 <tr><td><code>BSPlayer.Duration</code></td>
 <td>Duration changed</td>
@@ -627,16 +647,16 @@ top)</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td><code>BSPlayer.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
-</tr>
-
 <tr><td><code>BSPlayer.Close</code></td>
 <td>BSPlayer application closed</td>
 </tr>
 
 <tr></tr>
+
+<tr><td><code>PowerDivX.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
 
 <tr><td><code>PowerDivX.Duration</code></td>
 <td>Duration changed</td>
@@ -651,11 +671,6 @@ top)</td>
 <tr><td><code>PowerDivX.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
-</tr>
-
-<tr><td><code>PowerDivX.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
 <tr><td><code>PowerDivX.Close</code></td>
@@ -729,7 +744,16 @@ top)</td>
 <td>New total time (<code>MM:SS</code>)</td>
 </tr>
 
+<tr><td><code>MediaJukebox.Close</code></td>
+<td>Media Jukebox application closed</td>
+</tr>
+
 <tr></tr>
+
+<tr><td><code>RadLight.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
 
 <tr><td><code>RadLight.Duration</code></td>
 <td>Duration changed</td>
@@ -744,11 +768,6 @@ top)</td>
 <tr><td><code>RadLight.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
-</tr>
-
-<tr><td><code>RadLight.State</code></td>
-<td>Playback state changed</td>
-<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
 <tr><td><code>RadLight.Close</code></td>
