@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.28. &nbsp;MMcM 06/02
+Version 1.30. &nbsp;MMcM 07/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -298,6 +298,19 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
+<tr><td><code>ZoomPlayer.DVD.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.DVD.VideoPosition</code></td>
+<td>Video window position changed</td>
+<td width="250">New sizes (window width, window height, window left,
+window top; destination width, destination height, destination left,
+destination top; source width, source height, source left, source
+top)</td>
+</tr>
+
 <tr><td><code>ZoomPlayer.Media.Duration</code></td>
 <td>Duration changed</td>
 <td>New total duration (<code>HH:MM:SS</code>)</td>
@@ -313,14 +326,22 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New source file name</td>
 </tr>
 
+<tr><td><code>ZoomPlayer.Media.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.Media.VideoPosition</code></td>
+<td>Video window position changed</td>
+<td width="250">New sizes (window width, window height, window left,
+window top; destination width, destination height, destination left,
+destination top; source width, source height, source left, source
+top)</td>
+</tr>
+
 <tr><td><code>ZoomPlayer.OSD</code></td>
 <td>OSD caption changed</td>
 <td>New OSD message (<code>Play</code>, <code>Pause</code>, ...)</td>
-</tr>
-
-<tr><td><code>ZoomPlayer.Size</code></td>
-<td>Video window size changed</td>
-<td>New window size (width,height)</td>
 </tr>
 
 <tr><td><code>ZoomPlayer.Close</code></td>
@@ -408,6 +429,19 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
+<tr><td><code>TheaterTek.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>TheaterTek.VideoPosition</code></td>
+<td>Video window position changed</td>
+<td width="250">New sizes (window width, window height, window left,
+window top; destination width, destination height, destination left,
+destination top; source width, source height, source left, source
+top)</td>
+</tr>
+
 <tr><td><code>TheaterTek.Close</code></td>
 <td>TT application closed</td>
 </tr>
@@ -439,6 +473,11 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
+<tr><td><code>ATI.DVD.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
 <tr><td><code>ATI.MMC.Duration</code></td>
 <td>Duration changed</td>
 <td>New total duration (<code>HH:MM:SS</code>)</td>
@@ -452,6 +491,11 @@ If you do see events, then double check the OSD PopUp settings.
 <tr><td><code>ATI.MMC.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
+</tr>
+
+<tr><td><code>ATI.MMC.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
 <tr><td><code>ATI.Close</code></td>
@@ -547,6 +591,11 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New source file name</td>
 </tr>
 
+<tr><td><code>ShowShifter.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
 <tr><td><code>ShowShifter.Close</code></td>
 <td>ShowShifter application closed</td>
 </tr>
@@ -568,6 +617,11 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New source file name</td>
 </tr>
 
+<tr><td><code>BSPlayer.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
 <tr><td><code>BSPlayer.Close</code></td>
 <td>BSPlayer application closed</td>
 </tr>
@@ -587,6 +641,11 @@ If you do see events, then double check the OSD PopUp settings.
 <tr><td><code>PowerDivX.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
+</tr>
+
+<tr><td><code>PowerDivX.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
 <tr><td><code>PowerDivX.Close</code></td>
@@ -660,6 +719,32 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New total time (<code>MM:SS</code>)</td>
 </tr>
 
+<tr></tr>
+
+<tr><td><code>RadLight.Duration</code></td>
+<td>Duration changed</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>RadLight.Elapsed</code></td>
+<td>Position changed</td>
+<td>New current position (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>RadLight.File</code></td>
+<td>Source changed</td>
+<td>New source file name</td>
+</tr>
+
+<tr><td><code>RadLight.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>RadLight.Close</code></td>
+<td>RadLight application closed</td>
+</tr>
+
 </table><p>
 
 <h3>Details</h3>
@@ -715,9 +800,11 @@ file <kbd>gen_DVDSpy.dll</kbd> needs to be copied into the
 <kbd>Plugins</kbd> subdirectory of the Winamp installation directory,
 which is usually <kbd>C:\Program Files\Winamp</kbd>.  Once installed,
 the plugin can be configured from inside Winamp to set the interval
-(in milliseconds) at which it checks for state changes.  Note that
-Girder must be running before Winamp starts for communication to be
-established.<p>
+(in milliseconds) at which it checks for state changes.  There is also
+a configuration setting for changing the event prefix.  This is only
+really useful when running more than one copy of Winamp at the same
+time.  Note that Girder must be running before Winamp starts for
+communication to be established.<p>
 
 The registry key
 <kbd>HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\Events</kbd>
