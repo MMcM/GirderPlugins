@@ -11,7 +11,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.8. &nbsp;MMcM 01/02
+Version 1.10. &nbsp;MMcM 01/02
 
 <h3>Use</h3>
 
@@ -24,9 +24,14 @@ placed in Girder registers.<p>
 It also intercepts calls to Windows text drawing functions as used by
 accessDTV and exposes it similarly.<p>
 
-And finally, it wraps DirectX objects used by Zoom Player or
-TheaterTek and exposes the playing state.  This approach can probably
-be extended trivially to any other DirectShow DVD player.<p>
+It wraps DirectX objects used by Zoom Player, TheaterTek, or the newer
+versions of the ATI player and exposes the playing state.  This
+approach can probably be extended trivially to any other DirectShow
+DVD player.<p>
+
+It defines an ActiveX control element for use in Windows Media Player
+skins and thereby exposes that player's state when a special skin is
+used.<p>
 
 <table border="yes">
 <tr><th>Code</th>
@@ -155,6 +160,12 @@ be extended trivially to any other DirectShow DVD player.<p>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
+<tr><td>ZoomPlayer.OSD</td>
+<td>OSD caption changed</td>
+<td></td>
+<td>New OSD message (Play, Pause, ...)</td>
+</tr>
+
 <tr><td>ZoomPlayer.Close</td>
 <td>ZP application closed</td>
 </tr>
@@ -195,12 +206,107 @@ be extended trivially to any other DirectShow DVD player.<p>
 <td>TT application closed</td>
 </tr>
 
+<tr></tr>
+
+<tr><td>ATI.DVD.0</td>
+<td>Domain changed</td>
+<td></td>
+<td>New domain (PLAY,MENU,DVD,STOP)</td>
+</tr>
+
+<tr><td>ATI.DVD.1</td>
+<td>Title changed</td>
+<td></td>
+<td>New title (NN)</td>
+</tr>
+
+<tr><td>ATI.DVD.2</td>
+<td>Chapter changed</td>
+<td></td>
+<td>New chapter (NN)</td>
+</tr>
+
+<tr><td>ATI.DVD.3</td>
+<td>Total changed</td>
+<td></td>
+<td>New total time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ATI.DVD.4</td>
+<td>Location changed</td>
+<td></td>
+<td>New elapsed time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ATI.MMC.0</td>
+<td>Duration changed</td>
+<td></td>
+<td>New total duration (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ATI.MMC.1</td>
+<td>Position changed</td>
+<td></td>
+<td>New current position (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ATI.Close</td>
+<td>ATI application closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td>WMP.Status</td>
+<td>Media player status changed</td>
+<td></td>
+<td>New player status</td>
+</tr>
+
+<tr><td>WMP.Title</td>
+<td>Media name changed</td>
+<td></td>
+<td>New current media name</td>
+</tr>
+
+<tr><td>WMP.Duration</td>
+<td>Media duration changed</td>
+<td></td>
+<td>New total time (MM:SS)</td>
+</tr>
+
+<tr><td>WMP.Position</td>
+<td>Media player position changed</td>
+<td></td>
+<td>New elapsed time (MM:SS)</td>
+</tr>
+
+<tr><td>WMP.Close</td>
+<td>Media player closed</td>
+</tr>
+
 </table><p>
 
 In order for the DirectX wrappers to work, the MEDIASPY.DLL library
-must be registering using <kbd>regsvr32</kbd>.  This may impact
+must be registered using <kbd>regsvr32</kbd>.  This may impact
 programs even when Girder is not running.  Unregistering it should
 return things to normal.<p>
+
+In order for the Windows Media Player interface to work, the
+WMPSPY.DLL library must be registered in the same way.  It defines a
+new control element type, <code>WMPSpy</code>, for use in skin
+definition (WMS) files.  This control has two properties,
+<code>event</code> for the Girder event name, and <code>value</code>
+the other for the associated value.  The control will normally not be
+visible and will normally use a <code>wmpprop:</code> listening
+attribute.  The sample WMPSpy.wmz skin package (really a ZIP file)
+shows how to do this; it is based on Microsoft's <kbd>Classic</kbd>
+skin.  It can be placed in the <kbd>c:\Program Files\Windows Media
+Player\Skins</kbd> directory and then used with
+<kbd>?WMPSkin=WMPSpy</kbd> in URLs for content to be displayed using
+it.  This skin also makes the player full screen when playing, since
+Girder is presumably used to control it directly and to display its
+status someplace else.  More information on WMP skins is available in
+the Windows Media Player SDK.<p>
 
 The registry key
 <kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy</kbd> can
