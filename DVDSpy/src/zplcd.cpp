@@ -3,43 +3,13 @@
 #include "stdafx.h"
 #include "plugin.h"
 
-static HWND g_hwndSpy, g_hwndZP;
-
-// We initiate this process by seeing the creation of the ZoomPlayer main window.
-// At that time, we cannot yet send the rendezvous message.  We have to wait for
-// things to settle down a little bit first.  1sec seems enough; .5 sec does not.
-// Since Zoom Player remembers the name in its registry settings, this only really
-// needs to work once right after installing.
-DWORD WINAPI ZoomPlayerInitThread(LPVOID param)
-{
-  Sleep(1000);
-
-  char szName[128];
-  GetWindowText(g_hwndSpy, szName, sizeof(szName));
-  ATOM nName = GlobalAddAtom(szName);
-  // Tell ZoomPlayer to send LCD messages to our monitor window.
-  SendMessage(g_hwndZP, WM_APP+49, nName, 200);
-  GlobalDeleteAtom(nName);
-
-  return 0;
-}
-
-void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow)
-{
-  g_hwndSpy = hMonitorWindow;
-  g_hwndZP = (HWND)strtoul(data, NULL, 16);
-
-  DWORD dwThreadId;
-  HANDLE hThread = CreateThread(NULL, 0, ZoomPlayerInitThread, NULL, 0, &dwThreadId);
-  CloseHandle(hThread);
-}
-
 enum LCDMessageType { TYPE_NONE, TYPE_ATOM, TYPE_INT, TYPE_STATE, TYPE_MODE };
 
 struct LCDMessage {
   WPARAM wParam;                // Code number.
   const char *szName;           // Event suffix.
   LCDMessageType type;          // Data type.
+  LPARAM lParam;                // Last value.
 } LCDMessages[] = {
   // Messages as of ZPLCD130.
   { 1000, "State", TYPE_STATE },
@@ -60,10 +30,34 @@ struct LCDMessage {
 
 #define countof(x) sizeof(x)/sizeof(x[0])
 
+void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow)
+{
+  for (int i = 0; i < countof(LCDMessages); i++) {
+    LCDMessages[i].lParam = -1; // Must be an illegal / unlikely value for every type.
+  }
+
+  HWND hwndZP = (HWND)strtoul(data, NULL, 16);
+
+  char szName[128];
+  GetWindowText(hMonitorWindow, szName, sizeof(szName));
+  ATOM nName = GlobalAddAtom(szName);
+  // Tell ZoomPlayer to send LCD messages to our monitor window.
+  SendMessage(hwndZP, WM_APP+49, nName, 200);
+  GlobalDeleteAtom(nName);
+}
+
 void ZoomPlayerLCD(WPARAM wParam, LPARAM lParam)
 {
   for (int i = 0; i < countof(LCDMessages); i++) {
-    if (wParam == LCDMessages[i].wParam) {
+    if (LCDMessages[i].wParam == wParam) {
+      if (TYPE_NONE != LCDMessages[i].type) {
+        if (LCDMessages[i].lParam == lParam)
+          // Value has not changed.  We rely on the fact that atoms
+          // are _not_ deleted, at least not right away, and so not
+          // reused.
+          return;
+        LCDMessages[i].lParam = lParam;
+      }
       char szEvent[128], szPayload[256];
       strcpy(szEvent, "ZoomPlayer.LCD.");
       strcat(szEvent, LCDMessages[i].szName);
