@@ -4462,7 +4462,9 @@ result = idx
           <StateCurrent>1</StateCurrent>
           <StateInvert>FALSE</StateInvert>
           <Binary Encoding="Base64">hQAAAAIAAAA7AQAABgAAAAAAAAAFAAAACAAAADIAAAAQAAAANgAAABoAAABFAAAAIQAAACMAAAAp
+
 AAAAOwEAADEAAABGAAAAcGxkMgA9PQAiVGl0bGUiACJDaGFwdGVyIgAiVGltZSIAIlN0YXRlIgAi
+
 QW5nbGUiACJUb3RhbCIAAAAAAA==</Binary>
           <OSD>FALSE</OSD>
           <Submatch>FALSE</Submatch>
@@ -7022,6 +7024,117 @@ PlayerTitleNo = flds[3]
       <bValue3>FALSE</bValue3>
       <lValue1>26</lValue1>
       <EventString Name="DVDStation.Close" Identifier="543" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Close"/>
+    </Command>
+  </Group>
+  <Group Name="Foobar Display" Identifier="544" Enabled="TRUE">
+    <Comments>Foobar2000 player state *ON*</Comments>
+    <Command Name="Status" Identifier="545" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>6</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>35</lValue1>
+      <EventString Name="Foobar.Status" Identifier="546" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Status"/>
+    </Command>
+    <Command Name="Duration" Identifier="547" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>70</lValue1>
+      <EventString Name="Foobar.Duration" Identifier="548" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Duration"/>
+    </Command>
+    <Command Name="Elapsed" Identifier="549" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>69</lValue1>
+      <EventString Name="Foobar.Elapsed" Identifier="550" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Elapsed"/>
+    </Command>
+    <Command Name="Title" Identifier="551" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>82</lValue1>
+      <EventString Name="Foobar.Title" Identifier="552" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Title"/>
+    </Command>
+    <Command Name="Close" Identifier="553" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>26</lValue1>
+      <EventString Name="Foobar.Close" Identifier="554" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Close"/>
     </Command>
   </Group>
 </Girder>
