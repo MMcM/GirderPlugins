@@ -53,7 +53,8 @@ try {
   var xml = WScript.CreateObject("Msxml2.DOMDocument");
   xml.load(xmlfile);
 
-  var ints = xml.getElementsByTagName("IntegerRegisters").item(0);
+// As of LUA conversion, there really aren't any integer registers.
+//var ints = xml.getElementsByTagName("IntegerRegisters").item(0);
   var dbls = xml.getElementsByTagName("DoubleRegisters").item(0);
   var strs = xml.getElementsByTagName("StringRegisters").item(0);
 
@@ -61,14 +62,14 @@ try {
   addReg(strs, "State", weather.swSubDiv);
   addReg(strs, "Country", weather.swCountry);
   addReg(strs, "Region", weather.swRegion);
-  addReg(ints, "TempF", weather.swTemp);
-  addReg(ints, "TempC", weather.swTempCel);
-  addReg(ints, "WindSpeed", weather.swWindS);
+  addReg(dbls, "TempF", weather.swTemp);
+  addReg(dbls, "TempC", weather.swTempCel);
+  addReg(dbls, "WindSpeed", weather.swWindS);
   addReg(strs, "WindDirection", weather.swWindD);
   addReg(dbls, "Barometer", weather.swBaro);
-  addReg(ints, "Humidity", weather.swHumid);
-  addReg(ints, "RealTemp", weather.swReal);
-  addReg(ints, "UVIndex", weather.swUV);
+  addReg(dbls, "Humidity", weather.swHumid);
+  addReg(dbls, "RealTemp", weather.swReal);
+  addReg(dbls, "UVIndex", weather.swUV);
   addReg(strs, "Visibility", weather.swVis);
   addReg(strs, "LastUpdate", weather.swLastUp);
   addReg(strs, "Conditions", weather.swConText);
