@@ -43,6 +43,7 @@
 
 #include <pledit/svc_pldir.h>
 #include <pledit/playlist.h>
+#include <pledit/editor.h>
 
 GirderWnd::GirderWnd() : pldir(NULL) { 
   setStartHidden(TRUE);
@@ -313,6 +314,14 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
         playlist->setCurrent(pos);
     }
     break;
+  case IPC_C_NEXT_PLAYLIST:
+    logreq = "next playlist";
+    nextPlaylist(+1);
+    break;
+  case IPC_C_PREV_PLAYLIST:
+    logreq = "prev playlist";
+    nextPlaylist(-1);
+    break;
 
   case IPC_R_STATE:
     {
@@ -504,4 +513,89 @@ Playlist *GirderWnd::getPlaylist()
   
   PlaylistHandle plhand = pldir->getCurrentlyOpen();
   return pldir->getPlaylist(plhand);
+}
+
+struct FinderState {
+  DWORD procId;
+  GUID guid;
+  RootWnd *result;
+};
+
+BOOL CALLBACK FinderProc(HWND hwnd, LPARAM lparam)
+{
+  FinderState *state = (FinderState *)lparam;
+
+  // Must be for same process.
+  DWORD procId;
+  GetWindowThreadProcessId(hwnd, &procId);
+  if (procId != state->procId) return TRUE;
+
+  // Must be a RootWnd.
+  char buf[128];
+  GetClassName(hwnd, buf, sizeof(buf));
+  if (strcmp(buf, "BaseWindow_RootWnd")) return TRUE;
+  
+  // Get Winamp window from Windows window.
+  RootWnd *wnd = (RootWnd *)GetWindowLong(hwnd, GWL_USERDATA);
+  if (NULL == wnd) return TRUE;
+
+  // Get matching child, if any.
+  wnd = wnd->findWindowByInterface(state->guid);
+  if (NULL == wnd) return TRUE;
+  
+  state->result = wnd;
+  return FALSE;
+}
+
+// I cannot find a function to enumerate the top-level windows for all
+// layouts on the Winamp side.  So, do it on the Windows side.  This
+// is not portable, obviously.
+RootWnd *FindTopLevelWindowByInterface(GUID interfaceGuid)
+{
+  FinderState state;
+  state.procId = GetCurrentProcessId();
+  state.guid = interfaceGuid;
+  state.result = NULL;
+
+  EnumWindows(FinderProc, (LPARAM)&state);
+
+  return state.result;
+}
+
+void GirderWnd::nextPlaylist(int delta)
+{
+  if (NULL == pldir) {
+    pldir = SvcEnumByGuid<svc_plDir>();
+    if (NULL == pldir)
+      return;
+  }
+  
+  PlaylistHandle plcurr = pldir->getCurrentlyOpen();
+  int npl = pldir->getNumPlaylists();
+  for (int i = 0; i < npl; i++) {
+    PlaylistHandle plhand = pldir->enumPlaylist(i);
+    if (plhand == plcurr) {
+      i += delta;
+      if ((i >= 0) && (i < npl)) {
+        plhand = pldir->enumPlaylist(i);
+        pldir->setCurrentlyOpen(plhand);
+#if 0        
+        // Don't start playback, right?
+        pldir->getPlaylist(plhand)->startPlayback(0);
+#endif
+        // Inform the editor if visible.
+#if 0
+        // This will only find windows in the same "layout".
+        RootWnd *wnd = findWindowByInterface(Editor::getInterfaceGuid());
+#else
+        RootWnd *wnd = FindTopLevelWindowByInterface(Editor::getInterfaceGuid());
+#endif
+        if (NULL != wnd) {
+          Editor *ed = static_cast<Editor*>(wnd->getInterface(Editor::getInterfaceGuid()));
+          ed->setPlaylistByHandle(plhand);
+        }
+      }
+      break;
+    }
+  }
 }
