@@ -139,22 +139,29 @@ void MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
     nMarqueePos = 0;
 }
 
-void DisplayCommon(DisplayCommandState& state, LPCSTR str)
+void DisplayUpdate(int row, int col, int width, LPCSTR str)
 {
-  if (!DisplayOpen(state)) 
+  if ((row < 0) || (row >= nDisplayRows))
     return;
-  state.SetStatus(str);
-
-  int row, col;
-  row = state.m_command->ivalue1 % nDisplayRows;
 
   BOOL bDrawingMarquee = FALSE;
-  if (state.m_command->ivalue2 < 0) {
-    int length = strlen(str);
+  if (col < 0) {
+    int length;
+    LPCSTR endl = strchr(str, '\n');
+    if (NULL == endl)
+      length = strlen(str);
+    else {
+      length = endl - str;
+      while ((length > 0) &&
+             ('\r' == str[length-1]))
+        length--;
+    }
     if (length > nDisplayCols) {
       // Marquee mode and text wide enough to need it.
       if (NULL != pMarquee) {
-        if (!strcmp(str, pMarquee) && (row == nMarqueeRow))
+        if ((row == nMarqueeRow) &&
+            (length == nMarqueeLen) && 
+            !memcmp(str, pMarquee, length))
           return;               // Same as presently active.
         if (bMarqueeSimulated) {
           KillTimer(NULL, idMarqueeTimer);
@@ -225,7 +232,8 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
           (LCD_RESULT_NOERROR == lcdEnableMarquee(str, length, row, 
                                                   nMarqueePixelWidth, nMarqueeSpeed))) {
         pMarquee = (LPSTR)malloc(length + 1);
-        memcpy(pMarquee, str, length + 1);
+        memcpy(pMarquee, str, length);
+        pMarquee[length] = '\0';
         memset(pDisplayBuf + (row * nDisplayCols), 0xFE, nDisplayCols);
 #ifdef _DEBUG
         {
@@ -255,11 +263,16 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
     // Fits as normal rest of line (or simulated or error enabling marquee).
     col = 0;
   }
-  else
-    col = state.m_command->ivalue2 % nDisplayCols;
+  else if (col >= nDisplayCols)
+    return;
 
   if (!bDrawingMarquee && (NULL != pMarquee) && (row == nMarqueeRow)) {
-    lcdDisableMarquee();
+    if (bMarqueeSimulated) {
+      KillTimer(NULL, idMarqueeTimer);
+      idMarqueeTimer = 0;
+    }
+    else
+      lcdDisableMarquee();
     // Display what fits of scrolling in ordinary mode.
     memcpy(pDisplayBuf + (row * nDisplayCols), pMarquee, nDisplayCols);
     DisplayInternal(row, 0, pMarquee, nDisplayCols);
@@ -267,14 +280,14 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
     pMarquee = NULL;
   }
 
-  int width = nDisplayCols - col;
-  if ((state.m_command->ivalue3 > 0) && (state.m_command->ivalue3 < width))
-    width = state.m_command->ivalue3;
+  int ncols = nDisplayCols - col;
+  if ((width <= 0) || (width > ncols))
+    width = ncols;
   LPSTR start = NULL, end;
   LPSTR bp = pDisplayBuf + (row * nDisplayCols) + col;
   while (width-- > 0) {
     char ch = *str;
-    if ('\0' == ch)
+    if (('\0' == ch) || ('\n' == ch) || ('\r' == ch))
       ch = ' ';
     else
       str++;
@@ -293,6 +306,15 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
 
   end++;
   DisplayInternal(row, col, start, (end - start));
+}
+
+void DisplayCommon(DisplayCommandState& state, LPCSTR str)
+{
+  if (!DisplayOpen(state)) 
+    return;
+  DisplayUpdate(state.m_command->ivalue1, state.m_command->ivalue2, 
+                state.m_command->ivalue3, str);
+  state.SetStatus(str);
 }
 
 void DisplayString(DisplayCommandState& state)
@@ -340,6 +362,31 @@ void DisplayCurrentTime(DisplayCommandState& state)
   now = localtime(&ltime);
   strftime(buf, sizeof(buf), fmt, now);
   DisplayCommon(state, buf);
+}
+
+void DisplayScreen(DisplayCommandState& state)
+{
+  if (!DisplayOpen(state)) 
+    return;
+
+  char buf[1024];
+  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  for (int pass = 0; pass <= 1; pass++) { // Do marquee after others.
+    PCHAR pval = buf;
+    for (int i = 0; i < nDisplayRows; i++) {
+      if (!(state.m_command->ivalue1 & (1 << i))) { // Enabled
+        if (pass == !!(state.m_command->ivalue2 & (1 << i))) { // Marquee
+          DisplayUpdate(i, (pass) ? -1 : 0, -1, pval);
+        }
+      }
+      PCHAR next = strchr(pval, '\n');
+      if (NULL != next)
+        pval = next + 1;
+      else
+        pval += strlen(pval);
+    }
+  }
+  state.SetStatus("LCD screen");
 }
 
 void DisplayCommand(p_command command,
