@@ -227,6 +227,56 @@ void DisplayFanPower(int fan, double power, LPCSTR devname)
     device->SetFanPower(fan, power);
 }
 
+int DisplayGetSetting(LPCSTR key, PVOID val, size_t vlen, LPCSTR devname)
+{
+  DisplayCriticalSection cs;
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if (NULL == device)
+    return -1;
+
+  HKEY hkey = device->GetSettingsKey();
+  DWORD dwType, dwLen;
+  int result = -1;
+  dwLen = vlen;
+  if (ERROR_SUCCESS == RegQueryValueEx(hkey, key, NULL, &dwType, (LPBYTE)val, &dwLen)) {
+    switch (dwType) {
+    case REG_SZ:
+      result = dwLen;
+      break;
+    case REG_DWORD:
+      result = -4;
+      break;
+    }
+  }
+  RegCloseKey(hkey);
+  return result;
+}
+
+void DisplaySetSetting(LPCSTR key, PVOID val, int vlen, LPCSTR devname)
+{
+  DisplayCriticalSection cs;
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if (NULL == device)
+    return;
+
+
+  HKEY hkey = device->GetSettingsKey();
+  if (vlen >= 0)
+    device->SetSettingString(hkey, key, (LPCSTR)val);
+  else if (vlen == -4)
+    device->SetSettingInt(hkey, key, *(int*)val);
+  else
+    device->SetSettingString(hkey, key, NULL);
+
+  // Only allow changes while closed.
+  device->Close();
+  device->LoadSettings(hkey);
+
+  RegCloseKey(hkey);
+}
+
 /*** Actual command routines ***/
 
 class DisplayCommandState : public DisplayCriticalSection

@@ -2947,7 +2947,7 @@ end
   </Group>
   <Group Name="Functions" Identifier="143" Enabled="TRUE">
     <Comments>Test LCD LUA extension functions</Comments>
-    <Command Name="Script" Identifier="144" Enabled="TRUE">
+    <Command Name="Basic" Identifier="144" Enabled="TRUE">
       <Comments>Open in script editor</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
@@ -2977,6 +2977,33 @@ LCD_CustomCharacter(0, 0, "0b11111 0b10101 0b11101 0b10001 0b10001 0b11111")
 LCD_CustomCharacter(0, w - 1, "0b11111 0b10101 0b10111 0b10001 0b10001 0b11111")
 LCD_CustomCharacter(h - 1, 0, "0b11111 0b10001 0b10001 0b11101 0b10101 0b11111")
 LCD_CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b11111")
+</sValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+    </Command>
+    <Command Name="Settings" Identifier="145" Enabled="TRUE">
+      <Comments>Open in script editor</Comments>
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>34</ActionSubType>
+      <sValue1>-- These only really work with Simulated LCD or LcdHype display devices.
+print(LCD_GetSetting("SimLCDFont"))
+print(LCD_GetSetting("SimLCDFontSize"))
+
+LCD_SetSetting("SimLCDFont", "Lucida Console")
+LCD_SetSetting("SimLCDFontSize", 18)
+
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>

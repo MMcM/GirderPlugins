@@ -127,6 +127,67 @@ int luaFanPower(lua_State *L)
   return 0;
 }
 
+// LCD_GetSetting(key [, dev]) -> value
+int luaGetSetting(lua_State *L)
+{
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 1, dev)) {
+    lua_error(L, "incorrect number of arguments to LCD_GetSetting");
+    return 0;
+  }
+  if (!lua_isstring(L, 1)) {
+    lua_error(L, "wrong type argument to LCD_GetSetting");
+    return 0;
+  }
+  LPCSTR key = lua_tostring(L, 1);
+  char buf[1024];
+  int len = DisplayGetSetting(key, buf, sizeof(buf), dev);
+  if (len >= 0)
+    lua_pushlstring(L, buf, len);
+  else if (len == -4)
+    lua_pushnumber(L, (double)*(int*)buf);
+  else
+    lua_pushnil(L);
+  return 1;
+}
+
+// LCD_SetSetting(key, value [, dev])
+int luaSetSetting(lua_State *L)
+{
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 2, dev)) {
+    lua_error(L, "incorrect number of arguments to LCD_SetSetting");
+    return 0;
+  }
+  if (!(lua_isstring(L, 1) &&
+        (lua_isstring(L, 2) || lua_isnil(L, 2)))) {
+    lua_error(L, "wrong type argument to LCD_SetSetting");
+    return 0;
+  }
+  LPCSTR key = lua_tostring(L, 1);
+  LPCSTR sval;
+  int nval;
+  PVOID val;
+  int vlen;
+  switch (lua_type(L, 2)) {
+  case LUA_TNIL:
+    val = NULL;
+    vlen = -1;
+    break;
+  case LUA_TNUMBER:    
+    nval = (int)lua_tonumber(L, 2);
+    val = &nval;
+    vlen = -4;
+    break;
+  default:
+    sval = lua_tostring(L, 2);
+    val = (PVOID)sval;
+    vlen = strlen(sval);
+  }
+  DisplaySetSetting(key, val, vlen, dev);
+  return 0;
+}
+
 struct luaL_reg luaFunctions[] = {
   { "LCD_Size", luaSize },
   { "LCD_Close", luaClose },
@@ -134,6 +195,8 @@ struct luaL_reg luaFunctions[] = {
   { "LCD_CustomCharacter", luaCustomCharacter },
   { "LCD_GPO", luaGPO },
   { "LCD_FanPower", luaFanPower },
+  { "LCD_GetSetting", luaGetSetting },
+  { "LCD_SetSetting", luaSetSetting },
 };
 
 void FunctionsOpen()

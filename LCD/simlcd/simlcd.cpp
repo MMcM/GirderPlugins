@@ -563,6 +563,7 @@ void SimulatedLCD::DeviceLoadSettings(HKEY hkey)
   GetSettingInt(hkey, "SimLCDXPos", m_xPos);
   GetSettingInt(hkey, "SimLCDYPos", m_yPos);
   GetSettingBool(hkey, "SimLCDAlwaysOnTop", m_onTop);
+  memset(&m_logFont, 0, sizeof(m_logFont)); // Depends on the above.
 }
 
 void SimulatedLCD::DeviceSaveSettings(HKEY hkey)
