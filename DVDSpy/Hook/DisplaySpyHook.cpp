@@ -12,6 +12,8 @@ $Header$
 #define ASSERT(x) _ASSERTE(x)
 #define countof(x) sizeof(x)/sizeof(x[0])
 
+LPCSTR _stristr(LPCSTR str, LPCSTR key);
+
 struct MatchEntry
 {
   LPCSTR szName;
@@ -1144,7 +1146,7 @@ void IndexMatches(BOOL bAll)
       BOOL bMatch = TRUE;
       switch (BASE_CODE(g_matches[i].nCode)) {
       case MATCH_MODULE_PATHNAME:
-        bMatch = (NULL != strstr(szModulePathName, g_matches[i].szVal));
+        bMatch = (NULL != _stristr(szModulePathName, g_matches[i].szVal));
         break;
       case MATCH_MODULE_VERSION:
         // TODO: Something involving GetFileVersionInfo.  Maybe load
@@ -2358,6 +2360,22 @@ void ExtractWinDVDSetImage(UINT nType, LPSTR szBuf, size_t nSize)
   case SKINDVD_CHAPTER:
     strncpy(szBuf, g_skinDVDChapter, nSize);
     break;
+  }
+}
+
+LPCSTR _stristr(LPCSTR str, LPCSTR key)
+{
+  char chrs[3];
+  chrs[0] = chrs[1] = key[0];
+  chrs[2] = '\0';
+  _strupr(chrs);
+  _strlwr(chrs+1);
+  size_t keyl = strlen(key);
+  while (TRUE) {
+    LPCSTR nstr = strpbrk(str, chrs);
+    if (NULL == nstr) return NULL;
+    if (!_strnicmp(nstr, key, keyl)) return nstr;
+    str = nstr + 1;
   }
 }
 
