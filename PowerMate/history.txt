@@ -1,0 +1,4 @@
+
+1.1     01/07/2003      MMcM    First SourceForge release.
+
+1.0     08/11/2002      MMcM    Initial release.

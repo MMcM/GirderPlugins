@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 46
 #define PLUGINNAME "Motherboard Monitor"
-#define PLUGINVERSION "1.1"
+#define PLUGINVERSION "1.2"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

@@ -1,4 +1,6 @@
 
+2.5     01/07/2003      MMcM    First SourceForge release.
+
 2.4     11/29/2002      MMcM    Fix 4x40 parallel addressing.
 
 2.3     10/01/2002      MMcM    Add debounce time for Matrix Orbital keypads.

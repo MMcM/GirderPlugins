@@ -1,4 +1,6 @@
 
+1.2     01/07/2003      MMcM    First SourceForge release.
+
 1.1     10/07/2002      MMcM    Fix typo that caused CPU usage to be too high.
 
 1.0     08/12/2002      MMcM    Initial release.

@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 44
 #define PLUGINNAME "PowerMate"
-#define PLUGINVERSION "1.0"
+#define PLUGINVERSION "1.1"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
