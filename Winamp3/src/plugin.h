@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 49
 #define PLUGINNAME "Winamp3"
-#define PLUGINVERSION "1.4"
+#define PLUGINVERSION "1.5"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

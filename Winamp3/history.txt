@@ -1,4 +1,6 @@
 
+1.5     03/09/2003      MMcM    More commands.
+
 1.4     01/07/2003      MMcM    First SourceForge release.
 
 1.3     10/25/2002      MMcM    Another playlist command.

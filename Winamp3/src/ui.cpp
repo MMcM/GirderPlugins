@@ -9,12 +9,18 @@ $Header$
 
 const UINT WM_SELECT_EVENT = WM_USER+100;
 
+// See AttribKeys
+enum ActionKey { 
+  ATTRIB_SHUFFLE = 1, ATTRIB_REPEAT, ATTRIB_CROSSFADE 
+};
+
 struct ActionEntry {
   const char *desc;
   IPC_OPCODE op;
   BOOL value;                   // Takes a value.
   BOOL reply;                   // Returns a result.
   int subindex;                 // Which of the returned values.
+  int key;                      // For attributes.
 } ActionEntries[] = {
   { "Play", IPC_C_START },
   { "Stop", IPC_C_STOP },
@@ -30,6 +36,13 @@ struct ActionEntry {
   { "Next playlst", IPC_C_NEXT_PLAYLIST },
   { "Previous playlist", IPC_C_PREV_PLAYLIST },
   { "Start playlist", IPC_C_START_PLAYLIST },
+  { "Set volume", IPC_C_SET_VOLUME, TRUE },
+  { "Set shuffle", IPC_C_SET_ATTRIB, TRUE, FALSE, 0, ATTRIB_SHUFFLE },
+  { "Toggle shuffle", IPC_C_TOGGLE_ATTRIB, FALSE, FALSE, 0, ATTRIB_SHUFFLE },
+  { "Set repeat", IPC_C_SET_ATTRIB, TRUE, FALSE, 0, ATTRIB_REPEAT },
+  { "Toggle repeat", IPC_C_TOGGLE_ATTRIB, FALSE, FALSE, 0, ATTRIB_REPEAT },
+  { "Set crossfade", IPC_C_SET_ATTRIB, TRUE, FALSE, 0, ATTRIB_CROSSFADE },
+  { "Toggle crossfade", IPC_C_TOGGLE_ATTRIB, FALSE, FALSE, 0, ATTRIB_CROSSFADE },
 
   { "Get state", IPC_R_STATE, FALSE, TRUE },
   { "Get playstring", IPC_R_PLAYSTRING, FALSE, TRUE },
@@ -39,6 +52,11 @@ struct ActionEntry {
   { "Get elapsed", IPC_R_POSITION, FALSE, TRUE, 0 },
   { "Get duration", IPC_R_POSITION, FALSE, TRUE, 1 },
   { "Get playlist item", IPC_R_ITEM, TRUE, TRUE },
+  { "Get playlist name", IPC_R_PLAYLIST, FALSE, TRUE },
+  { "Get volume", IPC_R_VOLUME, FALSE, TRUE },
+  { "Get shuffle", IPC_R_ATTRIB, FALSE, TRUE, 0, ATTRIB_SHUFFLE },
+  { "Get repeat", IPC_R_ATTRIB, FALSE, TRUE, 0, ATTRIB_REPEAT },
+  { "Get crossfade", IPC_R_ATTRIB, FALSE, TRUE, 0, ATTRIB_CROSSFADE },
 };
 
 #define countof(x) sizeof(x)/sizeof(x[0])
@@ -90,7 +108,8 @@ static void LoadUISettings(HWND hwnd)
   for (int idx = 0; idx < nf; idx++) {
     ActionEntry *ae = (ActionEntry *)SendMessage(hwndList, CB_GETITEMDATA, idx, 0);
     if ((ae->op == g_pCommand->ivalue1) &&
-        (ae->subindex == g_pCommand->ivalue2)) {
+        (ae->subindex == g_pCommand->ivalue2) &&
+        (ae->key == g_pCommand->ivalue3)) {
       selidx = idx;
       break;
     }
@@ -123,6 +142,7 @@ static BOOL SaveUISettings(HWND hwnd)
     ActionEntry *ae = (ActionEntry *)SendMessage(hwndList, CB_GETITEMDATA, idx, 0);
     g_pCommand->ivalue1 = ae->op;
     g_pCommand->ivalue2 = ae->subindex;
+    g_pCommand->ivalue3 = ae->key;
   }
 
   g_pCommand->actiontype = PLUGINNUM;

@@ -71,7 +71,7 @@ IDB_TAB_SELECTED        RCDATA  DISCARDABLE     "girder-active.png"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,4,0,13
+ FILEVERSION 1,5,0,14
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -88,7 +88,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "Girder Winamp component\0"
-            VALUE "FileVersion", "1.4 (13)\0"
+            VALUE "FileVersion", "1.5 (14)\0"
             VALUE "InternalName", "Girder\0"
             VALUE "OriginalFilename", "Girder.WAC\0"
         END

@@ -67,7 +67,7 @@ int GirderWnd::onInit() {
 
   core.addCallback(this);
 
-  setTimer(MY_TIMER, 1000);
+  setTimer(MY_TIMER, WACNAME::intervalAttrib);
   
   connect();
 
@@ -331,6 +331,48 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
         playlist->startPlayback(playlist->getCurrent());
     }
     break;
+  case IPC_C_SET_VOLUME:
+    {
+      int vol = msg.nextInt();
+      if (GirderLogWnd::logging()) {
+        logreq = "set volume";
+        sprintf(lreqbuf, "%d", vol);
+        lreqdata = lreqbuf;
+      }
+      core.setVolume(vol);
+    }
+    break;
+  case IPC_C_SET_ATTRIB:
+    {
+      const char *guidstr = msg.nextString();
+      const char *name = msg.nextString();
+      const char *value = msg.nextString();
+      if (GirderLogWnd::logging()) {
+        logreq = "set attrib";
+        sprintf(lreqbuf, "%s %s %s", guidstr, name, value);
+        lreqdata = lreqbuf;
+      }
+      GUID guid = nsGUID::fromChar(guidstr);
+      CfgItem *cfg = api->config_getCfgItemByGuid(guid);
+      if (NULL != cfg)
+        cfg->setData(name, value);
+    }
+    break;
+  case IPC_C_TOGGLE_ATTRIB:
+    {
+      const char *guidstr = msg.nextString();
+      const char *name = msg.nextString();
+      if (GirderLogWnd::logging()) {
+        logreq = "toggle attrib";
+        sprintf(lreqbuf, "%s %s", guidstr, name);
+        lreqdata = lreqbuf;
+      }
+      GUID guid = nsGUID::fromChar(guidstr);
+      CfgItem *cfg = api->config_getCfgItemByGuid(guid);
+      if (NULL != cfg)
+        cfg->setDataAsInt(name, !cfg->getDataAsInt(name));
+    }
+    break;
 
   case IPC_R_STATE:
     {
@@ -373,23 +415,23 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
       if (NULL == playstr)
         playstr = core.getCurrent();
       int dt = api->metadb_getMetaDataType(tag);
-      char buf[1024];
-      const char *value = buf;
+      char buf[1024], buf2[1024];
+      const char *value = NULL;
       int len = api->metadb_getMetaData(playstr, tag, buf, sizeof(buf), dt);
-      msg.reuse();
       if (len > 0) {
-        char buf2[1024];
-        if (MDT_STRINGZ != dt) {
+        if (MDT_STRINGZ == dt)
+          value = buf;
+        else {
           if (api->metadb_convertToText(buf, dt, buf2, sizeof(buf2)))
             value = buf2;
-          else
-            value = NULL;
         }
-        if (NULL != value)
-          msg.addString(value);
       }
-      else
-        value = NULL;
+      if (GirderLogWnd::logging()) {
+        strncpy(lreqbuf, tag, sizeof(lreqbuf));
+      }
+      msg.reuse();
+      if (NULL != value)
+        msg.addString(value);
       if (GirderLogWnd::logging()) {
         logreq = "get meta-data";
         strncpy(lreqbuf, tag, sizeof(lreqbuf));
@@ -447,6 +489,70 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
         lreqdata = lreqbuf;
         if (NULL != playstr)
           strncpy(lrepbuf, playstr, sizeof(lrepbuf));
+        else
+          lrepbuf[0] = '\0';
+        lrepdata = lrepbuf;
+      }
+      *r = (int)msg.detach();
+    }
+    break;
+  case IPC_R_PLAYLIST:
+    {
+      msg.reuse();
+      const char *name = NULL;
+      Playlist *playlist = getPlaylist();
+      if (NULL != playlist)
+        name = playlist->getPlaylistName();
+      if (NULL != name)
+        msg.addString(name);
+      if (GirderLogWnd::logging()) {
+        logreq = "get pl name";
+        if (NULL != name)
+          strncpy(lrepbuf, name, sizeof(lrepbuf));
+        else
+          lrepbuf[0] = '\0';
+        lrepdata = lrepbuf;
+      }
+      *r = (int)msg.detach();
+    }
+    break;
+  case IPC_R_VOLUME:
+    {
+      msg.reuse();
+      int vol = core.getVolume();
+      msg << vol;
+      if (GirderLogWnd::logging()) {
+        logreq = "get volume";
+        sprintf(lrepbuf, "%d", vol);
+        lrepdata = lrepbuf;
+      }
+      *r = (int)msg.detach();
+    }
+    break;
+  case IPC_R_ATTRIB:
+    {
+      const char *guidstr = msg.nextString();
+      const char *name = msg.nextString();
+      char buf[1024];
+      const char *value = NULL;
+      GUID guid = nsGUID::fromChar(guidstr);
+      CfgItem *cfg = api->config_getCfgItemByGuid(guid);
+      if (NULL != cfg) {
+        int len = cfg->getData(name, buf, sizeof(buf));
+        if (len >= 0)
+          value = buf;
+      }
+      if (GirderLogWnd::logging()) {
+        sprintf(lreqbuf, "%s %s", guidstr, name);
+      }
+      msg.reuse();
+      if (NULL != value)
+        msg.addString(value);
+      if (GirderLogWnd::logging()) {
+        logreq = "get attrib";
+        lreqdata = lreqbuf;
+        if (NULL != value)
+          strncpy(lrepbuf, value, sizeof(lrepbuf));
         else
           lrepbuf[0] = '\0';
         lrepdata = lrepbuf;

@@ -391,8 +391,17 @@ void StopMonitor(BOOL events)
   g_bRunning = FALSE;
 }
 
+// See ActionKey
+const char *AttribKeys[] = {
+  NULL,
+  "{45F3F7C1-A6F3-4EE6-A15E-125E92FC3F8D}Shuffle",
+  "{45F3F7C1-A6F3-4EE6-A15E-125E92FC3F8D}Repeat",
+  "{3CBD4483-DC44-11D3-B608-000086340885}Enable crossfading",
+};
+
 // ivalue1 is opcode (IPC_OPCODE)
 // ivalue2 is returned value subindex
+// ivalue3 is attrib key
 // svalue1 is value (variables are expanded)
 // svalue2 is variable to set
 // svalue3 is prefix (default 'Winamp3')
@@ -422,6 +431,7 @@ void SendCommand(p_command command, char *status, int statuslen)
   case IPC_C_SEEK_ABSOLUTE:
   case IPC_C_SEEK_RELATIVE:
   case IPC_C_TRACK:
+  case IPC_C_SET_VOLUME:
   case IPC_R_ITEM:
     msg.addInt(atoi(buf));
     break;
@@ -441,6 +451,30 @@ void SendCommand(p_command command, char *status, int statuslen)
       }
     }
     break;
+  case IPC_C_SET_ATTRIB:
+  case IPC_C_TOGGLE_ATTRIB:
+  case IPC_R_ATTRIB:
+    {
+      const char *key = AttribKeys[command->ivalue3];
+      char guid[64];
+      const char *gp = strchr(key, '}');
+      if (NULL != gp) {
+        size_t nb = ++gp - key;
+        if (nb >= sizeof(guid))
+          nb = sizeof(guid) - 1;
+        memcpy(guid, key, nb);
+        guid[nb] = '\0';
+        key = gp;
+      }
+      else {
+        guid[0] = '\0';
+      }
+      msg.addString(guid);
+      msg.addString(key);
+      if (IPC_C_SET_ATTRIB == op)
+        msg.addString(buf);
+    }
+    break;
   }
 
   BOOL reply = FALSE;
@@ -451,6 +485,9 @@ void SendCommand(p_command command, char *status, int statuslen)
   case IPC_R_TRACK:
   case IPC_R_POSITION:
   case IPC_R_ITEM:
+  case IPC_R_PLAYLIST:
+  case IPC_R_VOLUME:
+  case IPC_R_ATTRIB:
     reply = TRUE;
     break;
   }
@@ -484,6 +521,8 @@ void SendCommand(p_command command, char *status, int statuslen)
   case IPC_R_PLAYSTRING:
   case IPC_R_METADATA:
   case IPC_R_ITEM:
+  case IPC_R_PLAYLIST:
+  case IPC_R_ATTRIB:
     {
       const char *value = msg.nextString();
       if (NULL == value)
@@ -494,6 +533,7 @@ void SendCommand(p_command command, char *status, int statuslen)
     break;
   case IPC_R_TRACK:
   case IPC_R_POSITION:
+  case IPC_R_VOLUME:
     {
       int n = command->ivalue2;
       int value;

@@ -28,6 +28,9 @@ enum IPC_OPCODE {
   IPC_C_NEXT_PLAYLIST,          // ()
   IPC_C_PREV_PLAYLIST,          // ()
   IPC_C_START_PLAYLIST,         // ()
+  IPC_C_SET_VOLUME,             // (vol)
+  IPC_C_SET_ATTRIB,             // (guid, name, value)
+  IPC_C_TOGGLE_ATTRIB,          // (guid, name)
   
   // Requests (synchronous) Girder -> Winamp -> Girder
   IPC_R_STATE = 100,            // () -> (state)
@@ -36,6 +39,9 @@ enum IPC_OPCODE {
   IPC_R_TRACK,                  // () -> (pos, length)
   IPC_R_POSITION,               // () -> (elapsed, duration)
   IPC_R_ITEM,                   // (pos) -> (playstring)
+  IPC_R_PLAYLIST,               // () -> (playlist)
+  IPC_R_VOLUME,                 // () -> (vol)
+  IPC_R_ATTRIB,                 // (guid, name) -> (value)
   
   // Events (asynchronous) Winamp -> Girder
   IPC_E_HELLO = 1000,           // (prefix)
