@@ -157,7 +157,15 @@ BOOL SpecialEvent(LPCSTR szEvent, LPCSTR szVal)
 {
   if (!strcmp(szEvent, "ZoomPlayer.Init")) {
     ZoomPlayerInit(szVal, g_hMonitorWindow);
+    return TRUE;                // Don't send to Girder.
+  }
+  else if (!strcmp(szEvent, "Eugenes.Init")) {
+    EugenesInit(szVal, g_hMonitorWindow);
     return TRUE;
+  }
+  else if (!strcmp(szEvent, "Eugenes.Close")) {
+    EugenesClose();
+    return FALSE;               // Also send to Girder.
   }
   return FALSE;
 }
