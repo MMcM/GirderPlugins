@@ -1,4 +1,6 @@
 
+1.37    09/04/2002      MMcM    Add more ShowShifter events.
+
 1.36    09/28/2002      MMcM    Make DVD2LCD.GML variants DVD2LCD2.GML and DVD2LCD4.GML.
 
 1.35    09/13/2002      MMcM    Add MATCH_REGISTERED_MESSAGE.

@@ -34,7 +34,7 @@
       <EventString Name="PowerDVD.Title" Identifier="5" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Title"/>
       <EventString Name="ZoomPlayer.Media.File" Identifier="6" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
       <EventString Name="ATI.MMC.File" Identifier="7" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.File"/>
-      <EventString Name="ShowShifter.File" Identifier="8" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.File"/>
+      <EventString Name="ShowShifter.Media.File" Identifier="8" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.File"/>
       <EventString Name="WMP.URL" Identifier="9" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
       <EventString Name="WMP.Title" Identifier="10" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
       <EventString Name="Winamp.File" Identifier="11" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
@@ -339,7 +339,7 @@ Position2 = &#34;/&#34; + pld1;</sValue1>
       <EventString Name="TheaterTek.Elapsed" Identifier="57" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Elapsed"/>
       <EventString Name="ATI.DVD.Elapsed" Identifier="58" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Elapsed"/>
       <EventString Name="ATI.MMC.Elapsed" Identifier="59" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Elapsed"/>
-      <EventString Name="ShowShifter.Elapsed" Identifier="60" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Elapsed"/>
+      <EventString Name="ShowShifter.Media.Elapsed" Identifier="60" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.Elapsed"/>
       <EventString Name="WMP.Elapsed" Identifier="61" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
       <EventString Name="Winamp.Elapsed" Identifier="62" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
       <EventString Name="Winamp3.Elapsed" Identifier="63" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Elapsed"/>
@@ -397,7 +397,7 @@ Elapsed = pld1;</sValue1>
       <EventString Name="TheaterTek.Duration" Identifier="73" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Duration"/>
       <EventString Name="ATI.DVD.Duration" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Duration"/>
       <EventString Name="ATI.MMC.Duration" Identifier="75" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Duration"/>
-      <EventString Name="ShowShifter.Duration" Identifier="76" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Duration"/>
+      <EventString Name="ShowShifter.Media.Duration" Identifier="76" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.Duration"/>
       <EventString Name="WMP.Duration" Identifier="77" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
       <EventString Name="Winamp.Duration" Identifier="78" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
       <EventString Name="Winamp3.Duration" Identifier="79" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Duration"/>
