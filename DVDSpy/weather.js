@@ -1,89 +1,70 @@
 // Get the weather.
 
-// Arguments: accid xmlfile [prefix]
-var args = WScript.Arguments;
-
+// Arguments: accid...
 // ACCID is the location (ZIP code in the USA).
 // Cf. http://www.msnbc.com/news/wea_front.asp?ta=y&tab=BW&tp=&ctry=&cp1=1
-var accid = args(0);
+var args = WScript.Arguments;
 
-// Write this file with infomation in Girder register format.
-var xmlfile = args(1);
+// This progid seems to be the generally available one.
+// WinHttp.WinHttpRequest.5 also works, if that's all you have; nothing
+// depends on any differences.
+var HttpReq = WScript.CreateObject("WinHttp.WinHttpRequest.5.1");
 
-// Unique string if more than one city is fetched.
-var prefix = "";
-if (args.length > 2) prefix = args(2);
+// This can be converted to the Girder event object as soon as that is
+// fully supported.
+var GirderEvent = WScript.CreateObject("WMPSpy.SpyCtrl");
+GirderEvent.event = "NewWeather";
 
-function addReg(elem, name, value) {
-  name = "Weather" + prefix + name;
-  var children, existing, child;
-  children = elem.childNodes;
-  existing = null;
-  for (var i = 0; i < children.length; i++) {
-    child = elem.childNodes(i);
-    if (child.getAttribute("Name") == name) {
-      existing = child;
-      break;
-    }
-  }
-  child = xml.createElement("Register");
-  child.setAttribute("Name", name);
-  var text = xml.createTextNode(value);
-  child.appendChild(text);
-  if (existing == null)
-    elem.appendChild(child);
+function addVar(pld, name, val) {
+  if (pld == null)
+    pld = "";
   else
-    elem.replaceChild(child, existing);
+    pld = pld + ",";
+  if (val == "")
+    val = "nil";
+  return pld + name + "=" + val;
 }
 
-try {
-
-  // Get the weather object; downloads as JavaScript source.
-  // This progid seems to be the generally available one.
-  // WinHttp.WinHttpRequest.5 also works, if that's all you have; nothing
-  // depends on any differences.
-  var HttpReq = WScript.CreateObject("WinHttp.WinHttpRequest.5.1");
-  HttpReq.Open("GET", "http://www.msnbc.com/m/chnk/d/weather_d_src.asp?acid=" + accid, false);
-  HttpReq.Send();
-  if (200 != HttpReq.Status()) exit;
-  var src = HttpReq.ResponseText();
-  eval(src);
-  var weather = new makeWeatherObj();
-
-  var xml = WScript.CreateObject("Msxml2.DOMDocument");
-  xml.load(xmlfile);
-
-// As of LUA conversion, there really aren't any integer registers.
-//var ints = xml.getElementsByTagName("IntegerRegisters").item(0);
-  var dbls = xml.getElementsByTagName("DoubleRegisters").item(0);
-  var strs = xml.getElementsByTagName("StringRegisters").item(0);
-
-  addReg(strs, "City", weather.swCity);
-  addReg(strs, "State", weather.swSubDiv);
-  addReg(strs, "Country", weather.swCountry);
-  addReg(strs, "Region", weather.swRegion);
-  addReg(dbls, "TempF", weather.swTemp);
-  addReg(dbls, "TempC", weather.swTempCel);
-  addReg(dbls, "WindSpeed", weather.swWindS);
-  addReg(strs, "WindDirection", weather.swWindD);
-  addReg(dbls, "Barometer", weather.swBaro);
-  addReg(dbls, "Humidity", weather.swHumid);
-  addReg(dbls, "RealTemp", weather.swReal);
-  addReg(dbls, "UVIndex", weather.swUV);
-  addReg(strs, "Visibility", weather.swVis);
-  addReg(strs, "LastUpdate", weather.swLastUp);
-  addReg(strs, "Conditions", weather.swConText);
-  addReg(strs, "Forecast", weather.swFore);
-  addReg(strs, "Accid", weather.swAcid);
-
-  xml.save(xmlfile);
-
-  // Tell Girder we're done.
-  var shell = WScript.CreateObject("WScript.Shell");
-  var cmd = "\"c:\\Program Files\\girder32\\Girder.exe\" -eventstring NewWeather"
-  shell.Run(cmd, 0);
-
+function addVarStr(pld, name, val) {
+  var strval = val.replace(/([\\\"\n])/g, "\\$1"); // Escape special characters.
+  return addVar(pld, name, "\"" + strval + "\"");
 }
-catch (ex) {
-  Debug.writeln(ex);
+
+for (var i = 0; i < args.Length; i++) {
+  var accid = args(i);
+
+  try {
+    // Get the weather object; downloads as JavaScript source.
+    HttpReq.Open("GET", "http://www.msnbc.com/m/chnk/d/weather_d_src.asp?acid=" + accid, false);
+    HttpReq.Send();
+    if (200 != HttpReq.Status()) continue;
+    var src = HttpReq.ResponseText();
+    eval(src);
+    var weather = new makeWeatherObj();
+
+    var payload = null;
+
+    payload = addVarStr(payload, "City", weather.swCity);
+    payload = addVarStr(payload, "State", weather.swSubDiv);
+    payload = addVarStr(payload, "Country", weather.swCountry);
+    payload = addVarStr(payload, "Region", weather.swRegion);
+    payload = addVar(payload, "TempF", weather.swTemp);
+    payload = addVar(payload, "TempC", weather.swTempCel);
+    payload = addVar(payload, "WindSpeed", weather.swWindS);
+    payload = addVarStr(payload, "WindDirection", weather.swWindD);
+    payload = addVar(payload, "Barometer", weather.swBaro);
+    payload = addVar(payload, "Humidity", weather.swHumid);
+    payload = addVar(payload, "RealTemp", weather.swReal);
+    payload = addVar(payload, "UVIndex", weather.swUV);
+    payload = addVarStr(payload, "Visibility", weather.swVis);
+    payload = addVarStr(payload, "LastUpdate", weather.swLastUp);
+    payload = addVarStr(payload, "Conditions", weather.swConText);
+    payload = addVarStr(payload, "Forecast", weather.swFore);
+    payload = addVarStr(payload, "Accid", weather.swAcid);
+
+    GirderEvent.value = payload;
+  }
+  catch (ex) {
+    Debug.writeln(ex);
+  }
 }
