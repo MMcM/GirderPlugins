@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.31. &nbsp;MMcM 07/02
+Version 1.32. &nbsp;MMcM 07/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -127,6 +127,13 @@ This file shows how to use the DVDSpy plug-in with the OSD PopUp plug-in to
 display player status in a pop-up window.<p>
 </li>
 
+<li><kbd>DVDInsert.GML</kbd><br/>
+Another sample Girder script.<p>
+
+This file shows how to use the DVD title information in the
+Disc.Insert event to switch resolutions.<p>
+</li>
+
 </ul>
 
 <h3>Getting Started</h3>
@@ -190,13 +197,16 @@ If you do see events, then double check the OSD PopUp settings.
 <tr><th>Code</th>
 <th>Meaning</th>
 <th>Payload String 1</th>
-<th>Payload String 2</th>
+<th>Other Payload Strings</th>
 </tr>
 
 <tr><td><code>Disc.Insert.<i>X</i></code></td>
 <td>A new DVD was inserted into drive <i>X:</i></td>
 <td>The volume name or disc title (see <a href="#DVDTitles">below</a>)</td>
-<td>The volume serial number</td>
+<td width="250"><b>2:</b>volume serial number (hex),<br>
+<b>3:</b>aspect ratio (<code>4:3</code>,<code>16:9</code>,<code>unknown</code>),<br>
+<b>4:</b>display format (<code>none</code>,<code>letterbox</code>,<code>pan-scan</code>,<code>both</code>),<br>
+<b>5:</b>video standard (<code>NTSC</code>,<code>PAL</code>)</td>
 </tr>
 
 <tr><td><code>Disc.Eject.<i>X</i></code></td>
