@@ -83,9 +83,11 @@ as well.
 <td>20</td><td>4</td>
 <td>USB version of the VK204-25.</td></tr>
 
-<tr><td><a href="http://www.futaba.com">Futaba</a></td>
-<td><a href="http://www.futaba.com/display_modules/vfd_products/index.html">VFD</a></td>
+<tr><td rowspan=2><a href="http://www.futaba.com">Futaba</a></td>
+<td rowspan=2><a href="http://www.futaba.com/display_modules/vfd_products/index.html">VFD</a></td>
 <td>20</td><td>4</td>
+<td></td></tr>
+<td>40</td><td>2</td>
 <td></td></tr>
 
 <tr><td><a href="http://www.renesas.com">Hitachi</a> and others</td>
@@ -142,6 +144,11 @@ other device driver DLLs that may not be installed at all.<p>
 A Girder script for basic testing of drawing and command capabilities.
 It includes commands for displaying all possible characters sixteen at a
 time.  This is useful for working out a custom character map.<p>
+</li>
+
+<li><kbd>EnableMultiple.reg</kbd><br/>
+Changes a registry setting to enable multiple display devices.<p>
+<p>
 </li>
 
 </ul>
@@ -337,12 +344,23 @@ Display the given custom character at the given position.
 
 </ul>
 
+<h3>Multiple displays</h3>
+
+More than one display device can be defined.  One of the displays is
+designated the default.  Commands that use this display do not need to
+be changed to display on a different device when the default is
+changed.  Commands can also specify a particular device explicitly.
+Multiple mode must be enabled explicitly in the registry.
+
 <h3>Registry</h3>
 
 Settings for the plug-in are stored in the registry key
-<kbd>HKEY_LOCAL_MACHINE\Software\Girder3\SoftPlugins\LCD</kbd>.  Most,
-but not all, are controlled through the Settings dialog.  Here is a
-complete reference to the values used.<p>
+<kbd>HKEY_LOCAL_MACHINE\Software\Girder3\SoftPlugins\LCD</kbd>.
+Normally device settings are the values for this key.  In multiple
+display device mode, there are subkeys for each display device and the
+default value for the parent key gives the name of the default one.
+Most, but not all, of these values are controlled through the Settings
+dialog.  Here is a complete reference to the values used.<p>
 
 <table>
 
@@ -502,6 +520,12 @@ Whether the Simulated LCD window stays on top of other windows.  The default is 
 <tr><td><kbd>DebounceTime</kbd></td>
 <td>
 The debounce time for a keypad in milliseconds.  The default for Matrix Orbital is 52ms.
+</td>
+
+<tr><td><kbd>Enabled</kbd></td>
+<td>
+Whether the display is enabled.  Only available when there is more
+than one display defined.
 </td>
 
 </table><p>

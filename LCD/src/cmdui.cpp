@@ -22,12 +22,15 @@ DisplayAction DisplayActions[] = {
   { "o", "General Purpose Output", valBOOL, DisplayGPO },
 };
 
-BOOL FindDisplayAction(DisplayDeviceList& devices,
-                       p_command command,
-                       DisplayDevice*& device,
+BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
+                       DisplayActionDeviceType& devtype, DisplayDevice*& device,
                        DisplayAction*& action)
 {
+  devtype = devDEFAULT;
+  device = devices.GetDefault();
+
   PCHAR key = command->svalue2;
+
 #if 0
   if ((NULL == key) || ('\0' == *key)) {
     // An older GML file.  Convert the command to the new format.
@@ -63,7 +66,7 @@ BOOL FindDisplayAction(DisplayDeviceList& devices,
       val = buf;
       break;
     default:
-      return NULL;
+      return FALSE;
     }
     // Position information.
     command->ivalue1 = command->lvalue1; // Row
@@ -79,7 +82,29 @@ BOOL FindDisplayAction(DisplayDeviceList& devices,
     SF.realloc_pchar(&command->svalue2, key);
   }
 #endif
-  device = devices.GetDefault();
+
+  LPSTR cpos = strchr(key, ':');
+  if (NULL != cpos) {
+    char name[128];
+    size_t nlen = cpos - key;
+    if (nlen < sizeof(name)) {
+      memcpy(name, key, nlen);
+      name[nlen] = '\0';
+      if (!strcmp(name, "*")) {
+        devtype = devALL;
+        device = devices.GetFirst();
+      }
+      else {
+        device = devices.Get(name);
+        if (NULL != device)
+          devtype = devNAMED;
+        else
+          devtype = devUNKNOWN;
+      }
+    }
+    key = cpos + 1;
+  }
+
   for (size_t i = 0; i < countof(DisplayActions); i++) {
     if (!strcmp(DisplayActions[i].key, key)) {
       action = DisplayActions + i;
@@ -92,10 +117,13 @@ BOOL FindDisplayAction(DisplayDeviceList& devices,
 
 /* Local variables */
 static DisplayDeviceList g_devices;
-static DisplayDevice *g_commandDevice = NULL;
+static BOOL g_bMultipleDevices = FALSE;
 static p_command g_editCommand = NULL;
 static HWND g_commandDialog = NULL;
 static HANDLE g_commandThread = NULL;
+
+const LPARAM ALL_DEVICE = (LPARAM)-1;
+const LPARAM DEFAULT_DEVICE = (LPARAM)0;
 
 // Show input controls appropriate for this value type and optionally
 // load from edited command.
@@ -250,6 +278,26 @@ static void ShowCommandInputs(HWND hwnd, DisplayAction *action, BOOL reload)
   }
 }
 
+static void FillCommandChoices(HWND hwnd, 
+                               DisplayDevice *commandDevice, DisplayAction *selact)
+{
+  HWND combo = GetDlgItem(hwnd, IDC_TYPE);
+  ComboBox_ResetContent(combo);
+  for (size_t i = 0; i < countof(DisplayActions); i++) {
+    DisplayAction *action = DisplayActions + i;
+    if (NULL == commandDevice) {
+      if (DisplayClose !=  action->function) continue;
+    }
+    else if (DisplayGPO == action->function) {
+      if (commandDevice->GetGPOs() <= 0) continue;
+    }
+    int idx = ComboBox_AddString(combo, action->name);
+    ComboBox_SetItemData(combo, idx, action);
+    if (action == selact)
+      ComboBox_SetCurSel(combo, idx);
+  }
+}
+
 // Load state from edited command.
 static void LoadCommandSettings(HWND hwnd)
 {
@@ -263,26 +311,43 @@ static void LoadCommandSettings(HWND hwnd)
 
   EnterCriticalSection(&g_editCommand->critical_section);
   
-  DisplayAction *selact;
-  if (!FindDisplayAction(g_devices, g_editCommand, g_commandDevice, selact))
-    selact = DisplayActions;    // String
+  DisplayActionDeviceType deviceType;  
+  DisplayDevice *commandDevice;
+  DisplayAction *action;
+  if (!FindDisplayAction(g_devices, g_editCommand, 
+                         deviceType, commandDevice, 
+                         action))
+    action = DisplayActions;    // String
 
-  // TODO: Set selection in IDC_DISPLAY.
-
-  HWND combo = GetDlgItem(hwnd, IDC_TYPE);
-  ComboBox_ResetContent(combo);
-  for (size_t i = 0; i < countof(DisplayActions); i++) {
-    DisplayAction *action = DisplayActions + i;
-    if (DisplayGPO == action->function) {
-      if (g_commandDevice->GetGPOs() <= 0) continue;
+  if (g_bMultipleDevices) {
+    LPARAM devdata;
+    switch (deviceType) {
+    case devDEFAULT:
+      devdata = DEFAULT_DEVICE;
+      break;
+    case devALL:
+      devdata = ALL_DEVICE;
+      break;
+    case devNAMED:
+      devdata = (LPARAM)commandDevice;
+      break;
+    case devUNKNOWN:
+      devdata = (LPARAM)-2;     // Something that won't match.
+      break;
     }
-    int idx = ComboBox_AddString(combo, action->name);
-    ComboBox_SetItemData(combo, idx, action);
-    if (action == selact)
-      ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_TYPE), idx);
+    HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
+    int nidx = ComboBox_GetCount(combo);
+    for (int idx = 0; idx < nidx; idx++) {
+      if (devdata == ComboBox_GetItemData(combo, idx)) {
+        ComboBox_SetCurSel(combo, idx);
+        break;
+      }
+    }
   }
+
+  FillCommandChoices(hwnd, commandDevice, action);
   
-  ShowCommandInputs(hwnd, selact, TRUE);
+  ShowCommandInputs(hwnd, action, TRUE);
 
   LeaveCriticalSection(&g_editCommand->critical_section);
 }
@@ -297,13 +362,28 @@ static BOOL SaveCommandSettings(HWND hwnd)
 
   EnterCriticalSection(&g_editCommand->critical_section);
 
-  int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_TYPE));
+  HWND combo = GetDlgItem(hwnd, IDC_TYPE);
+  int selidx = ComboBox_GetCurSel(combo);
   DisplayAction *action = (DisplayAction *)
-    ComboBox_GetItemData(GetDlgItem(hwnd, IDC_TYPE), idx);
-  if (NULL != action)
-    SF.realloc_pchar(&g_editCommand->svalue2, (PCHAR)action->key);
-  else
-    SF.realloc_pchar(&g_editCommand->svalue2, "?");
+    ComboBox_GetItemData(combo, selidx);
+  PCHAR key = (NULL != action) ? (PCHAR)action->key : "?";
+  if (g_bMultipleDevices) {
+    combo = GetDlgItem(hwnd, IDC_DISPLAY);
+    selidx = ComboBox_GetCurSel(combo);
+    if (CB_ERR != selidx) {
+      LPARAM devdata = ComboBox_GetItemData(combo, selidx);
+      if (DEFAULT_DEVICE != devdata) {
+        if (ALL_DEVICE == devdata)
+          strcpy(buf, "*");
+        else
+          strncpy(buf, ((DisplayDevice *)devdata)->GetName(), sizeof(buf));
+        strncat(buf, ":", sizeof(buf));
+        strncat(buf, key, sizeof(buf));
+        key = buf;
+      }
+    }
+  }
+  SF.realloc_pchar(&g_editCommand->svalue2, key);
 
   if (DisplayScreen == action->function) {
     PCHAR pval = buf;
@@ -380,8 +460,20 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
-      // TODO: Fill display list.
+      if (g_bMultipleDevices) {
+        HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
+        int idx = ComboBox_AddString(combo, " All");
+        ComboBox_SetItemData(combo, idx, ALL_DEVICE);
+        idx = ComboBox_AddString(combo, " Default");
+        ComboBox_SetItemData(combo, idx, DEFAULT_DEVICE);
+        for (DisplayDevice *dev = g_devices.GetFirst(); NULL != dev;
+             dev = dev->GetNext()) {
+          idx = ComboBox_AddString(combo, dev->GetName());
+          ComboBox_SetItemData(combo, idx, dev);
+        }
+        ShowWindow(GetDlgItem(hwnd, IDC_DISPLAYL), SW_SHOW);
+        ShowWindow(combo, SW_SHOW);
+      }
 
       LoadCommandSettings(hwnd);
 
@@ -410,10 +502,24 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
 
     case IDC_DISPLAY:
       if (HIWORD(wParam) == CBN_SELENDOK) {
-        int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_DISPLAY));
-        g_commandDevice = (DisplayDevice *)
-          ComboBox_GetItemData(GetDlgItem(hwnd, IDC_DISPLAY), idx);
-        // TODO: Handle device change.
+        HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
+        int selidx = ComboBox_GetCurSel(combo);
+        LPARAM devdata = ComboBox_GetItemData(combo, selidx);
+        DisplayDevice *commandDevice;
+        if (DEFAULT_DEVICE == devdata)
+          commandDevice = g_devices.GetDefault();
+        else if (ALL_DEVICE == devdata)
+          commandDevice = NULL;
+        else
+          commandDevice = (DisplayDevice *)devdata;
+        DisplayAction *selact = NULL;
+        combo = GetDlgItem(hwnd, IDC_TYPE);
+        selidx = ComboBox_GetCurSel(combo);
+        if (CB_ERR != selidx)
+          // Maintain existing action type selection if possible.
+          selact = (DisplayAction *)ComboBox_GetItemData(combo, selidx);
+        FillCommandChoices(hwnd, commandDevice, selact);
+        EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
       break;
 
@@ -505,35 +611,40 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
 
 static DWORD WINAPI CommandThread(LPVOID lpParam)
 {
-  BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_COMMAND), 
-                               DisplayWindowParent(), CommandDialogProc, 
-                               (LPARAM)lpParam);
+  g_devices.LoadFromRegistry();
+  g_bMultipleDevices = ((NULL == g_devices.GetFirst()) ||
+                        (NULL != g_devices.GetFirst()->GetName()));
+
+  DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_COMMAND), DisplayWindowParent(), 
+                 CommandDialogProc, (LPARAM)lpParam);
   g_commandDialog = NULL;
+   
+  g_devices.Clear();
   return 0;
 }
 
 // Plugin request for Settings dialog.
 void OpenCommandUI()
 {
-  // TODO: Close timing window.
-   if (NULL != g_commandDialog) {
-     SetForegroundWindow(g_commandDialog);
-   }
-   else {
-     if (NULL != g_commandThread)
-       CloseHandle(g_commandThread);
-     DWORD dwThreadId;
-     g_commandThread = CreateThread(NULL, 0, &CommandThread, NULL, 0, &dwThreadId);
-     if (NULL == g_commandThread)
-       MessageBox(NULL, "Cannot create dialog thread.", "Error", MB_OK);
-   }
+  // TODO: I think there is a race condition here when thread is
+  // starting or finishing
+  if (NULL != g_commandDialog) {
+    SetForegroundWindow(g_commandDialog);
+  }
+  else {
+    if (NULL != g_commandThread)
+      CloseHandle(g_commandThread);
+    DWORD dwThreadId;
+    g_commandThread = CreateThread(NULL, 0, &CommandThread, NULL, 0, &dwThreadId);
+    if (NULL == g_commandThread)
+      MessageBox(NULL, "Cannot create dialog thread.", "Error", MB_OK);
+  }
 }
 
 // Plugin request to edit another command.
 void UpdateCommandUI(p_command command)
 {
   g_editCommand = command;
-  // TODO: Close timing window.
   if (NULL != g_commandDialog)
     SendMessage(g_commandDialog, WM_USER+100, 0, 0);
 }

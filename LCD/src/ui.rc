@@ -58,8 +58,47 @@ IDI_PLUGIN              ICON    DISCARDABLE     "plugin.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Bitmap
+//
+
+IDB_CHECKS              BITMAP  MOVEABLE PURE   "checks.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Dialog
 //
+
+IDD_DISPLAYS DIALOG DISCARDABLE  0, 0, 300, 150
+STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "LCD"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Display Devices:",IDC_STATIC,12,10,120,8
+    CONTROL         "Displays",IDC_DISPLAYS,"SysListView32",LVS_REPORT | 
+                    LVS_SHAREIMAGELISTS | LVS_SHOWSELALWAYS | LVS_SORTASCENDING | 
+                    LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,22,220,100
+    PUSHBUTTON      "&Add...",IDC_ADD,235,34,50,14
+    PUSHBUTTON      "&Edit...",IDC_EDIT,235,51,50,14
+    PUSHBUTTON      "&Remove",IDC_REMOVE,235,68,50,14
+    PUSHBUTTON      "&Set Default",IDC_DEFAULT,235,85,50,14
+    DEFPUSHBUTTON   "OK",IDOK,59,129,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,125,129,50,14
+    PUSHBUTTON      "Apply",IDC_APPLY,191,129,50,14,WS_DISABLED
+END
+
+IDD_GENERAL DIALOG DISCARDABLE  0, 0, 250, 175
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "General"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Name:",IDC_NAMEL,10,20,40,8
+    EDITTEXT        IDC_NAME,50,17,190,14,ES_AUTOHSCROLL
+    CONTROL         "Enabled",IDC_ENABLED,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,45,100,10
+    CONTROL         "Default",IDC_DEFAULT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,65,100,10
+END
 
 IDD_DISPLAY DIALOG DISCARDABLE  0, 0, 250, 175
 STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
@@ -97,11 +136,11 @@ END
 IDD_COMMAND DIALOG DISCARDABLE  0, 0, 300, 200
 STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
-CAPTION "LCD 3.0"
+CAPTION "LCD"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "Display:",IDC_DISPLAYL,15,20,30,8,NOT WS_VISIBLE
-    COMBOBOX        IDC_DISPLAY,50,18,190,45,CBS_DROPDOWNLIST |
+    COMBOBOX        IDC_DISPLAY,50,18,190,100,CBS_DROPDOWNLIST |
                     NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Type:",IDC_TYPEL,15,40,30,8
     COMBOBOX        IDC_TYPE,50,38,190,100,CBS_DROPDOWNLIST | CBS_SORT | 
@@ -115,7 +154,7 @@ BEGIN
                     14
     CONTROL         "On",IDC_VALBOOL,"Button",BS_AUTOCHECKBOX | NOT 
                     WS_VISIBLE | WS_TABSTOP,15,64,100,10
-    LTEXT           "Row:",IDC_STATIC,15,90,30,8
+    LTEXT           "Row:",IDC_ROWL,15,90,30,8
     EDITTEXT        IDC_ROW,50,87,30,14,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "RowSpin",IDC_ROW_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS,80,87,10,14
@@ -214,6 +253,9 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
+    IDS_NEW_NAME            "LCD"
+    IDS_NAME                "Name"
+    IDS_TYPE                "Type"
     IDS_BACKLIGHT           "Backlight:"
     IDS_BRIGHTNESS          "Brightness:"
     IDS_VARIABLE            "Variable:"

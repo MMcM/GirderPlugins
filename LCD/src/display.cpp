@@ -178,9 +178,10 @@ DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 
 DisplayDevice::DisplayDevice(const DisplayDevice& other)
 {
-  m_name = (NULL == other.m_name) ? NULL : _strdup(other.m_name);
   m_factory = other.m_factory;
   m_devtype = (NULL == other.m_devtype) ? NULL : _strdup(other.m_devtype);
+  m_next = NULL;
+  m_name = (NULL == other.m_name) ? NULL : _strdup(other.m_name);
   m_default = other.m_default;
   m_enabled = other.m_enabled;
 
@@ -1166,6 +1167,16 @@ DisplayDevice *DisplayDeviceList::Get(LPCSTR name)
   return NULL;
 }
   
+BOOL DisplayDeviceList::Contains(DisplayDevice *kdev)
+{
+  for (DisplayDevice *dev = m_head; NULL != dev; dev = dev->m_next) {
+    if (dev == kdev) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 void DisplayDeviceList::Clear()
 {
   while (TRUE) {
@@ -1186,7 +1197,7 @@ void DisplayDeviceList::Replace(DisplayDevice *odev, DisplayDevice *ndev)
       m_tail = m_head = ndev;
     }
     else {
-      ndev->m_next = m_tail;
+      m_tail->m_next = ndev;
       m_tail = ndev;
     }
     return;
@@ -1209,7 +1220,7 @@ void DisplayDeviceList::Replace(DisplayDevice *odev, DisplayDevice *ndev)
         else {
           prev->m_next = odev->m_next;
           if (odev == m_tail)
-            m_tail = odev->m_next;
+            m_tail = prev;
         }
       }
       else {
@@ -1248,6 +1259,8 @@ void DisplayDeviceList::SetDefault(DisplayDevice *dev)
         break;
       if (dev == next) {
         prev->m_next = dev->m_next;
+        if (dev == m_tail)
+          m_tail = prev;
         break;
       }
       prev = next;
@@ -1298,6 +1311,20 @@ void DisplayDeviceList::LoadFromRegistry(BOOL all)
       }
       RegCloseKey(subkey);
     }
+    if ((NULL == m_head) && (strlen(defname) > 0)) {
+      char libbuf[MAX_PATH];
+      if (DisplayDevice::GetSettingString(hkey, "Library", libbuf, sizeof(libbuf))) {
+        // If there is a default value that is not empty, and no child
+        // keys, and what looks to be a definition in the root, load
+        // it with that name.  This simplifies the transition into
+        // multiple device mode while keeping an existing display
+        // device.
+        DisplayDevice *dev = LoadFromRegistry(hkey);
+        dev->SetName(defname);
+        dev->SetDefault(TRUE);
+        m_head = m_tail = dev;
+      }
+    }
   }
   RegCloseKey(hkey);
   m_loaded = TRUE;
@@ -1323,6 +1350,19 @@ DisplayDevice *DisplayDeviceList::LoadFromRegistry(HKEY hkey)
 
 void DisplayDeviceList::SaveToRegistry()
 {
+  BOOL emptyMultiDev = FALSE;
+  if (NULL == m_head) {
+    HKEY hkey = GetSettingsKey();
+    char defname[128];
+    if (DisplayDevice::GetSettingString(hkey, NULL, defname, sizeof(defname))) {
+      // If there are no display devices, but there is a marker for
+      // multiple device mode, need to remember to put back a marker
+      // to stay in that mode.
+      emptyMultiDev = TRUE;
+    }
+    RegCloseKey(hkey);
+  }
+
   // Clear out all previous settings.
   SHDeleteKey(HKEY_LOCAL_MACHINE, "Software\\Girder3\\SoftPlugins\\LCD");
 
@@ -1339,11 +1379,15 @@ void DisplayDeviceList::SaveToRegistry()
         if (dev->IsDefault())
           DisplayDevice::SetSettingString(hkey, NULL, name);
         DisplayDevice::SetSettingBool(subkey, "Enabled", dev->IsEnabled());
-        SaveToRegistry(hkey, dev);
+        SaveToRegistry(subkey, dev);
         RegCloseKey(subkey);
       }
     }
   }
+
+  if (emptyMultiDev)
+    // Write the empty string in place of the missing value.
+    DisplayDevice::SetSettingString(hkey, NULL, "");
   
   RegCloseKey(hkey);
 }
@@ -1366,20 +1410,53 @@ HKEY DisplayDeviceList::GetSettingsKey()
     return NULL;
 }
 
+struct NamedSaveState {
+  LPSTR m_name;
+  PVOID m_state;
+  NamedSaveState *m_next;
+};
+
 PVOID DisplayDeviceList::Save()
 {
-  // TODO: Handle all devices.
   if (NULL == m_head)
     return NULL;
-  else
+  else if (NULL == m_head->m_next)
     return m_head->Save();
+  else {
+    NamedSaveState *nstate = NULL;
+    for (DisplayDevice *dev = m_head; NULL != dev; dev = dev->m_next) {
+      PVOID state = dev->Save();
+      if (NULL == state) continue;
+      NamedSaveState *nnstate = new NamedSaveState;
+      nnstate->m_name = (NULL == dev->GetName()) ? NULL : _strdup(dev->GetName());
+      nnstate->m_state = state;
+      nnstate->m_next = nstate;
+      nstate = nnstate;
+    }
+    return nstate;
+  }
 }
 
 void DisplayDeviceList::Restore(PVOID state)
 {
   LoadFromRegistry();
-  // TODO: Handle all devices.
-  if (NULL != m_head)
+  if (NULL == m_head) return;
+  if (NULL == m_head->m_next)
     m_head->Restore(state);
-  // Memory is lost if original no longer present.
+  else {
+    NamedSaveState *nstate = (NamedSaveState *)state;
+    while (NULL != nstate) {
+      DisplayDevice *dev;
+      if (NULL == nstate->m_name)
+        dev = m_head;
+      else
+        dev = Get(nstate->m_name);
+      if (NULL != dev)
+        dev->Restore(nstate->m_state);
+      NamedSaveState *nnstate = nstate->m_next;
+      free(nstate->m_name);
+      delete nstate;
+      nstate = nnstate;
+    }
+  }
 }

@@ -49,11 +49,14 @@ struct DisplayAction
   void (*function)(DisplayCommandState& state);
 };
 
+enum DisplayActionDeviceType {
+  devUNKNOWN, devDEFAULT, devNAMED, devALL
+};
+
 class DisplayDeviceList;
 class DisplayDevice;
-extern BOOL FindDisplayAction(DisplayDeviceList& devices,
-                              p_command command,
-                              DisplayDevice*& device,
+extern BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
+                              DisplayActionDeviceType& devtype, DisplayDevice*& device,
                               DisplayAction*& action);
 
 extern void DisplayString(DisplayCommandState& state);

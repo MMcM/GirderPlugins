@@ -36,7 +36,7 @@ void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)
   else {
     char buf[128];
     buf[0] = 1;
-    strcpy(buf+1, payload);
+    strncpy(buf+1, payload, sizeof(buf)-1);
     SF.send_event((PCHAR)event, buf, strlen(buf+1)+2, PLUGINNUM);
   }
 }
@@ -121,7 +121,8 @@ void DisplayDisableInput()
 
 int DisplayWidth(LPCSTR devname)
 {
-  DisplayDevice *device = g_devices.Get(devname);
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
   if (NULL == device)
     return 20;
   return device->GetWidth();
@@ -129,7 +130,8 @@ int DisplayWidth(LPCSTR devname)
 
 int DisplayHeight(LPCSTR devname)
 {
-  DisplayDevice *device = g_devices.Get(devname);
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
   if (NULL == device)
     return 4;
   return device->GetHeight();
@@ -137,22 +139,25 @@ int DisplayHeight(LPCSTR devname)
 
 void DisplayClose(LPCSTR devname)
 {
-  DisplayDevice *device = g_devices.Get(devname);
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
   if (NULL != device)
     device->Close();
 }
 
 void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname)
 {
-  DisplayDevice *device = g_devices.Get(devname);
-  if ((NULL != device) && device->Open())
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if ((NULL != device) && device->IsEnabled() && device->Open())
     device->Display(row, col, width, str);
 }
 
 void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname)
 {
-  DisplayDevice *device = g_devices.Get(devname);
-  if ((NULL != device) && device->Open())
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if ((NULL != device) && device->IsEnabled() && device->Open())
     device->DisplayCustomCharacter(row, col, CustomCharacter(bits));
 }
 
@@ -162,6 +167,7 @@ class DisplayCommandState
 {
 public:
   p_command m_command;
+  DisplayActionDeviceType m_devtype;
   DisplayDevice *m_device;
   DisplayAction *m_action;
   PCHAR m_status;
@@ -194,6 +200,10 @@ BOOL DisplayOpen(DisplayCommandState& state)
     state.SetStatus("Could not find device.");
     return FALSE;
   }
+  else if (!state.m_device->IsEnabled()) {
+    state.SetStatus("Device is not enabled.");
+    return FALSE;
+  }
   if (!state.m_device->Open()) {
     state.SetStatus("Could not open device.");
     return FALSE;
@@ -203,14 +213,11 @@ BOOL DisplayOpen(DisplayCommandState& state)
 
 void DisplayClose(DisplayCommandState& state)
 {
-  if (NULL == state.m_device) {
-    DisplayClose();
-    state.SetStatus("All displays closed.");
+  for (DisplayDevice *dev = state.m_device; NULL != dev; dev = dev->GetNext()) {
+    dev->Close();
+    if (devALL != state.m_devtype) break;
   }
-  else {
-    state.m_device->Close();
-    state.SetStatus("Display closed.");
-  }
+  state.SetStatus("Display closed.");
 }
 
 void DisplayClear(DisplayCommandState& state)
@@ -338,6 +345,8 @@ void DisplayCustomCharacter(DisplayCommandState& state)
 void DisplayCommand(p_command command, PCHAR status, int statuslen)
 {
   DisplayCommandState state(command, status, statuslen);
-  if (FindDisplayAction(g_devices, command, state.m_device, state.m_action))
+  if (FindDisplayAction(g_devices, command, 
+                        state.m_devtype, state.m_device, 
+                        state.m_action))
     (*state.m_action->function)(state);
 }

@@ -5,32 +5,48 @@ $Header$
 #include "stdafx.h"
 #include "plugin.h"
 
-// TODO: Optional device name to all.
+static BOOL GetOptionalDisplayDevice(lua_State *L, int argpos, LPCSTR& dev)
+{
+  dev = NULL;
+  int nargs = lua_gettop(L);
+  if (nargs == argpos)
+    return TRUE;
+  else if (nargs == argpos + 1) {
+    if (lua_isstring(L, argpos))
+      dev = lua_tostring(L, argpos + 1);
+    return TRUE;
+  }
+  else
+    return FALSE;
+}
 
 int luaSize(lua_State *L)
 {
-  if (0 != lua_gettop(L)) {
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 0, dev)) {
     lua_error(L, "incorrect number of arguments to LCD_Width");
     return 0;
   }
-  lua_pushnumber(L, DisplayWidth());
-  lua_pushnumber(L, DisplayHeight());
+  lua_pushnumber(L, DisplayWidth(dev));
+  lua_pushnumber(L, DisplayHeight(dev));
   return 2;
 }
 
 int luaClose(lua_State *L)
 {
-  if (0 != lua_gettop(L)) {
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 0, dev)) {
     lua_error(L, "incorrect number of arguments to LCD_Close");
     return 0;
   }
-  DisplayClose();
+  DisplayClose(dev);
   return 0;
 }
 
 int luaString(lua_State *L)
 {
-  if (4 != lua_gettop(L)) {
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 4, dev)) {
     lua_error(L, "incorrect number of arguments to LCD_Display");
     return 0;
   }
@@ -44,13 +60,15 @@ int luaString(lua_State *L)
   DisplayString((int)lua_tonumber(L, 1), 
                 (int)lua_tonumber(L, 2),
                 (int)lua_tonumber(L, 3),
-                lua_tostring(L, 4));
+                lua_tostring(L, 4),
+                dev);
   return 0;
 }
 
 int luaCustomCharacter(lua_State *L)
 {
-  if (3 != lua_gettop(L)) {
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 3, dev)) {
     lua_error(L, "incorrect number of arguments to LCD_CustomCharacter");
     return 0;
   }
@@ -62,7 +80,8 @@ int luaCustomCharacter(lua_State *L)
   }
   DisplayCustomCharacter((int)lua_tonumber(L, 1), 
                          (int)lua_tonumber(L, 2),
-                         lua_tostring(L, 3));
+                         lua_tostring(L, 3),
+                         dev);
   return 0;
 }
 

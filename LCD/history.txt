@@ -1,4 +1,4 @@
-3.0     05/09/2004      MMcM    Revise UI for more options.
+3.0     05/09/2004      MMcM    Add support for multiple display devices at once.
 
 2.11    04/18/2004      MMcM    More device specific improvements.
 

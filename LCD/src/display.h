@@ -388,6 +388,7 @@ public:
   }
   DisplayDevice *GetDefault();
   DisplayDevice *Get(LPCSTR name);
+  BOOL Contains(DisplayDevice *dev);
   
   void Clear();
 
