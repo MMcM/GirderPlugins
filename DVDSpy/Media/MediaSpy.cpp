@@ -17,14 +17,32 @@ application.
 
 #include <dshow.h>
 
+STDAPI MediaSpyGetCurrentObject(REFCLSID, UINT, REFIID, PVOID*);
+STDAPI MediaSpyConvertOle(LPOLESTR, LPSTR, size_t, BOOL);
+
+class CCriticalSection
+{
+private:
+  LPCRITICAL_SECTION m_pcs;
+public:
+  CCriticalSection(LPCRITICAL_SECTION pcs) : m_pcs(pcs) {
+    EnterCriticalSection(m_pcs);
+  }
+  ~CCriticalSection() {
+    LeaveCriticalSection(m_pcs);
+  }
+};
+
 class CMediaWrapper;
 
 struct CInterceptedClass
 {
   REFCLSID m_rclsid;
+  CRITICAL_SECTION m_cs;
   CMediaWrapper *m_pCurrentWrapper;
 
   CInterceptedClass(REFCLSID rclsid) : m_rclsid(rclsid) {
+    InitializeCriticalSection(&m_cs);
     m_pCurrentWrapper = NULL;
   }
 };
@@ -70,14 +88,17 @@ HKEY GetServerKey(REFCLSID rclsid)
 class CMediaWrapper : public IUnknown
 {
   friend class CClassFactory;
+  friend HRESULT STDAPICALLTYPE MediaSpyGetCurrentObject(REFCLSID, UINT, REFIID, PVOID*);
 
 protected:
   CInterceptedClass *m_pClass;
+  CMediaWrapper *m_pNext;
   DWORD m_cRef;
   IUnknown *m_pInner;
   DWORD m_dwROT;
 
   CMediaWrapper(CInterceptedClass *pClass) : m_pClass(pClass) {
+    m_pNext = NULL;
     m_cRef = 0;
     m_pInner = NULL;
     m_dwROT = 0;
@@ -94,7 +115,19 @@ protected:
     }
     if (NULL != m_pInner)
       m_pInner->Release();
-    InterlockedCompareExchange((PVOID*)&m_pClass->m_pCurrentWrapper, NULL, this);
+    // Splice out of linked list.
+    CCriticalSection cs(&m_pClass->m_cs);
+    CMediaWrapper **pprev = &m_pClass->m_pCurrentWrapper;
+    while (TRUE) {
+      CMediaWrapper *prev = *pprev;
+      if (this == prev) {
+        *pprev = m_pNext;
+        break;
+      }
+      if (NULL == prev)
+        break;                  // Not found (maybe real create failed).
+      pprev = &prev->m_pNext;
+    }
   }
 
 public:
@@ -260,15 +293,17 @@ HRESULT CClassFactory::RealCreate(CMediaWrapper *pWrapper, IUnknown *pUnkOuter)
   if ('\0' != m_szROTPrefix[0])
     hr = AddToROT(pWrapper);
 
-  // Of course, we could put all of them into a list and let the
-  // client enumerate them.
-#if 1
-  // This remembers the earliest one created.
-  InterlockedCompareExchange((PVOID*)&m_pClass->m_pCurrentWrapper, pWrapper, NULL);
-#else
-  // This remembers the latest one created.
-  InterlockedExchange((PLONG)&m_pClass->m_pCurrentWrapper, (LONG)pWrapper);
-#endif
+  // Splice onto end of linked list.
+  CCriticalSection cs(&m_pClass->m_cs);
+  CMediaWrapper **pprev = &m_pClass->m_pCurrentWrapper;
+  while (TRUE) {
+    CMediaWrapper *prev = *pprev;
+    if (NULL == prev) {
+      *pprev = pWrapper;
+      break;
+    }
+    pprev = &prev->m_pNext;
+  }
 
   return S_OK;
 }
@@ -381,13 +416,21 @@ STDAPI DllUnregisterServer()
 
 /*** Hook entry function ***/
 
-STDAPI MediaSpyGetCurrentObject(REFCLSID rclsid, REFIID riid, PVOID *ppv)
+STDAPI MediaSpyGetCurrentObject(REFCLSID rclsid, UINT n,
+                                REFIID riid, PVOID *ppv)
 {
   CInterceptedClass *pClass = FindClass(rclsid);
   if (NULL == pClass) return CLASS_E_CLASSNOTAVAILABLE;
-  CMediaWrapper *pCurrent = pClass->m_pCurrentWrapper;
-  if (NULL == pCurrent) return S_FALSE;
-  return pCurrent->QueryInterface(riid, ppv);
+
+  CCriticalSection cs(&pClass->m_cs);
+  CMediaWrapper **pnext = &pClass->m_pCurrentWrapper;
+  while (TRUE) {
+    CMediaWrapper *next = *pnext;
+    if (NULL == next) return S_FALSE;
+    if (0 == n) return next->QueryInterface(riid, ppv);
+    pnext = &next->m_pNext;
+    n--;
+  }
 }
 
 // This is here so that the hook itself does not need to link with OLE.
