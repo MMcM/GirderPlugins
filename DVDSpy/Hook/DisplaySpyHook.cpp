@@ -288,9 +288,8 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 
   BEGIN_MODULE(ShowShifter)
-
-    // Getting information off the screen is tricky because SSF has
-    // its own window system of sorts.
+  // Getting information off the screen is tricky because SSF has its
+  // own window system of sorts.
 
     BEGIN_MATCH()
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
@@ -304,6 +303,87 @@ static MatchEntry g_matches[] = {
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "ShowShifterWndClass")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_NMODULE(BSPlayer,bplay)
+  // There are also some text controls, which display things like
+  // Pause, that might be worth getting.  Their position comes from
+  // the skin.ini file in the skin directory / archive.  They appear
+  // to be drawn with DrawText to a zero-origin DC, such as a bitmap
+  // that is then blted to the screen.
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "BSPlayer")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+#if 0
+  // Does anyone still use this?
+  BEGIN_NMODULE(SASAMI2k,sasami2000)
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "TMainForm")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+#endif
+
+#if 0
+  // The problem here is that the the decoding is all internal and the
+  // drawing via DirectDraw (not DirectShow).  Labels are drawn
+  // manually because of skinning.
+  BEGIN_NMODULE(DivXPlayer,DivX Player*)
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "QWidget")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+#endif
+
+  BEGIN_NMODULE(PowerDivX,PowerDivX*)
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+#if 0
+      // Too many of these.
+      ENTRY_STR(MATCH_CLASS, "ThunderRT6FormDC")
+#else
+      ENTRY_STR(MATCH_CLASS, "VideoRenderer")
+#endif
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
@@ -664,7 +744,14 @@ void IndexMatches(BOOL bAll)
       if (!bAll) {
         if (nBegin)
           break;                // End of found module.
-        else if (!_stricmp(g_matches[i].szVal, szModule)) {
+        LPCSTR szKey = g_matches[i].szVal;
+        BOOL bMatch = FALSE;
+        size_t nKey = strlen(szKey);
+        if ('*' == szKey[nKey-1]) // Allow trailing wildcard for prefix match.
+          bMatch = !_strnicmp(szKey, szModule, nKey-1);
+        else
+          bMatch = !_stricmp(szKey, szModule);
+        if (bMatch) {
           szModule = g_matches[i].szName; // Our name for it.
           nBegin = i + 1;       // First module entry.
         }
@@ -672,7 +759,7 @@ void IndexMatches(BOOL bAll)
     }
     else if (ENTRY_BEGIN == g_matches[i].nCode) {
       if (bAll || nBegin)
-        nMatches++;
+        nMatches++;             // Count matches in module (or all).
       else
         nOffset++;              // Count matches before module.
     }
@@ -854,7 +941,8 @@ void RemovePatches()
 /*** Wrapped COM object interface ***/
 
 // We do not link to mediaspy.dll, since that would clutter up every process.
-LPFNGETCLASSOBJECT MediaSpyGetCurrentObject = NULL;
+typedef HRESULT (STDAPICALLTYPE * LPFNGETOBJECT)(REFCLSID, UINT, REFIID, PVOID*);
+LPFNGETOBJECT MediaSpyGetCurrentObject = NULL;
 typedef HRESULT (STDAPICALLTYPE * LPFNCONVERTOLE)(LPOLESTR, LPSTR, size_t,BOOL);
 LPFNCONVERTOLE MediaSpyConvertOle = NULL;
 static REFTIME fgDuration, fgPosition;
@@ -872,7 +960,7 @@ BOOL MatchMediaSpy(UINT nClass)
     // the function pointer around.
     hInst = LoadLibrary("MEDIASPY.DLL");
     if (NULL == hInst) return FALSE;
-    MediaSpyGetCurrentObject = (LPFNGETCLASSOBJECT)
+    MediaSpyGetCurrentObject = (LPFNGETOBJECT)
       GetProcAddress(hInst, "MediaSpyGetCurrentObject");
     if (NULL == MediaSpyGetCurrentObject) return FALSE;
     MediaSpyConvertOle = (LPFNCONVERTOLE)
@@ -882,68 +970,75 @@ BOOL MatchMediaSpy(UINT nClass)
   switch (nClass) {
   case MS_FILTER_GRAPH:
     {
-      IFilterGraph *pFG = NULL;
-      HRESULT hr = MediaSpyGetCurrentObject(CLSID_FilterGraph, IID_IFilterGraph, 
-                                            (void**)&pFG);
-      if (S_OK != hr) return FALSE; // Including S_FALSE for none.
-      IMediaPosition *pMP = NULL;
-      hr = pFG->QueryInterface(IID_IMediaPosition, (void**)&pMP);
-      if (SUCCEEDED(hr)) {
-        hr = pMP->get_Duration(&fgDuration);
-        if (SUCCEEDED(hr))
-          hr = pMP->get_CurrentPosition(&fgPosition);
-        pMP->Release();
-      }
-      IEnumFilters *pEF = NULL;
-      BOOL bFound = FALSE;
-      hr = pFG->EnumFilters(&pEF);
-      if (SUCCEEDED(hr)) {
-        while (!bFound) {
-          IBaseFilter *pBF = NULL;
-          hr = pEF->Next(1, &pBF, NULL);
-          if (S_OK != hr) break;
-          IFileSourceFilter *pFSF = NULL;
-          hr = pBF->QueryInterface(IID_IFileSourceFilter, (void**)&pFSF);
-          if (SUCCEEDED(hr)) {
-            LPOLESTR wszFileName = NULL;
-            AM_MEDIA_TYPE mtype;
-            hr = pFSF->GetCurFile(&wszFileName, &mtype);
-            pFSF->Release();
-            if (SUCCEEDED(hr)) {
-              if (NULL != wszFileName)
-                hr = MediaSpyConvertOle(wszFileName, 
-                                        szfgFileName, sizeof(szfgFileName),
-                                        TRUE);
-              else {
-                // The filter may not support getting the filename,
-                // but the graph builder's render method will have
-                // given it the file's name.
-                FILTER_INFO finfo;
-                hr = pBF->QueryFilterInfo(&finfo);
-                if (SUCCEEDED(hr)) {
-                  hr = MediaSpyConvertOle(finfo.achName, 
-                                          szfgFileName, sizeof(szfgFileName),
-                                          FALSE);
-                  if (NULL != finfo.pGraph)
-                    finfo.pGraph->Release();
-                }
-              }
-              bFound = TRUE;
-            }
-          }
-          // Could look for a file sink as well to indicate that we are capturing.
-          pBF->Release();
+      // There may be multiple graphs lying around; use the eldest one
+      // that seems complete.
+      UINT n = 0;
+      while (TRUE) {
+        IFilterGraph *pFG = NULL;
+        HRESULT hr = MediaSpyGetCurrentObject(CLSID_FilterGraph, n,
+                                              IID_IFilterGraph, (void**)&pFG);
+        if (S_OK != hr) break;  // Including S_FALSE for none.
+        IMediaPosition *pMP = NULL;
+        hr = pFG->QueryInterface(IID_IMediaPosition, (void**)&pMP);
+        if (SUCCEEDED(hr)) {
+          hr = pMP->get_Duration(&fgDuration);
+          if (SUCCEEDED(hr))
+            hr = pMP->get_CurrentPosition(&fgPosition);
+          pMP->Release();
         }
-        pEF->Release();
+        IEnumFilters *pEF = NULL;
+        BOOL bFound = FALSE;
+        hr = pFG->EnumFilters(&pEF);
+        if (SUCCEEDED(hr)) {
+          while (!bFound) {
+            IBaseFilter *pBF = NULL;
+            hr = pEF->Next(1, &pBF, NULL);
+            if (S_OK != hr) break;
+            IFileSourceFilter *pFSF = NULL;
+            hr = pBF->QueryInterface(IID_IFileSourceFilter, (void**)&pFSF);
+            if (SUCCEEDED(hr)) {
+              LPOLESTR wszFileName = NULL;
+              AM_MEDIA_TYPE mtype;
+              hr = pFSF->GetCurFile(&wszFileName, &mtype);
+              pFSF->Release();
+              if (SUCCEEDED(hr)) {
+                if (NULL != wszFileName)
+                  hr = MediaSpyConvertOle(wszFileName, 
+                                          szfgFileName, sizeof(szfgFileName),
+                                          TRUE);
+                else {
+                  // The filter may not support getting the filename,
+                  // but the graph builder's render method will have
+                  // given it the file's name.
+                  FILTER_INFO finfo;
+                  hr = pBF->QueryFilterInfo(&finfo);
+                  if (SUCCEEDED(hr)) {
+                    hr = MediaSpyConvertOle(finfo.achName, 
+                                            szfgFileName, sizeof(szfgFileName),
+                                            FALSE);
+                    if (NULL != finfo.pGraph)
+                      finfo.pGraph->Release();
+                  }
+                }
+                bFound = TRUE;
+              }
+            }
+            // Could look for a file sink as well to indicate that we are capturing.
+            pBF->Release();
+          }
+          pEF->Release();
+        }
+        pFG->Release();
+        if (bFound) return TRUE;
+        n++;
       }
-      pFG->Release();
-      return bFound;
+      return FALSE;
     }
   case MS_DVD_NAVIGATOR:
     {
       IDvdInfo *pDVD = NULL;
-      HRESULT hr = MediaSpyGetCurrentObject(CLSID_DVDNavigator, IID_IDvdInfo, 
-                                            (void**)&pDVD);
+      HRESULT hr = MediaSpyGetCurrentObject(CLSID_DVDNavigator, 0,
+                                            IID_IDvdInfo, (void**)&pDVD);
       if (S_OK != hr) return FALSE; // Including S_FALSE for none.
       hr = pDVD->GetCurrentDomain(&dvdDomain);
       if (SUCCEEDED(hr)) {
