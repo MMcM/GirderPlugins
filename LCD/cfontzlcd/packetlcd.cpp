@@ -162,6 +162,7 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD
 {
   m_hasSendData = (devmode != OLD_CMDS);
   m_hasKeypadLegends = (devmode == LEGENDS);
+  m_hasFansAndSensors = (devmode == OLD_CMDS);
 
   m_cols = cols;
   m_rows = rows;
@@ -180,7 +181,12 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD
   strcpy(m_port, "COM1");
   m_portSpeed = (devmode == OLD_CMDS) ? CBR_19200 : CBR_115200;
 
-  m_inputEnabled = FALSE;
+  if (m_hasFansAndSensors) {
+    m_fanInterval = 500;
+    m_sensorInterval = 1000;
+    memset(m_fansIndexed, 0, sizeof(m_fansIndexed));
+    memset(m_sensorsIndexed, 0, sizeof(m_sensorsIndexed));
+  }
 
   m_sendHead = m_sendTail = NULL;
   InitializeCriticalSection(&m_inputCS);
@@ -190,8 +196,13 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD(const CrystalfontzPacketLCD& other)
   : DisplayDevice(other)
 {
   m_hasSendData = other.m_hasSendData;
+  m_hasKeypadLegends = other.m_hasKeypadLegends;
+  m_hasFansAndSensors = other.m_hasFansAndSensors;
 
-  m_inputEnabled = FALSE;
+  if (m_hasFansAndSensors) {
+    memset(m_fansIndexed, 0, sizeof(m_fansIndexed));
+    memset(m_sensorsIndexed, 0, sizeof(m_sensorsIndexed));
+  }
 
   m_sendHead = m_sendTail = NULL;
   InitializeCriticalSection(&m_inputCS);
@@ -267,6 +278,12 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
   SendOneWay(spkt);
 
   UpdateKeypadLegends();
+
+  if (m_hasFansAndSensors) {
+    for (int i = 0; i < NFANS; i++)
+      // Need place to remember power; name does not matter.
+      m_fansIndexed[i] = GetFan(i + 1, "Fan");
+  }
 
   return TRUE;
 }
@@ -419,18 +436,223 @@ void CrystalfontzPacketLCD::UpdateKeypadLegends()
   SendOneWay(spkt);
 }
 
+int CrystalfontzPacketLCD::DeviceGetNFans()
+{
+  if (m_hasFansAndSensors)
+    return NFANS;
+  else
+    return 0;
+}
+
+void CrystalfontzPacketLCD::DeviceSetFanPower(int fan, double power)
+{
+  BOOL needQuery = FALSE;
+  for (int i = 0; i < NFANS; i++) {
+    if (i == fan-1) continue;
+    if (m_fansIndexed[i]->GetPower() < 0) {
+      needQuery = TRUE;
+      break;
+    }
+  }
+  if (needQuery) {
+    SendPacket *spkt = new SendPacket(27, 0); // Query Fan Power
+    ReceivePacket *rpkt = Send(spkt);
+    for (i = 0; i < NFANS; i++) {
+      m_fansIndexed[i]->SetPower((NULL == rpkt) ? 1.0 :
+                                 (double)rpkt->GetData()[i] / 100.0);
+    }
+    if (NULL != rpkt) delete rpkt;
+  }
+  m_fansIndexed[fan-1]->SetPower(power);
+  SendPacket *spkt = new SendPacket(17, 4); // Set Fan Power
+  for (i = 0; i < NFANS; i++) {
+    spkt->GetData()[i] = (BYTE)(m_fansIndexed[i]->GetPower() * 100.0);
+  }
+  SendOneWay(spkt);
+}
+
+DisplayDevice::IntervalMode CrystalfontzPacketLCD::DeviceHasFanInterval()
+{
+  if (m_hasFansAndSensors)
+    return IM_FIXED;
+  else
+    return IM_NONE;
+}
+
+void CrystalfontzPacketLCD::DeviceCheckFans()
+{
+  DWORD startTime = GetTickCount();
+
+  // Enable reporting from all fans.
+  SendPacket *spkt = new SendPacket(16, 1); // Set Up Fan Reporting
+  *spkt->GetData() = (1<<NFANS)-1;
+  SendOneWay(spkt);
+  
+  while (GetTickCount() - startTime < 1000) { // Wait up to one sec. for results
+    BOOL wait = FALSE;
+    for (int i = 0; i < NFANS; i++) {
+      if (m_fansIndexed[i]->GetUpdateTime() < startTime) {
+        wait = TRUE;
+        break;
+      }
+    }
+    if (!wait) break;
+    Sleep(100);
+  }
+
+  if (!m_inputEnabled) {
+    // Disable reporting.
+    SendPacket *spkt = new SendPacket(16, 1); // Set Up Fan Reporting
+    *spkt->GetData() = 0;
+    SendOneWay(spkt);
+  }
+}
+
+BOOL CrystalfontzPacketLCD::DeviceHasSensors()
+{
+  return m_hasFansAndSensors;
+}
+
+DisplayDevice::IntervalMode CrystalfontzPacketLCD::DeviceHasSensorInterval()
+{
+  if (m_hasFansAndSensors)
+    return IM_FIXED;
+  else
+    return IM_NONE;
+}
+
+void CrystalfontzPacketLCD::MatchSensors(LPCSTR createPrefix)
+{
+  int n = 0;
+  if (createPrefix)
+    n = DOWSensor::GetNewNameIndex(createPrefix, m_sensors);
+
+  DOWSensor *oldSensors = m_sensors;
+  DOWSensor **psensor = &m_sensors;
+
+  for (int i = 0; i < NSENSORS; i++) {
+    DOWSensor *sensor = NULL;
+    SendPacket *spkt = new SendPacket(18, 1); // Read DOW Device Information
+    *spkt->GetData() = i;
+    ReceivePacket *rpkt = Send(spkt);
+    if (NULL != rpkt) {
+      if (rpkt->GetData()[1] != 0) {
+        DOWSensor **prev = &oldSensors;
+        while (TRUE) {
+          sensor = *prev;
+          if (NULL == sensor) break;
+          if (!memcmp(sensor->GetROM(), rpkt->GetData()+1, 8)) {
+            *prev = sensor->GetNext(); // Unlink and reuse.
+            break;
+          }
+          prev = &sensor->GetNext();
+        }
+        if ((NULL == sensor) && (NULL != createPrefix))
+          sensor = DOWSensor::Create(createPrefix, ++n, rpkt->GetData()+1);
+      }
+      delete rpkt;
+    }
+    m_sensorsIndexed[i] = sensor;
+    if (NULL != sensor) {
+      *psensor = sensor;
+      psensor = &sensor->GetNext();
+    }
+  }
+
+  if (NULL == createPrefix) {
+    *psensor = oldSensors;
+  }
+  else {
+    *psensor = NULL;
+    DOWSensor::Destroy(oldSensors);
+  }
+}
+
+void CrystalfontzPacketLCD::DeviceDetectSensors(LPCSTR prefix)
+{
+  MatchSensors(prefix);
+
+  DWORD startTime = GetTickCount();
+
+  // Enable reporting from all sensors.
+  DWORD mask = 0;
+  for (int i = 0; i < NSENSORS; i++) {
+    if ((NULL != m_sensorsIndexed[i]) && m_sensorsIndexed[i]->IsKnown()) {
+      mask |= (1 << i);
+    }
+  }
+  SendPacket *spkt = new SendPacket(19, 4); // Set Up Temperature Reporting
+  memcpy(spkt->GetData(), &mask, 4);
+  SendOneWay(spkt);
+  
+  while (GetTickCount() - startTime < 2000) { // Wait up to two sec. for results
+    BOOL wait = FALSE;
+    for (int i = 0; i < NFANS; i++) {
+      if ((NULL != m_sensorsIndexed[i]) && m_sensorsIndexed[i]->IsKnown() &&
+          (m_sensorsIndexed[i]->GetUpdateTime() < startTime)) {
+        wait = TRUE;
+        break;
+      }
+    }
+    if (!wait) break;
+    Sleep(100);
+  }
+
+  if (!m_inputEnabled) {
+    // Disable reporting.
+    SendPacket *spkt = new SendPacket(19, 4); // Set Up Temperature Reporting
+    memset(spkt->GetData(), 0, 4);
+    SendOneWay(spkt);
+  }
+}
+
 BOOL CrystalfontzPacketLCD::DeviceEnableInput()
 {
   // The input thread is running whenever we are open; we just tell it
   // whether to post events or discard notifications.
   if (!Open()) return FALSE;
-  m_inputEnabled = TRUE;
+
+  if (m_enableFans) {
+    BYTE mask = 0;
+    for (int i = 0; i < NFANS; i++) {
+      if (m_fansIndexed[i]->IsEnabled()) {
+        mask |= (1 << i);
+      }
+    }
+    SendPacket *spkt = new SendPacket(16, 1); // Set Up Fan Reporting
+    *spkt->GetData() = mask;
+    SendOneWay(spkt);
+  }
+
+  if (m_enableSensors) {
+    MatchSensors(NULL);
+    DWORD mask = 0;
+    for (int i = 0; i < NSENSORS; i++) {
+      if ((NULL != m_sensorsIndexed[i]) && m_sensorsIndexed[i]->IsEnabled()) {
+        mask |= (1 << i);
+      }
+    }
+    SendPacket *spkt = new SendPacket(19, 4); // Set Up Temperature Reporting
+    memcpy(spkt->GetData(), &mask, 4);
+    SendOneWay(spkt);
+  }
+
   return TRUE;
 }
 
 void CrystalfontzPacketLCD::DeviceDisableInput()
 {
-  m_inputEnabled = FALSE;
+  if (m_enableFans) {
+    SendPacket *spkt = new SendPacket(16, 1); // Set Up Fan Reporting
+    *spkt->GetData() = 0;
+    SendOneWay(spkt);
+  }
+
+  if (m_enableSensors) {
+    SendPacket *spkt = new SendPacket(19, 4); // Set Up Temperature Reporting
+    memset(spkt->GetData(), 0, 4);
+    SendOneWay(spkt);
+  }
 }
 
 const DWORD ACK_TIMEOUT = 250;  // Wait for ack to command.
@@ -760,44 +982,58 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
     }
     break;
   case 0x80:
-    if (m_inputEnabled) {
-      switch (rpkt->GetType()) {
-      case 0x80:
-        if (m_enableKeypad && (1 == rpkt->GetDataLength())) {
+    switch (rpkt->GetType()) {
+    case 0x80:
+      if (1 == rpkt->GetDataLength()) {
+        if (m_enableKeypad && m_inputEnabled) {
           char buf[8];
-          sprintf(buf, "%d", rpkt->GetData()[0]); // Decimal as in manual.
+          sprintf(buf, "%d", *rpkt->GetData()); // Decimal as in manual.
           MapInput(buf);
         }
-        break;
-      case 0x81:
-        if (m_enableFans && (4 == rpkt->GetDataLength())) {
-          char event[8], payload[16];
-          sprintf(event, "FAN%d", rpkt->GetData()[0] + 1);
-          int tach = rpkt->GetData()[1];
-          int ticks = (rpkt->GetData()[2] << 8) + rpkt->GetData()[3];
-          if (tach < 3)
-            strcpy(payload, "STOP");
-          else if (tach < 4)
-            strcpy(payload, "SLOW");
-          else if (0xFF == tach)
-            strcpy(payload, "????");
-          else {
-            int ppr = 1;
-            sprintf(payload, "%5d", ((27692308 / ppr) * (tach - 3) / ticks));
-          }
-          DisplaySendEvent(event, payload);
-        }
-        break;
-      case 0x82:
-        if (m_enableSensors && (3 == rpkt->GetDataLength())) {
-          char event[8], payload[16];
-          sprintf(event, "TEMP%d", rpkt->GetData()[0] + 1);
-          int count = (rpkt->GetData()[1] << 8) + rpkt->GetData()[2];
-          sprintf(payload, "%9.4f", (double)count / 16.0);
-          DisplaySendEvent(event, payload);
-        }
-        break;
       }
+      break;
+    case 0x81:
+      if (4 == rpkt->GetDataLength()) {
+        int n = *rpkt->GetData();
+        if (n >= NFANS) break;
+        FanMonitor *fan = m_fansIndexed[n];
+        if (NULL == fan) break;
+        BOOL changed;
+        BYTE tach = rpkt->GetData()[1];
+        WORD ticks = *(WORD*)(rpkt->GetData()+2); // LSB first, contrary to data sheet.
+        if (tach < 3)
+          changed = fan->SetValue(NULL); // Not present
+        else if (tach < 4)
+          changed = fan->SetRPM(0); // SLOW
+        else if (0xFF == tach)
+          changed = fan->SetValue(NULL); // Not measured
+        else {
+          changed = fan->SetRPM(((27692308 / fan->GetPulsesPerRevolution()) * (tach - 3)) / ticks);
+        }
+        if (changed && m_enableFans && m_inputEnabled) {
+          DisplaySendEvent(fan->GetName(), fan->GetValue());
+        }
+      }
+      break;
+    case 0x82:
+      if (3 == rpkt->GetDataLength()) {
+        int n = *rpkt->GetData();
+        if (n >= NSENSORS) break;
+        DOWSensor *sensor = m_sensorsIndexed[n];
+        if (NULL == sensor) break;
+        BYTE counts[2];
+        counts[0] = rpkt->GetData()[2]; // MSB first
+        counts[1] = rpkt->GetData()[1];
+        BOOL changed;
+        if (rpkt->GetData()[3] == 0) // CRC mismatch?
+          changed = sensor->SetValue(NULL);
+        else
+          changed = sensor->LoadFromScratchpad(counts, 2);
+        if (changed && m_enableSensors && m_inputEnabled) {
+          DisplaySendEvent(sensor->GetName(), sensor->GetValue());
+        }
+      }
+      break;
     }
     break;
   }

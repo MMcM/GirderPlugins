@@ -32,6 +32,13 @@ public:
   virtual LPCSTR *DeviceGetKeypadButtonChoices();
   virtual LPCSTR *DeviceGetKeypadLegendChoices();
   virtual void DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend);
+  virtual int DeviceGetNFans();
+  virtual void DeviceSetFanPower(int fan, double power);
+  virtual IntervalMode DeviceHasFanInterval();
+  virtual void DeviceCheckFans();
+  virtual BOOL DeviceHasSensors();
+  virtual IntervalMode DeviceHasSensorInterval();
+  virtual void DeviceDetectSensors(LPCSTR prefix);
 
 protected:
   void Receive(ReceivePacket *pkt);
@@ -39,9 +46,14 @@ protected:
   ReceivePacket *Send(SendPacket *pkt);
 
   void UpdateKeypadLegends();
+  void MatchSensors(LPCSTR createPrefix);
 
-  BOOL m_hasSendData, m_hasKeypadLegends;
-  BOOL m_inputEnabled;
+  BOOL m_hasSendData, m_hasKeypadLegends, m_hasFansAndSensors;
+
+#define NFANS 4
+  FanMonitor *m_fansIndexed[NFANS];
+#define NSENSORS 32
+  DOWSensor *m_sensorsIndexed[NSENSORS];
 
   CRITICAL_SECTION m_inputCS;
   SendPacket *m_sendHead, *m_sendTail;

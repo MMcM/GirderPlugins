@@ -177,6 +177,7 @@ DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
   m_sensors = NULL;
   m_fanInterval = m_sensorInterval = 0;
 
+  m_inputEnabled = FALSE;
   m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
 }
 
@@ -232,6 +233,7 @@ DisplayDevice::DisplayDevice(const DisplayDevice& other)
   m_fanInterval = other.m_fanInterval;
   m_sensorInterval = other.m_sensorInterval;
 
+  m_inputEnabled = FALSE;
   m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
 }
 
@@ -332,6 +334,22 @@ int DisplayBuffer::AllocateCustomCharacter(const CustomCharacter& cust,
 void DisplayBuffer::UseCustomCharacter(int index)
 {
   m_customLastUse[index] = GetTickCount();
+}
+
+BOOL DisplayDevice::EnableInput()
+{
+  if (m_inputEnabled) return TRUE;
+
+  m_inputEnabled = TRUE;
+  m_inputEnabled = DeviceEnableInput();
+  return m_inputEnabled;
+}
+
+void DisplayDevice::DisableInput()
+{
+  if (!m_inputEnabled) return;
+  m_inputEnabled = FALSE;
+  DeviceDisableInput();
 }
 
 HKEY DisplayDevice::GetSettingsKey()
@@ -802,6 +820,7 @@ int DisplayDevice::DefineCustomCharacter(const CustomCharacter& cust)
 struct SaveState {
   DisplayBuffer *m_buffer;
   Marquee *m_marquee;
+  BOOL m_inputEnabled;
 };
 
 PVOID DisplayDevice::Save()
@@ -812,6 +831,7 @@ PVOID DisplayDevice::Save()
   SaveState *result = new SaveState;
   result->m_buffer = new DisplayBuffer(*m_buffer);
   result->m_marquee = (NULL == m_marquee) ? NULL : new Marquee(*m_marquee);
+  result->m_inputEnabled = m_inputEnabled;
   return result;
 }
 
@@ -836,6 +856,7 @@ void DisplayDevice::Restore(PVOID state)
   SaveState *sstate = (SaveState *)state;
   DisplayBuffer *buffer = sstate->m_buffer;
   Marquee *marquee = sstate->m_marquee;
+  BOOL inputEnabled = sstate->m_inputEnabled;
   delete sstate;
   
   if (!m_open) {
@@ -878,6 +899,9 @@ void DisplayDevice::Restore(PVOID state)
         DisplayInternal(row, col, buf, width);
     }
   }
+
+  if (inputEnabled)
+    EnableInput();
 }
 
 void Delay::Wait() const
@@ -935,6 +959,15 @@ void DisplayDevice::ResetInputMap()
   DisplayDevice *fresh = m_factory->CreateDisplayDevice(m_devtype);
   m_inputMap = fresh->m_inputMap;
   delete fresh;
+}
+
+void DisplayDevice::SetFanPower(int n, double power)
+{
+  DeviceSetFanPower(n, power);
+  // Remember in fan object if we have one.
+  FanMonitor *fan = GetFan(n);
+  if (NULL != fan)
+    fan->SetPower(power);
 }
 
 FanMonitor *DisplayDevice::GetFan(int n, LPCSTR createPrefix)
@@ -1811,11 +1844,12 @@ FanMonitor::FanMonitor(LPCSTR name, int number)
 {
   m_name = _strdup(name);
   m_number = number;
-  m_ppr = 1;
+  m_ppr = DEFAULT_PPR;
   m_enabled = FALSE;
   m_anonymous = TRUE;
   m_value = NULL;
   m_updateTime = 0;
+  m_power = -1;
   m_next = NULL;
 }
 
@@ -1828,6 +1862,7 @@ FanMonitor::FanMonitor(const FanMonitor& other)
   m_anonymous = other.m_anonymous;
   m_value = NULL;
   m_updateTime = 0;
+  m_power = -1;
   m_next = NULL;
 }
 
@@ -1952,7 +1987,8 @@ FanMonitor::FanMonitor(LPCSTR name, LPCSTR entry)
     m_enabled = TRUE;
   m_anonymous = FALSE;
   m_number = atoi(entry);
-  m_ppr = 1;
+  m_ppr = DEFAULT_PPR;
+  m_power = -1;
 }
 
 DOWSensor::DOWSensor(LPCSTR name, LPCBYTE rom)
@@ -1999,11 +2035,21 @@ void DOWSensor::SetName(LPCSTR name)
   m_name = _strdup(name);
 }
 
-void DOWSensor::Clear()
+BOOL DOWSensor::SetValue(LPCSTR value)
 {
-  free(m_value);
-  m_value = NULL;
   m_updateTime = GetTickCount();
+  if (NULL == value) {
+    if (NULL == m_value)
+      return FALSE;
+    free(m_value);
+    m_value = NULL;
+    return TRUE;
+  }
+  if ((NULL != m_value) && !strcmp(value, m_value))
+    return FALSE;
+  free(m_value);
+  m_value = _strdup(value);
+  return TRUE;
 }
 
 BOOL DOWSensor::LoadFromScratchpad(LPCBYTE pb, size_t nb)
@@ -2032,20 +2078,7 @@ BOOL DOWSensor::LoadFromScratchpad(LPCBYTE pb, size_t nb)
     break;
   }
 
-  m_updateTime = GetTickCount();
-  
-  if (NULL == value) {
-    if (NULL == m_value)
-      return FALSE;
-    free(m_value);
-    m_value = NULL;
-    return TRUE;
-  }
-  if ((NULL != m_value) && !strcmp(value, m_value))
-    return FALSE;
-  free(m_value);
-  m_value = _strdup(value);
-  return TRUE;
+  return SetValue(value);
 }
 
 void DOWSensor::LoadFromRegistry(HKEY hkey, DOWSensor **sensors)

@@ -1064,7 +1064,14 @@ static BOOL CALLBACK FansPageDialogProc(HWND hwnd, UINT uMsg,
         PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
         DisplayEnterCS();
         DisplayClose();
+        if (!g_editDevice->Open()) {
+          DisplayLeaveCS();
+          MessageBox(hwnd, "Cannot open device", "Refresh", MB_OK | MB_ICONERROR);
+          return TRUE;
+        }
+        HCURSOR ocurs = SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
         g_editDevice->CheckFans();
+        SetCursor(ocurs);
         g_editDevice->Close();
         DisplayLeaveCS();
         LoadFansSettings(hwnd);
@@ -1322,10 +1329,17 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
         PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
         DisplayEnterCS();
         DisplayClose();
+        if (!g_editDevice->Open()) {
+          DisplayLeaveCS();
+          MessageBox(hwnd, "Cannot open device", "Detect", MB_OK | MB_ICONERROR);
+          return TRUE;
+        }
         char prefix[128];
         if (!LoadString(g_hInstance, IDS_NEW_SENSOR_NAME, prefix, sizeof(prefix) - 2))
           strncpy(prefix, "Sensor", sizeof(prefix) - 2);
+        HCURSOR ocurs = SetCursor(LoadCursor(NULL, MAKEINTRESOURCE(IDC_WAIT)));
         g_editDevice->DetectSensors(prefix);
+        SetCursor(ocurs);
         g_editDevice->Close();
         DisplayLeaveCS();
         LoadSensorsSettings(hwnd);

@@ -187,6 +187,7 @@ public:
     return m_enabled;
   }
   void SetEnabled(BOOL enabled);
+#define DEFAULT_PPR 2
   int GetPulsesPerRevolution() const {
     return m_ppr;
   }
@@ -204,6 +205,12 @@ public:
   void SetUpdateTime(DWORD updateTime) {
     m_updateTime = updateTime;
   }
+  double GetPower() const {
+    return m_power;
+  }
+  void SetPower(double power) {
+    m_power = power;
+  }
   FanMonitor*& GetNext() {
     return m_next;
   }
@@ -219,6 +226,7 @@ protected:
   BOOL m_enabled, m_anonymous;
   LPSTR m_value;
   DWORD m_updateTime;
+  double m_power;
   FanMonitor *m_next;
 };
 
@@ -251,6 +259,7 @@ public:
   LPCSTR GetValue() const {
     return m_value;
   }
+  BOOL SetValue(LPCSTR value);
   DWORD GetUpdateTime() const {
     return m_updateTime;
   }
@@ -258,7 +267,6 @@ public:
     return m_next;
   }
 
-  void Clear();
   BOOL LoadFromScratchpad(LPCBYTE pb, size_t nb);
 
   static void LCD_DECL LoadFromRegistry(HKEY hkey, DOWSensor **sensors);
@@ -423,9 +431,7 @@ public:
   int GetNFans() {
     return DeviceGetNFans();
   }
-  void SetFanPower(int fan, double dutyCycle) {
-    DeviceSetFanPower(fan, dutyCycle);
-  }
+  void SetFanPower(int fan, double power);
   BOOL GetEnableFans() const {
     return m_enableFans;
   }
@@ -475,12 +481,8 @@ public:
     DeviceDetectSensors(prefix);
   }
   
-  BOOL EnableInput() {
-    return DeviceEnableInput();
-  }
-  void DisableInput() {
-    DeviceDisableInput();
-  }
+  BOOL EnableInput();
+  void DisableInput();
 
   HKEY GetSettingsKey();
   void LoadSettings(HKEY hkey);
@@ -594,6 +596,7 @@ protected:
   DOWSensor *m_sensors;
   DWORD m_sensorInterval;
 
+  BOOL m_inputEnabled;
   HANDLE m_inputThread, m_inputEvent, m_inputStopEvent, m_outputEvent;
 };
 

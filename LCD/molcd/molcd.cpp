@@ -444,7 +444,6 @@ DisplayDevice::IntervalMode MatrixOrbitalDisplay::DeviceHasFanInterval()
 
 void MatrixOrbitalDisplay::DeviceCheckFans()
 {
-  if (!Open()) return;          // Get a port handle.
   CheckFans(TRUE);
 }
 
@@ -500,7 +499,9 @@ DWORD MatrixOrbitalDisplay::CheckFans(BOOL forConfig)
             changed = fan->SetValue(NULL);
           }
           else {
-            int rpm = 18750000 / (period * fan->GetPulsesPerRevolution());
+            // Note the extra factor of 2 vs. the formula given in the data sheet.
+            // This is so that the PPR can be the same as everything else uses.
+            int rpm = (18750000 * 2) / (period * fan->GetPulsesPerRevolution());
             changed = fan->SetRPM(rpm);
           }
           if (!forConfig && changed) {
@@ -530,8 +531,6 @@ DisplayDevice::IntervalMode MatrixOrbitalDisplay::DeviceHasSensorInterval()
 
 void MatrixOrbitalDisplay::DeviceDetectSensors(LPCSTR prefix)
 {
-  if (!Open()) return;          // Get a port handle.
-
   int n = DOWSensor::GetNewNameIndex(prefix, m_sensors);
 
   DOWSensor *oldSensors = m_sensors;

@@ -23,8 +23,6 @@ public:
   virtual void DeviceClear();
   virtual BOOL DeviceHasSetSize();
   virtual BOOL DeviceHasKeypad();
-  virtual BOOL DeviceEnableInput();
-  virtual void DeviceDisableInput();
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 
@@ -59,7 +57,6 @@ protected:
   BOOL m_onTop;
   HBRUSH m_bgBrush;
   HBITMAP m_customBitmap;
-  BOOL m_inputEnabled;
 };
 
 SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
@@ -87,7 +84,6 @@ SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
   m_onTop = TRUE;
   m_bgBrush = NULL;
   m_customBitmap = NULL;
-  m_inputEnabled = FALSE;
 }
 
 SimulatedLCD::SimulatedLCD(const SimulatedLCD& other)
@@ -108,7 +104,6 @@ SimulatedLCD::SimulatedLCD(const SimulatedLCD& other)
   m_onTop = other.m_onTop;
   m_bgBrush = NULL;
   m_customBitmap = NULL;
-  m_inputEnabled = FALSE;
 }
 
 DisplayDevice *SimulatedLCD::Duplicate() const
@@ -380,7 +375,7 @@ void SimulatedLCD::OnToggleOnTop()
 
 void SimulatedLCD::OnInput(int vk)
 {
-  if (m_inputEnabled) {
+  if (m_enableKeypad && m_inputEnabled) {
     char buf[8];
     sprintf(buf, "%02X", vk);
     MapInput(buf);
@@ -555,17 +550,6 @@ BOOL SimulatedLCD::DeviceHasSetSize()
 BOOL SimulatedLCD::DeviceHasKeypad()
 {
   return TRUE;
-}
-
-BOOL SimulatedLCD::DeviceEnableInput()
-{
-  m_inputEnabled = TRUE;
-  return TRUE;
-}
-
-void SimulatedLCD::DeviceDisableInput()
-{
-  m_inputEnabled = FALSE;
 }
 
 void SimulatedLCD::DeviceLoadSettings(HKEY hkey)
