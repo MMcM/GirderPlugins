@@ -80,6 +80,33 @@ struct DeviceEntry {
 
 #define countof(x) sizeof(x)/sizeof(x[0])
 
+const char *KEYPAD_7 = 
+  "E	Right\n"
+  "H	Enter\n"
+  "I	Up\n"
+  "J	Down\n"
+  "M	F2\n"
+  "N	F1\n"
+  "O	Left\n"
+  ;
+const char *KEYPAD_15 = 
+  "C	F2\n"
+  "D	Play\n"
+  "E	FF\n"
+  "F	Enter\n"
+  "I	F3\n"
+  "J	Up\n"
+  "K	Down\n"
+  "O	F1\n"
+  "P	Rew\n"
+  "Q	Stop\n"
+  "R	Right\n"
+  "U	MatrixOrbital\n"
+  "V	Prev\n"
+  "W	Next\n"
+  "X	Left\n"
+  ;
+
 class MatrixOrbitalDisplay : public DisplayDevice
 {
 public:
@@ -121,6 +148,11 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(DisplayDeviceFactory *factory, LPCSTR
       m_rows = entry->rows;
       m_vfd = entry->vfd;
       m_keypad = entry->keypad;
+      if (m_keypad)
+        // You can hook any kind of keypad membrane.  But the standard
+        // drive bay inserts have these two arrangements for one bay
+        // and two.
+        m_inputMap.LoadFromString((m_rows < 4) ? KEYPAD_7 : KEYPAD_15);
       m_dow_pwm = entry->dow_pwm;
       m_brightnessFunc = entry->brightnessFunc;
       m_gpos = entry->gpos;
@@ -299,7 +331,7 @@ void MatrixOrbitalDisplay::DeviceInput(BYTE b)
   char buf[2];
   buf[0] = b;
   buf[1] = '\0';
-  DisplaySendEvent(buf);
+  MapInput(buf);
 }
 
 int MatrixOrbitalDisplay::DeviceGetGPOs()

@@ -22,6 +22,9 @@ public:
   virtual void DeviceClose();
   virtual void DeviceClear();
   virtual BOOL DeviceHasSetSize();
+  virtual BOOL DeviceHasKeypad();
+  virtual BOOL DeviceEnableInput();
+  virtual void DeviceDisableInput();
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 
@@ -36,8 +39,15 @@ public:
   void OnChangeBackground();
   void OnMove(int x, int y);
   void OnToggleOnTop();
+  void OnInput(int vk);
 
 protected:
+  void PutInputMap(int vk, LPCSTR value) {
+    char buf[8];
+    sprintf(buf, "%02X", vk);
+    m_inputMap.Put(buf, value);
+  }
+
   HWND m_parent, m_hwnd;
   int m_fontSize;
   char m_fontName[LF_FACESIZE], m_fontStyle[LF_FACESIZE];
@@ -49,6 +59,7 @@ protected:
   BOOL m_onTop;
   HBRUSH m_bgBrush;
   HBITMAP m_customBitmap;
+  BOOL m_inputEnabled;
 };
 
 SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
@@ -56,6 +67,14 @@ SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
   m_cols = 20;
   m_rows = 4;
+  
+  PutInputMap(VK_RETURN, "Enter");
+  PutInputMap(VK_ESCAPE, "Cancel");
+  PutInputMap(VK_LEFT, "Left");
+  PutInputMap(VK_UP, "Up");
+  PutInputMap(VK_RIGHT, "Right");
+  PutInputMap(VK_DOWN, "Down");
+
   m_parent = DisplayWindowParent();
   m_hwnd = NULL;
   m_fontSize = 10;
@@ -68,6 +87,7 @@ SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
   m_onTop = TRUE;
   m_bgBrush = NULL;
   m_customBitmap = NULL;
+  m_inputEnabled = FALSE;
 }
 
 SimulatedLCD::SimulatedLCD(const SimulatedLCD& other)
@@ -88,6 +108,7 @@ SimulatedLCD::SimulatedLCD(const SimulatedLCD& other)
   m_onTop = other.m_onTop;
   m_bgBrush = NULL;
   m_customBitmap = NULL;
+  m_inputEnabled = FALSE;
 }
 
 DisplayDevice *SimulatedLCD::Duplicate() const
@@ -357,6 +378,15 @@ void SimulatedLCD::OnToggleOnTop()
   RegCloseKey(hkey);
 }
 
+void SimulatedLCD::OnInput(int vk)
+{
+  if (m_inputEnabled) {
+    char buf[8];
+    sprintf(buf, "%02X", vk);
+    MapInput(buf);
+  }
+}
+
 const int GWL_DEVICE = 0;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -426,6 +456,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
         return 0;
       }
       break;
+    case WM_KEYDOWN:
+      device->OnInput(wParam);
+      return 0;
     }
   }
   return DefWindowProc(hWnd, nMsg, wParam, lParam);
@@ -517,6 +550,22 @@ void SimulatedLCD::DeviceDefineCustomCharacter(int index, const CustomCharacter&
 BOOL SimulatedLCD::DeviceHasSetSize()
 {
   return TRUE;
+}
+
+BOOL SimulatedLCD::DeviceHasKeypad()
+{
+  return TRUE;
+}
+
+BOOL SimulatedLCD::DeviceEnableInput()
+{
+  m_inputEnabled = TRUE;
+  return TRUE;
+}
+
+void SimulatedLCD::DeviceDisableInput()
+{
+  m_inputEnabled = FALSE;
 }
 
 void SimulatedLCD::DeviceLoadSettings(HKEY hkey)

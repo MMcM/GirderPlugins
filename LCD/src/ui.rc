@@ -128,9 +128,37 @@ BEGIN
     LTEXT           "Brightness:",IDC_BRIGHTNESSL,10,95,40,8
     CONTROL         "Brightness",IDC_BRIGHTNESS,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,50,92,190,15
-    CONTROL         "Enable keypad input",IDC_INPUT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,142,100,10
-    PUSHBUTTON      "Test...",IDC_TEST,190,140,50,14
+    PUSHBUTTON      "&Test...",IDC_TEST,190,140,50,14
+END
+
+IDD_KEYPAD DIALOG DISCARDABLE  0, 0, 250, 175
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Keypad"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Enable &keypad input",IDC_ENABLED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,10,150,10
+    CONTROL         "Entries",IDC_ENTRIES,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | WS_BORDER | 
+                    WS_TABSTOP,7,30,170,100
+    PUSHBUTTON      "&Add...",IDC_ADD,190,45,50,14
+    PUSHBUTTON      "&Edit...",IDC_EDIT,190,65,50,14
+    PUSHBUTTON      "&Remove",IDC_REMOVE,190,85,50,14
+    CONTROL         "Send &unknown input directly",IDC_PASSTHRU,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,140,150,10
+END
+
+IDD_KEYPAD_ENTRY DIALOG DISCARDABLE  0, 0, 186, 90
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit keypad entry"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Input:",IDC_STATIC,15,20,19,8
+    EDITTEXT        IDC_INPUT,60,17,100,14,ES_AUTOHSCROLL
+    LTEXT           "&Event:",IDC_STATIC,15,40,22,8
+    EDITTEXT        IDC_EVENT,60,37,100,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,35,69,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,101,69,50,14
 END
 
 IDD_COMMAND DIALOG DISCARDABLE  0, 0, 300, 200
@@ -212,8 +240,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,37
- PRODUCTVERSION 3,0,0,0
+ FILEVERSION 3,1,0,38
+ PRODUCTVERSION 3,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -229,12 +257,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "LCD Girder plug-in\0"
-            VALUE "FileVersion", "3.0 (37)\0"
+            VALUE "FileVersion", "3.1 (38)\0"
             VALUE "InternalName", "LCD\0"
             VALUE "LegalCopyright", "Copyright \251 2001-2004 Mike McMahon\0"
             VALUE "OriginalFilename", "LCD.DLL\0"
             VALUE "ProductName", "LCD\0"
-            VALUE "ProductVersion", "3.0\0"
+            VALUE "ProductVersion", "3.1\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -255,9 +283,11 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_NEW_NAME            "LCD"
     IDS_NAME                "Name"
-    IDS_TYPE                "Type"
+    IDS_DEVICE              "Device"
     IDS_BACKLIGHT           "Backlight:"
     IDS_BRIGHTNESS          "Brightness:"
+    IDS_INPUT               "Input"
+    IDS_EVENT               "Event"
     IDS_VARIABLE            "Variable:"
     IDS_VALUE               "Value:"
 END

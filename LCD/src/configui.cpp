@@ -74,6 +74,16 @@ static HIMAGELIST g_hChecks = NULL;
 const WPARAM PSQS_NEW_DEVICE = 1;
 const WPARAM PSQS_SAVE_FOR_TEST = 2;
 
+inline LPARAM ListView_GetItemData(HWND hwnd, int nItem)
+{
+  LV_ITEM lvi;
+  memset(&lvi, 0, sizeof(LVITEM));
+  lvi.iItem = nItem;
+  lvi.mask = LVIF_PARAM;
+  ListView_GetItem(hwnd, &lvi);
+  return lvi.lParam;
+}
+
 // Enable Apply button.
 static void SetPageModified(HWND hwnd)
 {
@@ -170,13 +180,18 @@ static BOOL CALLBACK GeneralPageDialogProc(HWND hwnd, UINT uMsg,
           Button_Enable(GetDlgItem(hwnd, IDC_DEFAULT), FALSE);
         }
       }
-      return FALSE;
+      return TRUE;
     }
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
-    case IDC_WIDTH:
+    case IDC_NAME:
       if (HIWORD(wParam) == EN_CHANGE) {
+        if (GetParent(hwnd) == g_displayPropertySheet) {
+          char name[128];
+          Edit_GetText(GetDlgItem(hwnd, IDC_NAME), name, sizeof(name));
+          PropSheet_SetTitle(g_displayPropertySheet, PSH_DEFAULT, name);
+        }
         SetPageModified(hwnd);
       }
       break;
@@ -195,6 +210,7 @@ static BOOL CALLBACK GeneralPageDialogProc(HWND hwnd, UINT uMsg,
       case PSN_SETACTIVE:
         break;
       case PSN_KILLACTIVE:
+        // TODO: Consider warning if name in use already.
         break;
       case PSN_APPLY:
         SaveGeneralSettings(hwnd);
@@ -365,14 +381,6 @@ static void LoadDisplaySettings(HWND hwnd)
     ShowWindow(GetDlgItem(hwnd, IDC_BRIGHTNESS), SW_HIDE);
   }
 
-  if (g_editDevice->HasKeypad()) {
-    ShowWindow(GetDlgItem(hwnd, IDC_INPUT), SW_SHOW);
-    Button_SetCheck(GetDlgItem(hwnd, IDC_INPUT), g_editDevice->GetEnableInput());
-  }
-  else {
-    ShowWindow(GetDlgItem(hwnd, IDC_INPUT), SW_HIDE);
-  }
-
   Button_Enable(GetDlgItem(hwnd, IDC_TEST), TRUE);
 }
 
@@ -414,11 +422,9 @@ static void SaveDisplaySettings(HWND hwnd)
     g_editDevice->SetBrightness(TrackBar_GetPos(GetDlgItem(hwnd, IDC_BRIGHTNESS)));
   }
 
-  if (g_editDevice->HasKeypad()) {
-    g_editDevice->SetEnableInput(Button_GetCheck(GetDlgItem(hwnd, IDC_INPUT)));
-  }
-
 }
+
+static void FillKeypadPage(LPPROPSHEETPAGE ppsp);
 
 // Create new edit device and set fresh state from it.
 static void CreateEditDevice(HWND hwnd)
@@ -454,7 +460,25 @@ static void CreateEditDevice(HWND hwnd)
     }
   }
 
-  PropSheet_QuerySiblings(GetParent(hwnd), PSQS_NEW_DEVICE, (LPARAM)g_editDevice);
+  HWND sheet = GetParent(hwnd);
+
+  if (NULL != g_editDevice) {
+    BOOL keypad = g_editDevice->HasKeypad();
+    int index = PropSheet_IdToIndex(sheet, IDD_KEYPAD);
+    if (keypad != (index >= 0)) {
+      if (keypad) {
+        PROPSHEETPAGE page;
+        FillKeypadPage(&page);
+        HPROPSHEETPAGE hpage = CreatePropertySheetPage(&page);
+        PropSheet_AddPage(sheet, hpage);
+      }
+      else {
+        PropSheet_RemovePage(sheet, index, NULL);
+      }
+    }
+  }
+
+  PropSheet_QuerySiblings(sheet, PSQS_NEW_DEVICE, (LPARAM)g_editDevice);
 }
 
 static BOOL CALLBACK DisplayPageDialogProc(HWND hwnd, UINT uMsg, 
@@ -486,7 +510,7 @@ static BOOL CALLBACK DisplayPageDialogProc(HWND hwnd, UINT uMsg,
 
       LoadDisplaySettings(hwnd);
 
-      return FALSE;
+      return TRUE;
     }
 
   case WM_COMMAND:
@@ -514,10 +538,6 @@ static BOOL CALLBACK DisplayPageDialogProc(HWND hwnd, UINT uMsg,
       if (HIWORD(wParam) == EN_CHANGE) {
         SetPageModified(hwnd);
       }
-      break;
-
-    case IDC_INPUT:
-      SetPageModified(hwnd);
       break;
     }
     break;
@@ -567,6 +587,254 @@ static void FillDisplayPage(LPPROPSHEETPAGE ppsp)
   ppsp->pfnDlgProc = DisplayPageDialogProc;
 }
 
+void UpdateKeypadButtonEnabling(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+  BOOL enable = FALSE;
+  int nSelItem = ListView_GetNextItem(list, -1, LVNI_SELECTED);
+  if (nSelItem >= 0) {
+    enable = TRUE;
+  }
+  Button_Enable(GetDlgItem(hwnd, IDC_EDIT), enable);
+  Button_Enable(GetDlgItem(hwnd, IDC_REMOVE), enable);
+}
+
+static void LoadKeypadSettings(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+  ListView_DeleteAllItems(list);
+  if (NULL != g_editDevice) {
+    Button_SetCheck(GetDlgItem(hwnd, IDC_ENABLED), g_editDevice->GetEnableInput());
+    LV_ITEM lvi;
+    memset(&lvi, 0, sizeof(LVITEM));
+    InputMap& inputMap = g_editDevice->GetInputMap();
+    PVOID estate = NULL;
+    LPCSTR input, event;
+    while (inputMap.Enum(estate, input, event)) {
+      lvi.mask = LVIF_TEXT;
+      lvi.iSubItem = 0;
+      lvi.pszText = (LPSTR)input;
+      lvi.iItem = ListView_InsertItem(list, &lvi); // May move when sorted.
+      lvi.iSubItem = 1;
+      lvi.pszText = (LPSTR)event;
+      ListView_SetItem(list, &lvi);
+    }
+    Button_SetCheck(GetDlgItem(hwnd, IDC_PASSTHRU), inputMap.GetPassUnknownInput());
+  }
+  UpdateKeypadButtonEnabling(hwnd);
+}
+
+static void SaveKeypadSettings(HWND hwnd)
+{
+  if (NULL == g_editDevice) return;
+  g_editDevice->SetEnableInput(Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLED)));
+  InputMap& inputMap = g_editDevice->GetInputMap();
+  inputMap.Clear();
+
+  HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+  int ni = ListView_GetItemCount(list);
+  for (int i = 0; i < ni; i++) {
+    char input[128], event[128];
+    ListView_GetItemText(list, i, 0, input, sizeof(input));
+    ListView_GetItemText(list, i, 1, event, sizeof(event));
+    inputMap.Put(input, event);
+  }
+
+  inputMap.SetPassUnknownInput(Button_GetCheck(GetDlgItem(hwnd, IDC_PASSTHRU)));
+}
+
+static BOOL CALLBACK KeypadEntryDialogProc(HWND hwnd, UINT uMsg, 
+                                           WPARAM wParam, LPARAM lParam)
+{
+  switch (uMsg) {
+  case WM_INITDIALOG:
+    {
+      SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
+                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_PLUGIN)));
+
+      SetWindowLong(hwnd, DWL_USER, lParam);
+      if (lParam == -1) return TRUE;
+
+      HWND sheet = GetParent(hwnd);
+      HWND page = PropSheet_IndexToHwnd(sheet, PropSheet_IdToIndex(sheet, IDD_KEYPAD));
+      HWND list = GetDlgItem(page, IDC_ENTRIES);
+
+      char buf[128];
+      ListView_GetItemText(list, lParam, 0, buf, sizeof(buf));
+      Edit_SetText(GetDlgItem(hwnd, IDC_INPUT), buf);
+      ListView_GetItemText(list, lParam, 1, buf, sizeof(buf));
+      Edit_SetText(GetDlgItem(hwnd, IDC_EVENT), buf);
+      Edit_SetSel(GetDlgItem(hwnd, IDC_EVENT), 0, -1);
+      SetFocus(GetDlgItem(hwnd, IDC_EVENT));
+      return FALSE;
+    }
+
+  case WM_COMMAND:
+    switch (LOWORD(wParam)) {
+    case IDOK:
+      {
+        HWND sheet = GetParent(hwnd);
+        HWND page = PropSheet_IndexToHwnd(sheet, PropSheet_IdToIndex(sheet, IDD_KEYPAD));
+        HWND list = GetDlgItem(page, IDC_ENTRIES);
+        int index = GetWindowLong(hwnd, DWL_USER);
+
+        char buf[128];
+        if (index < 0) {
+          LV_ITEM lvi;
+          memset(&lvi, 0, sizeof(LVITEM));
+          lvi.mask = LVIF_TEXT;
+          lvi.iSubItem = 0;
+          Edit_GetText(GetDlgItem(hwnd, IDC_INPUT), buf, sizeof(buf));
+          lvi.pszText = buf;
+          lvi.iItem = ListView_InsertItem(list, &lvi);
+          lvi.iSubItem = 1;
+          Edit_GetText(GetDlgItem(hwnd, IDC_EVENT), buf, sizeof(buf));
+          lvi.pszText = buf;
+          ListView_SetItem(list, &lvi);
+        }
+        else {
+          Edit_GetText(GetDlgItem(hwnd, IDC_INPUT), buf, sizeof(buf));
+          ListView_SetItemText(list, index, 0, buf);
+          Edit_GetText(GetDlgItem(hwnd, IDC_EVENT), buf, sizeof(buf));
+          ListView_SetItemText(list, index, 1, buf);
+        }
+      }
+      EndDialog(hwnd, TRUE);
+      return TRUE;
+
+    case IDCANCEL:
+      EndDialog(hwnd, FALSE);
+      return TRUE;
+    }
+    break;
+  }
+  return FALSE;
+}
+
+static void EditKeypadEntry(HWND hwnd, BOOL selected)
+{
+  HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+  int index = -1;
+  if (selected)
+    index = ListView_GetNextItem(list, -1, LVNI_SELECTED);
+  int result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_KEYPAD_ENTRY), 
+                              GetParent(hwnd), KeypadEntryDialogProc, (LPARAM)index);
+  if (result)
+    SetPageModified(hwnd);
+}
+
+static BOOL CALLBACK KeypadPageDialogProc(HWND hwnd, UINT uMsg, 
+                                          WPARAM wParam, LPARAM lParam)
+{
+  switch (uMsg) {
+  case WM_INITDIALOG:
+    {
+      HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+      char title[128];
+
+      LV_COLUMN lvc;
+      memset(&lvc, 0, sizeof(lvc));
+      lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+      lvc.cx = 100;
+      if (LoadString(g_hInstance, IDS_INPUT, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "Input";
+      lvc.iSubItem = 0;
+      ListView_InsertColumn(list, 0, &lvc);
+      lvc.cx = 150;
+      if (LoadString(g_hInstance, IDS_EVENT, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "Event";
+      lvc.iSubItem = 1;
+      ListView_InsertColumn(list, 1, &lvc);
+    }
+    LoadKeypadSettings(hwnd);
+    return TRUE;
+
+  case WM_COMMAND:
+    switch (LOWORD(wParam)) {
+    case IDC_ADD:
+      EditKeypadEntry(hwnd, FALSE);
+      return TRUE;
+
+    case IDC_EDIT:
+      EditKeypadEntry(hwnd, TRUE);
+      return TRUE;
+
+    case IDC_REMOVE:
+      {
+        HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+        int nSelItem = -1;
+        while (TRUE) {
+          nSelItem = ListView_GetNextItem(list, nSelItem, LVNI_SELECTED);
+          if (nSelItem < 0) break;
+          ListView_DeleteItem(list, nSelItem);
+          nSelItem--;
+        }
+      }
+      return TRUE;
+
+    case IDC_ENABLED:
+    case IDC_PASSTHRU:
+      SetPageModified(hwnd);
+      break;
+    }
+    break;
+
+  case WM_NOTIFY:
+    {
+      LPNMHDR phdr = (LPNMHDR)lParam;
+      switch (phdr->code) {
+      case PSN_SETACTIVE:
+        break;
+      case PSN_KILLACTIVE:
+        break;
+      case PSN_APPLY:
+        SaveKeypadSettings(hwnd);
+        OnApply(hwnd, lParam);
+        break;
+      case NM_DBLCLK:
+        EditKeypadEntry(hwnd, TRUE);
+        break;
+      case LVN_ITEMCHANGED:
+        {
+          LPNMLISTVIEW pNMLIST = (LPNMLISTVIEW)phdr;
+          if ((pNMLIST->uNewState ^ pNMLIST->uOldState) & LVNI_SELECTED) {
+            UpdateKeypadButtonEnabling(hwnd);
+          }
+        }
+        break;
+      }
+    }
+    break;
+
+  case PSM_QUERYSIBLINGS:
+    switch (wParam) {
+    case PSQS_NEW_DEVICE:
+      LoadKeypadSettings(hwnd);
+      break;
+    case PSQS_SAVE_FOR_TEST:
+      SaveKeypadSettings(hwnd);
+      break;
+    }
+    break;
+
+  }
+
+  return FALSE;
+}
+
+static void FillKeypadPage(LPPROPSHEETPAGE ppsp)
+{
+  ppsp->dwSize = sizeof(PROPSHEETPAGE);
+  ppsp->dwFlags = PSP_DEFAULT;
+  ppsp->hInstance = g_hInstance;
+  ppsp->pszTemplate = MAKEINTRESOURCE(IDD_KEYPAD);
+  ppsp->pfnDlgProc = KeypadPageDialogProc;
+}
+
 static int PropertySheetCallback(HWND hwnd, UINT uMsg, LPARAM lParam)
 {
   switch (uMsg) {
@@ -577,7 +845,7 @@ static int PropertySheetCallback(HWND hwnd, UINT uMsg, LPARAM lParam)
   return 0;
 }
 
-static void EditDevice(DisplayDevice *dev)
+static int EditDevice(DisplayDevice *dev)
 {
   g_editOrigDevice = dev;
   g_editDevice = (NULL == g_editOrigDevice) ? NULL : g_editOrigDevice->Duplicate();
@@ -589,6 +857,8 @@ static void EditDevice(DisplayDevice *dev)
     FillGeneralPage(pages + nPages++);
   nStartPage = nPages;
   FillDisplayPage(pages + nPages++);
+  if ((NULL != g_editDevice) && g_editDevice->HasKeypad())
+    FillKeypadPage(pages + nPages++);
 
   PROPSHEETHEADERA pshead;
   pshead.dwSize = sizeof(pshead);
@@ -613,19 +883,11 @@ static void EditDevice(DisplayDevice *dev)
     delete g_editOrigDevice;
     g_editOrigDevice = NULL;
   }
+
+  return result;
 }
 
-inline LPARAM ListView_GetItemData(HWND hwnd, int nItem)
-{
-  LV_ITEM lvi;
-  memset(&lvi, 0, sizeof(LVITEM));
-  lvi.iItem = nItem;
-  lvi.mask = LVIF_PARAM;
-  ListView_GetItem(hwnd, &lvi);
-  return lvi.lParam;
-}
-
-void UpdateButtonEnabling(HWND hwnd)
+void UpdateDisplaysButtonEnabling(HWND hwnd)
 {
   HWND list = GetDlgItem(hwnd, IDC_DISPLAYS);
   DisplayDevice *dev = NULL;
@@ -674,7 +936,7 @@ static void FillDisplaysList(HWND hwnd)
     }
     lvi.iItem++;
   }
-  UpdateButtonEnabling(hwnd);
+  UpdateDisplaysButtonEnabling(hwnd);
 }
 
 static void EditSelectedDevice(HWND hwnd, BOOL copy)
@@ -686,8 +948,9 @@ static void EditSelectedDevice(HWND hwnd, BOOL copy)
     if (nSelItem >= 0)
       dev = (DisplayDevice *)ListView_GetItemData(list, nSelItem);
   }
+  int result;
   if (!copy)
-    EditDevice(dev);
+    result = EditDevice(dev);
   else {
     DisplayDevice *ndev;
     char name[256];
@@ -717,9 +980,11 @@ static void EditSelectedDevice(HWND hwnd, BOOL copy)
       n++;
     }
     ndev->SetName(name);
-    EditDevice(ndev);
+    result = EditDevice(ndev);
   }
   FillDisplaysList(hwnd);  
+  if (result) 
+    Button_Enable(GetDlgItem(hwnd, IDC_APPLY), TRUE);
 }
 
 static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg, 
@@ -755,34 +1020,29 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
       lvc.iSubItem = 0;
       ListView_InsertColumn(list, 0, &lvc);
       lvc.cx = 225;
-      if (LoadString(g_hInstance, IDS_TYPE, title, sizeof(title)))
+      if (LoadString(g_hInstance, IDS_DEVICE, title, sizeof(title)))
         lvc.pszText = title;
       else
-        lvc.pszText = "Type";
+        lvc.pszText = "Device";
       lvc.iSubItem = 1;
       ListView_InsertColumn(list, 1, &lvc);
 
       FillDisplaysList(hwnd);
 
-      UpdateButtonEnabling(hwnd);
-
       Button_Enable(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      return FALSE;
+      return TRUE;
     }
-
-  case WM_DESTROY: 
-    PostQuitMessage(0); 
-    return FALSE;
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
     case IDOK:
-      g_editDevices.SaveToRegistry();
       EndDialog(hwnd, TRUE);
-      return TRUE;
-
+      /* falls through */
     case IDC_APPLY:
+      DisplayEnterCS();
+      DisplayClose();
       g_editDevices.SaveToRegistry();
+      DisplayLeaveCS();
       return TRUE;
 
     case IDCANCEL:
@@ -862,7 +1122,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
         {
           LPNMLISTVIEW pNMLIST = (LPNMLISTVIEW)phdr;
           if ((pNMLIST->uNewState ^ pNMLIST->uOldState) & LVNI_SELECTED) {
-            UpdateButtonEnabling(hwnd);
+            UpdateDisplaysButtonEnabling(hwnd);
           }
         }
         break;
@@ -875,7 +1135,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
 
 static DWORD WINAPI ConfigThread(LPVOID lpParam)
 {
-  g_editDevices.LoadFromRegistry();
+  g_editDevices.LoadFromRegistry(TRUE);
 
   DisplayDevice *defdev = g_editDevices.GetDefault();
   if ((NULL != defdev) && (NULL == defdev->GetName()))

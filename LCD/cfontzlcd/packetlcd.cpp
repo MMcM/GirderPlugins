@@ -122,6 +122,23 @@ protected:
   SendPacket *m_next;
 };
 
+const char *KEYPAD_6 =
+  "1	Up\n"
+  "2	Down\n"
+  "3	Left\n"
+  "4	Right\n"
+  "5	Enter\n"
+  "6	Exit\n"
+  ;
+// 7-12 are release of the above.
+const char *KEYPAD_4 =
+  "13   UL\n"
+  "14   UR\n"
+  "15   LL\n"
+  "16   LR\n"
+  ;
+// 17-20 are release of the above.
+
 CrystalfontzPacketLCD::CrystalfontzPacketLCD
 (DisplayDeviceFactory *factory, LPCSTR devtype,
  int cols, int rows, BOOL newCommands)
@@ -131,6 +148,8 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD
 
   m_cols = cols;
   m_rows = rows;
+
+  m_inputMap.LoadFromString((newCommands) ? KEYPAD_4 : KEYPAD_6);
 
   m_portType = portSERIAL;
   strcpy(m_port, "COM1");
@@ -595,30 +614,6 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
   CloseHandle(olInput.hEvent);
 }
 
-const char *KeyEvents[] = {
-  NULL,
-  "UP_PRESS",                   // 1
-  "DOWN_PRESS",                 // 2
-  "LEFT_PRESS",                 // 3
-  "RIGHT_PRESS",                // 4
-  "ENTER_PRESS",                // 5
-  "EXIT_PRESS",                 // 6
-  "UP_RELEASE",                 // 7
-  "DOWN_RELEASE",               // 8
-  "LEFT_RELEASE",               // 9
-  "RIGHT_RELEASE",              // 10
-  "ENTER_RELEASE",              // 11
-  "EXIT_RELEASE",               // 12
-  "UL_PRESS",                   // 13
-  "UR_PRESS",                   // 14
-  "LL_PRESS",                   // 15
-  "LR_PRESS",                   // 16
-  "UL_RELEASE",                 // 17
-  "UR_RELEASE",                 // 18
-  "LL_RELEASE",                 // 19
-  "LR_RELEASE"                  // 20
-};
-
 void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
 {
   switch (rpkt->GetType() & 0xC0) {
@@ -677,12 +672,9 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
       switch (rpkt->GetType()) {
       case 0x80:
         if (1 == rpkt->GetDataLength()) {
-          LPCSTR event = NULL;
-          BYTE key = rpkt->GetData()[0];
-          if (key < countof(KeyEvents))
-            event = KeyEvents[key];
-          if (NULL != event)
-            DisplaySendEvent(event);
+          char buf[8];
+          sprintf(buf, "%d", rpkt->GetData()[0]); // Decimal as in manual.
+          MapInput(buf);
         }
         break;
       case 0x81:

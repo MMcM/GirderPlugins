@@ -177,6 +177,7 @@ DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 }
 
 DisplayDevice::DisplayDevice(const DisplayDevice& other)
+  : m_inputMap(other.m_inputMap)
 {
   m_factory = other.m_factory;
   m_devtype = (NULL == other.m_devtype) ? NULL : _strdup(other.m_devtype);
@@ -335,6 +336,7 @@ void DisplayDevice::LoadSettings(HKEY hkey)
     
   if (HasKeypad()) {
     GetSettingBool(hkey, "EnableInput", m_enableInput);
+    m_inputMap.LoadFromRegistry(hkey);
   }
 
   switch (GetPortType()) {
@@ -372,6 +374,7 @@ void DisplayDevice::SaveSettings(HKEY hkey)
 
   if (HasKeypad()) {
     SetSettingBool(hkey, "EnableInput", m_enableInput);
+    m_inputMap.SaveToRegistry(hkey);
   }
 
   switch (GetPortType()) {
@@ -859,12 +862,19 @@ void Delay::Wait() const
   }
 }
 
+void DisplayDevice::MapInput(LPCSTR input)
+{
+  input = m_inputMap.Get(input);
+  if (NULL != input)
+    DisplaySendEvent(input);
+}
+
 void DisplayDevice::Test()
 {
   CustomCharacter cust1("0b11110 0b10001 0b10001 0b11110 0b10100 0b10010 0b10001");
   CustomCharacter cust2("0b01111 0b10001 0b10001 0b01111 0b00101 0b01001 0b10001");
 
-  Display(0, 0, 10, "LCD 3.0");
+  Display(0, 0, 10, "LCD 3.1");
   Display(1, -1, -1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   DisplayCustomCharacter(0, 10, cust1);
   DisplayCustomCharacter(0, 11, cust2);
@@ -1073,7 +1083,7 @@ void DisplayDevice::DeviceInput(BYTE b)
 {
   char buf[8];
   sprintf(buf, "%02X", b);
-  DisplaySendEvent(buf);
+  MapInput(buf);
 }
 
 int DisplayDevice::DeviceGetGPOs()
@@ -1458,5 +1468,188 @@ void DisplayDeviceList::Restore(PVOID state)
       delete nstate;
       nstate = nnstate;
     }
+  }
+}
+
+class InputMapEntry
+{
+  friend class InputMap;
+
+protected:
+  InputMapEntry(LPCSTR input, LPCSTR event) {
+    m_input = _strdup(input);
+    m_event = _strdup(event);
+    m_next = NULL;
+  }
+  ~InputMapEntry() {
+    free(m_input);
+    free(m_event);
+  }
+  InputMapEntry(const InputMapEntry& other) {
+    m_input = _strdup(other.m_input);
+    m_event = (NULL == other.m_event) ? NULL : _strdup(other.m_event);
+    m_next = NULL;
+  }
+  InputMapEntry(LPCSTR input, size_t ilen, LPCSTR event, size_t elen) {
+    m_input = (LPSTR)malloc(ilen+1);
+    memcpy(m_input, input, ilen);
+    m_input[ilen] = '\0';
+    m_event = (LPSTR)malloc(elen+1);
+    memcpy(m_event, event, elen);
+    m_event[elen] = '\0';
+    m_next = NULL;
+  }
+  
+  void SetEvent(LPCSTR event) {
+    free(m_event);
+    m_event = (NULL == event) ? NULL : _strdup(event);
+  }
+
+  LPSTR m_input, m_event;
+  InputMapEntry *m_next;
+};
+
+InputMap::InputMap(const InputMap& other)
+{
+  m_passUnknownInput = other.m_passUnknownInput;
+  InputMapEntry **pentry = &m_entries;
+  for (InputMapEntry *entry = other.m_entries; NULL != entry; entry = entry->m_next) {
+    InputMapEntry *nentry = new InputMapEntry(*entry);
+    *pentry = nentry;
+    pentry = &nentry->m_next;
+  }
+  *pentry = NULL;
+}
+
+LPCSTR InputMap::Get(LPCSTR input) const
+{
+  for (InputMapEntry *entry = m_entries; NULL != entry; entry = entry->m_next) {
+    if (!strcmp(input, entry->m_input)) {
+      return entry->m_event;
+    }
+  }
+  if (m_passUnknownInput)
+    return input;
+  else
+    return NULL;
+}
+
+void InputMap::Put(LPCSTR input, LPCSTR event)
+{
+  for (InputMapEntry *entry = m_entries; NULL != entry; entry = entry->m_next) {
+    if (!strcmp(input, entry->m_input)) {
+      entry->SetEvent(event);
+      return;
+    }
+  }
+  entry = new InputMapEntry(input, event);
+  entry->m_next = m_entries;
+  m_entries = entry;
+}
+
+void InputMap::Clear()
+{
+  while (NULL != m_entries) {
+    InputMapEntry *entry = m_entries;
+    m_entries = entry->m_next;
+    delete entry;
+  }
+}
+
+BOOL InputMap::Enum(PVOID& state, LPCSTR& input, LPCSTR& event) const
+{
+  InputMapEntry *entry = (NULL == state) ? m_entries : ((InputMapEntry*)state)->m_next;
+  if (NULL == entry) return FALSE;
+  input = entry->m_input;
+  event = entry->m_event;
+  state = entry;
+  return TRUE;
+}
+
+void InputMap::LoadFromString(LPCSTR defn)
+{
+  Clear();
+  InputMapEntry **pentry = &m_entries;
+
+  int index, istart, iend, estart, eend;
+  index = 0;
+  istart = iend = estart = eend = -1;
+  while (TRUE) {
+    char ch = defn[index];
+    if ((' ' == ch) || ('\t' == ch) || ('\r' == ch) || ('\n' == ch) || ('\0' == ch)) {
+      if ((istart >= 0) && (iend < 0))
+        iend = index;
+      else if ((estart >= 0) && (eend < 0))
+        eend = index;
+      if (('\r' == ch) || ('\n' == ch) || ('\0' == ch)) {
+        if ((iend > istart) && (eend > estart)) {
+          InputMapEntry *entry = new InputMapEntry(defn + istart, iend - istart,
+                                                   defn + estart, eend - estart);
+          *pentry = entry;
+          pentry = &entry->m_next;
+        }
+        if ('\0' == ch)
+          break;
+        istart = iend = estart = eend = -1;
+      }
+    }
+    else {
+      if (istart < 0)
+        istart = index;
+      else if ((iend > istart) && (estart < 0))
+        estart = index;
+    }
+    index++;
+  }
+
+  *pentry = NULL;
+}
+
+void InputMap::LoadFromRegistry(HKEY hkey)
+{
+  HKEY subkey;
+  if (ERROR_SUCCESS == RegOpenKey(hkey, "InputMap", &subkey)) {
+    Clear();
+    m_passUnknownInput = FALSE;
+    InputMapEntry **pentry = &m_entries;
+
+    char name[16], data[32];
+    DWORD dwIndex, dwType, namel, datal;
+    dwIndex = 0; 
+    while (TRUE) {
+      namel = sizeof(name); 
+      datal = sizeof(data);
+      if (ERROR_SUCCESS != RegEnumValue(subkey, dwIndex++, name, &namel, NULL, &dwType,
+                                        (LPBYTE)data, &datal))
+        break;
+      if (REG_SZ == dwType) {
+        if (namel > 0) {
+          InputMapEntry *entry = new InputMapEntry(name, data);
+          *pentry = entry;
+          pentry = &entry->m_next;
+        }
+        else {
+          m_passUnknownInput = (datal > 0);
+        }
+      }
+    }
+
+    *pentry = NULL;
+    RegCloseKey(subkey);
+  }
+}
+
+void InputMap::SaveToRegistry(HKEY hkey)
+{
+  RegDeleteKey(hkey, "InputMap");
+
+  HKEY subkey;
+  if (ERROR_SUCCESS == RegCreateKey(hkey, "InputMap", &subkey)) {
+    DisplayDevice::SetSettingString(subkey, NULL,
+                                    m_passUnknownInput ? "*" : NULL);
+    for (InputMapEntry *entry = m_entries; NULL != entry; entry = entry->m_next) {
+      DisplayDevice::SetSettingString(subkey, entry->m_input, entry->m_event);
+    }
+    RegCloseKey(subkey);
   }
 }

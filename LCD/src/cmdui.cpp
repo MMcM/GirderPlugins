@@ -478,12 +478,8 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
       LoadCommandSettings(hwnd);
 
       EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      return FALSE;
+      return TRUE;
     }
-
-  case WM_DESTROY: 
-    PostQuitMessage(0); 
-    return FALSE;
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {

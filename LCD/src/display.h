@@ -122,6 +122,43 @@ protected:
   int m_row, m_len, m_pos;
 };
 
+class InputMapEntry;
+
+class LCD_API InputMap
+{
+public:
+  InputMap() {
+    m_passUnknownInput = FALSE;
+    m_entries = NULL;
+  }
+  InputMap(const InputMap& other);
+  ~InputMap() {
+    Clear();
+  }
+
+  LPCSTR Get(LPCSTR input) const;
+  void Put(LPCSTR input, LPCSTR event);
+  void Clear();
+
+  BOOL GetPassUnknownInput() const {
+    return m_passUnknownInput;
+  }
+  void SetPassUnknownInput(BOOL passUnknownInput) {
+    m_passUnknownInput = passUnknownInput;
+  }
+
+  BOOL Enum(PVOID& state, LPCSTR& input, LPCSTR& event) const;
+
+  void LoadFromString(LPCSTR defn);
+
+  void LoadFromRegistry(HKEY hkey);
+  void SaveToRegistry(HKEY hkey);
+
+protected:
+  BOOL m_passUnknownInput;
+  InputMapEntry *m_entries;
+};
+
 class DisplayDeviceFactory;
 
 class LCD_API DisplayDevice
@@ -229,6 +266,9 @@ public:
   BOOL HasKeypad() {
     return DeviceHasKeypad();
   }
+  InputMap& GetInputMap() {
+    return m_inputMap;
+  }
   BOOL GetEnableInput() const {
     return m_enableInput;
   }
@@ -292,12 +332,15 @@ protected:
   void DisplayInternal(int row, int col, LPCBYTE str, int length);
   int DefineCustomCharacter(const CustomCharacter& cust);
   void DefineCustomCharacterInternal(int index, const CustomCharacter& cust);
+
   void SetSimulatedMarquee();
   void ClearSimulatedMarquee();
   void StepSimulatedMarquee();
   void SetMarqueeInternal(Marquee *marquee);
   void CheckMarqueeOverlap(int row);
   friend void WINAPI MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
+
+  void MapInput(LPCSTR input);
 
   BOOL OpenSerial(BOOL asynch = FALSE);
   BOOL WriteSerial(LPBYTE data, size_t len);
@@ -334,6 +377,7 @@ protected:
 
   int m_contrast, m_brightness;
 
+  InputMap m_inputMap;
   BOOL m_enableInput;
   HANDLE m_inputThread, m_inputStopEvent, m_outputEvent;
 };
