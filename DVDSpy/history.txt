@@ -1,4 +1,8 @@
 
+1.47    11/10/2002      MMcM    Background UI plugin for WMP 9 in place of skin.
+
+1.46    11/06/2002      MMcM    Reduce number of Zoom Player events.
+
 1.45    10/26/2002      MMcM    Try to avoid DVD Navigator problems with XP SP1.
 
 1.44    10/25/2002      MMcM    Add skin based support for PowerDVD and WinDVD.
