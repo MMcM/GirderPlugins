@@ -5,7 +5,7 @@ TODO
 
 NEED TO BE DONE
 ---------------
-* Implement decent mouse pad events
+* Implement decent mouse pad events (started)
 
 
 

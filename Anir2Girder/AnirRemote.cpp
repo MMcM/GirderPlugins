@@ -79,22 +79,12 @@ CAnirRemote::~CAnirRemote()
  */
 void CAnirRemote::ProcessReceivedData(BYTE nData, BOOL bRepeat)
 {
-	// Mouse event
-	if ((nData & 0x1D) == 20)
-	{
-		MYTRACE("MOUSE EVENT\n");
-	}
-
-	else
-	// "Noramal" button
-	{
-		// Send repeat events???
-		if (!m_bEventRepeat && bRepeat)
-			return;
-		// Check if button up events should be sent
-		if (!m_bEventOnUp && (nData % 2 == 1))
-			return;
-	}
+	// Send repeat events???
+	if (!m_bEventRepeat && bRepeat)
+		return;
+	// Check if button up events should be sent
+	if (!m_bEventOnUp && (nData % 2 == 1))
+		return;
 
 	// Create event string
 	// Format $name:$nData:$bRepeat

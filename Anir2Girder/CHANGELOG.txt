@@ -3,6 +3,8 @@ Changelog
 
 CURRENT (in CVS)
 - Added option to select if repeat button events should be sent
+- Change in CAnirRemoteControl::IsRepeatSignal to let mouse pad
+  send repeat events (needs some more tweaking)
 
 
 

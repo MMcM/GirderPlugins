@@ -306,10 +306,16 @@ BOOL CAnirRemoteControl::IsRepeatSignal(int nIndex)
   int nWidth3 = m_nStates[nIndex+2];
   int nWidth4 = m_nStates[nIndex+3];
 
-  return ( (nWidth1 <= 1000) &&
+/*
+  return   (nWidth1 <= 1000) &&
            ((nWidth2 >= 10000) && (nWidth2 <= 130000)) &&
            ((nWidth3 >= 1500)  && (nWidth3 <= 2700)) &&
-           ((nWidth4 >= 1500)  && (nWidth4 <= 2700)) );
+           ((nWidth4 >= 1500)  && (nWidth4 <= 2700));
+*/
+  return   (nWidth1 <= 10000) &&
+           ((nWidth2 >= 5000) && (nWidth2 <= 130000)) &&
+           ((nWidth3 >= 1500)  && (nWidth3 <= 10000)) &&
+           ((nWidth4 >= 1500)  && (nWidth4 <= 10000));
 }
 
 BOOL CAnirRemoteControl::IsBitSignal(int nIndex, BOOL& bBit)

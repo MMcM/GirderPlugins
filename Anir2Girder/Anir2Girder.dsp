@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 /nologo /version:0.3 /subsystem:windows /dll /debug /machine:I386 /out:"bin\Anir2Girder.dll" /pdbtype:sept
+# ADD LINK32 /nologo /version:0.3 /subsystem:windows /dll /debug /machine:I386 /out:"C:\Tools\girder32\plugins\Anir2Girder.dll" /pdbtype:sept
 
 !ENDIF 
 
