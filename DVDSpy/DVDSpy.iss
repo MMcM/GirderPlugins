@@ -16,8 +16,8 @@ SetupIconFile=plugins\DVDSpy\src\dvdspy.ico
 SourceDir=..\..
 
 [Types]
-Name: "full"; Description: "Full installation"
 Name: "compact"; Description: "Minimal installation"
+Name: "full"; Description: "Full installation"
 Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Components]
