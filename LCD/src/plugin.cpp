@@ -79,12 +79,6 @@ PCHAR DisplayCommandState::GetPayloadString(int index)
   return pld;
 }
 
-// girder doesn't export the getpayload function anymore, it now passes it
-// to gir_event. I'm doing this a little ugly hack to prevent me from having
-// to modify to much ( and thus make errors )
-void *gir_payload= NULL;
-int  gir_payload_len= 0;
-
 BOOL DisplayOpen(DisplayCommandState& state)
 {
   if (!bDisplayOpen) {
@@ -98,9 +92,9 @@ BOOL DisplayOpen(DisplayCommandState& state)
     pDisplayBuf = (LPSTR)malloc(nDisplayCols * nDisplayRows);
     memset(pDisplayBuf, ' ', nDisplayCols * nDisplayRows);
 
-    lcdClearDisplay();            // Clear
-    lcdSetWrapMode(0, 0);         // Turn off wrap mode
     lcdSetCursor(0);              // Hide cursor
+    lcdSetWrapMode(0, 0);         // Turn off wrap mode
+    lcdClearDisplay();            // Clear
 
     bDisplayOpen = TRUE;
   }
