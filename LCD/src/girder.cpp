@@ -1,6 +1,6 @@
 /***************************************************************************************/
 /*                                                                                     */
-/*  Girder 3.0 Plugin                                                                  */
+/*  Girder 3.1 Plugin                                                                  */
 /*  User interface                                                                     */
 /*                                                                                     */
 /*  Copyright 2000 (c) Ron Bessems                                                     */
@@ -135,30 +135,62 @@ void DisplayCommon(LPCSTR str, TCommand *command, PCHAR retbuf)
 #endif
 }
 
+PCHAR GetPayloadString(PCHAR pld, int len, int index)
+{
+  if (len-- <= 0) 
+    return NULL;
+  int nstr = *pld++;
+  if ((index < 1) || (index > nstr))
+    return NULL;
+  while (--index > 0) {
+    while (TRUE) {
+      if (len-- <= 0)
+        return NULL;
+      if ('\0' == *pld++)
+        break;
+    }
+  }
+  return pld;
+}
+
 void DisplayString(TCommand *command, PCHAR retbuf)
 {
-  char buf[256];
-  strncpy(buf, ParseRegString(command->svalue1), sizeof(buf));
+  char buf[1024];
+  SF.ParseRegStringEx(command->svalue1, buf, sizeof(buf));
   DisplayCommon(buf, command, retbuf);
 }
 
 void DisplayStringRegister(TCommand *command, PCHAR retbuf)
 {
-  DisplayCommon(GetGirderStrReg(command->ivalue2), command, retbuf);
+  char buf[1024];
+  SF.GetGirderStrRegisterEx(command->ivalue2, buf, sizeof(buf));
+  DisplayCommon(buf, command, retbuf);
 }
 
-void DisplayFilenameRegister(TCommand *command, PCHAR retbuf)
+void DisplayPayload(TCommand *command, PCHAR retbuf)
 {
-  char buf[MAX_PATH];
-  strncpy(buf, GetGirderStrReg(command->ivalue2), sizeof(buf));
-  char *sp = strrchr(buf, '\\');
+  char buf[1024];
+  int len = SF.GetPayload(buf, sizeof(buf));
+  PCHAR pld = GetPayloadString(buf, len, command->ivalue2);
+  if (NULL != pld)
+    DisplayCommon(pld, command, retbuf);
+}
+
+void DisplayFilenamePayload(TCommand *command, PCHAR retbuf)
+{
+  char buf[1024];
+  int len = SF.GetPayload(buf, sizeof(buf));
+  PCHAR pld = GetPayloadString(buf, len, command->ivalue2);
+  if (NULL == pld)
+    return;
+  PCHAR sp = strrchr(pld, '\\');
   if (NULL != sp)
     sp++;
-  else if (NULL != strstr(buf, "://")) // A URL
-    sp = strrchr(buf, '/') + 1;
+  else if (NULL != strstr(pld, "://")) // A URL
+    sp = strrchr(pld, '/') + 1;
   else
-    sp = buf;
-  char *ep = strrchr(sp, '.');
+    sp = pld;
+  PCHAR ep = strrchr(sp, '.');
   if (NULL != ep)
     *ep = '\0';
   DisplayCommon(sp, command, retbuf);
@@ -198,7 +230,7 @@ void DisplayCurrentTime(TCommand *command, PCHAR retbuf)
 
 */
 
-extern "C" int WINAPI __export init_dll( TFunctions *gf )
+extern "C" int WINAPI __export init_dll( void *gf )
 {
   if ( gf!=NULL) {
     MessageBox(0, "This Plugin requires Girder 3.0.22+", "Error", MB_ICONERROR);
@@ -222,7 +254,7 @@ extern "C" int WINAPI __export init_dll( TFunctions *gf )
 extern "C" int WINAPI __export init_dllex()
 {
 
-  return 4;  // We want version 4 structure
+  return 5;  // We want version 4 structure
 
 }
 
@@ -238,36 +270,22 @@ static char ArgPrefix[] = { (char)255, 0 };
 
 extern "C" int WINAPI __export setsupportex(void *s)
 {
-  TFunctionsEx4 *p;
 
-  p = (TFunctionsEx4 *) s;
+  TFunctionsEx5 *p;
 
-  if ( p->dwSize != sizeof ( TFunctionsEx4 ) )
-  {
-  
-    return GIR_ERROR; // ERROR 
+  p = (TFunctionsEx5 *) s;
 
-  }
-  
-  SetCommand    = p->SetCommand;
-  ReallocPchar  = p->ReallocPchar;
-  ShowOSD      = p->ShowOSD;
-  TargetEnum    = p->TargetEnum;
-  I18NTranslate  = p->I18NTranslate;
-  HideOSD      = p->HideOSD;
-  StartOSDDraw  = p->StartOSDDraw;
-  StopOSDDraw    = p->StopOSDDraw;
-  TreePickerShow  = p->TreePickerShow;
-  TargetHWND    = p->TargetHWND;
-  SetGirderReg  = p->SetGirderReg;
-  GetGirderReg  = p->GetGirderReg;
-  ParseRegString  = p->ParseRegString;
-  GetLinkName     = p->GetLinkName;
-  RegisterCB    = p->RegisterCB;
-  SetGirderStrReg = p->SetGirderStrReg;
-  GetGirderStrReg = p->GetGirderStrReg;
+  if ( p->dwSize != sizeof ( TFunctionsEx5 ) )
+    {
+	
+      return GIR_ERROR; // ERROR 
+
+    }
+	
+  memcpy( (void *)&SF, p, sizeof ( TFunctionsEx5));
 
   return PLUGINNUM;
+
 }
 
 /* Called right before Girder unloads the plugin, make 

@@ -27,7 +27,8 @@ DisplayAction DisplayActions[] = {
   { "Current Date/Time", valSTR, DisplayCurrentTime },
   { "Clear Display", valNONE, DisplayClear },
   { "Close Display", valNONE, DisplayClose },
-  { "Filename Register", valINT, DisplayFilenameRegister },
+  { "Payload", valINT, DisplayPayload },
+  { "Filename Payload", valINT, DisplayFilenamePayload },
 };
 
 #define countof(x) (sizeof(x)/sizeof(x[0]))
@@ -40,7 +41,7 @@ BOOL SaveUISettings(HWND hwnd)
   CurCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
 
   GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
-  ReallocPchar(&(CurCommand->svalue1), buf);
+  SF.ReallocPchar(&(CurCommand->svalue1), buf);
 
   CurCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_GETPOS, 0, 0);
 
@@ -52,7 +53,7 @@ BOOL SaveUISettings(HWND hwnd)
     CurCommand->lvalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
   
   CurCommand->actiontype=PLUGINNUM;
-  SetCommand(CurCommand);
+  SF.SetCommand(CurCommand);
 
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
   return TRUE;
@@ -107,7 +108,7 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
   switch (uMsg) {
   case WM_INITDIALOG:
     {
-      PCHAR trans;
+      char trans[256];
       	
       hDialog = hwnd;
 
@@ -116,31 +117,31 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      trans=I18NTranslate("Ok");
+      SF.I18NTranslateEx("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      trans=I18NTranslate("Cancel");
+      SF.I18NTranslateEx("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
 
-      trans=I18NTranslate("Apply");
+      SF.I18NTranslateEx("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      trans=I18NTranslate("Type:");
+      SF.I18NTranslateEx("Type:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_TYPEL), trans);
 
-      trans=I18NTranslate("Value:");
+      SF.I18NTranslateEx("Value:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
 
-      trans=I18NTranslate("Row:");
+      SF.I18NTranslateEx("Row:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_ROWL), trans);
 
-      trans=I18NTranslate("Column:");
+      SF.I18NTranslateEx("Column:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_COLL), trans);
 
-      trans=I18NTranslate("Rest of line");
+      SF.I18NTranslateEx("Rest of line", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_USE_REST), trans);
 
-      trans=I18NTranslate("Width:");
+      SF.I18NTranslateEx("Width:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_USE_WIDTH), trans);
 
       HWND combo = GetDlgItem(hwnd, IDC_TYPE);
