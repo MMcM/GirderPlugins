@@ -5,7 +5,7 @@
 #define DISPLAYSPYHOOK_API __declspec(dllimport) __stdcall
 #endif
 
-#define WM_NEWDISPLAY WM_USER+10
+#define WM_NEWDISPLAY WM_APP+10
 
 extern "C" {
 void DISPLAYSPYHOOK_API DS_StartHook(DWORD dwThreadId);
