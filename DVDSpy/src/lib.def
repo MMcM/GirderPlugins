@@ -1,15 +1,18 @@
 LIBRARY DVDSpy
 EXPORTS 
-   init_device
-   start_device
-   stop_device
-   flush_device       
-   identify_device
-   support_device
-   version_device
-   config_device
-   learn_device
-   compare_str
-   get_device_num
-   clean_up_device
-   h_support_functions
+
+
+
+	gir_close
+	gir_open
+
+	gir_version
+	gir_name
+	gir_description
+	gir_devicenum
+	gir_requested_api
+	gir_config
+	gir_stop
+	gir_start
+
+	gir_learn_event
