@@ -1,6 +1,6 @@
 /***************************************************************************************/
 /*                                                                                     */
-/*  Girder 3.0 Plugin                                                                  */
+/*  Girder 3.1 Plugin                                                                  */
 /*  User interface                                                                     */
 /*                                                                                     */
 /*  Copyright 2000 (c) Ron Bessems                                                     */
@@ -30,10 +30,10 @@ BOOL SaveUISettings(HWND hwnd)
     CurCommand->ivalue1 = 0;
   
   GetWindowText(GetDlgItem(hwnd, IDC_DEVICE), buf, sizeof(buf));
-  ReallocPchar(&(CurCommand->svalue1), buf);
+  SF.ReallocPchar(&(CurCommand->svalue1), buf);
 
   CurCommand->actiontype=PLUGINNUM;
-  SetCommand(CurCommand);
+  SF.SetCommand(CurCommand);
   
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
   return TRUE;
@@ -76,7 +76,7 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
   switch (uMsg) {
   case WM_INITDIALOG:
     {
-      PCHAR trans;
+      char trans[256];
       	
       hDialog = hwnd;
 
@@ -84,22 +84,22 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      trans=I18NTranslate("Ok");
+      SF.I18NTranslateEx("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      trans=I18NTranslate("Cancel");
+      SF.I18NTranslateEx("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
 
-      trans=I18NTranslate("Apply");
+      SF.I18NTranslateEx("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      trans=I18NTranslate("Playback");
+      SF.I18NTranslateEx("Playback", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_PLAYBACK), trans);
 
-      trans=I18NTranslate("Record");
+      SF.I18NTranslateEx("Record", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_RECORD), trans);
 
-      trans=I18NTranslate("Device:");
+      SF.I18NTranslateEx("Device:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_DEVICEL), trans);
 
       LoadUISettings(hwnd);
