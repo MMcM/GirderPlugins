@@ -15,6 +15,7 @@
 #include <windows.h>
 #include "plugin.h"
 #include "ui.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <time.h>
@@ -25,6 +26,12 @@
 int nDisplayCols = 0, nDisplayRows = 0;
 LPSTR pDisplayBuf = NULL;
 BOOL bDisplayOpen = FALSE;
+
+LPSTR pMarquee = NULL;
+int nMarqueeRow = 0, nMarqueePos = 0, nMarqueeLen = 0;
+BOOL bMarqueeSimulated = FALSE;
+int nMarqueePixelWidth = 0, nMarqueeSpeed = 0;
+UINT idMarqueeTimer = 0;
 
 class DisplayCommandState
 {
@@ -104,6 +111,17 @@ BOOL DisplayOpen(DisplayCommandState& state)
 void DisplayClose()
 {
   if (bDisplayOpen) {
+    if (NULL != pMarquee) {
+      if (bMarqueeSimulated) {
+        KillTimer(NULL, idMarqueeTimer);
+        idMarqueeTimer = 0;
+      }
+      else
+        lcdDisableMarquee();
+      free(pMarquee);
+      pMarquee = NULL;
+    }
+
     free(pDisplayBuf);
     pDisplayBuf = NULL;
 
@@ -123,9 +141,49 @@ void DisplayClear(DisplayCommandState& state)
 {
   if (!bDisplayOpen && !DisplayOpen(state)) 
     return;
+  if (NULL != pMarquee) {
+    if (bMarqueeSimulated) {
+      KillTimer(NULL, idMarqueeTimer);
+      idMarqueeTimer = 0;
+    }
+    else
+      lcdDisableMarquee();
+    free(pMarquee);
+    pMarquee = NULL;
+  }
   lcdClearDisplay();
   memset(pDisplayBuf, ' ', nDisplayCols * nDisplayRows);
   state.SetStatus("Display cleared.");
+}
+
+void DisplayInternal(int row, int col, LPCSTR str, int length)
+{
+  lcdSetCursorPos(col, row);
+  lcdSendString(str, length);
+
+#ifdef _DEBUG
+  {
+    char dbuf[1024];
+    sprintf(dbuf, "LCD: @%d,%d: '", row, col);
+    char *ep = dbuf + strlen(dbuf);
+    size_t nb = length;
+    if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
+      nb = sizeof(dbuf) - (ep - dbuf) - 3;
+    memcpy(ep, str, nb);
+    strcpy(ep + nb, "'\n");
+    OutputDebugString(dbuf);
+  }
+#endif
+}
+
+void MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+{
+  LPSTR bp = pDisplayBuf + (nMarqueeRow * nDisplayCols);
+  memmove(bp, bp+1, nDisplayCols-1);
+  bp[nDisplayCols-1] = pMarquee[nMarqueePos++];
+  DisplayInternal(nMarqueeRow, 0, bp, nDisplayCols);
+  if (nMarqueePos >= nMarqueeLen)
+    nMarqueePos = 0;
 }
 
 void DisplayCommon(DisplayCommandState& state, LPCSTR str)
@@ -134,11 +192,131 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
     return;
   state.SetStatus(str);
 
-  int row = state.m_command->lvalue1 % nDisplayRows;
-  int col = state.m_command->lvalue2 % nDisplayCols;
+  int row, col;
+  row = state.m_command->ivalue1 % nDisplayRows;
+
+  BOOL bDrawingMarquee = FALSE;
+  if (state.m_command->ivalue2 < 0) {
+    int length = strlen(str);
+    if (length > nDisplayCols) {
+      // Marquee mode and text wide enough to need it.
+      if (NULL != pMarquee) {
+        if (!strcmp(str, pMarquee) && (row == nMarqueeRow))
+          return;               // Same as presently active.
+        if (bMarqueeSimulated) {
+          KillTimer(NULL, idMarqueeTimer);
+          idMarqueeTimer = 0;
+        }
+        else
+          lcdDisableMarquee();
+        if (row != nMarqueeRow) {
+          // Only one row allowed to do a marquee at a time; display
+          // what fits of the old row in ordinary mode.
+          memcpy(pDisplayBuf + (nMarqueeRow * nDisplayCols), pMarquee, nDisplayCols);
+          DisplayInternal(nMarqueeRow, 0, pMarquee, nDisplayCols);
+        }
+        free(pMarquee);
+        pMarquee = NULL;
+      }
+      if (nMarqueePixelWidth == 0) {
+        // For CrystalFontz, LCDriver mistakenly sends the speed value
+        // straight to the \022 command, as though the device command
+        // units were msec.  Actually, they are 1/96sec.  So, 16 is
+        // the right value for one char/sec.
+        nMarqueePixelWidth = 1; // One pixel.
+        nMarqueeSpeed = 16;     // One character / second.
+
+        HKEY hkey;
+        if (ERROR_SUCCESS == RegOpenKey(HKEY_LOCAL_MACHINE,
+                                        "Software\\Girder3\\SoftPlugins\\LCD", 
+                                        &hkey)) {
+          BYTE buf[32];
+          DWORD dwType, dwLen;
+          dwLen = sizeof(buf);
+          if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MarqueeSimulated", NULL,
+                                               &dwType, buf, &dwLen)) {
+            switch (dwType) {
+            case REG_DWORD:
+              bMarqueeSimulated = !!*(DWORD*)&buf;
+              break;
+            case REG_SZ:
+              bMarqueeSimulated = !_stricmp((LPCSTR)buf, "True");
+              break;
+            }
+          }
+          if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MarqueePixelWidth", NULL,
+                                               &dwType, buf, &dwLen)) {
+            switch (dwType) {
+            case REG_DWORD:
+              nMarqueePixelWidth = (int)*(DWORD*)&buf;
+              break;
+            case REG_SZ:
+              nMarqueePixelWidth = atoi((LPCSTR)buf);
+              break;
+            }
+          }
+          if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MarqueeSpeed", NULL,
+                                               &dwType, buf, &dwLen)) {
+            switch (dwType) {
+            case REG_DWORD:
+              nMarqueeSpeed = (int)*(DWORD*)&buf;
+              break;
+            case REG_SZ:
+              nMarqueeSpeed = atoi((LPCSTR)buf);
+              break;
+            }
+          }
+        }
+      }
+      if (bMarqueeSimulated || 
+          (LCD_RESULT_NOERROR == lcdEnableMarquee(str, length, row, 
+                                                  nMarqueePixelWidth, nMarqueeSpeed))) {
+        pMarquee = (LPSTR)malloc(length + 1);
+        memcpy(pMarquee, str, length + 1);
+        memset(pDisplayBuf + (row * nDisplayCols), 0xFE, nDisplayCols);
+#ifdef _DEBUG
+        {
+          char dbuf[1024];
+          sprintf(dbuf, "LCD: @%d<<<: '", row);
+          char *ep = dbuf + strlen(dbuf);
+          size_t nb = length;
+          if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
+            nb = sizeof(dbuf) - (ep - dbuf) - 3;
+          memcpy(ep, str, nb);
+          strcpy(ep + nb, "'\n");
+          OutputDebugString(dbuf);
+        }
+#endif
+        nMarqueeRow = row;
+        if (!bMarqueeSimulated)
+          return;
+        nMarqueePos = nDisplayCols;
+        nMarqueeLen = length;
+        idMarqueeTimer = SetTimer(NULL, 0, 
+                                  // Keep time units consistent for now.
+                                  (nMarqueeSpeed * 125) / (nMarqueePixelWidth * 2), 
+                                  MarqueeTimer);
+        bDrawingMarquee = (0 != idMarqueeTimer);
+      }
+    }
+    // Fits as normal rest of line (or simulated or error enabling marquee).
+    col = 0;
+  }
+  else
+    col = state.m_command->ivalue2 % nDisplayCols;
+
+  if (!bDrawingMarquee && (NULL != pMarquee) && (row == nMarqueeRow)) {
+    lcdDisableMarquee();
+    // Display what fits of scrolling in ordinary mode.
+    memcpy(pDisplayBuf + (row * nDisplayCols), pMarquee, nDisplayCols);
+    DisplayInternal(row, 0, pMarquee, nDisplayCols);
+    free(pMarquee);
+    pMarquee = NULL;
+  }
+
   int width = nDisplayCols - col;
-  if ((state.m_command->lvalue3 > 0) && (state.m_command->lvalue3 < width))
-    width = state.m_command->lvalue3;
+  if ((state.m_command->ivalue3 > 0) && (state.m_command->ivalue3 < width))
+    width = state.m_command->ivalue3;
   LPSTR start = NULL, end;
   LPSTR bp = pDisplayBuf + (row * nDisplayCols) + col;
   while (width-- > 0) {
@@ -161,22 +339,7 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
     return;    // No change
 
   end++;
-  lcdSetCursorPos(col, row);
-  lcdSendString(start, (end - start));
-
-#ifdef _DEBUG
-  {
-    char dbuf[1024];
-    sprintf(dbuf, "LCD: @%d,%d: '", col, row);
-    char *ep = dbuf + strlen(dbuf);
-    size_t nb = end - start;
-    if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
-      nb = sizeof(dbuf) - (ep - dbuf) - 3;
-    memcpy(ep, start, nb);
-    strcpy(ep + nb, "'\n");
-    OutputDebugString(dbuf);
-  }
-#endif
+  DisplayInternal(row, col, start, (end - start));
 }
 
 void DisplayString(DisplayCommandState& state)
@@ -186,35 +349,24 @@ void DisplayString(DisplayCommandState& state)
   DisplayCommon(state, buf);
 }
 
-void DisplayStringRegister(DisplayCommandState& state)
+void DisplayVariable(DisplayCommandState& state)
 {
   char buf[1024];
-  char regname[100];
-  sprintf(regname, "treg%d",state.m_command->ivalue2);
-  SF.get_string_var(regname, buf, sizeof(buf));
-
+  SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
   DisplayCommon(state, buf);
 }
 
-void DisplayPayload(DisplayCommandState& state)
+void DisplayFilename(DisplayCommandState& state)
 {
-  PCHAR pld = state.GetPayloadString(state.m_command->ivalue2);
-  if (NULL != pld)
-    DisplayCommon(state, pld);
-}
-
-void DisplayFilenamePayload(DisplayCommandState& state)
-{
-  PCHAR pld = state.GetPayloadString(state.m_command->ivalue2);
-  if (NULL == pld)
-    return;
-  PCHAR sp = strrchr(pld, '\\');
+  char buf[1024];
+  SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
+  PCHAR sp = strrchr(buf, '\\');
   if (NULL != sp)
     sp++;
-  else if (NULL != strstr(pld, "://")) // A URL
-    sp = strrchr(pld, '/') + 1;
+  else if (NULL != strstr(buf, "://")) // A URL
+    sp = strrchr(buf, '/') + 1;
   else
-    sp = pld;
+    sp = buf;
   PCHAR ep = strrchr(sp, '.');
   if (NULL != ep)
     *ep = '\0';
@@ -236,11 +388,6 @@ void DisplayCurrentTime(DisplayCommandState& state)
   strftime(buf, sizeof(buf), fmt, now);
   DisplayCommon(state, buf);
 }
-
-
-
-static char ArgPrefix[] = { (char)255, 0 };
-
 
 extern "C" int WINAPI gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
 {
@@ -282,7 +429,9 @@ extern "C" int WINAPI gir_event(p_command command, PCHAR eventstring, void *payl
   DisplayCommandState state(command, eventstring,
                             payload, len,
                             status, statuslen);
-  (*DisplayActions[command->ivalue1].function)(state);
+  DisplayAction *action = FindDisplayAction(command);
+  if (NULL != action)
+    (*action->function)(state);
   return retContinue;
 }
 
