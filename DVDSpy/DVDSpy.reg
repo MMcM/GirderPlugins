@@ -2,6 +2,7 @@ REGEDIT4
 
 [HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy]
 "DVDTitles"="c:\\Program Files\\girder\\DVDTitles.csv"
+"StartHook="True"
 
 [HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\Events]
 "WMP.PlayState"=""

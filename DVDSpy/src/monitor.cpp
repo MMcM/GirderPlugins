@@ -5,10 +5,10 @@ $Header$
 #include "stdafx.h"
 #include "plugin.h"
 
-HANDLE g_hHookThread = NULL;
-DWORD g_dwHookThreadId = 0;
+HANDLE g_hMonitorThread = NULL;
+DWORD g_dwMonitorThreadId = 0;
 HWND g_hMonitorWindow = NULL;
-BOOL g_bRunning = FALSE, g_bOleInited = FALSE;
+BOOL g_bRunning = FALSE, g_bStartHook = TRUE, g_bOleInited = FALSE;
 
 void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 {
@@ -219,7 +219,7 @@ BOOL SpecialEvent(LPCSTR szEvent, LPCSTR szVal)
   return FALSE;
 }
 
-DWORD WINAPI HookThread(LPVOID param)
+DWORD WINAPI MonitorThread(LPVOID param)
 {
   g_bOleInited = FALSE;
 
@@ -266,13 +266,36 @@ BOOL StartMonitor()
   if (g_bRunning) 
     return TRUE;
 
-  g_hHookThread = CreateThread(NULL, 0, HookThread, NULL, 0, &g_dwHookThreadId);
-  if (NULL == g_hHookThread) {
+  g_hMonitorThread = CreateThread(NULL, 0, MonitorThread, NULL, 0, &g_dwMonitorThreadId);
+  if (NULL == g_hMonitorThread) {
     MessageBox(0, "Cannot create hookthread.", "Error", MB_OK);
     return FALSE;
   }
 
-  DS_StartHook(g_dwHookThreadId);
+  g_bStartHook = TRUE;
+  HKEY hkey;
+  if (ERROR_SUCCESS == RegOpenKey(HKEY_LOCAL_MACHINE, 
+                                  "Software\\Girder3\\HardPlugins\\DVDSpy", 
+                                  &hkey)) {
+    char buf[32];
+    DWORD dtype, len;
+    len = sizeof(buf);
+    if (ERROR_SUCCESS == RegQueryValueEx(hkey, "StartHook", NULL, 
+                                         &dtype, (LPBYTE)buf, &len)) {
+      switch (dtype) {
+      case REG_SZ:
+        g_bStartHook = !_stricmp(buf, "True");
+        break;
+      case REG_DWORD:
+        g_bStartHook = !!*(DWORD*)buf;
+        break;
+      }
+    }
+    RegCloseKey(hkey);
+  }
+  
+  if (g_bStartHook)
+    DS_StartHook(g_dwMonitorThreadId);
 
   g_bRunning = TRUE;
 
@@ -284,15 +307,16 @@ void StopMonitor()
   if (!g_bRunning)
     return;
 
-  DS_EndHook(g_dwHookThreadId);
+  if (g_bStartHook)
+    DS_EndHook(g_dwMonitorThreadId);
 
   if (NULL != g_hMonitorWindow)
     SendMessage(g_hMonitorWindow, WM_DESTROY, 0, 0);
   else
-    while (!PostThreadMessage(g_dwHookThreadId, WM_QUIT, 0, 0))
+    while (!PostThreadMessage(g_dwMonitorThreadId, WM_QUIT, 0, 0))
       Sleep(100);
-  WaitForSingleObject(g_hHookThread, INFINITE);
-  CloseHandle(g_hHookThread);
+  WaitForSingleObject(g_hMonitorThread, INFINITE);
+  CloseHandle(g_hMonitorThread);
 
   g_bRunning = FALSE;
 }
