@@ -396,7 +396,8 @@ const char *AttribKeys[] = {
   NULL,
   "{45F3F7C1-A6F3-4EE6-A15E-125E92FC3F8D}Shuffle",
   "{45F3F7C1-A6F3-4EE6-A15E-125E92FC3F8D}Repeat",
-  "{3CBD4483-DC44-11D3-B608-000086340885}Enable crossfading",
+  "{FC3EAF78-C66E-4ED2-A0AA-1494DFCC13FF}Enable crossfading",
+  // TODO: want fullscreen.  Can this be done this way?
 };
 
 // ivalue1 is opcode (IPC_OPCODE)

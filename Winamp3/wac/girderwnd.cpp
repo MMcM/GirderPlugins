@@ -46,6 +46,34 @@ $Header$
 #include <pledit/playlist.h>
 #include <pledit/editor.h>
 
+#if 0
+static void dumpCfgItem(CfgItem *cfg, int depth)
+{
+  if (NULL == cfg) return;
+
+  char guidstr[nsGUID::GUID_STRLEN];
+  char buf[1024];
+  sprintf(buf, "%d %s %s\n", depth, 
+          nsGUID::toChar(cfg->getGuid(), guidstr), cfg->getName());
+  OutputDebugString(buf);
+  int na = cfg->getNumAttributes();
+  for (int i = 0; i < na; i++) {
+    sprintf(buf, "  %s\n", cfg->enumAttribute(i));
+    OutputDebugString(buf);
+  }
+  int nc = cfg->getNumChildren();
+  for (i = 0; i < nc; i++) {
+    dumpCfgItem(cfg->enumChild(i), depth+1);
+  }
+}
+#endif
+
+static inline CfgItem *getCfgItemForName(const char *guidstr, const char* name)
+{
+  GUID guid = nsGUID::fromChar(guidstr);
+  return api->config_getCfgItemByGuid(guid);
+}
+
 GirderWnd::GirderWnd() : pldir(NULL) { 
   setStartHidden(TRUE);
   setName("Girder Internal");
@@ -352,8 +380,7 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
         sprintf(lreqbuf, "%s %s %s", guidstr, name, value);
         lreqdata = lreqbuf;
       }
-      GUID guid = nsGUID::fromChar(guidstr);
-      CfgItem *cfg = api->config_getCfgItemByGuid(guid);
+      CfgItem *cfg = getCfgItemForName(guidstr, name);
       if (NULL != cfg)
         cfg->setData(name, value);
     }
@@ -367,8 +394,7 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
         sprintf(lreqbuf, "%s %s", guidstr, name);
         lreqdata = lreqbuf;
       }
-      GUID guid = nsGUID::fromChar(guidstr);
-      CfgItem *cfg = api->config_getCfgItemByGuid(guid);
+      CfgItem *cfg = getCfgItemForName(guidstr, name);
       if (NULL != cfg)
         cfg->setDataAsInt(name, !cfg->getDataAsInt(name));
     }
@@ -535,8 +561,7 @@ int GirderWnd::onUserMessage(int umsg, int w, int l, int *r) {
       const char *name = msg.nextString();
       char buf[1024];
       const char *value = NULL;
-      GUID guid = nsGUID::fromChar(guidstr);
-      CfgItem *cfg = api->config_getCfgItemByGuid(guid);
+      CfgItem *cfg = getCfgItemForName(guidstr, name);
       if (NULL != cfg) {
         int len = cfg->getData(name, buf, sizeof(buf));
         if (len >= 0)
