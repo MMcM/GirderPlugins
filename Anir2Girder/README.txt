@@ -10,3 +10,12 @@ Check out http://www.girder.nl
 
 
 More docs to come...(I hope)
+
+
+Where to get it
+===============
+http://girderplugins.sourceforge.net/
+http://sourceforge.net/projects/girderplugins/
+
+Gider can be found at
+http://www.girder.nl/
