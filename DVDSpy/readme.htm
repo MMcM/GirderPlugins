@@ -10,16 +10,18 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.61. &nbsp;MMcM 08/04
+Version 1.62. &nbsp;MMcM 10/04
 
 <h3>Files</h3>
-The original download location for this plug-in is 
-<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.61.zip?download">
-here</a>; source is available
-<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.61-src.zip?download">
+The original download location for this plug-in's installer is 
+<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.62.exe?download">
+here</a>.  An archive containing the files for manual installations is
+<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.62.zip?download">
+here</a>; source is also available
+<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.62-src.zip?download">
 here</a>.<p>
 
-These are the files contained in the distribution archive and what purpose they serve.
+These are the files contained in the distribution and what purpose they serve.
 <ul>
 
 <li><kbd>readme.htm</kbd><br/>
@@ -37,17 +39,6 @@ beneath where Girder is installed.<p>
 The Windows hook DLL.<p>
 
 This file must be placed in the same folder where Girder is installed.<p>
-</li>
-
-<li><kbd>DVDSpy.reg</kbd><br/>
-Registry settings for the plug-in.<p>
-
-Run this file to merge its settings into the Windows registry.  This
-will inform the Learn command of DVDSpy Girder events that are not
-defined within the plug-in itself.<p>
-
-It will also point to the default DVD titles CSV file (see <a
-href="#DVDTitles">below</a>).<p> 
 </li>
 
 <li><kbd>MediaSpy.dll</kbd><br/>
@@ -141,14 +132,6 @@ Connect to any application's filter graph.<p>
 This file is not needed for normal Girder operation.<p>
 </li>
 
-<li><kbd>event-changes.txt</kbd><br/>
-An outline of the changes to the event naming convention over various
-releases of this plug-in.<p>
-
-This file is only needed for converting old Girder scripts to a newer
-version of the plug-in.<p>
-</li>
-
 <li><kbd>DVDTitles.csv</kbd><br/>
 A sample DVD titles CSV file.<p>
 
@@ -214,10 +197,17 @@ Disc.Insert event to switch resolutions.<p>
 <li><kbd>WinDVD3.reg</kbd>, <kbd>WinDVD4.reg</kbd>, <kbd>WinDVD4PR.reg</kbd>, <kbd>WinDVD5.reg</kbd><br/>
 Registry settings corresponding to the default skins in WinDVD 3,
 WinDVD 4, and WinDVD 4 Platinum, and WinDVD 5 Platinum respectively.
-DVDSpy.reg also contains the default skin for WinDVD 5 Platinum.
 (See <a href="#Skinned">below</a> for more information.)<p>
+</li>
 
-These files are not needed for normal Girder operation.<p>
+<li><kbd>PowerDVD.reg</kbd><br/>
+Registry settings corresponding to the default skin in PowerDVD.
+(See <a href="#Skinned">below</a> for more information.)<p>
+</li>
+
+<li><kbd>ShowShifter.reg</kbd><br/>
+Registry settings corresponding to the default UI in ShowShifter.
+(See <a href="#ShowShifter">below</a> for more information.)<p>
 </li>
 
 </ul>
