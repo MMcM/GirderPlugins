@@ -44,19 +44,31 @@ const UINT MATCH_CONTROLID = 1007;
 const UINT MATCH_NOTIFY_CODE = 1010;
 const UINT MATCH_NOTIFY_FROM = 1011;
 const UINT MATCH_PATCH = 1020;
+const UINT MATCH_MEDIA_SPY = 1030;
 
 const UINT EXTRACT_CONSTANT = 2001;
 const UINT EXTRACT_GETTEXT = 2002;
 const UINT EXTRACT_LPARAM_STR = 2003;
 const UINT EXTRACT_SB_GETTEXT = 2010;
+const UINT EXTRACT_MEDIA_SPY = 2030;
 
 const HWND HWND_PATCH = (HWND)0xDEADFACE;
 const UINT PATCH_TEXTOUT = 0x80000001;
 
+const UINT MS_FILTER_GRAPH = 1;
+const UINT MS_DVD_NAVIGATOR = 2;
+const UINT MS_FG_DURATION = 3;
+const UINT MS_FG_POSITION = 4;
+const UINT MS_DVD_DOMAIN = 5;
+const UINT MS_DVD_TITLE = 6;
+const UINT MS_DVD_CHAPTER = 7;
+const UINT MS_DVD_TOTAL = 8;
+const UINT MS_DVD_TIME = 9;
+
 /*** Patterns that drive the hook to extract display information. ***/
 static MatchEntry g_matches[] = {
 
-  BEGIN_MODULE(WinDVD.EXE)
+  BEGIN_MODULE(WinDVD)
 
     // This is an update to the tracker bar in the status bar in the
     // display window.  When it happens, the status bar fields have been
@@ -82,7 +94,7 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_MODULE(POWERDVD.EXE)
+  BEGIN_MODULE(POWERDVD)
 
     // This only happens when playing a .VOB file: the window title is
     // changed to the file in question.  Better than nothing.
@@ -103,7 +115,7 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-  BEGIN_MODULE(accessDTV.EXE)
+  BEGIN_MODULE(accessDTV)
 
     BEGIN_MATCH(accessDTV.Channel)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
@@ -115,7 +127,7 @@ static MatchEntry g_matches[] = {
     BEGIN_MATCH(accessDTV.ChanText)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
-      ENTRY_STR(ENTRY_NOT|MATCH_LPARAM_STR, "000.0 XXXX_XX")
+      ENTRY_STR(ENTRY_NOT|MATCH_LPARAM_STR, "XXXXXXXXXXXXXX")
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
@@ -123,7 +135,7 @@ static MatchEntry g_matches[] = {
     BEGIN_MATCH(accessDTV.ChanNoText)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
-      ENTRY_STR(MATCH_LPARAM_STR, "000.0 XXXX_XX")
+      ENTRY_STR(MATCH_LPARAM_STR, "XXXXXXXXXXXXXX")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
@@ -131,6 +143,54 @@ static MatchEntry g_matches[] = {
     BEGIN_MATCH(accessDTV.Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_MODULE(zplayer)
+
+    BEGIN_MATCH(ZoomPlayer.DVD)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
+     BEGIN_EXTRACT()
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+    END_MATCH()
+
+    BEGIN_MATCH(ZoomPlayer.Media)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+    END_MATCH()
+
+    BEGIN_MATCH(ZoomPlayer.Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "TMainForm")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_MODULE(TheaterTek DVD)
+
+    BEGIN_MATCH(TheaterTek)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
+     BEGIN_EXTRACT()
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+    END_MATCH()
+
+    BEGIN_MATCH(TheaterTek.Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_GETTEXT, "Overlay")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
@@ -160,7 +220,7 @@ struct MatchIndexEntry
 
 /*** Shared global data ***/
 #pragma data_seg(".SHARDATA")
-static HHOOK gs_hHook = NULL;
+static HHOOK gs_hWndHook = NULL, gs_hMsgHook = NULL;
 static DWORD gs_dwThreadId = NULL;
 static DWORD gs_dwEnabled = 0xFFFFFFFF;
 
@@ -176,6 +236,9 @@ HANDLE g_hMutex = NULL;
 size_t g_nMatchOffset = 0;
 size_t g_nMatches = 0;
 MatchIndexEntry *g_pMatches = NULL;
+
+BOOL MatchMediaSpy(UINT nClass);
+void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize);
 
 BOOL DoMatch2(const MatchEntry *pEntry, 
               HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -242,6 +305,8 @@ BOOL DoMatch2(const MatchEntry *pEntry,
         return FALSE;
       return (nMsg == (UINT)pEntry->dwVal);
     }
+  case MATCH_MEDIA_SPY:
+    return MatchMediaSpy((UINT)pEntry->dwVal);
   default:
     ASSERT(FALSE);
     return FALSE;
@@ -309,7 +374,13 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
         memmove(szBuf, szBuf + prefixLen, strlen(szBuf) - prefixLen + 1);
     }
     break;
-  }  
+  case EXTRACT_MEDIA_SPY:
+    ExtractMediaSpy((UINT)pEntry->dwVal, szBuf, nSize);
+    break;
+  default:
+    ASSERT(FALSE);
+    szBuf[0] = '\0';
+  }
 }
 
 BOOL DoExtract(size_t nMatch, HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -387,9 +458,12 @@ void IndexMatches(BOOL bAll)
   char szModBuf[MAX_PATH], *szModule = NULL;
   if (!bAll) {
     GetModuleFileName(NULL, szModBuf, sizeof(szModBuf));
+    szModule = strrchr(szModBuf, '.');
+    if (NULL != szModule)
+      *szModule = '\0';         // Remove extension.
     szModule = strrchr(szModBuf, '\\');
     if (NULL != szModule)
-      szModule++;
+      szModule++;               // Remove directory.
     else
       szModule = szModBuf;
   }
@@ -453,18 +527,21 @@ void DoMessage(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
   if (NULL == g_pMatches)
     return;
+  BOOL bNotify = FALSE;
   for (size_t i = 0; i < g_nMatches; i++) {
     if (0 == (gs_dwEnabled & (1 << i))) continue;
     if (DoMatch(g_pMatches+i, hWnd, nMsg, wParam, lParam)) {
       if (GetMutex(1000)) {     // Don't hang up long here if another process has it.
-        BOOL notify = DoExtract(i, hWnd, nMsg, wParam, lParam);
+        if (DoExtract(i, hWnd, nMsg, wParam, lParam))
+          bNotify = TRUE;
         ReleaseMutex(g_hMutex);
-        if (notify)
-          PostThreadMessage(gs_dwThreadId, WM_NEWDISPLAY, 0, 0);
       }
+      // This statement makes only the first match apply.  That seems best for now.
       break;
     }
   }
+  if (bNotify)
+    PostThreadMessage(gs_dwThreadId, WM_NEWDISPLAY, 0, 0);
 }
 
 // Windows message hook callback
@@ -474,7 +551,16 @@ LRESULT CALLBACK CallWndHookProc(int nCode, WPARAM wParam, LPARAM lParam)
     PCWPSTRUCT pParams = (PCWPSTRUCT)lParam;
     DoMessage(pParams->hwnd, pParams->message, pParams->wParam, pParams->lParam);
   }
-  return CallNextHookEx(gs_hHook, nCode, wParam, lParam);
+  return CallNextHookEx(gs_hWndHook, nCode, wParam, lParam);
+}
+
+LRESULT CALLBACK GetMsgHookProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+  if (nCode >= 0) {
+    PMSG pMsg = (PMSG)lParam;
+    DoMessage(pMsg->hwnd, pMsg->message, pMsg->wParam, pMsg->lParam);
+  }
+  return CallNextHookEx(gs_hMsgHook, nCode, wParam, lParam);
 }
 
 /*** Patching of Windows functions via Import Address Table ***/
@@ -569,13 +655,165 @@ void RemovePatches()
   }
 }
 
+/*** Wrapped COM object interface ***/
+
+// We do not link to mediaspy.dll, since that would clutter up every process.
+LPFNGETCLASSOBJECT MediaSpyGetCurrentObject = NULL;
+static REFTIME fgDuration, fgPosition;
+static DVD_DOMAIN dvdDomain;
+static DVD_PLAYBACK_LOCATION dvdLocation;
+static ULONG ulTotalTime;
+
+BOOL MatchMediaSpy(UINT nClass)
+{
+  if (NULL == MediaSpyGetCurrentObject) {
+    HINSTANCE hInst = GetModuleHandle("MEDIASPY.DLL");
+    if (NULL == hInst) return FALSE;
+    // Once it has come in, we need to keep it in so that we can keep
+    // the function pointer around.
+    hInst = LoadLibrary("MEDIASPY.DLL");
+    if (NULL == hInst) return FALSE;
+    MediaSpyGetCurrentObject = (LPFNGETCLASSOBJECT)
+      GetProcAddress(hInst, "MediaSpyGetCurrentObject");
+    if (NULL == MediaSpyGetCurrentObject) return FALSE;
+  }
+  switch (nClass) {
+  case MS_FILTER_GRAPH:
+    {
+      IMediaPosition *pMP = NULL;
+      HRESULT hr = MediaSpyGetCurrentObject(CLSID_FilterGraph, IID_IMediaPosition, 
+                                            (void**)&pMP);
+      if (S_OK != hr) return FALSE; // Including S_FALSE for none.
+      hr = pMP->get_Duration(&fgDuration);
+      if (SUCCEEDED(hr))
+        hr = pMP->get_CurrentPosition(&fgPosition);
+      pMP->Release();
+      return SUCCEEDED(hr);
+    }
+  case MS_DVD_NAVIGATOR:
+    {
+      IDvdInfo *pDVD = NULL;
+      HRESULT hr = MediaSpyGetCurrentObject(CLSID_DVDNavigator, IID_IDvdInfo, 
+                                            (void**)&pDVD);
+      if (S_OK != hr) return FALSE; // Including S_FALSE for none.
+      hr = pDVD->GetCurrentDomain(&dvdDomain);
+      if (SUCCEEDED(hr)) {
+        hr = pDVD->GetCurrentLocation(&dvdLocation);
+        if (VFW_E_DVD_INVALIDDOMAIN == hr) {
+          dvdLocation.TitleNum = 0xFFFFFFFF;
+          dvdLocation.ChapterNum = 0xFFFFFFFF;
+          dvdLocation.TimeCode = 0xFFFFFFFF;
+          hr = S_OK;
+        }
+      }
+      if (SUCCEEDED(hr)) {
+        hr = pDVD->GetTotalTitleTime(&ulTotalTime);
+        if ((VFW_E_DVD_INVALIDDOMAIN == hr) ||
+            (VFW_S_DVD_NON_ONE_SEQUENTIAL == hr)) {
+          ulTotalTime = 0xFFFFFFFF;
+          hr = S_OK;
+        }
+      }
+      pDVD->Release();
+      return SUCCEEDED(hr);
+    }
+
+  // TODO: It should be possible to get the filename of a media file
+  // from the graph by looking for the stream filter and asking it.
+
+  default:
+    ASSERT(FALSE);
+    return FALSE;
+  }
+}
+
+void FormatREFTIME(REFTIME time, LPSTR szBuf, size_t nSize)
+{
+  int nHours = (int)(time / 3600.0);
+  time -= nHours * 3600.0;
+  int nMinutes = (int)(time / 60.0);
+  time -= nMinutes * 60.0;
+  int nSeconds = (int)time;
+  // Using this doesn't seem to bloat the DLL as much as I'd feared.
+  sprintf(szBuf, "%02d:%02d:%02d", nHours, nMinutes, nSeconds);
+}
+
+void FormatTIMECODE(const DVD_TIMECODE& tc, LPSTR szBuf, size_t nSize)
+{
+  // Easy enough this way since it's already BCD.
+  szBuf[0] = '0' + (char)tc.Hours10;
+  szBuf[1] = '0' + (char)tc.Hours1;
+  szBuf[2] = ':';
+  szBuf[3] = '0' + (char)tc.Minutes10;
+  szBuf[4] = '0' + (char)tc.Minutes1;
+  szBuf[5] = ':';
+  szBuf[6] = '0' + (char)tc.Seconds10;
+  szBuf[7] = '0' + (char)tc.Seconds1;
+  szBuf[8] = '\0';
+}
+
+void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
+{
+  switch (nField) {
+  case MS_FG_DURATION:
+    FormatREFTIME(fgDuration, szBuf, nSize);
+    break;
+  case MS_FG_POSITION:
+    FormatREFTIME(fgPosition, szBuf, nSize);
+    break;
+  case MS_DVD_DOMAIN:
+    switch (dvdDomain) {
+    case DVD_DOMAIN_FirstPlay:
+      strncpy(szBuf, "PLAY", nSize);
+      break;
+    case DVD_DOMAIN_VideoManagerMenu:
+    case DVD_DOMAIN_VideoTitleSetMenu:
+      strncpy(szBuf, "MENU", nSize);
+      break;
+    case DVD_DOMAIN_Title:
+      strncpy(szBuf, "DVD", nSize);
+      break;
+    case DVD_DOMAIN_Stop:
+      strncpy(szBuf, "STOP", nSize);
+      break;
+    }
+    break;
+  case MS_DVD_TITLE:
+    if (dvdLocation.TitleNum == 0xFFFFFFFF)
+      szBuf[0] = '\0';
+    else
+      sprintf(szBuf, "%02d", dvdLocation.TitleNum);
+    break;
+  case MS_DVD_CHAPTER:
+    if (dvdLocation.ChapterNum == 0xFFFFFFFF)
+      szBuf[0] = '\0';
+    else
+      sprintf(szBuf, "%02d", dvdLocation.ChapterNum);
+    break;
+  case MS_DVD_TOTAL:
+    if (ulTotalTime == 0xFFFFFFFF)
+      szBuf[0] = '\0';
+    else
+      FormatTIMECODE(*(DVD_TIMECODE*)&ulTotalTime, szBuf, nSize);
+    break;
+  case MS_DVD_TIME:
+    if (dvdLocation.TimeCode == 0xFFFFFFFF)
+      szBuf[0] = '\0';
+    else
+      FormatTIMECODE(*(DVD_TIMECODE*)&dvdLocation.TimeCode, szBuf, nSize);
+    break;
+  }
+}
+
 /*** Functions called from the plug-in itself, rather than a hooked process. ***/
 // Enable windows message hook globally.
 void DISPLAYSPYHOOK_API DS_StartHook(DWORD dwThreadId)
 {
   GetMutex(INFINITE);
-  if (NULL == gs_hHook)
-    gs_hHook = SetWindowsHookEx(WH_CALLWNDPROC, CallWndHookProc, g_hInst, 0);
+  if (NULL == gs_hWndHook)
+    gs_hWndHook = SetWindowsHookEx(WH_CALLWNDPROC, CallWndHookProc, g_hInst, 0);
+  if (NULL == gs_hMsgHook)
+    gs_hMsgHook = SetWindowsHookEx(WH_GETMESSAGE, GetMsgHookProc, g_hInst, 0);
   gs_dwThreadId = dwThreadId;
   ReleaseMutex(g_hMutex);
 }
@@ -585,9 +823,13 @@ void DISPLAYSPYHOOK_API DS_EndHook(DWORD dwThreadId)
 {
   GetMutex(INFINITE);
   if (dwThreadId == gs_dwThreadId) {
-    if (NULL != gs_hHook) {
-      UnhookWindowsHookEx(gs_hHook);
-      gs_hHook = NULL;
+    if (NULL != gs_hWndHook) {
+      UnhookWindowsHookEx(gs_hWndHook);
+      gs_hWndHook = NULL;
+    }
+    if (NULL != gs_hMsgHook) {
+      UnhookWindowsHookEx(gs_hMsgHook);
+      gs_hMsgHook = NULL;
     }
   }
   ReleaseMutex(g_hMutex);
