@@ -1,12 +1,13 @@
 LIBRARY LCD
 EXPORTS 
-   close_dll
-   command_execute
-   command_changed
-   command_gui
-   command_controls
-   command_clear
-   name_dll
-   setsupportex
-   init_dllex
 
+	gir_open
+	gir_close
+	gir_event
+	gir_command_changed
+	gir_command_gui
+	gir_requested_api
+	gir_devicenum
+	gir_description
+	gir_name
+	gir_version
