@@ -183,65 +183,98 @@ void GetDVDTitle(LPCSTR disc, LPSTR title, size_t tsize, LPDWORD volser)
 
 }
 
-// Get the DVD title attributes
-BOOL GetDVDVideoAttribs(LPCSTR disc, LPCSTR *aspect, LPCSTR *display, LPCSTR *standard)
+// Get DVD attributes.  Get video attributes from VTSTT_VOBS of first
+// title, which is most likely to represent the bulk of the content.
+BOOL GetDVDAttribs(LPCSTR disc, 
+                   LPCSTR& aspect, LPCSTR& display, LPCSTR& standard, 
+                   LPSTR regions)
 {
-  FILE *m_file;
-  char file[MAX_PATH];
+  char fname[MAX_PATH];
+  FILE *file;
+
+  strcpy(fname, disc);
+  strcat(fname, "video_ts\\vts_01_0.ifo");
+
+  file = fopen(fname, "rb");
+  if (NULL == file)
+    return FALSE;
+
+  if (fseek(file, VTSTT_VOBS_ATTRIB_OFFSET, SEEK_SET)) {
+    fclose(file);
+    return FALSE;
+  }
+
   char v_attribs;
 
-  strcpy(file, disc);
-  strcat(file, "video_ts\\vts_01_0.ifo");
-
-  m_file = fopen(file, "rb");
-  if (NULL == m_file)
-    return FALSE;
-
-  if (fseek(m_file, VTSTT_VOBS_ATTRIB_OFFSET, 0)) {
-    fclose(m_file);
+  if (fread(&v_attribs, 1, sizeof(v_attribs), file) != sizeof(v_attribs)) {
+    fclose(file);
     return FALSE;
   }
 
-  if (fread(&v_attribs, 1, sizeof(v_attribs), m_file) != sizeof(v_attribs)) {
-    fclose(m_file);
-    return FALSE;
-  }
+  fclose(file);
 
   switch (v_attribs & VIDEO_ATTRIB_ASPECT_MASK) {
   case VIDEO_ATTRIB_ASPECT_4X3:
-    *aspect = "4:3";
+    aspect = "4:3";
     break;
   case VIDEO_ATTRIB_ASPECT_16X9:
-    *aspect = "16:9";
+    aspect = "16:9";
     break;
   default:
-    *aspect = "unknown";
+    aspect = "unknown";
     break;
   }
 
   if (v_attribs & VIDEO_ATTRIB_DISPLAY_PANSCAN) {
     if (v_attribs & VIDEO_ATTRIB_DISPLAY_LETTERBOX) {
-      *display = "none";
+      display = "none";
     }
     else {
-      *display = "letterbox";
+      display = "letterbox";
     }
   }
   else {
     if (v_attribs & VIDEO_ATTRIB_DISPLAY_LETTERBOX) {
-      *display = "pan-scan";
+      display = "pan-scan";
     }
     else {
-      *display = "both";
+      display = "both";
     }
   }
 
   if (v_attribs & VIDEO_ATTRIB_STANDARD_PAL) {
-    *standard = "PAL";
+    standard = "PAL";
   }
   else {
-    *standard = "NTSC";
+    standard = "NTSC";
   }
+
+  strcpy(fname, disc);
+  strcat(fname, "video_ts\\video_ts.ifo");
+
+  file = fopen(fname, "rb");
+  if (NULL == file)
+    return FALSE;
+
+  if (fseek(file, VMG_CATEGORY_REGION_MASK_OFFSET, SEEK_SET)) {
+    fclose(file);
+    return FALSE;
+  }
+
+  char r_mask;
+
+  if (fread(&r_mask, 1, sizeof(r_mask), file) != sizeof(r_mask)) {
+    fclose(file);
+    return FALSE;
+  }
+
+  fclose(file);
+  
+  for (int i = 1; i <= 8; i++) {
+    if ((r_mask & (1 << (i-1))) == 0)
+      *regions++ = '0' + i;
+  }
+  *regions = '\0';
 
   return TRUE;
 }

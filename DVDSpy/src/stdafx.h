@@ -27,6 +27,8 @@
 #define VIDEO_ATTRIB_DISPLAY_PANSCAN    0x02
 #define VIDEO_ATTRIB_DISPLAY_LETTERBOX  0x01
 
+#define VMG_CATEGORY_REGION_MASK_OFFSET 0x23
+
 #include "DisplaySpyHook.h"
 
 #include <girder.h>

@@ -81,6 +81,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
           DWORD volser = 0;
           char volnam[MAX_PATH] = {'\0'};
           const char *aspect, *display, *standard;
+          char regions[9];
           BOOL attribs;
           switch(wParam) {
           case DBT_DEVICEARRIVAL:
@@ -89,13 +90,13 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
             event[2] = '\\';
             event[3] = '\0';
             GetDVDTitle(event, volnam, sizeof(volnam), &volser);
-            attribs = GetDVDVideoAttribs(event, &aspect, &display, &standard);
+            attribs = GetDVDAttribs(event, aspect, display, standard, regions);
             strcpy(event, "Disc.Insert.");
             pb = event + strlen(event);
             *pb++ = cd;
             *pb++ = '\0';
             pb = payload;
-            *pb++ = ((attribs) ? 5 : 2);
+            *pb++ = ((attribs) ? 6 : 2);
             strcpy(pb, volnam);
             pb += strlen(pb) + 1;
             sprintf(pb, "%08X", volser);
@@ -106,6 +107,8 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
               strcpy(pb, display);
               pb += strlen(pb) + 1;
               strcpy(pb, standard);
+              pb += strlen(pb) + 1;
+              strcpy(pb, regions);
               pb += strlen(pb) + 1;
             }
             GirderEvent(event, payload, pb - payload);
