@@ -93,6 +93,10 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(WinDVD)
 
+  // This is version 3 and earlier, where the status is in a status
+  // bar beneath the main display.  That is gone in version 4, which
+  // has overlays and a skinnable remote window full of images.
+
     // This is an update to the tracker bar in the status bar in the
     // display window.  When it happens, the status bar fields have been
     // changed as well (via MFC).
@@ -449,6 +453,50 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
+
+  // Digital CD Player 
+  BEGIN_MODULE(cdplayer)
+
+    BEGIN_NMATCH(Time) 
+      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT) 
+      ENTRY_STR(MATCH_CLASS, "TApplication") 
+    BEGIN_EXTRACT() 
+      ENTRY0(EXTRACT_LPARAM_STR) 
+    END_MATCH() 
+
+#if 0
+    BEGIN_NMATCH(Album) 
+      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT) 
+      ENTRY_STR(MATCH_CLASS, "TPanel") 
+    BEGIN_EXTRACT() 
+      ENTRY0(EXTRACT_LPARAM_STR) 
+    END_MATCH() 
+#endif
+
+    BEGIN_NMATCH(Track) 
+      ENTRY_NUM(MATCH_MESSAGE, CB_GETLBTEXT) 
+      ENTRY_STR(MATCH_CLASS, "TComboBox") 
+      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TMyanDigitalCDPlayerForm") 
+    BEGIN_EXTRACT() 
+      ENTRY0(EXTRACT_GETTEXT) 
+    END_MATCH() 
+
+#if 0
+    BEGIN_NMATCH(Status)
+      ENTRY_NUM(MATCH_MESSAGE, WM_USER+1) 
+      ENTRY_STR(MATCH_CLASS, "TStatusBar") 
+      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TMyanDigitalCDPlayerForm") 
+    BEGIN_EXTRACT() 
+  // How to extract anything outside a Delphi program?
+    END_MATCH() 
+#endif
+
+    BEGIN_NMATCH(Close) 
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY) 
+      ENTRY_STR(MATCH_CLASS, "TMyanDigitalCDPlayerForm") 
+    BEGIN_EXTRACT() 
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH() 
 
 #if 0
   // Uncomment this and edit to begin adding a new application.
