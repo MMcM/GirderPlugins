@@ -30,6 +30,7 @@ const UINT ENTRY_END = 4;
 
 #define BEGIN_MODULE(x) BEGIN_NMODULE(x,x)
 #define BEGIN_NMODULE(n,x) NENTRY_STR(n,ENTRY_MODULE,#x)
+#define BEGIN_NMODULE_FLAGS(n,x,f) NENTRY(n,ENTRY_MODULE,#x,f)
 #define BEGIN_MATCH() ENTRY0(ENTRY_BEGIN)
 #define BEGIN_NMATCH(n) NENTRY0(n,ENTRY_BEGIN)
 #define BEGIN_EXTRACT() ENTRY0(ENTRY_EXTRACT)
@@ -79,6 +80,8 @@ const UINT MS_DVD_TITLE = 7;
 const UINT MS_DVD_CHAPTER = 8;
 const UINT MS_DVD_TOTAL = 9;
 const UINT MS_DVD_TIME = 10;
+
+const DWORD MODULE_NO_WIN16_CWP = 1;
 
 /*** Patterns that drive the hook to extract display information. ***/
 static MatchEntry g_matches[] = {
@@ -246,7 +249,7 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_NMODULE(TheaterTek,TheaterTek DVD)
+  BEGIN_NMODULE_FLAGS(TheaterTek,TheaterTek DVD,MODULE_NO_WIN16_CWP)
 
     BEGIN_MATCH()
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
@@ -478,7 +481,6 @@ struct MatchIndexEntry
 #pragma data_seg(".SHARDATA")
 static HHOOK gs_hWndHook = NULL, gs_hMsgHook = NULL;
 static DWORD gs_dwThreadId = NULL;
-static DWORD gs_dwEnabled = 0xFFFFFFFF;
 
 static DisplayBuf gs_pDisplayBufs[MAX_BUFS] = { { 0 } };
 static size_t gs_nRead = 0;
@@ -492,6 +494,8 @@ HANDLE g_hMutex = NULL;
 size_t g_nMatchOffset = 0;
 size_t g_nMatches = 0;
 MatchIndexEntry *g_pMatches = NULL;
+DWORD g_dwModuleFlags = 0;
+BOOL g_bNoCallWndProc = FALSE;
 
 BOOL MatchMediaSpy(UINT nClass);
 void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize);
@@ -738,6 +742,7 @@ void IndexMatches(BOOL bAll)
 {
   char szModBuf[MAX_PATH];
   LPCSTR szModule;
+  DWORD dwFlags = 0;
   if (!bAll) {
     GetModuleFileName(NULL, szModBuf, sizeof(szModBuf));
     LPSTR pend = strrchr(szModBuf, '.');
@@ -764,6 +769,7 @@ void IndexMatches(BOOL bAll)
           bMatch = !_stricmp(szKey, szModule);
         if (bMatch) {
           szModule = g_matches[i].szName; // Our name for it.
+          dwFlags = g_matches[i].dwVal;
           nBegin = i + 1;       // First module entry.
         }
       }
@@ -814,6 +820,18 @@ void IndexMatches(BOOL bAll)
   g_pMatches = pMatches;
   g_nMatchOffset = nOffset;
   g_nMatches = nMatches;
+
+  g_dwModuleFlags = dwFlags;
+  if (dwFlags & MODULE_NO_WIN16_CWP) {
+    OSVERSIONINFO osinfo;
+    osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+    if (GetVersionEx(&osinfo) &&
+        (VER_PLATFORM_WIN32_NT != osinfo.dwPlatformId))
+      // Don't try to decode CallWndProc messages from this application under Win9x/Me.
+      // Just matching causes some kind of damage which makes Windows unable to reboot.
+      // I think it may have something to do with the stack depth and thunking.
+      g_bNoCallWndProc = TRUE;
+  }
 }
 
 // Process a single message
@@ -823,7 +841,6 @@ void DoMessage(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
     return;
   BOOL bNotify = FALSE;
   for (size_t i = 0; i < g_nMatches; i++) {
-    if (0 == (gs_dwEnabled & (1 << i))) continue;
     if (DoMatch(g_pMatches+i, hWnd, nMsg, wParam, lParam)) {
       if (GetMutex(1000)) {     // Don't hang up long here if another process has it.
         if (DoExtract(i, hWnd, nMsg, wParam, lParam))
@@ -841,7 +858,7 @@ void DoMessage(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 // Windows message hook callback
 LRESULT CALLBACK CallWndHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-  if (nCode >= 0) {
+  if ((nCode >= 0) && !g_bNoCallWndProc) {
     PCWPSTRUCT pParams = (PCWPSTRUCT)lParam;
     DoMessage(pParams->hwnd, pParams->message, pParams->wParam, pParams->lParam);
   }
@@ -1257,15 +1274,6 @@ void DISPLAYSPYHOOK_API DS_GetName(size_t nMatch, size_t nIndex,
     }
     strncpy(szBuf, szName, nSize);
   }
-}
-
-// Enable a particular match.
-void DISPLAYSPYHOOK_API DS_EnableMatch(size_t nIndex, BOOL bEnabled)
-{
-  if (bEnabled)
-    gs_dwEnabled |= (1 << nIndex);
-  else
-    gs_dwEnabled &= ~(1 << nIndex);
 }
 
 // Get the next extracted string from the ring buffer.
