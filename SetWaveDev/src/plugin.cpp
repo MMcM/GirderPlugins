@@ -1,30 +1,93 @@
-/***************************************************************************************/
-/*                                                                                     */
-/*  Girder 3.1 Plugin                                                                  */
-/*  User interface                                                                     */
-/*                                                                                     */
-/*  Copyright 2000 (c) Ron Bessems                                                     */
-/*  GNU General Public License                                                         */
-/*                                                                                     */
-/*                                                                                     */
-/***************************************************************************************/
+/* Girder entry functions. */
 
-#define WIN32_LEAN_AND_MEAN
-#define GIRDER_CPP
-
-#include <windows.h>
+#include "stdafx.h"
 #include "plugin.h"
-#include "ui.h"
-#include <mmsystem.h>
-// From mmddk.h
-#define DRVM_MAPPER 0x2000
 
+HINSTANCE g_hInstance;
+s_functions SF;
 
-
-extern "C" int WINAPI gir_event(p_command command, PCHAR eventstring, void *payload, int len, PCHAR status, int statuslen)
+extern "C" void WINAPI
+gir_version(PCHAR buffer, BYTE length)
 {
-   
+  strncpy(buffer, PLUGINVERSION, length);
+}
 
+extern "C" void WINAPI
+gir_name(PCHAR buffer, BYTE length)
+{
+  strncpy(buffer, PLUGINNAME, length);
+}
+
+extern "C" void WINAPI
+gir_description(PCHAR buffer, BYTE length)
+{
+  strncpy(buffer, "Change sound playback / record device.  Written by Mike McMahon (MMcM).", length);
+}
+
+extern "C" int WINAPI
+gir_devicenum()
+{
+  return PLUGINNUM;
+}
+
+extern "C" int WINAPI
+gir_requested_api(int maxapi)
+{
+  return 1;
+}
+
+extern "C" int WINAPI
+gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
+{
+  if (p->size != sizeof(SF)) {
+    return GIR_FALSE;
+  }
+  memcpy(&SF, p, p->size);
+  return GIR_TRUE;
+}
+
+extern "C" int WINAPI
+gir_close()
+{
+  CloseCommandUI();
+  return GIR_TRUE;
+}
+
+#if 0
+extern "C" void WINAPI
+gir_config()
+{
+}
+
+extern "C" int WINAPI
+gir_start()
+{
+}
+
+extern "C" int WINAPI
+gir_stop()
+{
+}
+
+extern "C" int WINAPI
+gir_compare(PCHAR orig, PCHAR recv)
+{
+  // Unlikely to need this.
+  return strcmp(orig, recv);
+}
+
+extern "C" int WINAPI
+gir_learn_event(char *oldevent, char *newevent, int len)
+{
+  return GIR_FALSE;
+}
+#endif
+
+extern "C" int WINAPI
+gir_event(p_command command, 
+          char *eventString, void *payload, int len,
+          char *status, int statuslen)
+{
   switch (command->ivalue1) {
   case 0:
     {
@@ -39,7 +102,6 @@ extern "C" int WINAPI gir_event(p_command command, PCHAR eventstring, void *payl
           strncpy(status, "Playback device selected.", statuslen);
           return retContinue;
         }
-
       }
     }
     strncpy(status, "Playback device not found.", statuslen);
@@ -64,109 +126,35 @@ extern "C" int WINAPI gir_event(p_command command, PCHAR eventstring, void *payl
     MessageBox(0, "Unknown device selection", "Error", MB_ICONERROR);
     break;
   }
-
   return retContinue;
 }
 
-
-
-
-extern "C" void WINAPI gir_command_changed(p_command  command)
+extern "C" void WINAPI
+gir_command_gui()
 {
-
-  if ( command == NULL ) 
-    {
-      Enable_Config(FALSE);
-    }
-  else
-    {
-      Enable_Config(TRUE);
-      CurCommand = command;	
-      Update_Config();
-    }
-
+  OpenCommandUI();
 }
 
-
-/* You should open a configuration dialog for the plugin
-   when this function gets called.
-	
-	In : TCommand *command: the details of the new plugin
-*/
-extern "C" void WINAPI gir_command_gui()
+extern "C" void WINAPI
+gir_command_changed(p_command command)
 {
-
-  Show_Config();
-
+  UpdateCommandUI(command);
 }
 
-
-extern "C" int WINAPI  gir_requested_api(int maxapi)
+#if 0
+extern "C" int WINAPI
+gir_info(int message, int wparam, int lparam)
 {
-  return 1;
-}
-
-extern "C" int WINAPI  gir_devicenum()
-{
-  return PLUGINNUM;
-}
-
-extern "C" void WINAPI  gir_description(PCHAR Buffer, BYTE Length)
-{
-  strncpy(Buffer, "Change sound playback / record device.  Written by Mike McMahon (MMcM).", Length);
-}
-
-extern "C" void WINAPI  gir_name(PCHAR Buffer, BYTE Length)
-{
-  strncpy(Buffer, PLUGINNAME, Length);
-}
-
-extern "C" void WINAPI gir_version(PCHAR Buffer, BYTE Length)
-{
-  strncpy(Buffer, PLUGINVERSION, Length);
-}
-
-
-
-extern "C" int WINAPI gir_close()
-{
-
-	
-  Close_Config();
-
   return GIR_TRUE;
 }
-
-
-
-
-extern "C" int WINAPI  gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
-{
-
-
-  p_functions h = (p_functions )	p;
-  if ( h->size != sizeof( s_functions ) )
-    {
-      return GIR_FALSE;
-    }
-		
-  memcpy((void *)&SF, p, sizeof ( s_functions ));
-
-
-
-  return GIR_TRUE;
-
-}
-
+#endif
 
 /* Called by windows */
-BOOL WINAPI DllMain( HANDLE hModule, DWORD fdwreason,  LPVOID lpReserved )
+BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)
 {
-  UNREFERENCED_PARAMETER(lpReserved);
-  
-  switch(fdwreason) {
+  switch(dwReason) {
   case DLL_PROCESS_ATTACH:
-    hInstance=HINSTANCE(hModule);
+    g_hInstance = (HINSTANCE)hModule;
     break;
   case DLL_THREAD_ATTACH:
     break;
