@@ -3,11 +3,11 @@
 
 [Setup] 
 AppName=DVDSpy
-AppVerName=DVDSpy 1.62
+AppVerName=DVDSpy 1.63
 AppID=DVDSpy
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=1.62
+AppVersion=1.63
 DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=DVDSpy
@@ -39,6 +39,7 @@ Name: "mj"; Description: "Media Jukebox / Center"; Types: full
 Name: "radlight"; Description: "RadLight"; Types: full
 Name: "eugenes"; Description: "Eugene's Player"; Types: full
 Name: "dvdstation"; Description: "DVDStation"; Types: full
+Name: "foobar"; Description: "Foobar2000"; Types: full
 Name: "weather"; Description: "Weather data download"; Types: full
 Name: "dvdtitles"; Description: "DVD titles flat file"
 Name: "dvddata"; Description: "DVD titles download"; Types: full compact
@@ -62,6 +63,7 @@ Source: "gen_DVDSpy.dll"; DestDir: "{reg:HKCU\Software\Winamp,|{pf}\Winamp}\Plug
 Source: "ShowShifterSpy.dll"; DestDir: "{pf}\Home Media Networks Limited\ShowShifter"; Components: ssf; Flags: promptifolder regserver
 Source: "TVSpy.exe"; DestDir: "{app}"; Components: ssf; Flags: promptifolder
 Source: "int_DVDSpy.dll"; DestDir: "{app}"; Components: mj; Flags: promptifolder regserver
+Source: "foo_girder_dvdspy.dll"; DestDir: "{reg:HKCU\Software\foobar2000,InstallDir|{pf}\foobar2000}\components"; Components: foobar; Flags: promptifolder
 Source: "DVDTitles.csv"; DestDir: "{app}"; Components: dvdtitles; Flags: promptifolder
 Source: "DVDData.vbs"; DestDir: "{app}"; Components: dvddata; Flags: promptifolder
 Source: "weather.js"; DestDir: "{app}"; Components: weather; Flags: promptifolder
@@ -160,6 +162,11 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ac
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Channel"; ValueType: string; Components: adtv
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.ChannelPSIP"; ValueType: string; Components: adtv
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.SignalMeter"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Close"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Duration"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Elapsed"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Status"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Title"; ValueType: string; Components: foobar
 
 [Run]
 Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s ShowShifter.reg"; Components: ssf

@@ -1,3 +1,5 @@
+1.63    10/17/2004      erikt   Add support for foobar2000.
+
 1.62    10/06/2004      MMcM    Add an Inno Setup installer.
 
 1.61    05/31/2004      MMcM    React to accessDTV events.

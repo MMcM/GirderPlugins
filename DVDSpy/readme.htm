@@ -10,15 +10,15 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.62. &nbsp;MMcM 10/04
+Version 1.63. &nbsp;MMcM 10/04
 
 <h3>Files</h3>
 The original download location for this plug-in's installer is 
-<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.62.exe?download">
+<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.63.exe?download">
 here</a>.  An archive containing the files for manual installations is
-<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.62.zip?download">
+<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.63.zip?download">
 here</a>; source is also available
-<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.62-src.zip?download">
+<a href="http://prdownloads.sourceforge.net/girderplugins/DVDSpy-1.63-src.zip?download">
 here</a>.<p>
 
 These are the files contained in the distribution and what purpose they serve.
@@ -96,6 +96,15 @@ copied to any convenient folder (the Girder installation folder is
 fine) and self-registered by running <kbd>regsvr32 int_DVDSpy.dll</kbd>.
 Once registered, it should show up in Media Jukebox's Plug-in Manager.
 See <a href="#MJ">below</a> for more information.<p>
+</li>
+
+<li><kbd>foo_girder_dvdspy.dll</kbd><br/>
+A Foobar2000 component.<p>
+
+This file is needed for spying on Foobar2000.  It should be copied to the
+Foobar component folder, which is usually
+<kbd>C:\Program Files\foobar2000\components</kbd>.
+See <a href="#Foobar">below</a> for more information.<p>
 </li>
 
 <li><kbd>ShowShifterSpy.dll</kbd><br/>
@@ -1029,6 +1038,32 @@ top)</td>
 <td>Hollywood+ DVD Station closed</td>
 </tr>
 
+<tr></tr>
+
+<tr><td><code>Foobar.Status</code></td>
+<td>Status changed</td>
+<td>New status (<code>Play</code>,<code>Pause</code>)</td>
+</tr>
+
+<tr><td><code>Foobar.Duration</code></td>
+<td>Total time changed</td>
+<td>New total time (<code>MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>Foobar.Elapsed</code></td>
+<td>Time position changed</td>
+<td>New elapsed time (<code>MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>Foobar.Title</code></td>
+<td>Track title changed</td>
+<td>New current title information.  Title information and its format can be configured in the foo_girder_dvdspy component.</td>
+</tr>
+
+<tr><td><code>Foobar.Close</code></td>
+<td>Foobar2000 program closed</td>
+</tr>
+
 </table><p>
 
 <h3>Details</h3>
@@ -1145,6 +1180,17 @@ inside Media Jukebox to set the interval (in milliseconds) at which it
 checks for state changes.  Communication between the plug-in and
 Girder can also be manually reset, should Girder have started after
 Media Jukebox, for instance.<p>
+
+<a name="Foobar"/>
+It includes a Foobar2000 component that exposes state changes.  The
+file <kbd>foo_girder_dvdspy.dll</kbd> needs to be copied into the
+components subdirectory of the Foobar2000 installation directory,
+which is usually <kbd>C:\Program Files\foobar2000</kbd>.  Once
+installed, the plugin can be configured from inside Foobar to control
+the string format of the <code>Foobar.Title</code> payload.  This
+allows you to control exactly what track information is included in
+the payload, and can contain conditional modifiers to change what is
+sent, depending on genre, artist, or any other tag info.<p>
 
 <a name="TV"/>
 It includes a helper application for use with TV tuners.  If Guide+ is
