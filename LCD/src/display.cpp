@@ -179,6 +179,7 @@ DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 
   m_inputEnabled = FALSE;
   m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
+  InitializeCriticalSection(&m_outputCS);
 }
 
 DisplayDevice::DisplayDevice(const DisplayDevice& other)
@@ -235,6 +236,7 @@ DisplayDevice::DisplayDevice(const DisplayDevice& other)
 
   m_inputEnabled = FALSE;
   m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
+  InitializeCriticalSection(&m_outputCS);
 }
 
 DisplayDevice::~DisplayDevice()
@@ -247,6 +249,7 @@ DisplayDevice::~DisplayDevice()
     delete fan;
   }
   DOWSensor::Destroy(m_sensors);
+  DeleteCriticalSection(&m_outputCS);
 }
 
 void DisplayDevice::SetName(LPCSTR name)
@@ -1050,14 +1053,19 @@ BOOL DisplayDevice::WriteSerial(LPBYTE data, DWORD len)
   if (NULL == m_outputEvent)
     return WriteFile(m_portHandle, data, len, &nb, NULL);
 
+  BOOL result;
   OVERLAPPED overlapped;
   memset(&overlapped, 0, sizeof(overlapped));
+  EnterCriticalSection(&m_outputCS);
   overlapped.hEvent = m_outputEvent;
   if (WriteFile(m_portHandle, data, len, &nb, &overlapped))
-    return TRUE;
-  if (ERROR_IO_PENDING != GetLastError())
-    return FALSE;
-  return GetOverlappedResult(m_portHandle, &overlapped, &nb, TRUE);
+    result = TRUE;
+  else if (ERROR_IO_PENDING != GetLastError())
+    result = FALSE;
+  else
+    result = GetOverlappedResult(m_portHandle, &overlapped, &nb, TRUE);
+  LeaveCriticalSection(&m_outputCS);
+  return result;
 }
 
 BOOL DisplayDevice::ReadSerial(LPBYTE data, DWORD len, LPDWORD plen, DWORD timeout)

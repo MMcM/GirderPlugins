@@ -55,7 +55,6 @@ protected:
 #define NSENSORS 32
   DOWSensor *m_sensorsIndexed[NSENSORS];
 
-  CRITICAL_SECTION m_inputCS;
   SendPacket *m_sendHead, *m_sendTail;
   HANDLE m_sendEvent;
 };

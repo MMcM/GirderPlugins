@@ -598,6 +598,7 @@ protected:
 
   BOOL m_inputEnabled;
   HANDLE m_inputThread, m_inputEvent, m_inputStopEvent, m_outputEvent;
+  CRITICAL_SECTION m_outputCS;
 };
 
 class LCD_API DisplayDeviceFactory

@@ -189,7 +189,6 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD
   }
 
   m_sendHead = m_sendTail = NULL;
-  InitializeCriticalSection(&m_inputCS);
 }
 
 CrystalfontzPacketLCD::CrystalfontzPacketLCD(const CrystalfontzPacketLCD& other)
@@ -205,12 +204,10 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD(const CrystalfontzPacketLCD& other)
   }
 
   m_sendHead = m_sendTail = NULL;
-  InitializeCriticalSection(&m_inputCS);
 }
 
 CrystalfontzPacketLCD::~CrystalfontzPacketLCD()
 {
-  DeleteCriticalSection(&m_inputCS);
 }
 
 DisplayDevice *CrystalfontzPacketLCD::Duplicate() const
@@ -696,9 +693,9 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
 
     if (NULL == spkt) {
       // Check for new packet to send.
-      EnterCriticalSection(&m_inputCS);
+      EnterCriticalSection(&m_outputCS);
       spkt = m_sendHead;
-      LeaveCriticalSection(&m_inputCS);
+      LeaveCriticalSection(&m_outputCS);
     }
     if (NULL != spkt) {
       if (SendPacket::TRANSMIT_NEEDED == spkt->GetState()) {
@@ -781,11 +778,11 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
           }
 #endif
           spkt->SetState(SendPacket::TIMED_OUT);
-          EnterCriticalSection(&m_inputCS);
+          EnterCriticalSection(&m_outputCS);
           m_sendHead = spkt->GetNext();
           if (NULL == m_sendHead)
             m_sendTail = NULL;
-          LeaveCriticalSection(&m_inputCS);
+          LeaveCriticalSection(&m_outputCS);
           if (spkt->IsTwoWay())
             SetEvent(spkt->GetEvent());
           spkt = NULL;
@@ -945,7 +942,7 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
   case 0xC0:
     {
       SendPacket *spkt;
-      EnterCriticalSection(&m_inputCS);
+      EnterCriticalSection(&m_outputCS);
       spkt = m_sendHead;
       if (NULL != spkt) {
         if ((rpkt->GetType() & 0x3F) == (spkt->GetType() & 0x3F)) {
@@ -957,7 +954,7 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
         else
           spkt = NULL;
       }
-      LeaveCriticalSection(&m_inputCS);
+      LeaveCriticalSection(&m_outputCS);
       if (NULL != spkt) {
         spkt->SetState(SendPacket::ACKED);
         if (spkt->IsTwoWay()) {
@@ -1049,7 +1046,7 @@ void CrystalfontzPacketLCD::SendOneWay(SendPacket *spkt)
 
   BOOL wakeup = FALSE;
 
-  EnterCriticalSection(&m_inputCS);
+  EnterCriticalSection(&m_outputCS);
   if (NULL == m_sendHead) {
     m_sendHead = m_sendTail = spkt;
     wakeup = TRUE;
@@ -1058,7 +1055,7 @@ void CrystalfontzPacketLCD::SendOneWay(SendPacket *spkt)
     m_sendTail->SetNext(spkt);
     m_sendTail = spkt;
   }
-  LeaveCriticalSection(&m_inputCS);
+  LeaveCriticalSection(&m_outputCS);
 
   if (wakeup)
     SetEvent(m_sendEvent);
