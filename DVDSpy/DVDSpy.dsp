@@ -109,17 +109,7 @@ SOURCE=.\src\plugin.def
 # Begin Source File
 
 SOURCE=.\src\stdafx.cpp
-
-!IF  "$(CFG)" == "DVDSpy - Win32 Release"
-
 # ADD CPP /Yc"stdafx.h"
-
-!ELSEIF  "$(CFG)" == "DVDSpy - Win32 Debug"
-
-# ADD CPP /Yc"stdafx.h"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 

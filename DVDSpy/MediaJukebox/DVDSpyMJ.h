@@ -2,7 +2,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Tue Aug 20 09:49:23 2002
+/* at Thu Oct 03 10:54:40 2002
  */
 /* Compiler settings for C:\Program Files\girder32\plugins\DVDSpy\MediaJukebox\DVDSpyMJ.idl:
     Oicf (OptLev=i2), W1, Zp8, env=Win32, ms_ext, c_ext
