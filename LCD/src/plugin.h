@@ -2,7 +2,7 @@
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "2.0"
+#define PLUGINVERSION "2.1"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
@@ -47,6 +47,8 @@ extern void DisplayFilename(DisplayCommandState& state);
 extern void DisplayClose(DisplayCommandState& state);
 extern void DisplayClear(DisplayCommandState& state);
 extern void DisplayScreen(DisplayCommandState& state);
+extern void DisplayCharacter(DisplayCommandState& state);
+extern void DisplayCustomCharacter(DisplayCommandState& state);
 extern void DisplayGPO(DisplayCommandState& state);
 
 extern void DisplayCommand(p_command command,

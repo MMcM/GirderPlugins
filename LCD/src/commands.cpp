@@ -230,6 +230,30 @@ void DisplayGPO(DisplayCommandState& state)
   state.SetStatus("GPO set");
 }
 
+void DisplayCharacter(DisplayCommandState& state)
+{
+  if (!DisplayOpen(state)) 
+    return;
+  char buf[1024];
+  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  char ch = (char)strtoul(buf, NULL, 0);
+  g_device->DisplayCharacter(state.m_command->ivalue1, state.m_command->ivalue2, ch);
+  sprintf(buf, "%c", ch);
+  state.SetStatus(buf);
+}
+
+void DisplayCustomCharacter(DisplayCommandState& state)
+{
+  if (!DisplayOpen(state)) 
+    return;
+  char buf[1024];
+  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  CustomCharacter cust(buf);
+  g_device->DisplayCustomCharacter(state.m_command->ivalue1, state.m_command->ivalue2, 
+                                   cust);
+  state.SetStatus("Custom character displayed");
+}
+
 void DisplayCommand(p_command command,
                     PCHAR status, int statuslen)
 {

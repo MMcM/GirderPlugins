@@ -43,6 +43,8 @@ DisplayAction DisplayActions[] = {
   { "x", "Close Display", valNONE, DisplayClose },
   { "c", "Clear Display", valNONE, DisplayClear },
   { "#", "Screen", valNONE, DisplayScreen },
+  { "*", "Character (numerical code)", valSTR, DisplayCharacter },
+  { "$", "Custom Character", valSTR, DisplayCustomCharacter },
   { "o", "General Purpose Output", valBOOL, DisplayGPO },
 };
 

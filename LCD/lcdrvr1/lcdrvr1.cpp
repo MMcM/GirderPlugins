@@ -10,7 +10,8 @@ public:
   LCDriver1Display();
   ~LCDriver1Display();
   
-  virtual void DeviceDisplay(int row, int col, LPCSTR str, int length);
+  virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
+  virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
@@ -56,10 +57,16 @@ void LCDriver1Display::DeviceClear()
   lcdClearDisplay();
 }
 
-void LCDriver1Display::DeviceDisplay(int row, int col, LPCSTR str, int length)
+void LCDriver1Display::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
   lcdSetCursorPos(col, row);
-  lcdSendString(str, length);
+  lcdSendString((const char *)str, length);
+}
+
+void LCDriver1Display::DeviceDefineCustomCharacter(int index, 
+                                                   const CustomCharacter& cust)
+{
+  lcdSetCustomChar(index, (const char *)cust.GetBits());
 }
 
 void LCDriver1Display::DeviceSetMarquee()
@@ -69,7 +76,7 @@ void LCDriver1Display::DeviceSetMarquee()
   else {
     // Don't know what's on the screen once it starts.
     memset(m_buffer + (m_marqueeRow * m_cols), 0xFE, m_cols);
-    lcdEnableMarquee(m_marquee, m_marqueeLen, m_marqueeRow,
+    lcdEnableMarquee((const char *)m_marquee, m_marqueeLen, m_marqueeRow,
                      // Time units for CrystalFontz (the only
                      // supported hardware for this) are 1/96 sec.
                      m_marqueePixelWidth, (m_marqueeSpeed * 96) / 1000);

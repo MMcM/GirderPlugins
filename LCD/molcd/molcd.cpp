@@ -38,7 +38,8 @@ public:
   MatrixOrbitalDisplay(HWND parent, LPCSTR devname);
   ~MatrixOrbitalDisplay();
   
-  virtual void DeviceDisplay(int row, int col, LPCSTR str, int length);
+  virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
+  virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
@@ -72,6 +73,18 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
   m_portType = portSERIAL;
   strcpy(m_port, "COM1");
   m_portSpeed = CBR_19200;
+
+  // This is pretty much the minimum to (1) get back the two
+  // ISO-8859-1L characters in funny places, (2) prevent damage from
+  // displaying an FE being interpreted as some command, and (3) null
+  // out formatting control characters (BS, CR, etc.)
+  m_characterMap['\\'] = 0x8C;
+  m_characterMap[0x8C] = '\\';
+  m_characterMap['~'] = 0x8E;
+  m_characterMap[0x8E] = '~';
+  m_characterMap[0xFE] = ' ';
+  for (i = 8; i < 16; i++)
+    m_characterMap[i] = ' ';
 }
 
 MatrixOrbitalDisplay::~MatrixOrbitalDisplay()
@@ -152,7 +165,7 @@ void MatrixOrbitalDisplay::DeviceClear()
   WriteSerial(buf, nb);
 }
 
-void MatrixOrbitalDisplay::DeviceDisplay(int row, int col, LPCSTR str, int length)
+void MatrixOrbitalDisplay::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
   BYTE buf[128];
   int nb = 0;
@@ -167,10 +180,23 @@ void MatrixOrbitalDisplay::DeviceDisplay(int row, int col, LPCSTR str, int lengt
     buf[nb++] = row + 1;
   }
   for (int i = 0; i < length; i++) {
-    char ch = str[i];
-    // TODO: Translate character set?
-    buf[nb++] = ch;
+    BYTE b = str[i];
+    // There is no way to send an FE to DDRAM.  But that character is blank anyway.
+    buf[nb++] = b;
   }
+  WriteSerial(buf, nb);
+}
+
+void MatrixOrbitalDisplay::DeviceDefineCustomCharacter(int index, 
+                                                       const CustomCharacter& cust)
+{
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 0xFE;
+  buf[nb++] = 0x4E;             // Define custom character ...
+  buf[nb++] = index;
+  for (int i = 0; i < NCUSTROWS; i++)
+    buf[nb++] = cust.GetBits()[i];
   WriteSerial(buf, nb);
 }
 

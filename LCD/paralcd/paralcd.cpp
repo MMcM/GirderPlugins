@@ -18,7 +18,8 @@ public:
   ParallelLCD(HWND parent, LPCSTR devname);
   ~ParallelLCD();
   
-  virtual void DeviceDisplay(int row, int col, LPCSTR str, int length);
+  virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
+  virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
@@ -77,7 +78,7 @@ void ParallelLCD::DeviceClear()
   WriteIR(0x01);        // Clear display
 }
 
-void ParallelLCD::DeviceDisplay(int row, int col, LPCSTR str, int length)
+void ParallelLCD::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
   if ((row == 0) && (col == 0)) {
     WriteIR(0x02);      // Return home
@@ -92,6 +93,13 @@ void ParallelLCD::DeviceDisplay(int row, int col, LPCSTR str, int length)
   }
   for (int i = 0; i < length; i++)
     WriteDR(str[i]);
+}
+
+void ParallelLCD::DeviceDefineCustomCharacter(int index, const CustomCharacter& cust)
+{
+  WriteIR(0x40 + (index * NCUSTROWS)); // Set CGRAM address
+  for (int i = 0; i < NCUSTROWS; i++)
+    WriteDR(cust.GetBits()[i]);
 }
 
 BOOL ParallelLCD::DeviceHasSetSize()

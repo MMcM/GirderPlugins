@@ -12,7 +12,8 @@ public:
   SimulatedLCD(HWND parent, LPCSTR title);
   ~SimulatedLCD();
   
-  virtual void DeviceDisplay(int row, int col, LPCSTR str, int length);
+  virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
+  virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
@@ -23,6 +24,7 @@ public:
   void Resize(HWND hwnd = NULL);
   void OnClose();
   HBRUSH InitBackgroundBrush(HDC hDC);
+  void PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length);
   void OnPaint();
   void OnContextMenu(int x, int y);
   void OnChangeFont();
@@ -43,6 +45,7 @@ protected:
   int m_xPos, m_yPos;
   BOOL m_onTop;
   HBRUSH m_bgBrush;
+  HBITMAP m_customBitmap;
 };
 
 SimulatedLCD::SimulatedLCD(HWND parent, LPCSTR title)
@@ -63,12 +66,15 @@ SimulatedLCD::SimulatedLCD(HWND parent, LPCSTR title)
   m_xPos = m_yPos = -1;
   m_onTop = TRUE;
   m_bgBrush = NULL;
+  m_customBitmap = NULL;
 }
 
 SimulatedLCD::~SimulatedLCD()
 {
   if (NULL != m_bgBrush)
     DeleteObject(m_bgBrush);
+  if (NULL != m_customBitmap)
+    DeleteObject(m_customBitmap);
 }
 
 void SimulatedLCD::OnClose()
@@ -125,6 +131,72 @@ HBRUSH SimulatedLCD::InitBackgroundBrush(HDC hDC)
   return m_bgBrush;
 }
 
+void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
+{
+  HDC custDC = NULL;
+  HBITMAP oldBitmap = NULL;
+  while (length > 0) {
+    int nch = 0;
+    while (nch < length) {
+      if ((unsigned char)str[nch] < NCUSTCHARS)
+        break;
+      nch++;
+    }
+    if (nch > 0) {
+      // Next segment is normal characters.  Can trim spaces off the ends.
+      while ((nch > 0) && (' ' == *str)) {
+        col++;
+        str++;
+        length--;
+        nch--;
+      }
+      RECT rect;
+      rect.left = col * m_charWidth;
+      rect.top = row * m_lineHeight;
+      rect.bottom = rect.top + m_lineHeight;
+      LPCSTR seg = str;
+      col += nch;
+      str += nch;
+      length -= nch;
+      while ((nch > 0) && (' ' == seg[nch-1])) {
+        nch--;
+      }
+      if (nch > 0) {
+        rect.right = rect.left + nch * m_charWidth;
+        DrawText(hDC, seg, nch, &rect, 
+                 DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
+      }
+    }
+    else {
+      // A custom character.
+      if (NULL == custDC) {
+        if (NULL == m_customBitmap) {
+          BYTE bits[NCUSTCHARS * NCUSTROWS];
+          for (int i = 0; i < NCUSTCHARS; i++) {
+            const BYTE *cbits = m_customCharacters[i].GetBits();
+            for (int j = 0; j < NCUSTROWS; j++) {
+              bits[j * NCUSTCHARS + i] = ~cbits[j]; // zero is foreground color
+            }
+          }
+          m_customBitmap = CreateBitmap(NCUSTCHARS * 8, NCUSTROWS, 1, 1, bits);
+        }
+        custDC = CreateCompatibleDC(NULL);
+        oldBitmap = (HBITMAP)SelectObject(custDC, m_customBitmap);
+      }
+      SetStretchBltMode(hDC, BLACKONWHITE);
+      StretchBlt(hDC, col * m_charWidth, row * m_lineHeight, m_charWidth, m_lineHeight,
+                 custDC, *str * 8 + (8 - NCUSTCOLS), 0, NCUSTCOLS + 1, NCUSTROWS, SRCCOPY);
+      col++;
+      str++;
+      length--;
+    }
+  }
+  if (NULL != custDC) {
+    SelectObject(custDC, oldBitmap);
+    DeleteDC(custDC);
+  }
+}
+
 void SimulatedLCD::OnPaint()
 {
   PAINTSTRUCT ps;
@@ -135,13 +207,25 @@ void SimulatedLCD::OnPaint()
   HFONT hFont = CreateFontIndirect(&m_logFont);
   HFONT hOld = (HFONT)SelectObject(hDC, hFont);
 
-  RECT rect;
-  GetClientRect(m_hwnd, &rect);
+  if (m_fixedPitch) {
+    // Fixed pitch; do each line segment.
+    PCHAR pb = (PCHAR)m_buffer;
+    for (int i = 0; i < m_rows; i++) {
+      PaintFixed(hDC, i, 0, pb, m_cols);
+      pb += m_cols;
+    }
+  }
+  else {
+    // Variable pitch; don't get custom characters.
+    RECT rect;
+    GetClientRect(m_hwnd, &rect);
   
-  PCHAR pb = m_buffer;
-  for (int i = 0; i < m_rows; i++) {
-    rect.top += DrawText(hDC, pb, m_cols, &rect, DT_LEFT | DT_SINGLELINE);
-    pb += m_cols;
+    PCHAR pb = (PCHAR)m_buffer;
+    for (int i = 0; i < m_rows; i++) {
+      rect.top += DrawText(hDC, pb, m_cols, &rect, 
+                           DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
+      pb += m_cols;
+    }
   }
   
   SetTextColor(hDC, oldText);
@@ -376,21 +460,16 @@ void SimulatedLCD::DeviceClear()
   InvalidateRect(m_hwnd, NULL, TRUE);
 }
 
-void SimulatedLCD::DeviceDisplay(int row, int col, LPCSTR str, int length)
+void SimulatedLCD::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
-  RECT rect;
-  GetClientRect(m_hwnd, &rect);
-  rect.top = row * m_lineHeight;
-  rect.bottom = rect.top + m_lineHeight;
   if (m_fixedPitch) {
-    rect.left = col * m_charWidth;
-    rect.right = rect.left + length * m_charWidth;
+    // Paint right away if fixed pitch.
     HDC hDC = GetDC(m_hwnd);
     COLORREF oldText = SetTextColor(hDC, m_textColor);
     COLORREF oldBack = SetBkColor(hDC, m_backColor);
     HFONT hFont = CreateFontIndirect(&m_logFont);
     HFONT hOld = (HFONT)SelectObject(hDC, hFont);
-    DrawText(hDC, str, length, &rect, DT_LEFT | DT_SINGLELINE);
+    PaintFixed(hDC, row, col, (LPCSTR)str, length);
     SetTextColor(hDC, oldText);
     SetBkColor(hDC, oldBack);
     SelectObject(hDC, hOld);
@@ -398,8 +477,23 @@ void SimulatedLCD::DeviceDisplay(int row, int col, LPCSTR str, int length)
     ReleaseDC(m_hwnd, hDC);
     return;
   }
-  // Invalidate the whole row if variable pitch.
-  InvalidateRect(m_hwnd, &rect, TRUE);
+  else {
+    // Invalidate the whole row if variable pitch.
+    RECT rect;
+    GetClientRect(m_hwnd, &rect);
+    rect.top = row * m_lineHeight;
+    rect.bottom = rect.top + m_lineHeight;
+    InvalidateRect(m_hwnd, &rect, TRUE);
+  }
+}
+
+void SimulatedLCD::DeviceDefineCustomCharacter(int index, const CustomCharacter& cust)
+{
+  // Invalidate current source bitmap.
+  if (NULL != m_customBitmap) {
+    DeleteObject(m_customBitmap);
+    m_customBitmap = NULL;
+  }
 }
 
 BOOL SimulatedLCD::DeviceHasSetSize()
