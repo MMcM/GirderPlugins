@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.24. &nbsp;MMcM 05/02
+Version 1.25. &nbsp;MMcM 05/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -182,344 +182,398 @@ If you do see events, then double check the OSD PopUp settings.
 <th>Payload String 2</th>
 </tr>
 
-<tr><td>Disc.Insert.<i>X</i></td>
+<tr><td><code>Disc.Insert.<i>X</i></code></td>
 <td>A new DVD was inserted into drive <i>X:</i></td>
 <td>The volume name or disc title (see <a href="#DVDTitles">below</a>)</td>
 <td>The volume serial number</td>
 </tr>
 
-<tr><td>Disc.Eject.<i>X</i></td>
+<tr><td><code>Disc.Eject.<i>X</i></code></td>
 <td>The DVD was ejected from drive <i>X:</i></td>
 </tr>
 
 <tr></tr>
 
-<tr><td>WinDVD.Chapter</td>
+<tr><td><code>WinDVD.Chapter</code></td>
 <td>Chapter changed</td>
-<td>New chapter (NN)</td>
+<td>New chapter (<code>NN</code>)</td>
 </tr>
 
-<tr><td>WinDVD.Elapsed</td>
+<tr><td><code>WinDVD.Elapsed</code></td>
 <td>Elapsed time changed</td>
-<td>New time (HH:MM:SS)</td>
+<td>New time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>WinDVD.Video</td>
+<tr><td><code>WinDVD.Video</code></td>
 <td>Video mode changed</td>
-<td>New mode (e.g. MPEG)</td>
+<td>New mode (e.g. <code>MPEG</code>)</td>
 </tr>
 
-<tr><td>WinDVD.Audio</td>
+<tr><td><code>WinDVD.Audio</code></td>
 <td>Audio mode changed</td>
-<td>New mode (e.g. BOTH)</td>
+<td>New mode (e.g. <code>BOTH</code>)</td>
 </tr>
 
-<tr><td>WinDVD.Close</td>
+<tr><td><code>WinDVD.Close</code></td>
 <td>WinDVD application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>PowerDVD.Elapsed</td>
+<tr><td><code>PowerDVD.Elapsed</code></td>
 <td>Elapsed time changed</td>
-<td>New time (HH:MM:SS)</td>
+<td>New time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>PowerDVD.Title</td>
+<tr><td><code>PowerDVD.Title</code></td>
 <td>Title of video window changed</td>
 <td>New title (file name if playing file instead of disc)</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>accessDTV.ChanText</td>
+<tr><td><code>accessDTV.ChanText</code></td>
 <td>The channel description changed</td>
-<td>New description (NNN.n XXXX_XX)</td>
+<td>New description (<code>NNN.n XXXX_XX</code>)</td>
 </tr>
 
-<tr><td>accessDTV.ChanNoText</td>
+<tr><td><code>accessDTV.ChanNoText</code></td>
 <td>The channel description was not present</td>
 </tr>
 
-<tr><td>accessDTV.Channel</td>
+<tr><td><code>accessDTV.Channel</code></td>
 <td>The big channel digits changed</td>
-<td>New digits (NN.n)</td>
+<td>New digits (<code>NN.n</code>)</td>
 </tr>
 
-<tr><td>accessDTV.Duration</td>
+<tr><td><code>accessDTV.Duration</code></td>
 <td>File duration changed</td>
-<td>New total duration (HH:MM:SS)</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>accessDTV.Elapsed</td>
+<tr><td><code>accessDTV.Elapsed</code></td>
 <td>File position changed</td>
-<td>New elapsed time (HH:MM:SS)</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>accessDTV.Close</td>
+<tr><td><code>accessDTV.Close</code></td>
 <td>ADTV application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>ZoomPlayer.DVD.Domain</td>
+<tr><td><code>ZoomPlayer.DVD.Domain</code></td>
 <td>Domain changed</td>
-<td>New domain (PLAY,MENU,DVD,STOP)</td>
+<td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.TitleNo</td>
+<tr><td><code>ZoomPlayer.DVD.TitleNo</code></td>
 <td>Title changed</td>
-<td>New title number (NN)</td>
+<td>New title number (<code>NN</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.Chapter</td>
+<tr><td><code>ZoomPlayer.DVD.Chapter</code></td>
 <td>Chapter changed</td>
-<td>New chapter (NN)</td>
+<td>New chapter (<code>NN</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.Duration</td>
+<tr><td><code>ZoomPlayer.DVD.Duration</code></td>
 <td>Total changed</td>
-<td>New total time (HH:MM:SS)</td>
+<td>New total time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.Elapsed</td>
+<tr><td><code>ZoomPlayer.DVD.Elapsed</code></td>
 <td>Position changed</td>
-<td>New elapsed time (HH:MM:SS)</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.Duration</td>
+<tr><td><code>ZoomPlayer.Media.Duration</code></td>
 <td>Duration changed</td>
-<td>New total duration (HH:MM:SS)</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.Elapsed</td>
+<tr><td><code>ZoomPlayer.Media.Elapsed</code></td>
 <td>Position changed</td>
-<td>New elapsed time (HH:MM:SS)</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.File</td>
+<tr><td><code>ZoomPlayer.Media.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td>ZoomPlayer.OSD</td>
+<tr><td><code>ZoomPlayer.OSD</code></td>
 <td>OSD caption changed</td>
-<td>New OSD message (Play, Pause, ...)</td>
+<td>New OSD message (<code>Play</code>, <code>Pause</code>, ...)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Close</td>
+<tr><td><code>ZoomPlayer.Close</code></td>
 <td>ZP application closed</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.State</code></td>
+<td>ZP state changed</td>
+<td>New state (<code>Closed</code>, <code>Stopped</code>, <code>Paused</code>, <code>Playing</code>)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.Time</code></td>
+<td>ZP time position changed</td>
+<td>New time line information</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.OSD</code></td>
+<td>OSD caption changed</td>
+<td>New OSD message (<code>Play</code>, <code>Pause</code>, ...)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.OSD.Off</code></td>
+<td>OSD caption removed</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.Mode</code></td>
+<td>Player mode changed</td>
+<td>New mode (<code>DVD</code>, <code>Media</code>)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.DVD.Title</code></td>
+<td>DVD Title changed</td>
+<td>New title number</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.DVD.Chapter</code></td>
+<td>DVD Chapter changed</td>
+<td>New chapter number</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.DVD.Audio</code></td>
+<td>DVD audio mode changed</td>
+<td>New audio track (<code>2ch:English [AC3]</code>)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.DVD.Sub</code></td>
+<td>DVD subtitles changed</td>
+<td>New subtitle language</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.File</code></td>
+<td>Media file changed</td>
+<td>New file name</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.LCD.Position</code></td>
+<td>Playlist position changed</td>
+<td>New position (<code>1/2</code>)</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>TheaterTek.Domain</td>
+<tr><td><code>TheaterTek.Domain</code></td>
 <td>Domain changed</td>
-<td>New domain (PLAY,MENU,DVD,STOP)</td>
+<td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
 </tr>
 
-<tr><td>TheaterTek.TitleNo</td>
+<tr><td><code>TheaterTek.TitleNo</code></td>
 <td>Title changed</td>
-<td>New title number (NN)</td>
+<td>New title number (<code>NN</code>)</td>
 </tr>
 
-<tr><td>TheaterTek.Chapter</td>
+<tr><td><code>TheaterTek.Chapter</code></td>
 <td>Chapter changed</td>
-<td>New chapter (NN)</td>
+<td>New chapter (<code>NN</code>)</td>
 </tr>
 
-<tr><td>TheaterTek.Duration</td>
+<tr><td><code>TheaterTek.Duration</code></td>
 <td>Total changed</td>
-<td>New total time (HH:MM:SS)</td>
+<td>New total time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>TheaterTek.Elapsed</td>
+<tr><td><code>TheaterTek.Elapsed</code></td>
 <td>Position changed</td>
-<td>New elapsed time (HH:MM:SS)</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>TheaterTek.Close</td>
+<tr><td><code>TheaterTek.Close</code></td>
 <td>TT application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>ATI.DVD.Domain</td>
+<tr><td><code>ATI.DVD.Domain</code></td>
 <td>Domain changed</td>
-<td>New domain (PLAY,MENU,DVD,STOP)</td>
+<td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
 </tr>
 
-<tr><td>ATI.DVD.TitleNo</td>
+<tr><td><code>ATI.DVD.TitleNo</code></td>
 <td>Title changed</td>
-<td>New title number (NN)</td>
+<td>New title number (<code>NN</code>)</td>
 </tr>
 
-<tr><td>ATI.DVD.Chapter</td>
+<tr><td><code>ATI.DVD.Chapter</code></td>
 <td>Chapter changed</td>
-<td>New chapter (NN)</td>
+<td>New chapter (<code>NN</code>)</td>
 </tr>
 
-<tr><td>ATI.DVD.Duration</td>
+<tr><td><code>ATI.DVD.Duration</code></td>
 <td>Total changed</td>
-<td>New total time (HH:MM:SS)</td>
+<td>New total time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ATI.DVD.Elapsed</td>
+<tr><td><code>ATI.DVD.Elapsed</code></td>
 <td>Position changed</td>
-<td>New elapsed time (HH:MM:SS)</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ATI.MMC.Duration</td>
+<tr><td><code>ATI.MMC.Duration</code></td>
 <td>Duration changed</td>
-<td>New total duration (HH:MM:SS)</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ATI.MMC.Elapsed</td>
+<tr><td><code>ATI.MMC.Elapsed</code></td>
 <td>Position changed</td>
-<td>New current position (HH:MM:SS)</td>
+<td>New current position (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ATI.MMC.File</td>
+<tr><td><code>ATI.MMC.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td>ATI.Close</td>
+<tr><td><code>ATI.Close</code></td>
 <td>ATI application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>WMP.Status</td>
+<tr><td><code>WMP.Status</code></td>
 <td>Media player status changed</td>
 <td>New player status</td>
 </tr>
 
-<tr><td>WMP.Duration</td>
+<tr><td><code>WMP.Duration</code></td>
 <td>Media duration changed</td>
-<td>New total time (MM:SS)</td>
+<td>New total time (<code>MM:SS</code>)</td>
 </tr>
 
-<tr><td>WMP.Elapsed</td>
+<tr><td><code>WMP.Elapsed</code></td>
 <td>Media player position changed</td>
-<td>New elapsed time (MM:SS)</td>
+<td>New elapsed time (<code>MM:SS</code>)</td>
 </tr>
 
-<tr><td>WMP.URL</td>
+<tr><td><code>WMP.URL</code></td>
 <td>Media source changed</td>
 <td>New current media URL</td>
 </tr>
 
-<tr><td>WMP.Title</td>
+<tr><td><code>WMP.Title</code></td>
 <td>Media name changed</td>
 <td>New current media name</td>
 </tr>
 
-<tr><td>WMP.Close</td>
+<tr><td><code>WMP.Close</code></td>
 <td>Media player closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>Winamp.Status</td>
+<tr><td><code>Winamp.Status</code></td>
 <td>Status changed</td>
-<td>New status (STOP, PLAY, PAUSE)</td>
+<td>New status (<code>STOP</code>, <code>PLAY</code>, <code>PAUSE</code>)</td>
 </tr>
 
-<tr><td>Winamp.Length</td>
+<tr><td><code>Winamp.Length</code></td>
 <td>Playlist length changed</td>
 <td>New playlist length</td>
 </tr>
 
-<tr><td>Winamp.Position</td>
+<tr><td><code>Winamp.Position</code></td>
 <td>Playlist position changed</td>
 <td>New playlist position (1-based)</td>
 </tr>
 
-<tr><td>Winamp.Duration</td>
+<tr><td><code>Winamp.Duration</code></td>
 <td>Total time changed</td>
-<td>New total time (MM:SS)</td>
+<td>New total time (<code>MM:SS</code>)</td>
 </tr>
 
-<tr><td>Winamp.Elasped</td>
+<tr><td><code>Winamp.Elasped</code></td>
 <td>Time position changed</td>
-<td>New elapsed time (MM:SS)</td>
+<td>New elapsed time (<code>MM:SS</code>)</td>
 </tr>
 
-<tr><td>Winamp.File</td>
+<tr><td><code>Winamp.File</code></td>
 <td>Track file changed</td>
 <td>New current filename</td>
 </tr>
 
-<tr><td>Winamp.Title</td>
+<tr><td><code>Winamp.Title</code></td>
 <td>Track title changed</td>
 <td>New current title</td>
 </tr>
 
-<tr><td>Winamp.Close</td>
+<tr><td><code>Winamp.Close</code></td>
 <td>Program closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>ShowShifter.Duration</td>
+<tr><td><code>ShowShifter.Duration</code></td>
 <td>Duration changed</td>
-<td>New total duration (HH:MM:SS)</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ShowShifter.Elapsed</td>
+<tr><td><code>ShowShifter.Elapsed</code></td>
 <td>Position changed</td>
-<td>New current position (HH:MM:SS)</td>
+<td>New current position (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>ShowShifter.File</td>
+<tr><td><code>ShowShifter.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td>ShowShifter.Close</td>
+<tr><td><code>ShowShifter.Close</code></td>
 <td>ShowShifter application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>BSPlayer.Duration</td>
+<tr><td><code>BSPlayer.Duration</code></td>
 <td>Duration changed</td>
-<td>New total duration (HH:MM:SS)</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>BSPlayer.Elapsed</td>
+<tr><td><code>BSPlayer.Elapsed</code></td>
 <td>Position changed</td>
-<td>New current position (HH:MM:SS)</td>
+<td>New current position (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>BSPlayer.File</td>
+<tr><td><code>BSPlayer.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td>BSPlayer.Close</td>
+<tr><td><code>BSPlayer.Close</code></td>
 <td>BSPlayer application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>PowerDivX.Duration</td>
+<tr><td><code>PowerDivX.Duration</code></td>
 <td>Duration changed</td>
-<td>New total duration (HH:MM:SS)</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>PowerDivX.Elapsed</td>
+<tr><td><code>PowerDivX.Elapsed</code></td>
 <td>Position changed</td>
-<td>New current position (HH:MM:SS)</td>
+<td>New current position (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td>PowerDivX.File</td>
+<tr><td><code>PowerDivX.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
 </tr>
 
-<tr><td>PowerDivX.Close</td>
+<tr><td><code>PowerDivX.Close</code></td>
 <td>PowerDivX application closed</td>
 </tr>
 
@@ -546,6 +600,12 @@ approach can probably be extended trivially to any other DirectShow
 DVD player.  The MEDIASPY.DLL library must be registered using
 <kbd>regsvr32</kbd>.  This may impact programs even when Girder is not
 running.  Unregistering it should return things to normal.<p>
+
+<a name="ZoomPlayer"/>
+In order to receive the <code>ZoomPlayer.LCD.*</code> events, LCD output
+must be enabled in the Zoom Player Options dialog.  Before doing this,
+be sure that your script is following the license restrictions on use
+of this feature.<p>
 
 <a name="WMPSpy"/>
 It defines an ActiveX control element for use in Windows Media Player
