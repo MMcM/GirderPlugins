@@ -31,6 +31,11 @@ BOOL SaveUISettings(HWND hwnd)
 
   GetWindowText(GetDlgItem(hwnd, IDC_VALUE), buf, sizeof(buf));
   SF.realloc_pchar(&(CurCommand->svalue2), buf);
+  
+  if (SendMessage(GetDlgItem(hwnd, IDC_DWORD), BM_GETCHECK, 0, 0))
+    CurCommand->ivalue1 = REG_DWORD;
+  else
+    CurCommand->ivalue1 = REG_SZ;
 
   CurCommand->actiontype=PLUGINNUM;
   SF.set_command(CurCommand);
@@ -68,9 +73,27 @@ void LoadUISettings(HWND hwnd)
 {
   EnterCriticalSection(&CurCommand->critical_section);
 
+  if (!CurCommand->ivalue1) {
+    // Compatibility.
+    if (CurCommand->bvalue1) {
+      CurCommand->bvalue1 = FALSE;
+      char buf[32];
+      sprintf(buf, "%d", CurCommand->lvalue1);
+      CurCommand->lvalue1 = 0;
+      SF.realloc_pchar(&(CurCommand->svalue2), buf);
+      CurCommand->ivalue1 = REG_DWORD;
+    }
+    else
+      CurCommand->ivalue1 = REG_SZ;
+  }
+
   SetWindowText(GetDlgItem(hwnd, IDC_KEY), CurCommand->svalue1);
   SetWindowText(GetDlgItem(hwnd, IDC_VALUE), CurCommand->svalue2);
-
+  SendMessage(GetDlgItem(hwnd, IDC_SZ), BM_SETCHECK, 
+              (CurCommand->ivalue1 == REG_SZ), 0);
+  SendMessage(GetDlgItem(hwnd, IDC_DWORD), BM_SETCHECK, 
+              (CurCommand->ivalue1 == REG_DWORD), 0);
+  
   LeaveCriticalSection(&CurCommand->critical_section);
 }
 
@@ -103,6 +126,9 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
       SF.i18n_translate("Value:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
 
+      SF.i18n_translate("Type:", trans, sizeof(trans));
+      SetWindowText(GetDlgItem(hwnd, IDC_TYPEL), trans);
+
       LoadUISettings(hwnd);
 
       EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
@@ -133,6 +159,16 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
       if ( HIWORD(wParam)==EN_CHANGE) {
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
+      break;
+
+    case IDC_SZ:
+      SendMessage(GetDlgItem(hwnd, IDC_DWORD), BM_SETCHECK, FALSE, 0);
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
+      break;
+
+    case IDC_DWORD:
+      SendMessage(GetDlgItem(hwnd, IDC_SZ), BM_SETCHECK, FALSE, 0);
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       break;
     }
     break;
