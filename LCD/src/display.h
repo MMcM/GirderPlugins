@@ -34,10 +34,10 @@ public:
     return !memcmp(m_bits, other.m_bits, sizeof(m_bits));
   }
 
-  const BYTE* GetBits() const {
+  LPCBYTE GetBits() const {
     return m_bits;
   }
-  void SetBits(LPBYTE bits) {
+  void SetBits(LPCBYTE bits) {
     memcpy(m_bits, bits, sizeof(m_bits));
   }
 
@@ -256,6 +256,7 @@ protected:
   virtual BOOL DeviceHasBrightness();
   virtual BOOL DeviceHasBacklight();
   virtual BOOL DeviceHasKeypad();
+  virtual void DeviceSerialInputThread();
   virtual BOOL DeviceEnableInput();
   virtual void DeviceDisableInput();
   virtual void DeviceInput(BYTE b);

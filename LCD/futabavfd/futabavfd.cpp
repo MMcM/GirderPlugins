@@ -37,7 +37,7 @@ FutabaVFDDisplay::~FutabaVFDDisplay()
 
 BOOL FutabaVFDDisplay::DeviceOpen()
 {
-  if (!OpenSerial(m_enableInput))
+  if (!OpenSerial())
     return FALSE;
 
   BYTE buf[128];

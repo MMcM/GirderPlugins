@@ -12,8 +12,11 @@
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#include <malloc.h>
 
 #include <display.h>
+
+#define countof(x) sizeof(x)/sizeof(x[0])
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

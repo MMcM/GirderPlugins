@@ -100,8 +100,16 @@ SOURCE=.\cfontzlcd.rc
 # End Source File
 # Begin Source File
 
+SOURCE=.\packetlcd.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\stdafx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\streamlcd.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -109,11 +117,19 @@ SOURCE=.\stdafx.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\packetlcd.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\stdafx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\streamlcd.h
 # End Source File
 # End Group
 # End Target

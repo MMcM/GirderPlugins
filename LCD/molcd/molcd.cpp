@@ -14,22 +14,27 @@ struct DeviceEntry {
   int cols;
   int rows;
   BOOL vfd;
+  BOOL usb;
   BOOL keypad;
   int gpos;
 } DeviceEntries[] = {
-  { "LCD2021", 20, 2, FALSE, FALSE, 1 },
-  { "LCD4021", 40, 2, FALSE, FALSE, 1 },
-  { "LCD2041", 20, 4, FALSE, FALSE, 1 },
-  { "LCD4041", 40, 4, FALSE, FALSE, 1 },
-  { "LK162", 16, 2, FALSE, TRUE, 6 },
-  { "LK202", 20, 2, FALSE, TRUE, 6 },
-  { "LK204", 20, 4, FALSE, TRUE, 6 },
-  { "LK402", 40, 2, FALSE, TRUE, 7 },
-  { "LK404", 40, 4, FALSE, TRUE, 1 },
-  { "VFD2021", 20, 2, TRUE, FALSE, 1 },
-  { "VFD2041", 20, 4, TRUE, FALSE, 1 },
-  { "VK202", 20, 2, TRUE, TRUE, 6 },
-  { "VK204", 20, 4, TRUE, TRUE, 6 },
+  { "LCD2021", 20, 2, FALSE, FALSE, FALSE, 1 },
+  { "LCD4021", 40, 2, FALSE, FALSE, FALSE, 1 },
+  { "LCD2041", 20, 4, FALSE, FALSE, FALSE, 1 },
+  { "LCD4041", 40, 4, FALSE, FALSE, FALSE, 1 },
+  { "LK162", 16, 2, FALSE, FALSE, TRUE, 6 },
+  { "LK202", 20, 2, FALSE, FALSE, TRUE, 6 },
+  { "LK204", 20, 4, FALSE, FALSE, TRUE, 6 },
+  { "LK202U", 20, 2, FALSE, TRUE, TRUE, 6 },
+  { "LK204U", 20, 4, FALSE, TRUE, TRUE, 6 },
+  { "LK402", 40, 2, FALSE, FALSE, TRUE, 7 },
+  { "LK404", 40, 4, FALSE, FALSE, TRUE, 1 },
+  { "VFD2021", 20, 2, TRUE, FALSE, FALSE, 1 },
+  { "VFD2041", 20, 4, TRUE, FALSE, FALSE, 1 },
+  { "VK202", 20, 2, TRUE, FALSE, TRUE, 6 },
+  { "VK204", 20, 4, TRUE, FALSE, TRUE, 6 },
+  { "VK202U", 20, 2, TRUE, TRUE, TRUE, 6 },
+  { "VK204U", 20, 4, TRUE, TRUE, TRUE, 6 },
 };
 
 #define countof(x) sizeof(x)/sizeof(x[0])
@@ -57,7 +62,7 @@ public:
   virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
-  BOOL m_vfd, m_keypad;
+  BOOL m_vfd, m_usb, m_keypad;
   int m_gpos;
   int m_debounceTime;
 };
@@ -70,6 +75,7 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
       m_cols = entry->cols;
       m_rows = entry->rows;
       m_vfd = entry->vfd;
+      m_usb = entry->usb;
       m_keypad = entry->keypad;
       m_gpos = entry->gpos;
       break;
@@ -98,12 +104,12 @@ MatrixOrbitalDisplay::~MatrixOrbitalDisplay()
 {
 }
 
-inline static BYTE contrast(int percent)
+inline static BYTE rangeFF(int percent)
 {
   return (percent * 0xFF) / 100;
 }
 
-inline static BYTE brightness(int percent)
+inline static BYTE range03(int percent)
 {
   if (percent <= 25)
     return 0;
@@ -136,12 +142,17 @@ BOOL MatrixOrbitalDisplay::DeviceOpen()
   if (m_vfd) {
     buf[nb++] = 0xFE;
     buf[nb++] = 0x59;           // Set brightness ...
-    buf[nb++] = brightness(m_brightness);
+    buf[nb++] = (m_usb) ? rangeFF(m_brightness) : range03(m_brightness);
   }
   else {
     buf[nb++] = 0xFE;
     buf[nb++] = 0x50;           // Set contrast ...
-    buf[nb++] = contrast(m_contrast);
+    buf[nb++] = rangeFF(m_contrast);
+    if (m_usb) {
+      buf[nb++] = 0xFE;
+      buf[nb++] = 0x99;           // Set backlight brightness ...
+      buf[nb++] = rangeFF(m_brightness);
+    }
   }
   if (m_keypad) {
     buf[nb++] = 0xFE;
@@ -219,7 +230,7 @@ BOOL MatrixOrbitalDisplay::DeviceHasContrast()
 
 BOOL MatrixOrbitalDisplay::DeviceHasBrightness()
 {
-  return m_vfd;
+  return m_vfd || m_usb;
 }
 
 BOOL MatrixOrbitalDisplay::DeviceHasKeypad()

@@ -95,12 +95,12 @@ void DisplayDevice::SetSettingString(HKEY hkey, LPCSTR valkey, LPCSTR value)
   if (NULL == value)
     RegDeleteValue(hkey, valkey);
   else
-    RegSetValueEx(hkey, valkey, NULL, REG_SZ, (BYTE*)value, strlen(value));
+    RegSetValueEx(hkey, valkey, NULL, REG_SZ, (LPBYTE)value, strlen(value));
 }
 
 void DisplayDevice::SetSettingInt(HKEY hkey, LPCSTR valkey, int value)
 {
-  RegSetValueEx(hkey, valkey, NULL, REG_DWORD, (BYTE*)&value, sizeof(int));
+  RegSetValueEx(hkey, valkey, NULL, REG_DWORD, (LPBYTE)&value, sizeof(int));
 }
 
 void DisplayDevice::SetSettingBool(HKEY hkey, LPCSTR valkey, BOOL value)
@@ -871,6 +871,17 @@ void DisplayDevice::CloseSerial()
 static DWORD WINAPI SerialInputThread(LPVOID lpParam)
 {
   DisplayDevice *device = (DisplayDevice *)lpParam;
+  device->DeviceSerialInputThread();
+  return 0;
+}
+
+void DisplayDevice::DeviceSerialInputThread()
+{
+  HANDLE stopEvent = m_inputStopEvent;
+  if (NULL == stopEvent) return;
+
+  HANDLE portHandle = m_portHandle;
+  if (NULL == portHandle) return;
 
   OVERLAPPED overlapped;
   memset(&overlapped, 0, sizeof(overlapped));
@@ -879,38 +890,32 @@ static DWORD WINAPI SerialInputThread(LPVOID lpParam)
   while (TRUE) {
     HANDLE handles[2];
     int nh = 0;
-    handles[nh++] = device->m_inputStopEvent;
+    handles[nh++] = stopEvent;
 
     BYTE buf[1];
     DWORD nb;
-    HANDLE ph = device->m_portHandle;
-    if (NULL != ph) {
-      if (ReadFile(ph, buf, sizeof(buf), &nb, &overlapped)) {
-        if (nb > 0)
-          device->DeviceInput(buf[0]);
-        continue;
-      }
-      if (ERROR_IO_PENDING == GetLastError())
-        handles[nh++] = overlapped.hEvent;
-    }
-    if (WAIT_OBJECT_0 == WaitForMultipleObjects(nh, handles, FALSE, INFINITE)) {
-      if (NULL != ph)
-        CancelIo(ph);
-      break;
-    }
-    if (GetOverlappedResult(ph, &overlapped, &nb, TRUE)) {
+    if (ReadFile(portHandle, buf, sizeof(buf), &nb, &overlapped)) {
       if (nb > 0)
-        device->DeviceInput(buf[0]);
+        DeviceInput(buf[0]);
+      continue;
+    }
+    if (ERROR_IO_PENDING == GetLastError())
+      handles[nh++] = overlapped.hEvent;
+    if (WAIT_OBJECT_0 == WaitForMultipleObjects(nh, handles, FALSE, INFINITE))
+      break;
+    if (GetOverlappedResult(portHandle, &overlapped, &nb, TRUE)) {
+      if (nb > 0)
+        DeviceInput(buf[0]);
     }
   }
 
+  CancelIo(portHandle);
   CloseHandle(overlapped.hEvent);
-  return 0;
 }
 
 BOOL DisplayDevice::EnableSerialInput()
 {
-  m_inputStopEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+  m_inputStopEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
   DWORD dwThreadId;
   m_inputThread = CreateThread(NULL, 0, SerialInputThread, this, 0, &dwThreadId);
@@ -927,10 +932,11 @@ void DisplayDevice::DisableSerialInput()
     return;
 
   SetEvent(m_inputStopEvent);
+  WaitForSingleObject(m_inputThread, INFINITE);
+
   CloseHandle(m_inputStopEvent);
   m_inputStopEvent = NULL;
 
-  WaitForSingleObject(m_inputThread, INFINITE);
   CloseHandle(m_inputThread);
   m_inputThread = NULL;
 }

@@ -18,9 +18,10 @@ struct DisplayDeviceEntry {
   { "LCDriver 1.x", "LCDRVR1", NULL },
   { "Crystalfontz 632SS (16x2)", "CFONTZLCD", "632SS" },
   { "Crystalfontz 632SG (16x2, backlight)", "CFONTZLCD", "632SG" },
-//{ "Crystalfontz 633 (16x2, backlight, keypad)", "CFONTZLCD", "633" },
   { "Crystalfontz 634SS (20x4)", "CFONTZLCD", "634SS" },
   { "Crystalfontz 634SG (20x4, backlight)", "CFONTZLCD", "634SG" },
+  { "Crystalfontz 633 (16x2, backlight, keypad)", "CFONTZLCD", "633" },
+  { "Crystalfontz 631 (16x2, backlight, keypad)", "CFONTZLCD", "631" },
   { "Matrix Orbital LCD2021 (20x2)", "MOLCD", "LCD2021" }, // discontinued 7/20/00
   { "Matrix Orbital LCD4021 (40x2)", "MOLCD", "LCD4021" },
   { "Matrix Orbital LCD2041 (20x4)", "MOLCD", "LCD2041" },
@@ -28,12 +29,16 @@ struct DisplayDeviceEntry {
   { "Matrix Orbital LK162-12 (16x2, keypad)", "MOLCD", "LK162" },
   { "Matrix Orbital LK202-25 (20x2, keypad)", "MOLCD", "LK202" },
   { "Matrix Orbital LK204-25 (20x4, keypad)", "MOLCD", "LK204" },
+  { "Matrix Orbital LK202-24-USB (20x2, keypad, USB)", "MOLCD", "LK202U" },
+  { "Matrix Orbital LK204-24-USB (20x4, keypad, USB)", "MOLCD", "LK204U" },
   { "Matrix Orbital LK402-12 (40x2, keypad)", "MOLCD", "LK402" },
   { "Matrix Orbital LK404-55 (40x4, keypad)", "MOLCD", "LK404" },
   { "Matrix Orbital VFD2021 (20x2, vfd)", "MOLCD", "VFD2021" }, // discontinued 7/20/00
   { "Matrix Orbital VFD2041 (20x4, vfd)", "MOLCD", "VFD2041" },
   { "Matrix Orbital VK202-25 (20x2, vfd, keypad)", "MOLCD", "VK202" },
   { "Matrix Orbital VK204-25 (20x4, vfd, keypad)", "MOLCD", "VK204" },
+  { "Matrix Orbital VK202-24-USB (20x2, vfd, keypad, USB)", "MOLCD", "VK202U" },
+  { "Matrix Orbital VK204-24-USB (20x4, vfd, keypad, USB)", "MOLCD", "VK204U" },
   { "Futaba VFD (20x4)", "FutabaVFD", NULL },
   { "HD44780 (parallel)", "PARALCD", NULL }
 };
