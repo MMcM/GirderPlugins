@@ -119,8 +119,8 @@ BOOL Delay::LoadSetting(HKEY hkey, LPCSTR valkey)
       SetDelay(((double)*(DWORD*)&buf) / 1000.0);
       return TRUE;
     case REG_SZ:
-      if (NULL == strchr((LPCSTR)buf, '.')) {
-        // Again for compatibility, a string without a decimal point
+      if ((NULL == strchr((LPCSTR)buf, '.')) && (NULL == strchr((LPCSTR)buf, 'e'))) {
+        // Again for compatibility, a string without a decimal point or exponent
         // is milliseconds.
         SetDelay(strtod((LPCSTR)buf, NULL) / 1000.0);
       }
@@ -138,7 +138,7 @@ void Delay::SaveSetting(HKEY hkey, LPCSTR valkey) const
 {
   char buf[64];
   sprintf(buf, "%g", m_delay);
-  if (NULL == strchr(buf, '.'))
+  if ((NULL == strchr(buf, '.')) && (NULL == strchr(buf, 'e')))
     strcat(buf, ".0");          // See compatibility interpretation above.
   RegSetValueEx(hkey, valkey, NULL, REG_SZ, (LPBYTE)buf, strlen(buf));
 }
