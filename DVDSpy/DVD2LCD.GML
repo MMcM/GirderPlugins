@@ -11,6 +11,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>122</ActionType>
@@ -32,6 +33,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -54,6 +56,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -76,6 +79,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -99,6 +103,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -122,6 +127,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -144,6 +150,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -166,6 +173,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -189,6 +197,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -211,6 +220,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -233,6 +243,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -254,6 +265,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -277,6 +289,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -300,6 +313,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -323,6 +337,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -347,6 +362,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -369,6 +385,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -390,6 +407,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -411,6 +429,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -433,6 +452,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -452,6 +472,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -473,6 +494,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -494,6 +516,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -515,6 +538,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -536,6 +560,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -557,6 +582,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -578,6 +604,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -599,6 +626,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -622,6 +650,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -644,6 +673,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -663,6 +693,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -684,6 +715,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -705,6 +737,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -726,6 +759,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -747,6 +781,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -769,6 +804,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -788,6 +824,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -809,6 +846,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -830,6 +868,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -851,6 +890,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -872,6 +912,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -893,6 +934,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -914,6 +956,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -935,6 +978,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -957,6 +1001,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -978,6 +1023,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -999,6 +1045,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1020,6 +1067,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1048,6 +1096,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1068,6 +1117,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1091,6 +1141,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1120,6 +1171,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1141,6 +1193,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1165,6 +1218,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -1194,6 +1248,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1214,6 +1269,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1236,6 +1292,7 @@
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
         <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
         <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
@@ -1255,6 +1312,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1276,6 +1334,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1297,6 +1356,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1319,6 +1379,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -1341,6 +1402,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1362,6 +1424,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1383,6 +1446,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1404,6 +1468,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1425,6 +1490,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1447,6 +1513,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -1470,6 +1537,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -1493,6 +1561,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
@@ -1517,6 +1586,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1538,6 +1608,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1559,6 +1630,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1580,6 +1652,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1601,6 +1674,7 @@
       <Submatch>FALSE</Submatch>
       <Topmost>TRUE</Topmost>
       <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
@@ -1611,6 +1685,95 @@
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
       <EventString Name="Winamp.Close" Identifier="10143" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Close"/>
+    </Command>
+  </Group>
+  <Group Name="BSPlayer Display" Identifier="20876" Enabled="TRUE">
+    <Command Name="Duration" Identifier="20877" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10009</lValue1>
+      <EventString Name="BSPlayer.Duration" Identifier="20878" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Duration"/>
+    </Command>
+    <Command Name="Elapsed" Identifier="20879" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10010</lValue1>
+      <EventString Name="BSPlayer.Elapsed" Identifier="20880" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Elapsed"/>
+    </Command>
+    <Command Name="File" Identifier="20881" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10011</lValue1>
+      <EventString Name="BSPlayer.File" Identifier="20882" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.File"/>
+    </Command>
+    <Command Name="Close" Identifier="20883" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10013</lValue1>
+      <EventString Name="BSPlayer.Close" Identifier="20884" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Close"/>
     </Command>
   </Group>
 </Girder>
