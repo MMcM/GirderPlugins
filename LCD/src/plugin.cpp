@@ -49,27 +49,32 @@ gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
 extern "C" int WINAPI
 gir_close()
 {
+  CloseConfigUI();
   CloseCommandUI();
   DisplayClose();
   return GIR_TRUE;
 }
 
-#if 0
 extern "C" void WINAPI
 gir_config()
 {
+  OpenConfigUI();
 }
 
 extern "C" int WINAPI
 gir_start()
 {
+  return DisplayEnableInput();
 }
 
 extern "C" int WINAPI
 gir_stop()
 {
+  DisplayDisableInput();
+  return GIR_TRUE;
 }
 
+#if 0
 extern "C" int WINAPI
 gir_compare(PCHAR orig, PCHAR recv)
 {
