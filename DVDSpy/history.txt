@@ -1,4 +1,6 @@
 
+1.53    01/03/2003      MMcM    Add skin support for WinDVD Platinum.
+
 1.52    01/01/2003      massi   Add support for DVD Station.
 
 1.51    12/18/2002      eLupus  Add support for Eugene's DVD player.

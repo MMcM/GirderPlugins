@@ -2,7 +2,7 @@
 
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.52"
+#define PLUGINVERSION "1.53"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
