@@ -33,6 +33,8 @@ DWORD HookThreadId=0;
 HWND hMonitorWindow=NULL;
 bool Running=FALSE;
 
+static const UINT WM_HARDWAREEVENT = RegisterWindowMessage("9FC3EB47-4ED7-41f2-BDE7-955D1BB05D8E");
+
 void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 {
 #ifdef _DEBUG
@@ -56,7 +58,7 @@ void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
         pllen = 1024 - elen;
       memcpy(pMessageBuffer + elen, payload, pllen);
     }
-    PostMessage(hTargetWindow, WM_USER+1030, PLUGINNUM, pllen);
+    PostMessage(hTargetWindow, WM_HARDWAREEVENT, PLUGINNUM, pllen);
   }
 #ifdef _DEBUG
   else {
@@ -295,7 +297,7 @@ extern "C" void WINAPI learn_device(PCHAR old)
    
   if (hLearnDialog != 0) {
     SetForegroundWindow(hLearnDialog);
-    SendMessage(hLearnDialog, WM_USER+100, 0, (LPARAM)old);
+    SendMessage(hLearnDialog, WM_SELECT_EVENT, 0, (LPARAM)old);
   }
   else {
     LearnThreadHandle=CreateThread(NULL,0,&LearnThread,old,0,&dwThreadId);
@@ -318,7 +320,7 @@ extern "C" void WINAPI support_device(PCHAR Buffer, BYTE Length)
 
 extern "C" void WINAPI version_device(PCHAR Buffer, BYTE Length)
 {
-  strncpy(Buffer, "1.17", Length);
+  strncpy(Buffer, "1.18", Length);
 }
 
 extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)

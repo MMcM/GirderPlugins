@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.17. &nbsp;MMcM 03/02
+Version 1.18. &nbsp;MMcM 03/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -487,7 +487,7 @@ This plug-in intercepts various Windows messages that are used by
 WinDVD and PowerDVD to update their own windows with the information
 about the DVD currently being played.  When this information has
 changed, a Girder event is generated.  The associated information is
-placed in Girder text registers.<p>
+placed in the event payload strings.<p>
 
 It also intercepts calls to Windows text drawing functions as used by
 accessDTV and exposes it similarly.<p>

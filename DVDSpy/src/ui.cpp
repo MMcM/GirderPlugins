@@ -155,7 +155,7 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
           }
         }
       }
-      SendMessage(hwnd, WM_USER+100, 0, lParam);
+      SendMessage(hwnd, WM_SELECT_EVENT, 0, lParam);
 
       if (NULL != hKey)
         RegCloseKey(hKey);
@@ -190,7 +190,7 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
     }
     break;
 
-  case WM_USER+100:
+  case WM_SELECT_EVENT:
     {
       HWND events = GetDlgItem(hwnd, IDC_EVENTS);
       LRESULT pos = SendMessage(events, LB_FINDSTRINGEXACT, 0, lParam);
