@@ -1,0 +1,46 @@
+HKCR
+{
+  WMPSpy.SpyCtrl.1 = s 'SpyCtrl Class'
+  {
+    CLSID = s '{9F913F27-28B7-4B98-A988-01C3F196E574}'
+  }
+  WMPSpy.SpyCtrl = s 'SpyCtrl Class'
+  {
+    CLSID = s '{9F913F27-28B7-4B98-A988-01C3F196E574}'
+    CurVer = s 'WMPSpy.SpyCtrl.1'
+  }
+  NoRemove CLSID
+  {
+    ForceRemove {9F913F27-28B7-4B98-A988-01C3F196E574} = s 'SpyCtrl Class'
+    {
+      ProgID = s 'WMPSpy.SpyCtrl.1'
+      VersionIndependentProgID = s 'WMPSpy.SpyCtrl'
+      ForceRemove 'Programmable'
+      InprocServer32 = s '%MODULE%'
+      {
+        val ThreadingModel = s 'Apartment'
+      }
+      'TypeLib' = s '{5AD389EC-0735-4B24-BF9B-C1FD2D9BCBD8}'
+    }
+  }
+}
+HKLM
+{
+  NoRemove Software
+  {
+    NoRemove Microsoft
+    {
+      NoRemove MediaPlayer
+      {
+        NoRemove Objects
+        {
+          ForceRemove WMPSpy
+          {
+            val 'classid' = s 'clsid:9F913F27-28B7-4B98-A988-01C3F196E574'
+            val 'event' = s 'WMP'
+          }
+        }
+      }
+    }
+  }
+}

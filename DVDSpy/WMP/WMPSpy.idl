@@ -1,0 +1,53 @@
+// WMPSpy.idl : IDL source for WMPSpy.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (WMPSpy.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(9ED07019-CA39-4AAF-8594-709EAC9D2A50),
+		dual,
+		helpstring("ISpyCtrl Interface"),
+		pointer_default(unique)
+	]
+	interface ISpyCtrl : IDispatch
+	{
+		[propget, id(1), helpstring("property event")] HRESULT event([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property event")] HRESULT event([in] BSTR newVal);
+		[propget, id(2), helpstring("property value")] HRESULT value([out, retval] BSTR *pVal);
+		[propput, id(2), helpstring("property value")] HRESULT value([in] BSTR newVal);
+	};
+
+[
+	uuid(5AD389EC-0735-4B24-BF9B-C1FD2D9BCBD8),
+	version(1.0),
+	helpstring("WMPSpy 1.0 Type Library")
+]
+library WMPSPYLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(BAFC5D0C-B848-450D-9072-F58CADB4368E),
+		helpstring("_ISpyCtrlEvents Interface")
+	]
+	dispinterface _ISpyCtrlEvents
+	{
+		properties:
+		methods:
+	};
+
+	[
+		uuid(9F913F27-28B7-4B98-A988-01C3F196E574),
+		helpstring("SpyCtrl Class")
+	]
+	coclass SpyCtrl
+	{
+		[default] interface ISpyCtrl;
+		[default, source] dispinterface _ISpyCtrlEvents;
+	};
+};
