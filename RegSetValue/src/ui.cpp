@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "resource.h"
-#include "girder.h"
+#include "plugin.h"
 
 /* Local variables */
 HWND hDialog;
@@ -23,28 +23,35 @@ static
 BOOL SaveUISettings(HWND hwnd)
 {
   char buf[1024];
-
+  
+  EnterCriticalSection(&CurCommand->critical_section);
+  
   GetWindowText(GetDlgItem(hwnd, IDC_KEY), buf, sizeof(buf));
-  SF.ReallocPchar(&(CurCommand->svalue1), buf);
+  SF.realloc_pchar(&(CurCommand->svalue1), buf);
 
   GetWindowText(GetDlgItem(hwnd, IDC_VALUE), buf, sizeof(buf));
-  SF.ReallocPchar(&(CurCommand->svalue2), buf);
+  SF.realloc_pchar(&(CurCommand->svalue2), buf);
 
   CurCommand->actiontype=PLUGINNUM;
-  SF.SetCommand(CurCommand);
+  SF.set_command(CurCommand);
 
   HKEY hkey;
   PCHAR pval = DecodeKeyValue(CurCommand->svalue1, &hkey);
   if (NULL == pval)
+  {
+    LeaveCriticalSection(&CurCommand->critical_section);
     return FALSE;
+  }
   LONG rc = RegQueryValueEx(hkey, pval, NULL, NULL, NULL, NULL);
   RegCloseKey(hkey);
   if (ERROR_SUCCESS != rc) {
+    LeaveCriticalSection(&CurCommand->critical_section);
     sprintf(buf, "Value does not exist: %s", CurCommand->svalue1);
     MessageBox(0, buf, "Error", MB_ICONERROR);
     return FALSE;
   }
   
+  LeaveCriticalSection(&CurCommand->critical_section);  
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
   return TRUE;
 }
@@ -59,8 +66,12 @@ void EmptyUI(HWND hwnd)
 static
 void LoadUISettings(HWND hwnd)
 {
+  EnterCriticalSection(&CurCommand->critical_section);
+
   SetWindowText(GetDlgItem(hwnd, IDC_KEY), CurCommand->svalue1);
   SetWindowText(GetDlgItem(hwnd, IDC_VALUE), CurCommand->svalue2);
+
+  LeaveCriticalSection(&CurCommand->critical_section);
 }
 
 static
@@ -77,19 +88,19 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      SF.I18NTranslateEx("Ok", trans, sizeof(trans));
+      SF.i18n_translate("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      SF.I18NTranslateEx("Cancel", trans, sizeof(trans));
+      SF.i18n_translate("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
 
-      SF.I18NTranslateEx("Apply", trans, sizeof(trans));
+      SF.i18n_translate("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      SF.I18NTranslateEx("Key\\Name:", trans, sizeof(trans));
+      SF.i18n_translate("Key\\Name:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_KEYL), trans);
 	
-      SF.I18NTranslateEx("Value:", trans, sizeof(trans));
+      SF.i18n_translate("Value:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
 
       LoadUISettings(hwnd);
@@ -191,7 +202,7 @@ void Enable_Config(BOOL bValue)
 void Show_Config()
 {
    DWORD dwThreadId;
-   HANDLE ConfigThreadHandle;
+
    
    if (hDialog != 0)   
    {
