@@ -1,7 +1,7 @@
 // Get the weather.
 
 // Arguments: accid xmlfile [prefix]
-var args = WScript.Arguments
+var args = WScript.Arguments;
 
 // ACCID is the location (ZIP code in the USA).
 // Cf. http://www.msnbc.com/news/wea_front.asp?ta=y&tab=BW&tp=&ctry=&cp1=1
