@@ -1,6 +1,6 @@
 /***************************************************************************************/
 /*                                                                                     */
-/*  Girder 3.0 Plugin                                                                  */
+/*  Girder 3.1 Plugin                                                                  */
 /*  User interface                                                                     */
 /*                                                                                     */
 /*  Copyright 2000 (c) Ron Bessems                                                     */
@@ -10,7 +10,7 @@
 /***************************************************************************************/
 
 #define PLUGINNUM 118
-#define PLUGINNAME "LCD 1.6"
+#define PLUGINNAME "LCD 1.7"
 #define GIR_ERROR -10;
 
 #define APIEX
@@ -54,9 +54,7 @@ typedef struct s_TCommand {
 
 } TCommand;
 
-
 typedef  void  (WINAPI *PTargetCallBack)(HWND hw, TCommand *command);
-typedef PCHAR  (WINAPI *PI18NTranslate)	(PCHAR trans); 
 typedef PCHAR  (WINAPI *PSetCommand)	(TCommand * command); 
 typedef PCHAR  (WINAPI *PTargetEnum)	(TCommand * command, PTargetCallBack back); 
 typedef void   (WINAPI *PReallocPCHAR)	(PCHAR * old, PCHAR newchar);
@@ -65,81 +63,28 @@ typedef void   (WINAPI *PHideOSD)		();
 typedef _BOOL  (WINAPI *PStartOSDDraw)	(HWND *hw, HDC *h, int user);
 typedef void   (WINAPI *PStopOSDDraw)	(HDC h);
 typedef int    (WINAPI *PTreePickerShow)(int id);
-// v2
 typedef int    (WINAPI *PSetGirderReg)	(long val, int reg);
 typedef long   (WINAPI *PGetGirderReg)	(int reg);
-typedef PCHAR  (WINAPI *PParseRegString)(PCHAR orig);
-typedef PCHAR  (WINAPI *PGetLinkName)   (int lvalue);
-// v3
 typedef _BOOL  (WINAPI *PEventCB)       (PCHAR event_string, int device);
 typedef _BOOL  (WINAPI *PRegisterCB)    (int actionplugin, PEventCB callback, PCHAR prefix, int device);
-typedef int    (WINAPI *PSetGirderStrReg)(const char *val, int reg);
-// Copy the PCHAR immediately!!
-typedef PCHAR  (WINAPI *PGetGirderStrReg)(int reg);
+typedef int    (WINAPI *PSetGirderStrRegister)	(PCHAR val, int reg);
+typedef _BOOL  (WINAPI *PGetGirderStrRegEx ) ( int reg, PCHAR szstore, int size);
+typedef _BOOL  (WINAPI *PGetLinkNameEx     ) ( int lvalue, PCHAR szstore, int size);
+typedef _BOOL  (WINAPI *PParseGirderRegEx  ) ( PCHAR orig, PCHAR szstore, int size);
+typedef int    (WINAPI *PGetPayload        ) ( PCHAR szstore, int size);
+typedef _BOOL  (WINAPI *PI18NTranslateEx   ) ( PCHAR orig, PCHAR szstore, int size);
+typedef DWORD   (WINAPI *PGetOSDSettings    ) ( int setting);
+typedef _BOOL  (WINAPI *PGetOSDFontName    ) ( PCHAR szstore, int size);
 
-/* Old type structure */
-typedef struct s_TFunctions {	
-			PSetCommand		SetCommand;
-			PTargetEnum		TargetEnum;
-			PI18NTranslate	I18NTranslate;
-			PReallocPCHAR	ReallocPchar;
-			PShowOSD		ShowOSD;
-			PHideOSD		HideOSD;
-			PStartOSDDraw	StartOSDDraw;
-			PStopOSDDraw	StopOSDDraw;
-			PTreePickerShow	TreePickerShow;
-			HWND			TargetHWND;
-} TFunctions;
-
-/* I introduced this new type to be able to extend the
-   API more easily without breaking compatibility to older
-   plugins
-*/
-
-/* New Type ! */ 
-typedef struct s_TFunctionsEx1 {   /* Version 1 */
-	        DWORD           dwSize;
-			PSetCommand		SetCommand;
-			PTargetEnum		TargetEnum;
-			PI18NTranslate	I18NTranslate;
-			PReallocPCHAR	ReallocPchar;
-			PShowOSD		ShowOSD;
-			PHideOSD		HideOSD;
-			PStartOSDDraw	StartOSDDraw;
-			PStopOSDDraw	StopOSDDraw;
-			PTreePickerShow	TreePickerShow;
-			HWND			TargetHWND;
-} TFunctionsEx1;
-
-
-typedef struct s_TFunctionsEx2 {	/* Version 2 */
-	        DWORD			dwSize;
+typedef struct s_TFunctionsEx5 {	/* Version 5 */
+	      DWORD			dwSize;
 			PSetGirderReg   SetGirderReg;
 			PGetGirderReg   GetGirderReg;
-			PParseRegString ParseRegString;
-			PGetLinkName	GetLinkName;
+			PParseGirderRegEx ParseRegStringEx;
+			PGetLinkNameEx	GetLinkNameEx;
 			PSetCommand		SetCommand;
 			PTargetEnum		TargetEnum;
-			PI18NTranslate	I18NTranslate;
-			PReallocPCHAR	ReallocPchar;
-			PShowOSD		ShowOSD;
-			PHideOSD		HideOSD;
-			PStartOSDDraw	StartOSDDraw;
-			PStopOSDDraw	StopOSDDraw;
-			PTreePickerShow	TreePickerShow;
-			HWND			TargetHWND;
-} TFunctionsEx2;
-
-
-typedef struct s_TFunctionsEx3 {	/* Version 3 */
-	        DWORD			dwSize;
-			PSetGirderReg   SetGirderReg;
-			PGetGirderReg   GetGirderReg;
-			PParseRegString ParseRegString;
-			PGetLinkName	GetLinkName;
-			PSetCommand		SetCommand;
-			PTargetEnum		TargetEnum;
-			PI18NTranslate	I18NTranslate;
+		
 			PReallocPCHAR	ReallocPchar;
 			PShowOSD		ShowOSD;
 			PHideOSD		HideOSD;
@@ -147,74 +92,28 @@ typedef struct s_TFunctionsEx3 {	/* Version 3 */
 			PStopOSDDraw	StopOSDDraw;
 			PTreePickerShow	TreePickerShow;
 			PRegisterCB     RegisterCB;
+         PSetGirderStrRegister SetGirderStrRegister;
+         PGetGirderStrRegEx GetGirderStrRegisterEx;
+         PGetPayload GetPayload;
+         PI18NTranslateEx I18NTranslateEx;
+         PGetOSDSettings GetOSDSettings;
+         PGetOSDFontName GetOSDFontName;
 			HWND			TargetHWND;
-} TFunctionsEx3;
-
-typedef struct s_TFunctionsEx4 {	/* Version 4 */
-	        DWORD				dwSize;
-			PSetGirderReg		SetGirderReg;
-			PGetGirderReg		GetGirderReg;
-			PParseRegString		ParseRegString;
-			PGetLinkName		GetLinkName;
-			PSetCommand			SetCommand;
-			PTargetEnum			TargetEnum;
-			PI18NTranslate		I18NTranslate;
-			PReallocPCHAR		ReallocPchar;
-			PShowOSD			ShowOSD;
-			PHideOSD			HideOSD;
-			PStartOSDDraw		StartOSDDraw;
-			PStopOSDDraw		StopOSDDraw;
-			PTreePickerShow		TreePickerShow;
-			PRegisterCB			RegisterCB;
-			PSetGirderStrReg	SetGirderStrReg;
-			PGetGirderStrReg	GetGirderStrReg;
-			HWND				TargetHWND;
-} TFunctionsEx4;
+} TFunctionsEx5;
 
 
 #ifdef GIRDER_CPP
-	TCommand				*CurCommand;		
-	PSetGirderReg			SetGirderReg;
-	PGetGirderReg			GetGirderReg;
-	PParseRegString			ParseRegString;	
-	PGetLinkName			GetLinkName;
-	PSetCommand				SetCommand;
-	PTargetEnum				TargetEnum;
-	PI18NTranslate			I18NTranslate;
-	PReallocPCHAR			ReallocPchar;
-	PShowOSD				ShowOSD;
-	PHideOSD				HideOSD;
-	PStartOSDDraw			StartOSDDraw;
-	PStopOSDDraw			StopOSDDraw;
-	PTreePickerShow			TreePickerShow;
-	PRegisterCB				RegisterCB;
-	PSetGirderStrReg		SetGirderStrReg;
-	PGetGirderStrReg		GetGirderStrReg;
-	HWND					TargetHWND;
+	TCommand				*CurCommand;
+   TFunctionsEx5     SF;
 	HINSTANCE				hInstance;
 #endif
 
 #ifndef GIRDER_CPP
 	extern TCommand			*CurCommand;		
-	extern PSetGirderReg	SetGirderReg;
-	extern PGetGirderReg	GetGirderReg;		
-	extern PParseRegString	ParseRegString;
-	extern PGetLinkName		GetLinkName;
-	extern PSetCommand		SetCommand;
-	extern PTargetEnum		TargetEnum;
-	extern PI18NTranslate	I18NTranslate;
-	extern PReallocPCHAR	ReallocPchar;
-	extern PShowOSD			ShowOSD;
-	extern PHideOSD			HideOSD;
-	extern PStartOSDDraw	StartOSDDraw;
-	extern PStopOSDDraw		StopOSDDraw;
-	extern PTreePickerShow	TreePickerShow;
-	extern HWND				TargetHWND;
-	extern PRegisterCB		RegisterCB;
-	extern PSetGirderStrReg	SetGirderStrReg;
-	extern PGetGirderStrReg	GetGirderStrReg;
+   extern TFunctionsEx5     SF;
 	extern HINSTANCE		hInstance;
 #endif
+
 
 /* Commmon routines */
 
@@ -238,4 +137,5 @@ extern void DisplayClear(TCommand *command, PCHAR retbuf);
 extern void DisplayString(TCommand *command, PCHAR retbuf);
 extern void DisplayStringRegister(TCommand *command, PCHAR retbuf);
 extern void DisplayCurrentTime(TCommand *command, PCHAR retbuf);
-extern void DisplayFilenameRegister(TCommand *command, PCHAR retbuf);
+extern void DisplayPayload(TCommand *command, PCHAR retbuf);
+extern void DisplayFilenamePayload(TCommand *command, PCHAR retbuf);
