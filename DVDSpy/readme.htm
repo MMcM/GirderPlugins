@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.27. &nbsp;MMcM 06/02
+Version 1.28. &nbsp;MMcM 06/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -169,7 +169,7 @@ good choice.  See <a href="#Events">below</a> for a list of DVDSpy events.
 <li>Select the Plugins tab from the actions at the bottom of the screen.
 <li>Select OSD PopUp from the list beneath that tab.
 <li>Click Settings to display the OSD PopUp action settings for the command.
-<li>Replace <kbd>Place text here</kbd> with <kbd>[pl1]</kbd>.
+<li>Replace <kbd>Place text here</kbd> with <kbd>[pld1]</kbd>.
 <li>Click OK.
 </ul>
 
@@ -316,6 +316,11 @@ If you do see events, then double check the OSD PopUp settings.
 <tr><td><code>ZoomPlayer.OSD</code></td>
 <td>OSD caption changed</td>
 <td>New OSD message (<code>Play</code>, <code>Pause</code>, ...)</td>
+</tr>
+
+<tr><td><code>ZoomPlayer.Size</code></td>
+<td>Video window size changed</td>
+<td>New window size (width,height)</td>
 </tr>
 
 <tr><td><code>ZoomPlayer.Close</code></td>
