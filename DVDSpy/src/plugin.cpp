@@ -21,11 +21,6 @@
 
 #include "DisplaySpyHook.h"
 
-HWND hTargetWindow;
-PCHAR pMessageBuffer;
-HANDLE hSharedMem;
-HANDLE hSMSem;
-
 HANDLE ConfigThreadHandle=NULL;
 HANDLE LearnThreadHandle=NULL;
 HANDLE HookThreadHandle=NULL;
@@ -148,8 +143,20 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
       GirderEvent(event, payload, pllen);
       return 0;
     }
+  case WM_APP+444:
+    ZoomPlayerLCD(wParam, lParam);
+    return 0;
   }
   return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+BOOL SpecialEvent(LPCSTR szEvent, LPCSTR szVal)
+{
+  if (!strcmp(szEvent, "ZoomPlayer.Init")) {
+    ZoomPlayerInit(szVal, hMonitorWindow);
+    return TRUE;
+  }
+  return FALSE;
 }
 
 DWORD WINAPI HookThread(LPVOID param)
@@ -175,7 +182,8 @@ DWORD WINAPI HookThread(LPVOID param)
       while (DS_GetNext(&nMatch, &nIndex, pszVal, sizeof(szVal)-1)) {
         char szEvent[256];
         DS_GetName(nMatch, nIndex, szEvent, sizeof(szEvent));
-        GirderEvent(szEvent, szVal, strlen(pszVal) + 2);
+        if (!SpecialEvent(szEvent, pszVal))
+          GirderEvent(szEvent, szVal, strlen(pszVal) + 2);
       }
     }
     else
