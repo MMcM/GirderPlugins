@@ -1,4 +1,6 @@
 
+1.48    12/08/2002      MMcM    Make better use of LUA in samples.
+
 1.47    11/10/2002      MMcM    Background UI plugin for WMP 9 in place of skin.
 
 1.46    11/06/2002      MMcM    Reduce number of Zoom Player events.
