@@ -1,3 +1,4 @@
+/* Hook shared memory event interface */
 
 #ifdef DISPLAYSPYHOOK_EXPORTS
 #define DISPLAYSPYHOOK_API __declspec(dllexport) __stdcall
