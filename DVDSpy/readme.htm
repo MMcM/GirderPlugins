@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.15. &nbsp;MMcM 03/02
+Version 1.16. &nbsp;MMcM 03/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -108,6 +108,13 @@ This file shows how to use the DVDSpy plug-in with the LCD plug-in to
 display player status on a 4x20 display.<p>
 </li>
 
+<li><kbd>DVD2OSD.GML</kbd><br/>
+Another sample Girder script.<p>
+
+This file shows how to use the DVDSpy plug-in with the OSD PopUp plug-in to
+display player status in a pop-up window.<p>
+</li>
+
 </ul>
 
 <h3>Getting Started</h3>
@@ -116,7 +123,9 @@ If you have an LCD or VFD display and the LCD plug-in is installed and
 working, you can try to display events from player applications using
 the included same script.<p>
 
-Otherwise, here is a step-by-step procedure for use with an on-screen display.<p>
+Otherwise, you can use the included OSD sample script.<p>
+
+Here is a step-by-step procedure building a new script like that one.<p>
 
 <ul>
 
@@ -189,7 +198,7 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>WinDVD.Time</td>
+<tr><td>WinDVD.Elapsed</td>
 <td>Elapsed time changed</td>
 <td>New time (HH:MM:SS)</td>
 </tr>
@@ -210,7 +219,7 @@ If you do see events, then double check the OSD PopUp settings.
 
 <tr></tr>
 
-<tr><td>PowerDVD.Time</td>
+<tr><td>PowerDVD.Elapsed</td>
 <td>Elapsed time changed</td>
 <td>New time (HH:MM:SS)</td>
 </tr>
@@ -247,9 +256,9 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.Title</td>
+<tr><td>ZoomPlayer.DVD.TitleNo</td>
 <td>Title changed</td>
-<td>New title (NN)</td>
+<td>New title number (NN)</td>
 </tr>
 
 <tr><td>ZoomPlayer.DVD.Chapter</td>
@@ -257,13 +266,13 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.Total</td>
+<tr><td>ZoomPlayer.DVD.Duration</td>
 <td>Total changed</td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.Time</td>
-<td>Location changed</td>
+<tr><td>ZoomPlayer.DVD.Elapsed</td>
+<td>Position changed</td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
@@ -272,9 +281,9 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.Position</td>
+<tr><td>ZoomPlayer.Media.Elapsed</td>
 <td>Position changed</td>
-<td>New current position (HH:MM:SS)</td>
+<td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
 <tr><td>ZoomPlayer.Media.File</td>
@@ -298,9 +307,9 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>TheaterTek.Title</td>
+<tr><td>TheaterTek.TitleNo</td>
 <td>Title changed</td>
-<td>New title (NN)</td>
+<td>New title number (NN)</td>
 </tr>
 
 <tr><td>TheaterTek.Chapter</td>
@@ -308,13 +317,13 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>TheaterTek.Total</td>
+<tr><td>TheaterTek.Duration</td>
 <td>Total changed</td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>TheaterTek.Time</td>
-<td>Location changed</td>
+<tr><td>TheaterTek.Elapsed</td>
+<td>Position changed</td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
@@ -329,9 +338,9 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>ATI.DVD.Title</td>
+<tr><td>ATI.DVD.TitleNo</td>
 <td>Title changed</td>
-<td>New title (NN)</td>
+<td>New title number (NN)</td>
 </tr>
 
 <tr><td>ATI.DVD.Chapter</td>
@@ -339,13 +348,13 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>ATI.DVD.Total</td>
+<tr><td>ATI.DVD.Duration</td>
 <td>Total changed</td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.DVD.Time</td>
-<td>Location changed</td>
+<tr><td>ATI.DVD.Elapsed</td>
+<td>Position changed</td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
@@ -354,7 +363,7 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.MMC.Position</td>
+<tr><td>ATI.MMC.Elapsed</td>
 <td>Position changed</td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
@@ -380,7 +389,7 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New total time (MM:SS)</td>
 </tr>
 
-<tr><td>WMP.Position</td>
+<tr><td>WMP.Elapsed</td>
 <td>Media player position changed</td>
 <td>New elapsed time (MM:SS)</td>
 </tr>
@@ -416,7 +425,7 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New playlist position (1-based)</td>
 </tr>
 
-<tr><td>Winamp.Total</td>
+<tr><td>Winamp.Duration</td>
 <td>Total time changed</td>
 <td>New total time (MM:SS)</td>
 </tr>
@@ -447,7 +456,7 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ShowShifter.Position</td>
+<tr><td>ShowShifter.Elapsed</td>
 <td>Position changed</td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
