@@ -65,17 +65,17 @@ struct DeviceEntry {
   { "LK162", 16, 2, FALSE, NULL, TRUE, 6 },
   { "LK202", 20, 2, FALSE, NULL, TRUE, 6 },
   { "LK204", 20, 4, FALSE, NULL, TRUE, 6 },
-  { "LK204PC", 20, 4, FALSE, BrightnessContinuous, TRUE, 6, TRUE },
-  { "LK202U", 20, 2, FALSE, BrightnessContinuous, TRUE, 6, TRUE },
-  { "LK204U", 20, 4, FALSE, BrightnessContinuous, TRUE, 6, TRUE },
+  { "LK204PC", 20, 4, FALSE, BrightnessContinuous, TRUE, 7, TRUE },
+  { "LK202U", 20, 2, FALSE, BrightnessContinuous, TRUE, 7, TRUE },
+  { "LK204U", 20, 4, FALSE, BrightnessContinuous, TRUE, 7, TRUE },
   { "LK402", 40, 2, FALSE, NULL, TRUE, 7 },
   { "LK404", 40, 4, FALSE, NULL, TRUE, 1 },
   { "VFD2021", 20, 2, TRUE, BrightnessSteppedDown, FALSE, 1 },
   { "VFD2041", 20, 4, TRUE, BrightnessSteppedDown, FALSE, 1 },
   { "VK202", 20, 2, TRUE, BrightnessSteppedDown, TRUE, 6 },
   { "VK204", 20, 4, TRUE, BrightnessSteppedDown, TRUE, 6 },
-  { "VK202U", 20, 2, TRUE, BrightnessSteppedDown, TRUE, 6, TRUE },
-  { "VK204U", 20, 4, TRUE, BrightnessSteppedDown, TRUE, 6, TRUE },
+  { "VK202U", 20, 2, TRUE, BrightnessSteppedDown, TRUE, 7, TRUE },
+  { "VK204U", 20, 4, TRUE, BrightnessSteppedDown, TRUE, 7, TRUE },
 };
 
 #define countof(x) sizeof(x)/sizeof(x[0])
@@ -407,6 +407,7 @@ void MatrixOrbitalDisplay::DeviceSetFanPower(int fan, double dutyCycle)
   int nb = 0;
   buf[nb++] = 0xFE;
   buf[nb++] = 0xC0;             // PWM Value
+  buf[nb++] = fan;
   int pwm;
   if (dutyCycle < 0.0)
     pwm = 0;

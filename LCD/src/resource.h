@@ -19,6 +19,8 @@
 #define IDS_BRIGHTNESS                  105
 #define IDS_INPUT                       106
 #define IDS_EVENT                       107
+#define IDS_NEW_FAN_NAME                116
+#define IDS_FAN                         117
 #define IDS_NEW_SENSOR_NAME             115
 #define IDS_ROM                         113
 #define IDS_TEMPERATURE                 114
@@ -26,6 +28,8 @@
 #define IDS_VALUE                       109
 #define IDS_BUTTON                      110
 #define IDS_LEGEND                      111
+#define IDS_GPOL                        119
+#define IDS_FANL                        120
 #define IDC_APPLY                       1000
 #define IDC_DISPLAYS                    1001
 #define IDC_ADD                         1002
@@ -92,9 +96,8 @@
 #define IDC_VALUE2L                     1060
 #define IDC_VALSTR2                     1061
 #define IDC_VALLIST2                    1062
-#define IDC_GPOL                        1063
-#define IDC_GPO                         1064
-#define IDC_GPO_SPIN                    1065
+#define IDC_FANGPO                      1064
+#define IDC_FANGPO_SPIN                 1065
 
 // Next default values for new objects
 // 
@@ -104,6 +107,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1069
-#define _APS_NEXT_SYMED_VALUE           116
+#define _APS_NEXT_SYMED_VALUE           121
 #endif
 #endif

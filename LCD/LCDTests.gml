@@ -3,7 +3,7 @@
 $Header$
 -->
 <Girder>
-  <Group Name="Commands" Identifier="1" Enabled="TRUE">
+  <Group Name="Display Commands" Identifier="1" Enabled="TRUE">
     <Comments>Test each command type</Comments>
     <Command Name="String" Identifier="2" Enabled="TRUE">
       <Comments>Display string</Comments>
@@ -235,28 +235,6 @@ abcdefghijklmnopqrstuvwxyz
       <iValue2>2</iValue2>
       <iValue3>1</iValue3>
       <bValue1>FALSE</bValue1>
-      <bValue2>FALSE</bValue2>
-      <bValue3>FALSE</bValue3>
-    </Command>
-    <Command Name="GPO" Identifier="13" Enabled="TRUE">
-      <Comments>General purpose output</Comments>
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <OSD>FALSE</OSD>
-      <Submatch>FALSE</Submatch>
-      <Topmost>TRUE</Topmost>
-      <OneMatch>FALSE</OneMatch>
-      <UseVar>FALSE</UseVar>
-      <MatchHidden>FALSE</MatchHidden>
-      <MatchNum>1</MatchNum>
-      <ActionType>118</ActionType>
-      <ActionSubType>1</ActionSubType>
-      <sValue2>o</sValue2>
-      <iValue1>1</iValue1>
-      <iValue3>-1</iValue3>
-      <bValue1>TRUE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>
@@ -2414,6 +2392,122 @@ pqrstuvwxyz{|}~</sValue1>
       <sValue2>#</sValue2>
       <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+    </Command>
+  </Group>
+  <Group Name="GPO" Identifier="124" Enabled="TRUE">
+    <Command Name="Simple" Identifier="13" Enabled="TRUE">
+      <Comments>General purpose output</Comments>
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>118</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue2>o</sValue2>
+      <iValue1>5</iValue1>
+      <iValue3>-1</iValue3>
+      <bValue1>TRUE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+    </Command>
+    <Command Name="Start Counter" Identifier="129" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>122</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue1>2000</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>TRUE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue3>130</lValue3>
+    </Command>
+    <Command Name="Counter" Identifier="130" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <Binary Encoding="Base64">G0x1YUABBAQEIAYJCBLmW6GwubJBCAAAAD0obm9uZSkAAAAAAAAAAAAABQAAAAAAAAAAAAAAAwAA&#xD;
+AAsAAABHUE9Db3VudGVyAAgAAABMQ0RfR1BPAAUAAABiYW5kAAAAAAAAAAAAGwAAAAwAAAAoAACA&#xD;
+xv//fxgAAIATAAAATAAAAAYBAICMAAAADAAAAAYAAIDCPwEAAgAAAEwAAABGAQCAjAAAAAwAAABG&#xD;
+AACAwj8BAAIAAABMAAAAhgEAgIwAAAAMAAAAxgAAgMI/AQACAAAAAAAAAA==</Binary>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>34</ActionSubType>
+      <sValue1>GPOCounter = (GPOCounter or 0) + 1
+LCD_GPO(5, band(GPOCounter,1))
+LCD_GPO(6, band(GPOCounter,2))
+LCD_GPO(7, band(GPOCounter,4))
+</sValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+    </Command>
+    <Command Name="End Counter" Identifier="131" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>122</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+    </Command>
+  </Group>
+  <Group Name="Fans" Identifier="125" Enabled="TRUE">
+    <Command Name="Simple" Identifier="126" Enabled="TRUE">
+      <Comments>General purpose output</Comments>
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>118</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>75</sValue1>
+      <sValue2>p</sValue2>
+      <iValue1>1</iValue1>
+      <iValue3>-1</iValue3>
+      <bValue1>TRUE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
     </Command>

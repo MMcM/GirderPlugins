@@ -160,6 +160,25 @@ void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname)
     device->DisplayCustomCharacter(row, col, CustomCharacter(bits));
 }
 
+void DisplayGPO(int gpo, BOOL on, LPCSTR devname)
+{
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if ((NULL != device) && device->Open())
+    device->SetGPO(gpo, on);
+}
+
+void DisplayFanPower(int fan, double power, LPCSTR devname)
+{
+  if (power > 1)
+    power = power / 100.0;      // Must have meant percentage.
+
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if ((NULL != device) && device->Open())
+    device->SetFanPower(fan, power);
+}
+
 /*** Actual command routines ***/
 
 class DisplayCommandState
@@ -206,6 +225,7 @@ BOOL DisplayOpen(DisplayCommandState& state)
   return TRUE;
 }
 
+// Display Close
 void DisplayClose(DisplayCommandState& state)
 {
   for (DisplayDevice *dev = state.m_device; NULL != dev; dev = dev->GetNext()) {
@@ -215,6 +235,7 @@ void DisplayClose(DisplayCommandState& state)
   state.SetStatus("Display closed.");
 }
 
+// Display Clear
 void DisplayClear(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
@@ -222,6 +243,9 @@ void DisplayClear(DisplayCommandState& state)
   state.SetStatus("Display cleared.");
 }
 
+// ivalue1: row
+// ivalue2: col (-1 = marquee)
+// ivalue3: width (-1 = rest of line)
 void DisplayCommon(DisplayCommandState& state, LPCSTR str)
 {
   if (!DisplayOpen(state)) return; 
@@ -230,6 +254,9 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
   state.SetStatus(str);
 }
 
+// Display String
+// svalue1: string to display (variables expanded).
+// See DisplayCommon for position.
 void DisplayString(DisplayCommandState& state)
 {
   char buf[1024];
@@ -237,6 +264,9 @@ void DisplayString(DisplayCommandState& state)
   DisplayCommon(state, buf);
 }
 
+// Display Variable
+// svalue1: name of variable.
+// See DisplayCommon for position.
 void DisplayVariable(DisplayCommandState& state)
 {
   char buf[1024];
@@ -246,6 +276,9 @@ void DisplayVariable(DisplayCommandState& state)
   DisplayCommon(state, buf);
 }
 
+// Display Filename / URL Variable, trimming directory and extension.
+// svalue1: name of variable.
+// See DisplayCommon for position.
 void DisplayFilename(DisplayCommandState& state)
 {
   char buf[1024];
@@ -265,6 +298,9 @@ void DisplayFilename(DisplayCommandState& state)
   DisplayCommon(state, sp);
 }
 
+// Display Current Date/Time
+// svalue1: format (default HH:MM:SS)
+// See DisplayCommon for position.
 void DisplayCurrentTime(DisplayCommandState& state)
 {
   const char *fmt = state.m_command->svalue1;
@@ -281,6 +317,10 @@ void DisplayCurrentTime(DisplayCommandState& state)
   DisplayCommon(state, buf);
 }
 
+// Display Screen
+// svalue1: multi-line string (variables expanded)
+// ivalue1: line bitmask
+// ivalue2: marquee bitmask
 void DisplayScreen(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
@@ -307,6 +347,10 @@ void DisplayScreen(DisplayCommandState& state)
   state.SetStatus("LCD screen");
 }
 
+// Display Character (numerical code)
+// svalue1: code (variables expanded)
+// ivalue1: row
+// ivalue2: col
 void DisplayCharacter(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
@@ -319,6 +363,10 @@ void DisplayCharacter(DisplayCommandState& state)
   state.SetStatus(buf);
 }
 
+// Display Custom Character
+// svalue1: character definition (variables expanded)
+// ivalue1: row
+// ivalue2: col
 void DisplayCustomCharacter(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
@@ -330,6 +378,9 @@ void DisplayCustomCharacter(DisplayCommandState& state)
   state.SetStatus("Custom character displayed");
 }
 
+// Set Keypad Legend
+// svalue1: button name / code (variables expanded)
+// svalue2: legend (variables expanded)
 void DisplayKeypadLegend(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
@@ -339,11 +390,28 @@ void DisplayKeypadLegend(DisplayCommandState& state)
   state.m_device->SetKeypadLegend(buf1, buf2);
 }
 
+// Set General Purpose Output
+// ivalue1: GPO # (1-based)
+// bvalue1: on/off
 void DisplayGPO(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
   state.m_device->SetGPO(state.m_command->ivalue1, state.m_command->bvalue1);
   state.SetStatus("GPO set");
+}
+
+// Set Fan Power
+// ivalue1: fan # (1-based)
+// svalue1: power (percentage)
+void DisplayFanPower(DisplayCommandState& state)
+{
+  if (!DisplayOpen(state)) return; 
+  char buf[1024];
+  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  double n = strtod(buf, NULL);
+  state.m_device->SetFanPower(state.m_command->ivalue1, n / 100);
+  sprintf(buf, "Power %.f%%", n);
+  state.SetStatus(buf);
 }
 
 void DisplayCommand(p_command command, PCHAR status, int statuslen)

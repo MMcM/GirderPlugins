@@ -521,8 +521,8 @@ static BOOL CALLBACK DisplayPageDialogProc(HWND hwnd, UINT uMsg,
       }
       ComboBox_SetCurSel(combo, selidx);
 
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), 4, 0);
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), 40, 0);
+      UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), 4, 1);
+      UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), 40, 1);
 
       TrackBar_SetRange(GetDlgItem(hwnd, IDC_CONTRAST), 0, 100);
       TrackBar_SetRange(GetDlgItem(hwnd, IDC_BRIGHTNESS), 0, 100);
@@ -1003,7 +1003,7 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
       memset(&lvc, 0, sizeof(lvc));
       lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
       lvc.cx = 75;
-      if (LoadString(g_hInstance, IDS_NAME, title, sizeof(title)))
+      if (LoadString(g_hInstance, IDS_EVENT, title, sizeof(title)))
         lvc.pszText = title;
       else
         lvc.pszText = "Name";

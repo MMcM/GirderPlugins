@@ -303,16 +303,38 @@ and release events.<p>
 
 Most Matrix Orbital displays have one or more general purpose outputs
 (GPOs).  These are low-current 5VDC outputs suitable for connecting to
-LEDs, fans, and relays.  If the chosen display has GPOs, there is a
-special action to turn one on or off.<p>
+LEDs and relays.  If the chosen display has GPOs, there is a special
+action to turn one on or off.<p>
+</li>
+
+<li>Fans<br>
+
+Some displays have high-current 12VCD outputs suitable for connecting
+to a fan.  The power to a fan can be regulated by setting the pulse
+width modulation (PWM) duty cycle.  If the chosen display has such fan
+controls, there is a special action to set the power level.<p>
+
+These displays generally also have a means of monitoring how fast the
+fan is turning.  This can generate an event.<p>
+</li>
+
+<li>Temperature sensors<br>
+
+Some displays support the Dallas 1-wire (DOW) sensor bus.  Up to 32
+temperature sensors can be daisy chained to this bus and used to
+monitor temperature at various points.  This can generate an event.<p>
 </li>
 
 </ul>
 
 <h3>LUA functions</h3>
 
-The following functions are defined in LUA so that the display can be
-controlled directly from a script.<p>
+Some command parameters expand variables.  Positions in particular do
+not, however.  When that is needed, a script must be used.  The
+following LCD-related functions are defined in LUA so that the display
+can be controlled from a script.  All functions take a optional final
+string parameters naming the display device; if unspecified, the
+default is used.<p>
 
 <ul>
 
@@ -339,6 +361,19 @@ negative, a marquee is started on the given row.
 <li><code>LCD_CustomCharacter(row, column, bits)</code><br>
 
 Display the given custom character at the given position.
+
+</li>
+
+<li><code>LCD_GPO(gpo, on/off)</code><br>
+
+Set the given GPO state.
+
+</li>
+
+<li><code>LCD_FanPower(gpo, power)</code><br>
+
+Set the given fan's power (PWM duty cycle).  <code>power</code> is a
+fraction: 0 for no power and 1 for full power.
 
 </li>
 

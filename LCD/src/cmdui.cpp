@@ -25,6 +25,7 @@ DisplayAction DisplayActions[] = {
   { "$", "Custom Character", valSTR, DisplayCustomCharacter },
   { "k", "Keypad Legend", valLIST2, DisplayKeypadLegend },
   { "o", "General Purpose Output", valBOOL, DisplayGPO },
+  { "p", "Fan Power", valSTR, DisplayFanPower },
 };
 
 BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
@@ -230,13 +231,13 @@ static void ShowPositionInputs(HWND hwnd, UINT ctlid, BOOL reload)
     EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !rest);
   }
 
-  sw = (IDC_GPO == ctlid) ? SW_SHOW : SW_HIDE;
-  ShowWindow(GetDlgItem(hwnd, IDC_GPOL), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_GPO), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_GPO_SPIN), sw);
+  sw = (IDC_FANGPO == ctlid) ? SW_SHOW : SW_HIDE;
+  ShowWindow(GetDlgItem(hwnd, IDC_VALUE2L), sw);
+  ShowWindow(GetDlgItem(hwnd, IDC_FANGPO), sw);
+  ShowWindow(GetDlgItem(hwnd, IDC_FANGPO_SPIN), sw);
   if (reload)
-    UpDown_SetPos(GetDlgItem(hwnd, IDC_GPO_SPIN),
-                  (IDC_GPO == ctlid) ? g_editCommand->ivalue1 : 0);
+    UpDown_SetPos(GetDlgItem(hwnd, IDC_FANGPO_SPIN),
+                  (IDC_FANGPO == ctlid) ? g_editCommand->ivalue1 : 0);
 }
 
 // Show inputs for screen command and optionally load from edited command.
@@ -304,11 +305,6 @@ static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice,
     ShowPositionInputs(hwnd, 0, reload);
     ShowScreenInputs(hwnd, TRUE, reload);
   }
-  else if (DisplayGPO == action->function) {
-    ShowValueInputs(hwnd, valBOOL, reload);
-    ShowPositionInputs(hwnd, IDC_GPO, reload);
-    ShowScreenInputs(hwnd, FALSE, reload);
-  }
   else if (DisplayKeypadLegend == action->function) {
     FillValueListChoices(hwnd, IDC_VALLIST, 
                          IDS_BUTTON, commandDevice->GetKeypadButtonChoices());
@@ -318,6 +314,21 @@ static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice,
     ShowPositionInputs(hwnd, 0, reload);
     ShowScreenInputs(hwnd, FALSE, reload);
   }
+  else if ((DisplayGPO == action->function) ||
+           (DisplayFanPower == action->function)) {
+    char legend[256];
+    if (LoadString(g_hInstance,
+                   (DisplayGPO == action->function) ? IDS_GPOL : IDS_FANL,
+                   legend, sizeof(legend)))
+      Static_SetText(GetDlgItem(hwnd, IDC_VALUE2L), legend);
+    UpDown_SetRange(GetDlgItem(hwnd, IDC_FANGPO_SPIN),
+                    (DisplayGPO == action->function) ? 
+                    commandDevice->GetGPOs() : commandDevice->GetFans(),
+                    1);
+    ShowValueInputs(hwnd, action->valueType, reload);
+    ShowPositionInputs(hwnd, IDC_FANGPO, reload);
+    ShowScreenInputs(hwnd, FALSE, reload);
+  }
   else if ((valSTR2 == action->valueType) ||
            (valLIST2 == action->valueType)) {
     ShowValueInputs(hwnd, action->valueType, reload);
@@ -325,6 +336,8 @@ static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice,
     ShowScreenInputs(hwnd, FALSE, reload);
   }
   else {
+    UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), commandDevice->GetHeight() - 1, 0);
+    UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), commandDevice->GetWidth() - 1, 0);
     ShowValueInputs(hwnd, action->valueType, reload);
     ShowPositionInputs(hwnd, IDC_ROW, reload);
     ShowScreenInputs(hwnd, FALSE, reload);
@@ -346,6 +359,9 @@ static void FillCommandChoices(HWND hwnd,
     }
     else if (DisplayGPO == action->function) {
       if (commandDevice->GetGPOs() <= 0) continue;
+    }
+    else if (DisplayFanPower == action->function) {
+      if (commandDevice->GetFans() <= 0) continue;
     }
     int idx = ComboBox_AddString(combo, action->name);
     ComboBox_SetItemData(combo, idx, action);
@@ -460,10 +476,6 @@ static BOOL SaveCommandSettings(HWND hwnd)
     }
     SF.realloc_pchar(&g_editCommand->svalue1, buf);
   }
-  else if (DisplayGPO == action->function) {
-    g_editCommand->bvalue1 = Button_GetCheck(GetDlgItem(hwnd, IDC_VALBOOL));
-    g_editCommand->ivalue1 = UpDown_GetPos(GetDlgItem(hwnd, IDC_GPO_SPIN));
-  }
   else {
     if (NULL != action) {
       switch (action->valueType) {
@@ -496,15 +508,21 @@ static BOOL SaveCommandSettings(HWND hwnd)
 
     g_editCommand->bvalue1 = Button_GetCheck(GetDlgItem(hwnd, IDC_VALBOOL));
 
-    g_editCommand->ivalue1 = UpDown_GetPos(GetDlgItem(hwnd, IDC_ROW_SPIN));
-    if (Button_GetCheck(GetDlgItem(hwnd, IDC_USE_WRAP)))
-      g_editCommand->ivalue2 = -1;
-    else
-      g_editCommand->ivalue2 = UpDown_GetPos(GetDlgItem(hwnd, IDC_COL_SPIN));
-    if (Button_GetCheck(GetDlgItem(hwnd, IDC_USE_REST)))
-      g_editCommand->ivalue3 = -1;
-    else
-      g_editCommand->ivalue3 = UpDown_GetPos(GetDlgItem(hwnd, IDC_WIDTH_SPIN));
+    if ((DisplayGPO == action->function) ||
+        (DisplayFanPower == action->function)) {
+      g_editCommand->ivalue1 = UpDown_GetPos(GetDlgItem(hwnd, IDC_FANGPO_SPIN));
+    }
+    else {
+      g_editCommand->ivalue1 = UpDown_GetPos(GetDlgItem(hwnd, IDC_ROW_SPIN));
+      if (Button_GetCheck(GetDlgItem(hwnd, IDC_USE_WRAP)))
+        g_editCommand->ivalue2 = -1;
+      else
+        g_editCommand->ivalue2 = UpDown_GetPos(GetDlgItem(hwnd, IDC_COL_SPIN));
+      if (Button_GetCheck(GetDlgItem(hwnd, IDC_USE_REST)))
+        g_editCommand->ivalue3 = -1;
+      else
+        g_editCommand->ivalue3 = UpDown_GetPos(GetDlgItem(hwnd, IDC_WIDTH_SPIN));
+    }
   }
   
   g_editCommand->actiontype = PLUGINNUM;
@@ -611,12 +629,17 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
       break;
 
     case IDC_VALSTR:
+    case IDC_VALINT:
     case IDC_ROW:
     case IDC_COL:
     case IDC_WIDTH:
       if (HIWORD(wParam) == EN_CHANGE) {
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
+      break;
+
+    case IDC_VALBOOL:
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       break;
 
     case IDC_USE_WRAP:
@@ -630,6 +653,7 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
     case IDC_USE_REST:
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), FALSE);
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       break;
 
     case IDC_USE_COL:
@@ -637,11 +661,13 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
       EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), TRUE);
       EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), TRUE);
       EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), TRUE);
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       break;
 
     case IDC_USE_WIDTH:
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), TRUE);
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), TRUE);
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       break;
 
     case IDC_ENABLE_LINE1:

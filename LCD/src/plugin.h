@@ -34,6 +34,8 @@ extern int DisplayWidth(LPCSTR devname = NULL);
 extern int DisplayHeight(LPCSTR devname = NULL);
 extern void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname = NULL);
 extern void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname = NULL);
+extern void DisplayGPO(int gpo, BOOL on, LPCSTR devname = NULL);
+extern void DisplayFanPower(int fan, double power, LPCSTR devname = NULL);
 
 class DisplayCommandState;
 
@@ -66,6 +68,7 @@ extern void DisplayCharacter(DisplayCommandState& state);
 extern void DisplayCustomCharacter(DisplayCommandState& state);
 extern void DisplayKeypadLegend(DisplayCommandState& state);
 extern void DisplayGPO(DisplayCommandState& state);
+extern void DisplayFanPower(DisplayCommandState& state);
 
 extern void DisplayCommand(p_command command, PCHAR status, int statuslen);
 

@@ -20,6 +20,7 @@ static BOOL GetOptionalDisplayDevice(lua_State *L, int argpos, LPCSTR& dev)
     return FALSE;
 }
 
+// LCD_Size([dev]) -> width, height
 int luaSize(lua_State *L)
 {
   LPCSTR dev;
@@ -32,6 +33,7 @@ int luaSize(lua_State *L)
   return 2;
 }
 
+// LCD_Close([dev])
 int luaClose(lua_State *L)
 {
   LPCSTR dev;
@@ -43,6 +45,7 @@ int luaClose(lua_State *L)
   return 0;
 }
 
+// LCD_String(row, col, width, str [, dev])
 int luaString(lua_State *L)
 {
   LPCSTR dev;
@@ -65,6 +68,7 @@ int luaString(lua_State *L)
   return 0;
 }
 
+// LCD_CustomCharacter(row, col, defn [, dev])
 int luaCustomCharacter(lua_State *L)
 {
   LPCSTR dev;
@@ -85,11 +89,51 @@ int luaCustomCharacter(lua_State *L)
   return 0;
 }
 
+// LCD_GPO(gpo, state [, dev])
+int luaGPO(lua_State *L)
+{
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 2, dev)) {
+    lua_error(L, "incorrect number of arguments to LCD_GPO");
+    return 0;
+  }
+  if (!(lua_isnumber(L, 1) &&
+        (lua_isnumber(L, 2) || lua_isnil(L, 2)))) {
+    lua_error(L, "wrong type argument to LCD_GPO");
+    return 0;
+  }
+  DisplayGPO((int)lua_tonumber(L, 1), 
+             lua_isnil(L, 2) ? FALSE : (lua_tonumber(L, 2) != 0.0),
+             dev);
+  return 0;
+}
+
+// LCD_FanPower(fan, power [, dev])
+int luaFanPower(lua_State *L)
+{
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 2, dev)) {
+    lua_error(L, "incorrect number of arguments to LCD_FanPower");
+    return 0;
+  }
+  if (!(lua_isnumber(L, 1) &&
+        lua_isnumber(L, 2))) {
+    lua_error(L, "wrong type argument to LCD_FanPower");
+    return 0;
+  }
+  DisplayFanPower((int)lua_tonumber(L, 1), 
+                  lua_tonumber(L, 2),
+                  dev);
+  return 0;
+}
+
 struct luaL_reg luaFunctions[] = {
   { "LCD_Size", luaSize },
   { "LCD_Close", luaClose },
   { "LCD_String", luaString },
   { "LCD_CustomCharacter", luaCustomCharacter },
+  { "LCD_GPO", luaGPO },
+  { "LCD_FanPower", luaFanPower },
 };
 
 void FunctionsOpen()
