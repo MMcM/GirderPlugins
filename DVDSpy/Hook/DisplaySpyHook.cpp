@@ -60,6 +60,8 @@ const UINT EXTRACT_GETTEXT = 2002;
 const UINT EXTRACT_LPARAM_STR = 2003;
 const UINT EXTRACT_LPARAM = 2004;
 const UINT EXTRACT_WPARAM = 2005;
+const UINT EXTRACT_WPARAM_POINT = 2006;
+const UINT EXTRACT_CLASS = 2007;
 const UINT EXTRACT_SB_GETTEXT = 2010;
 const UINT EXTRACT_MEDIA_SPY = 2030;
 
@@ -191,16 +193,6 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-#if 0
-    // Enable and use this to discover new strings as they get added.
-    BEGIN_NMATCH(UnknownText)
-      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
-     BEGIN_EXTRACT()
-      NENTRY0(String,EXTRACT_LPARAM_STR)
-      NENTRY0(Point,EXTRACT_WPARAM)
-    END_MATCH()
-#endif
-
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
@@ -297,7 +289,8 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(ShowShifter)
 
-    // Getting off the screen is tricky because SSF has its own window system of sorts.
+    // Getting information off the screen is tricky because SSF has
+    // its own window system of sorts.
 
     BEGIN_MATCH()
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
@@ -314,6 +307,60 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
+
+#if 0
+  // Uncomment this and edit to begin adding a new application.
+  BEGIN_MODULE(XXX)
+
+    // DVDNavigator.
+    BEGIN_NMATCH(DVD)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(TitleNo, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+    END_MATCH()
+
+    // Filter graph.
+    BEGIN_NMATCH(Media)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+    END_MATCH()
+
+    // Set window text.
+    BEGIN_NMATCH(SetText)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
+     BEGIN_EXTRACT()
+      NENTRY0(Class,EXTRACT_CLASS)
+      NENTRY0(Text,EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    // Calls to TextOut at some point.
+    BEGIN_NMATCH(TextOut)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
+     BEGIN_EXTRACT()
+      NENTRY0(Name,EXTRACT_GETTEXT)
+      NENTRY0(Class,EXTRACT_CLASS)
+      NENTRY0(Point,EXTRACT_WPARAM_POINT)
+      NENTRY0(String,EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    // Close a window.
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+     BEGIN_EXTRACT()
+      NENTRY0(Name,EXTRACT_GETTEXT)
+      NENTRY0(Class,EXTRACT_CLASS)
+    END_MATCH()
+
+#endif
 
 };
 
@@ -498,6 +545,16 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
     break;
   case EXTRACT_WPARAM:
     sprintf(szBuf, "%d", wParam);
+    break;
+  case EXTRACT_WPARAM_POINT:
+    sprintf(szBuf, "%d,%d", LOWORD(wParam), HIWORD(wParam));
+    break;
+  case EXTRACT_CLASS:
+    {
+      char szCName[256];
+      GetClassName(hWnd, szCName, sizeof(szCName));
+      strncpy(szBuf, szCName, nSize);
+    }
     break;
   case EXTRACT_SB_GETTEXT:
     SendMessage(hWnd, SB_GETTEXT, pEntry->dwVal, (LPARAM)szBuf);

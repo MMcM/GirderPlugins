@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.20. &nbsp;MMcM 04/02
+Version 1.21. &nbsp;MMcM 04/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -476,12 +476,17 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New source file name</td>
 </tr>
 
+<tr><td>ShowShifter.Close</td>
+<td>ShowShifter application closed</td>
+</tr>
+
 </table><p>
 
 <h3>Details</h3>
 To completely understand how the various spy techniques used by this
 plug-in work, look at the C++ source, which can be downloaded from the
-Developers area.<p>
+Developers area.  The source distribution also includes <a href="extending.htm">
+this document</a> outlining how to add support for a new application.<p>
 
 This plug-in intercepts various Windows messages that are used by
 WinDVD and PowerDVD to update their own windows with the information
@@ -552,18 +557,6 @@ the LCD Software plug-in.  See the
 <a href="../../software/lcd/readme.htm">readme</a> file for that plug-in
 for more details.  A sample Girder file is included that displays some
 information in a format suitable for 4x20 displays.<p>
-
-<h3>Extending</h3>
-
-Sending a <code>WM_COPYDATA</code> message to the top-level window
-whose name is <code>"Girder DVDSpy Monitor Window"</code> generates an
-event inside Girder.  The <code>dwData</code> of the message is the
-integer value, and the <code>lpData</code> is two adjacent
-null-terminated strings for the event name and the string value,
-respectively.  The <code>cbData</code> must be the entire length,
-including the second null character.<p>
-
-This is how the WMP and Winamp interfaces work.<p>
 
 <h3>Disclaimer</h3>
 You use this plug-in at your own risk.

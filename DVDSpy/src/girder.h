@@ -1,5 +1,5 @@
 #define PLUGINNUM 15
-#define PLUGINNAME "DVDSpy 1.20"
+#define PLUGINNAME "DVDSpy 1.21"
 #define GIR_ERROR -10;
 
 #define _BOOL BYTE

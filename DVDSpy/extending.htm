@@ -1,0 +1,314 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="en-us">
+<title>Extending DVDSpy</title>
+</head>
+
+<body>
+
+<h1>Extending the DVDSpy Girder plug-in for new applications</h1>
+
+<h3>When there is a clean interface</h3>
+
+Extracting player information usually involves some kind of spying, by
+which is meant intercepting the application's calls to some system
+facility.  A few applications have an extension API of their own that
+allows user-added code to participate in the application.  Such an
+extension can receive updates from the application through the API and
+forward relevant state along to DVDSpy, which will turn it into Girder
+events.<p>
+
+Sending a <code>WM_COPYDATA</code> message to the top-level window
+whose name is <code>"Girder DVDSpy Monitor Window"</code> generates an
+event inside Girder.  The <code>dwData</code> of the message is the
+integer value, and the <code>lpData</code> is two adjacent
+null-terminated strings for the event name and the string value,
+respectively.  The <code>cbData</code> must be the entire length,
+including the second null character.<p>
+
+This is how the WMP and Winamp interfaces work.<p>
+
+<h3>Basic requirements</h3>
+
+The source distribution of DVDSpy can be downloaded from the Girder
+Developers area.<p>
+
+Extending DVDSpy requires Visual Studio.  Visual C++ is needed for
+compiling the plug-in itself.  Some of the tools that come with Visual
+C++, in particular Spy++, are invaluable in determining what to
+intercept.<p>
+
+It is a good idea to start by making sure that compiling DVDSpy
+without any changes locally works.<p>
+
+<h3>Seeing the events</h3>
+
+To check that new events are coming out of Girder properly, they need
+to be displayed someplace.<p>
+
+<ul>
+<li>The Debug version of DVDSpy will output a message for each event using
+<code>OutputDebugString</code>.  If Girder is run under the Visual
+Studio debugger, this will display in the Output window.  For example, girder.exe
+can be set as the application to run for the DVDSpy DLL project.
+
+<li><a href="http://www.sysinternals.com/ntw2k/freeware/debugview.shtml">DebugView</a>
+can be used to display the same messages in a separate window without a debugger.
+
+<li>The Logger Girder plug-in can be used to display events (and their
+payloads, which is critical for DVDSpy) from the Release version.
+</ul>
+
+<h3>Definition structure</h3>
+
+Intercepts of applications calls are defined in
+<kbd>DisplaySpyHook.cpp</kbd> within the <code>g_matches</code> array.
+Some C++ macros are used to make the syntax a little more attractive.<p>
+
+<ul>
+<li>There is one <code>BEGIN_MODULE</code> block for each application.
+It gives the name of the application's executable file and the first
+segment of the name of all the application's events.
+
+<li>There is one <code>BEGIN_MATCH</code> ... <code>END_MATCH</code>
+block for each intercepted call (usually a windows message).
+
+<li>The <code>BEGIN_EXTRACT</code> marker defines the boundary between
+the match predicates and the information extraction.
+
+<li>From <code>BEGIN_MATCH</code> to <code>BEGIN_EXTRACT</code> the
+entries each define a condition which must be satisfied by the
+intercepted message.  For instance, the message code, or the class of the
+target window.
+
+<li>From <code>BEGIN_EXTRACT</code> to <code>END_MATCH</code> the
+entries each define a piece of information that is extracted from the
+message (or more generally the state of the application) and passed to
+Girder.  Each such entry turns into a single Girder event with one
+payload string.
+
+<li>The name of the Girder event is the name of the application, plus
+the name of the match, plus the name of the extraction, separated by
+dots.  Actually, both the match name and the extraction name are
+optional and not needed if there is only one such.
+
+</ul>
+
+<h3>The XXX module</h3>
+
+The source includes a module named XXX, which is commented out.  It
+has several matches that do not filter out very much and several
+extractions which get indentification information as well as potential
+contents.<p>
+
+Adding back this module, editing the name to match the name of the
+target application executable file, and running the application with
+the modified plug-in will give a good initial gauge of how information
+might be extracted.<p>
+
+<h3>DVD Navigator</h3>
+
+Almost all DVD player applications use the DirectShow DVD Navigator to
+manage the overall state of the player.  DVDSpy can extract
+information from the navigator related to chapter position and elapsed
+time.  This is often all that is needed (except for an event when the
+player closes).<p>
+
+<h3>Filter graphs</h3>
+
+A number of media player applications use DirectX filter graphs to
+modularize their playing.  DVDSpy can extract information from an
+active filter graph related to position and source.<p>
+
+Some players, like ZoomPlayer, can play both DVDs and media files.  In
+that case, both the <code>MS_DVD_NAVIGATOR</code> and the
+<code>MS_FILTER_GRAPH</code> should be in the resultant module.<p>
+
+<h3>Looking at messages</h3>
+
+If an application does not use the DVD Navigator or filter graphs,
+application state needs to be gotten by looking at what it actually
+displays on the screen.  Simple applications that use standard Windows
+controls will use Windows messages to update those controls.<p>
+
+The best way to see what messages are sent by an application when it
+is running is to run Spy++ with message logging.<p>
+
+<h3>Intercepting text display</h3>
+
+One technique remains for intercepting display updates from
+applications that do not use Windows messages.  That is to patch calls
+to the TextOut Windows function.  Spy++ cannot be used to log these
+calls.  But the TextOut match in the XXX module will produce events
+that may show a pattern of updates.<p>
+
+In most cases, the meaning of the TextOut will depend on the precise
+position on the screen at which it is drawn.  This makes the
+extraction depend strongly on the particular version of the
+application.  So, this technique should really only be used as a last
+resort.<p>
+
+<h3>The Close event</h3>
+
+The trick to getting an event when the main window of the application
+closes is avoiding false matches.  The application will typically open
+and close windows when doing innocuous things like editing the
+application settings.  Usually one of the main windows is
+distinguished by its Window class.<p>
+
+Since windows are destroyed just after the are closed, it is hard to
+use Spy++ to find out the distinguishing characteristics of the main
+windows as they are closed.  The log will not be able to find the
+window from the message log.  Since these windows are usually created
+early on, it is possible to find them in Spy++ before closing the
+application.  The XXX module also includes a match that will produce
+Girder events for all window closes.<p>
+
+<h3>An example</h3>
+
+Here is a step-by-step cookbook for adding support for the dvdplay
+application.  This application is mostly just a sample of how to write
+a DirectShow DVD player in C++ with MFC.  But it seems to ship with
+Windows and end up in the windows system directory.<p>
+
+The dvdplay application is easy to support in DVDSpy.  But it is not
+there already because so far as I know no one actually uses it is
+their default player.  So, such support would just be a waste of
+space.  This makes it an ideal example.<p>
+
+<ul>
+<li>Open the <kbd>DVDSpy</kbd> project in Visual C++.
+
+<li>Set <kbd>DVDSpy - Win32 Debug</kbd> as the active project.
+
+<li>Open <kbd>DisplaySpyHook.cpp</kbd> in the workspace editor.
+
+<li>Find <code>BEGIN_MODULE(XXX)</code>.
+
+<li>Change the XXX to dvdplay and the <code>#if 0</code> to <code>#if
+1</code>.
+
+<li>Start the debugger (<kbd>F5</kbd>).  When prompted for an
+executable file, Browse to <kbd>girder.exe</kbd>.  It is okay that
+Girder itself does not contain debugging information.
+
+<li>Enable input events in Girder (<kbd>F9</kbd>).
+
+<li>Launch dvdplay (e.g. with <kbd>Start</kbd> > <kbd>Run...</kbd>).
+
+<li>Right away, the Output window will show something like this.<br>
+<pre>
+DVDSpy monitor window started.
+Girder event: 'dvdplay.SetText.Class' pld='#32770'.
+Girder event: 'dvdplay.SetText.Text' pld='DVD Player'.
+Girder event: 'dvdplay.SetText.Class' pld='VideoRenderer'.
+Girder event: 'dvdplay.DVD.Domain' pld='STOP'.
+Girder event: 'dvdplay.DVD.TitleNo' pld=''.
+Girder event: 'dvdplay.DVD.Chapter' pld=''.
+Girder event: 'dvdplay.DVD.Duration' pld=''.
+Girder event: 'dvdplay.DVD.Elapsed' pld=''.
+</pre>
+This shows the application setting its window title and that the DVD
+Navigator is indeed used.
+
+<li>Play a DVD, using various commands like Pause and Fast Forward.
+Something like the following confirms that the DVD Navigator spy is working.<br>
+<pre>
+Girder event: 'dvdplay.DVD.Domain' pld='DVD'.
+Girder event: 'dvdplay.DVD.TitleNo' pld='01'.
+Girder event: 'dvdplay.DVD.Chapter' pld='01'.
+Girder event: 'dvdplay.DVD.Duration' pld='01:00:00'.
+Girder event: 'dvdplay.DVD.Elapsed' pld='00:00:00'.
+Girder event: 'dvdplay.DVD.Elapsed' pld='00:00:01'.
+Girder event: 'dvdplay.DVD.Elapsed' pld='00:00:02'.
+Girder event: 'dvdplay.DVD.Elapsed' pld='00:00:03'.
+Girder event: 'dvdplay.DVD.Elapsed' pld='00:00:04'.
+Girder event: 'dvdplay.DVD.Elapsed' pld='00:00:05'.
+</pre>
+
+<li>You may have noticed that there were no filter graph events in the
+log.  This is because DVDSpy takes the first match for each
+intercepted message.  Since the DVD Navigator matched for
+<code>WM_TIMER</code>, the filter graph was not given a chance.  Had
+there been no DVD Navigator, it would have generated some events.
+
+<li>Exit Girder and return to the editor.
+
+<li>Return the XXX module to its original state.  (E.g. via Undo).
+
+<li>The new module to be added looks like the this.<br>
+<pre>
+  BEGIN_MODULE(dvdplay)
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(TitleNo, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+    END_MATCH()
+
+</pre>
+
+<li>To find the main windows for doing the Close event, start dvdplay
+again by itself (it's easier without Girder or a debugger).  Start it
+playing a DVD and pause it.
+
+<li>Start Spy++.
+
+<li>Do <kbd>Search</kbd> > <kbd>Find Window...</kbd>.  Hide Spy++ and
+drag the Finder Tool around over the dvdplay windows.
+
+<li>There should be top-level windows titled "DVD Player", one with
+class <kbd>#32770</kbd> and the other <kbd>VideoRenderer</kbd>.  The
+first is not unique enough; there will be lots of dialogs.  The second
+is a good choice.
+
+<li>The close match looks like this.<br>
+<pre>
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "VideoRenderer")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+</pre>
+
+<li>Compile the changes and test using Girder's Logger plug-in.  If
+all goes well, you should have events like the following.<br>
+<pre>
+Dev: 15	dvdplay.Close	14:30:22	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Elapsed	14:30:15	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Duration	14:30:15	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Chapter	14:30:15	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.TitleNo	14:30:15	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Domain	14:30:15	Sunday, April 21, 2002	Pld1: STOP
+Dev: 15	dvdplay.Elapsed	14:30:14	Sunday, April 21, 2002	Pld1: 00:00:05
+Dev: 15	dvdplay.Elapsed	14:30:13	Sunday, April 21, 2002	Pld1: 00:00:04
+Dev: 15	dvdplay.Elapsed	14:30:12	Sunday, April 21, 2002	Pld1: 00:00:03
+Dev: 15	dvdplay.Elapsed	14:30:11	Sunday, April 21, 2002	Pld1: 00:00:02
+Dev: 15	dvdplay.Elapsed	14:30:10	Sunday, April 21, 2002	Pld1: 00:00:01
+Dev: 15	dvdplay.Duration	14:30:11	Sunday, April 21, 2002	Pld1: 01:00:00
+Dev: 15	dvdplay.Chapter	14:30:11	Sunday, April 21, 2002	Pld1: 01
+Dev: 15	dvdplay.TitleNo	14:30:11	Sunday, April 21, 2002	Pld1: 01
+Dev: 15	dvdplay.Domain	14:30:11	Sunday, April 21, 2002	Pld1: DVD
+Dev: 15	dvdplay.Domain	14:30:11	Sunday, April 21, 2002	Pld1: PLAY
+Dev: 15	dvdplay.Elapsed	14:28:46	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Duration	14:28:46	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Chapter	14:28:46	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.TitleNo	14:28:46	Sunday, April 21, 2002	Pld1: 
+Dev: 15	dvdplay.Domain	14:28:46	Sunday, April 21, 2002	Pld1: STOP
+Dev: 18	GirderEnabled	14:28:33	Sunday, April 21, 2002
+Dev: 18	GirderOpen	14:28:25	Sunday, April 21, 2002
+</pre>
+
+</ul>
+
+<h3>Sharing</h3>
+If you add support for a new application, please try to get your
+changes migrated back into the main distribution.
