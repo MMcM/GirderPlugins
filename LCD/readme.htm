@@ -9,7 +9,102 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 2.31. &nbsp;MMcM 02/04
+Version 2.10. &nbsp;MMcM 02/04
+
+<h3>Supported displays</h3>
+These displays are believed to work with this plug-in.  Often similar displays
+from the same manufacturer will use the same interface protocol.  Those may work
+as well.
+
+<table border>
+<tr><th>Manufacturer</th><th>Display</th><th>Rows</th><th>Cols</th><th>Notes</th></tr>
+
+<tr><td rowspan=4><a href="http://www.crystalfontz.com">Crystalfontz</a></td>
+<td><a href="http://www.crystalfontz.com/products/632/index.html">632</a></td>
+<td>16</td><td>2</td>
+<td>With or without backlight.</td></tr>
+<tr><td><a href="http://www.crystalfontz.com/products/634/index.html">634</a></td>
+<td>20</td><td>4</td>
+<td>With or without backlight.</td></tr>
+<tr><td><a href="http://www.crystalfontz.com/products/633/index.html">633</a></td>
+<td>16</td><td>2</td>
+<td>Has a 6 button lighted keypad.</td></tr>
+<tr><td><a href="http://www.crystalfontz.com/products/631/index.html">631</a></td>
+<td>20</td><td>2</td>
+<td>Has a 4 button lighted keypad.</td></tr>
+
+<tr><td rowspan=17><a href="http://www.matrixorbital.com">Matrix Orbital</a></td>
+<td>LCD2021</td><td>20</td><td>2</td>
+<td></td></tr>
+<tr><td>LCD4021</td><td>40</td><td>2</td>
+<td></td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=2">LCD2041</a></td>
+<td>20</td><td>4</td>
+<td></td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=3">LCD4041</a></td>
+<td>40</td><td>4</td>
+<td></td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=4">LK162-12</a></td>
+<td>16</td><td>2</td>
+<td>Has a membrane keypad.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=5">LK202-25</a></td>
+<td>20</td><td>2</td>
+<td>Has a membrane keypad.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=8">LK204-25</a></td>
+<td>20</td><td>4</td>
+<td>Four line version of the LK-202-25.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=93">LK202-24-USB</a></td>
+<td>20</td><td>2</td>
+<td>USB version of the LK-202-25.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=102">LK204-24-USB</a></td>
+<td>20</td><td>4</td>
+<td>USB version of the LK-204-25.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=9">LK402-12</a></td>
+<td>40</td><td>2</td>
+<td>Has a membrane keypad.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=1&ProductID=10">LK404-55</a></td>
+<td>40</td><td>4</td>
+<td>Four line version of the LK402-12.</td></tr>
+<tr><td>VFD2021</td><td>20</td><td>2</td>
+<td></td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=6">VFD2041</a></td>
+<td>20</td><td>4</td>
+<td></td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=23">VK202-25</a></td>
+<td>20</td><td>2</td>
+<td>VFD with a membrane keypad.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=24">VK204-25</a></td>
+<td>20</td><td>4</td>
+<td>Four line version of the VK202-25.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=100">VK202-24-USB</a></td>
+<td>20</td><td>2</td>
+<td>USB version of the VK202-25.</td></tr>
+<tr><td><a href="http://www.matrixorbital.com/pages/product_view.asp?CatID=2&ProductID=103">VK204-24-USB</a></td>
+<td>20</td><td>4</td>
+<td>USB version of the VK204-25.</td></tr>
+
+<tr><td><a href="http://www.futaba.com">Futaba</a></td>
+<td><a href="http://www.futaba.com/display_modules/vfd_products/index.html">VFD</a></td>
+<td>20</td><td>4</td>
+<td></td></tr>
+
+<tr><td><a href="http://www.renesas.com">Hitachi</a> and others</td>
+<td><a href="http://www.jkmicro.com/documentation/pdf/hd44780u.pdf ">HD44780</a></td>
+<td colspan=2><i>Various</i></td>
+<td>A standard display controller chip.</td></tr>
+
+<tr>
+<td><i>Various</i></td>
+<td><a href="http://lcdriver.pointofnoreturn.org">LCDriver</a></td>
+<td colspan=2><i>Various</i></td>
+<td>The LCDriver library, which supports various displays.</td>
+</tr>
+
+<tr>
+<td/><td>Simulated</td><td colspan=2><i>Any</i></td>
+<td>A window on the desktop.  Useful for testing.</td></tr>
+
+</table>
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -28,11 +123,12 @@ beneath where Girder is installed.<p>
 
 <li>Device specific files.<br>
 <table>
-<tr><td><kbd>simlcd.dll</kbd></td><td>Simulated LCD</td></tr>
-<tr><td><kbd>lcdrvr1.dll</kbd></td><td>LCDriver 1.x</td></tr>
 <tr><td><kbd>cfontzlcd.dll</kbd></td><td>Crystalfontz</td></tr>
+<tr><td><kbd>futabavfd.dll</kbd></td><td>Futaba</td></tr>
+<tr><td><kbd>lcdrvr1.dll</kbd></td><td>LCDriver 1.x</td></tr>
 <tr><td><kbd>molcd.dll</kbd></td><td>Matrix Orbital</td></tr>
 <tr><td><kbd>paralcd.dll</kbd></td><td>Parallel port</td></tr>
+<tr><td><kbd>simlcd.dll</kbd></td><td>Simulated LCD</td></tr>
 </table><p>
 
 These files must be in the Windows path; it is simplest to put them in
@@ -408,7 +504,7 @@ Whether the Simulated LCD window stays on top of other windows.  The default is 
 The debounce time for a keypad in milliseconds.  The default for Matrix Orbital is 52ms.
 </td>
 
-</table>
+</table><p>
 
 <a name="interval">
 Delay intervals can be specified as an integer number of milliseconds or a floating
