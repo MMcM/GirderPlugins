@@ -80,9 +80,9 @@ END_COM_MAP()
   STDMETHOD(GetModuleInfo)(HMNModuleInfo* pModuleInfo) {
     if (NULL == pModuleInfo)
       return E_POINTER;
-    if (!FillModuleInfo(pModuleInfo, _Module.GetModuleInstance(),
-                        _T("DVDSpy ShowShifter Module"), GetObjectCLSID(),
-                        *GetCategoryMap()[1].pcatid))
+    if (!TB_FillModuleInfo(pModuleInfo, _Module.GetModuleInstance(),
+                           _T("DVDSpy ShowShifter Module"), GetObjectCLSID(),
+                           *GetCategoryMap()[1].pcatid))
       return E_FAIL;
     return S_OK;
   }

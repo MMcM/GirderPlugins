@@ -54,7 +54,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,65,0,28
+ FILEVERSION 1,65,0,30
  PRODUCTVERSION 1,65,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -71,9 +71,9 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "DVDSpy ShowShifter Module\0"
-            VALUE "FileVersion", "1.65 (28)\0"
+            VALUE "FileVersion", "1.65 (30)\0"
             VALUE "InternalName", "ShowShifterSpy\0"
-            VALUE "LegalCopyright", "Copyright \251 2001-2004 Mike McMahon\0"
+            VALUE "LegalCopyright", "Copyright \251 2001-2005 Mike McMahon\0"
             VALUE "OriginalFilename", "ShowShifterSpy.DLL\0"
             VALUE "ProductName", "DVD Spy\0"
             VALUE "ProductVersion", "1.65\0"
