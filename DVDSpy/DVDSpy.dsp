@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /Gz /MD /W3 /GX /O2 /I "..\..\include" /I "Hook" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /Gz /MD /W3 /GX /O2 /I "..\..\include" /I "Hook" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /Yu"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "Hook" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "..\..\include" /I "Hook" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -96,11 +96,28 @@ SOURCE=.\src\dvdtitle.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\lib.def
+SOURCE=.\src\monitor.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\src\plugin.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\plugin.def
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\stdafx.cpp
+
+!IF  "$(CFG)" == "DVDSpy - Win32 Release"
+
+# ADD CPP /Yc"stdafx.h"
+
+!ELSEIF  "$(CFG)" == "DVDSpy - Win32 Debug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
@@ -128,7 +145,7 @@ SOURCE=.\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\ui.h
+SOURCE=.\src\stdafx.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

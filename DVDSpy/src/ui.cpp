@@ -1,36 +1,28 @@
-/***************************************************************************************/
-/*                                                                                     */
-/*  Girder 3.0 Plugin                                                                  */
-/*  User interface                                                                     */
-/*                                                                                     */
-/*  Copyright 2000 (c) Ron Bessems                                                     */
-/*  GNU General Public License                                                         */
-/*                                                                                     */
-/*                                                                                     */
-/***************************************************************************************/
+/* User interface. */
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdio.h>
-
-#define UI_CPP
+#include "stdafx.h"
 #include "plugin.h"
-#include "ui.h"
 #include "resource.h"
 
-#include "DisplaySpyHook.h"
+const UINT WM_SELECT_EVENT = WM_USER+100;
 
-static
-BOOL CALLBACK ConfigDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
+HANDLE g_hConfigThread = NULL;
+HWND g_hConfigDialog = NULL;
+HANDLE g_hLearnThread = NULL;
+HWND g_hLearnDialog = NULL;
+
+static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg, 
+                                      WPARAM wParam, LPARAM lParam)
 {
   switch (uMsg) {
   case WM_INITDIALOG:
     {
       char trans[256];
       	
-      hConfigDialog = hwnd;
+      g_hConfigDialog = hwnd;
 
-      SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DVDSPY)));
+      SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
+                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_DVDSPY)));
 
       SetWindowText(hwnd, PLUGINNAME);
 			
@@ -67,29 +59,48 @@ BOOL CALLBACK ConfigDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lP
   return FALSE;
 }
 
-DWORD WINAPI ConfigThread( LPVOID lpParameter )
+static DWORD WINAPI ConfigThread(LPVOID lpParam)
 {
-  BOOL fResult;
-
-  fResult = DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_CONFIG_DIALOG), NULL,
-                           ConfigDialogProc, (LPARAM)lpParameter);
-
-  hConfigDialog=0;
-  
+  BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_CONFIG_DIALOG), NULL,
+                               ConfigDialogProc, (LPARAM)lpParam);
+  g_hConfigDialog = NULL;
   return 0;
 }
 
-static
-BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
+void OpenConfigUI()
+{
+  DWORD dwThreadId;
+  if (NULL != g_hConfigDialog) {
+    SetForegroundWindow(g_hConfigDialog);
+  }
+  else {
+    g_hConfigThread = CreateThread(NULL, 0, ConfigThread, NULL, 0, &dwThreadId);
+    if (NULL == g_hConfigThread)
+      MessageBox(0, "Cannot create dialog thread.", "Error", MB_OK);
+  }
+}
+
+void CloseConfigUI()
+{
+  if (NULL != g_hConfigDialog) {
+    SendMessage(g_hConfigDialog, WM_DESTROY, 0, 0);
+    WaitForSingleObject(g_hConfigThread, 5000);
+    CloseHandle(g_hConfigThread);
+  }
+}
+
+static BOOL CALLBACK LearnDialogProc(HWND hwnd, UINT uMsg, 
+                                     WPARAM wParam, LPARAM lParam)
 {
   switch (uMsg) {
   case WM_INITDIALOG:
     {
       char trans[256];
       	
-      hLearnDialog = hwnd;
+      g_hLearnDialog = hwnd;
 
-      SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)LoadIcon(hInstance, MAKEINTRESOURCE(IDI_DVDSPY)));
+      SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
+                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_DVDSPY)));
 
       SetWindowText(hwnd, PLUGINNAME);
 			
@@ -214,14 +225,33 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
   return FALSE;
 }
 
-DWORD WINAPI LearnThread( LPVOID lpParameter )
+static DWORD WINAPI LearnThread(LPVOID lpParam)
 {
-  BOOL fResult;
-
-  fResult = DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_LEARN_DIALOG), NULL,
-                           LearnDialogProc, (LPARAM)lpParameter);
-
-  hLearnDialog=0;
-  
+  BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_LEARN_DIALOG), NULL,
+                               LearnDialogProc, (LPARAM)lpParam);
+  g_hLearnDialog = NULL;
   return 0;
+}
+
+void OpenLearnUI(PCHAR old)
+{
+  DWORD dwThreadId;
+  if (g_hLearnDialog != 0) {
+    SetForegroundWindow(g_hLearnDialog);
+    SendMessage(g_hLearnDialog, WM_SELECT_EVENT, 0, (LPARAM)old);
+  }
+  else {
+    g_hLearnThread = CreateThread(NULL, 0, LearnThread, old, 0, &dwThreadId);
+    if (NULL == g_hLearnThread)
+      MessageBox(0, "Cannot create dialog thread.", "Error", MB_OK);
+  }
+}
+
+void CloseLearnUI()
+{
+  if (NULL != g_hLearnDialog) {
+    SendMessage(g_hLearnDialog, WM_DESTROY, 0, 0);
+    WaitForSingleObject(g_hLearnThread, 5000);
+    CloseHandle(g_hLearnThread);
+  }
 }
