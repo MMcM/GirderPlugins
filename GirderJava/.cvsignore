@@ -1,9 +1,0 @@
-Release
-Debug
-jni
-*.plg
-*.opt
-*.ncb
-*.mak
-*.dep
-*.dsw

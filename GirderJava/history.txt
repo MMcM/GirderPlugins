@@ -1,6 +1,0 @@
-
-0.3     06/01/2003      MMcM    Add explicit license.
-
-0.2     01/07/2003      MMcM    First SourceForge release.
-
-0.1     08/10/2002      MMcM    Initial development release.
