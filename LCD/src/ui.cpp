@@ -27,6 +27,7 @@ DisplayAction DisplayActions[] = {
   { "Current Date/Time", valSTR, DisplayCurrentTime },
   { "Clear Display", valNONE, DisplayClear },
   { "Close Display", valNONE, DisplayClose },
+  { "Filename Register", valINT, DisplayFilenameRegister },
 };
 
 #define countof(x) (sizeof(x)/sizeof(x[0]))

@@ -10,7 +10,7 @@
 /***************************************************************************************/
 
 #define PLUGINNUM 118
-#define PLUGINNAME "LCD 1.5"
+#define PLUGINNAME "LCD 1.6"
 #define GIR_ERROR -10;
 
 #define APIEX
@@ -238,3 +238,4 @@ extern void DisplayClear(TCommand *command, PCHAR retbuf);
 extern void DisplayString(TCommand *command, PCHAR retbuf);
 extern void DisplayStringRegister(TCommand *command, PCHAR retbuf);
 extern void DisplayCurrentTime(TCommand *command, PCHAR retbuf);
+extern void DisplayFilenameRegister(TCommand *command, PCHAR retbuf);
