@@ -1,6 +1,6 @@
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.30"
+#define PLUGINVERSION "1.31"
 
 #include <girder.h>
 
