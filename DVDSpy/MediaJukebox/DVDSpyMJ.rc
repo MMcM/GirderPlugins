@@ -40,49 +40,11 @@ END
 
 3 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "\r\n"
+    "1 TYPELIB ""DVDSpyMJ.tlb""\r\n"
     "\0"
 END
 
 #endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_DVDSPY              ICON    DISCARDABLE     "dvdspy.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_CONFIG_DIALOG DIALOG DISCARDABLE  0, 0, 200, 100
-STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
-CAPTION "DVD Spy 1.26"
-FONT 8, "MS Sans Serif"
-BEGIN
-    ICON            IDI_DVDSPY,IDC_STATIC,20,20,20,20
-    LTEXT           "DVD Display Spy Girder plug-in",IDC_STATIC,60,25,98,8
-    DEFPUSHBUTTON   "OK",IDOK,42,79,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,108,79,50,14
-END
-
-IDD_LEARN_DIALOG DIALOG DISCARDABLE  0, 0, 200, 170
-STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
-CAPTION "DVD Spy 1.26"
-FONT 8, "MS Sans Serif"
-BEGIN
-    LISTBOX         IDC_EVENTS,20,20,160,110,WS_VSCROLL | WS_TABSTOP | LBS_SORT
-    DEFPUSHBUTTON   "Learn",IDC_LEARN,42,149,50,14
-    PUSHBUTTON      "Close",IDCLOSE,108,149,50,14
-END
 
 
 #ifndef _MAC
@@ -92,7 +54,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,26,0,40
+ FILEVERSION 1,26,0,2
  PRODUCTVERSION 1,26,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -106,14 +68,15 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "DVDSpy Girder plug-in\0"
-            VALUE "FileVersion", "1.26 (40)\0"
-            VALUE "InternalName", "DVDSpy\0"
-            VALUE "OriginalFilename", "DVDSpy.DLL\0"
+            VALUE "FileDescription", "DVDSpy MediaJukebox Control\0"
+            VALUE "FileVersion", "1.26 (2)\0"
+            VALUE "InternalName", "DVDSpyMJ\0"
+            VALUE "OriginalFilename", "int_DVDSpy.DLL\0"
             VALUE "ProductName", "DVD Spy\0"
             VALUE "ProductVersion", "1.26\0"
+            VALUE "OLESelfRegister", "\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -127,29 +90,53 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// DESIGNINFO
+// Bitmap
 //
 
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
-BEGIN
-    IDD_CONFIG_DIALOG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 193
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 93
-    END
+IDB_DVDSPYMJCTRL        BITMAP  DISCARDABLE     "DVDSpy.bmp"
 
-    IDD_LEARN_DIALOG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 193
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 163
-    END
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_DVDSPYMJCTRL        REGISTRY DISCARDABLE    "DVDSpyMJCtrl.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_DVDSPY              ICON    DISCARDABLE     "DVDSpy.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DVDSPYMJCTRL DIALOGEX 0, 0, 300, 100
+STYLE WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    ICON            IDI_DVDSPY,IDC_STATIC,5,5,20,20
+    LTEXT           "Refresh Interval:",IDC_STATIC,50,11,53,8
+    EDITTEXT        IDC_INTERVAL,110,8,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "Reset",IDC_RESET,160,8,50,14
 END
-#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROJNAME            "DVDSpyMJ"
+END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -161,7 +148,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
+1 TYPELIB "DVDSpyMJ.tlb"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
