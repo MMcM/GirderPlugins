@@ -1,147 +1,285 @@
-/* LCD device control */
+/* Display commands */
 
 #include "stdafx.h"
-#include "plugin.h"
+#include "display.h"
 
-int nDisplayCols = 0, nDisplayRows = 0;
-LPSTR pDisplayBuf = NULL;
-BOOL bDisplayOpen = FALSE;
-
-LPSTR pMarquee = NULL;
-int nMarqueeRow = 0, nMarqueePos = 0, nMarqueeLen = 0;
-BOOL bMarqueeSimulated = FALSE;
-int nMarqueePixelWidth = 0, nMarqueeSpeed = 0;
-UINT idMarqueeTimer = 0;
-
-class DisplayCommandState
+HKEY DisplayDevice::GetSettingsKey()
 {
-public:
-  p_command m_command;
-  PCHAR m_status;
-  int m_statuslen;
+  HKEY hkey;
+  if (ERROR_SUCCESS == RegCreateKey(HKEY_LOCAL_MACHINE,
+                                    "Software\\Girder3\\SoftPlugins\\LCD", 
+                                    &hkey))
+    return hkey;
+  else
+    return NULL;
+}
 
-  DisplayCommandState(p_command command,
-                      PCHAR status, int statuslen)
-    : m_command(command),
-      m_status(status), m_statuslen(statuslen) 
-  {
-    EnterCriticalSection(&m_command->critical_section);    
+BOOL DisplayDevice::GetSettingString(HKEY hkey, LPCSTR valkey,
+                                     LPSTR value, size_t vallen)
+{
+  BYTE buf[1024];
+  DWORD dwType, dwLen;
+  dwLen = sizeof(buf);
+  if (ERROR_SUCCESS == RegQueryValueEx(hkey, valkey, NULL, &dwType, buf, &dwLen)) {
+    switch (dwType) {
+    case REG_SZ:
+      strncpy(value, (LPCSTR)buf, vallen);
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+BOOL DisplayDevice::GetSettingInt(HKEY hkey, LPCSTR valkey, int& value)
+{
+  BYTE buf[32];
+  DWORD dwType, dwLen;
+  dwLen = sizeof(buf);
+  if (ERROR_SUCCESS == RegQueryValueEx(hkey, valkey, NULL, &dwType, buf, &dwLen)) {
+    switch (dwType) {
+    case REG_DWORD:
+      value = (int)*(DWORD*)&buf;
+      return TRUE;
+    case REG_SZ:
+      value = atoi((LPCSTR)buf);
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+BOOL DisplayDevice::GetSettingBool(HKEY hkey, LPCSTR valkey, BOOL& value)
+{
+  BYTE buf[32];
+  DWORD dwType, dwLen;
+  dwLen = sizeof(buf);
+  if (ERROR_SUCCESS == RegQueryValueEx(hkey, valkey, NULL, &dwType, buf, &dwLen)) {
+    switch (dwType) {
+    case REG_DWORD:
+      value = !!*(DWORD*)&buf;
+      return TRUE;
+    case REG_SZ:
+      value = !_stricmp((LPCSTR)buf, "True");
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+void DisplayDevice::SetSettingString(HKEY hkey, LPCSTR valkey, LPCSTR value)
+{
+  if (NULL == value)
+    RegDeleteValue(hkey, valkey);
+  else
+    RegSetValueEx(hkey, valkey, NULL, REG_SZ, (BYTE*)value, strlen(value));
+}
+
+void DisplayDevice::SetSettingInt(HKEY hkey, LPCSTR valkey, int value)
+{
+  RegSetValueEx(hkey, valkey, NULL, REG_DWORD, (BYTE*)&value, sizeof(int));
+}
+
+void DisplayDevice::SetSettingBool(HKEY hkey, LPCSTR valkey, BOOL value)
+{
+  SetSettingString(hkey, valkey, (value) ? "True" : "False");
+}
+
+DisplayDevice *DisplayDevice::Create(HWND parent, LPCSTR lib, LPCSTR dev)
+{
+  HKEY hkey = GetSettingsKey();
+  
+  LPCSTR libname = "SIMLCD";
+  LPCSTR devname = NULL;
+
+  char libbuf[MAX_PATH], devbuf[256];
+  if (NULL != lib)
+    libname = lib;
+  else if (GetSettingString(hkey, "Library", libbuf, sizeof(libbuf)))
+    libname = libbuf;
+  if (NULL != dev)
+    devname = dev;
+  else if (GetSettingString(hkey, "Device", devbuf, sizeof(devbuf)))
+    devname = devbuf;
+  
+  HMODULE hlib = LoadLibrary(libname);
+  if (NULL == hlib) {
+    DisplayWin32Error(parent, GetLastError());
+    return NULL;
   }
 
-  ~DisplayCommandState() 
-  {
-    LeaveCriticalSection(&m_command->critical_section);
+  CreateFun_t func = (CreateFun_t)GetProcAddress(hlib, "CreateDisplayDevice");
+  if (NULL == hlib) {
+    DisplayWin32Error(parent, GetLastError());
+    return NULL;
   }
   
-  void SetStatus(LPCSTR status)
-  {
-    strncpy(m_status, status, m_statuslen);
-  }
-};
+  DisplayDevice *device = (*func)(parent, devname);
+  if (NULL == hlib)
+    return NULL;
 
-BOOL DisplayOpen(DisplayCommandState& state)
-{
-  if (!bDisplayOpen) {
-    if (LCD_RESULT_NOERROR != lcdRequest()) {
-      state.SetStatus("Could not open LCD.");
-      return FALSE; 
-    }
-
-    nDisplayCols = lcdGetWidth();
-    nDisplayRows = lcdGetHeight();
-    pDisplayBuf = (LPSTR)malloc(nDisplayCols * nDisplayRows);
-    memset(pDisplayBuf, ' ', nDisplayCols * nDisplayRows);
-
-    lcdSetCursor(0);              // Hide cursor
-    lcdSetWrapMode(0, 0);         // Turn off wrap mode
-    lcdClearDisplay();            // Clear
-
-    bDisplayOpen = TRUE;
-  }
-  return bDisplayOpen;
+  device->LoadSettings(hkey);
+  RegCloseKey(hkey);
+  return device;
 }
 
-void DisplayClose()
+DisplayDevice::DisplayDevice()
 {
-  if (bDisplayOpen) {
-    if (NULL != pMarquee) {
-      if (bMarqueeSimulated) {
-        KillTimer(NULL, idMarqueeTimer);
-        idMarqueeTimer = 0;
-      }
-      else
-        lcdDisableMarquee();
-      free(pMarquee);
-      pMarquee = NULL;
-    }
+  m_open = FALSE;
+  m_cols = m_rows = 0;
+  m_buffer = NULL;
 
-    free(pDisplayBuf);
-    pDisplayBuf = NULL;
+  m_marquee = NULL;
+  m_marqueeRow = m_marqueeLen = m_marqueePos = 0;
+  m_marqueeTimer = 0;
+  m_marqueePixelWidth = 6;
+  m_marqueeSpeed = 1000;
 
-    lcdFree();
+  m_portType = portNONE;
+  memset(&m_port, 0, sizeof(m_port));
+  m_portSpeed = 0;
+  m_portRTS = m_portDTR = TRUE;
+  m_portHandle = NULL;
 
-    bDisplayOpen = FALSE;
+  m_contrast = m_brightness = 50;
+
+  m_enableInput = FALSE;
+  m_inputThread = m_inputStopEvent = m_outputEvent = NULL;
+}
+
+DisplayDevice::~DisplayDevice()
+{
+}
+
+void DisplayDevice::LoadSettings(HKEY hkey)
+{
+  if (HasSetSize()) {
+    GetSettingInt(hkey, "Cols", m_cols);
+    GetSettingInt(hkey, "Rows", m_rows);
   }
+
+  GetSettingInt(hkey, "MarqueePixelWidth", m_marqueePixelWidth);
+  GetSettingInt(hkey, "MarqueeSpeed", m_marqueeSpeed);
+
+  if (HasContrast()) {
+    GetSettingInt(hkey, "Contrast", m_contrast);
+  }
+  if (HasBrightness()) {
+    GetSettingInt(hkey, "Brightness", m_brightness);
+  }
+    
+  if (HasKeypad()) {
+    GetSettingBool(hkey, "EnableInput", m_enableInput);
+  }
+
+  switch (GetPortType()) {
+  case portSERIAL:
+    GetSettingInt(hkey, "PortSpeed", m_portSpeed);
+    GetSettingBool(hkey, "PortRTS", m_portRTS);
+    GetSettingBool(hkey, "PortDTR", m_portDTR);
+    /* falls through */
+  case DisplayDevice::portPARALLEL:
+    GetSettingString(hkey, "Port", m_port, sizeof(m_port));
+    break;
+  }
+
+  DeviceLoadSettings(hkey);
 }
 
-void DisplayClose(DisplayCommandState& state)
+void DisplayDevice::SaveSettings(HKEY hkey)
 {
-  DisplayClose();
-  state.SetStatus("Display closed.");
+  if (HasSetSize()) {
+    SetSettingInt(hkey, "Cols", m_cols);
+    SetSettingInt(hkey, "Rows", m_rows);
+  }
+
+  SetSettingInt(hkey, "MarqueePixelWidth", m_marqueePixelWidth);
+  SetSettingInt(hkey, "MarqueeSpeed", m_marqueeSpeed);
+
+  if (HasContrast()) {
+    SetSettingInt(hkey, "Contrast", m_contrast);
+  }
+  if (HasBrightness()) {
+    SetSettingInt(hkey, "Brightness", m_brightness);
+  }
+
+  if (HasKeypad()) {
+    SetSettingBool(hkey, "EnableInput", m_enableInput);
+  }
+
+  switch (GetPortType()) {
+  case portSERIAL:
+    SetSettingInt(hkey, "PortSpeed", m_portSpeed);
+    SetSettingBool(hkey, "PortRTS", m_portRTS);
+    SetSettingBool(hkey, "PortDTR", m_portDTR);
+    /* falls through */
+  case DisplayDevice::portPARALLEL:
+    SetSettingString(hkey, "Port", m_port);
+    break;
+  }
+
+  DeviceSaveSettings(hkey);
 }
 
-void DisplayClear(DisplayCommandState& state)
+BOOL DisplayDevice::Open()
 {
-  if (!bDisplayOpen && !DisplayOpen(state)) 
+  if (IsOpen())
+    return TRUE;
+
+  m_buffer = (LPSTR)malloc(m_cols * m_rows);
+  memset(m_buffer, ' ', m_cols * m_rows);
+  
+  switch (m_portType) {
+  case portSERIAL:
+    break;
+  }
+
+  if (!DeviceOpen())
+    return FALSE;
+
+  m_open = TRUE;
+  return TRUE;
+}
+
+void DisplayDevice::Close()
+{
+  if (!IsOpen())
     return;
-  if (NULL != pMarquee) {
-    if (bMarqueeSimulated) {
-      KillTimer(NULL, idMarqueeTimer);
-      idMarqueeTimer = 0;
-    }
-    else
-      lcdDisableMarquee();
-    free(pMarquee);
-    pMarquee = NULL;
+
+  m_open = FALSE;
+
+  if (NULL != m_marquee) {
+    DeviceClearMarquee();
+    free(m_marquee);
+    m_marquee = NULL;
   }
-  lcdClearDisplay();
-  memset(pDisplayBuf, ' ', nDisplayCols * nDisplayRows);
-  state.SetStatus("Display cleared.");
-}
 
-void DisplayInternal(int row, int col, LPCSTR str, int length)
-{
-  lcdSetCursorPos(col, row);
-  lcdSendString(str, length);
+  DeviceClose();
 
-#ifdef _DEBUG
-  {
-    char dbuf[1024];
-    sprintf(dbuf, "LCD: @%d,%d: '", row, col);
-    char *ep = dbuf + strlen(dbuf);
-    size_t nb = length;
-    if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
-      nb = sizeof(dbuf) - (ep - dbuf) - 3;
-    memcpy(ep, str, nb);
-    strcpy(ep + nb, "'\n");
-    OutputDebugString(dbuf);
+  switch (m_portType) {
+  case portSERIAL:
+    break;
   }
-#endif
+
+  if (NULL != m_buffer) {
+    free(m_buffer);
+    m_buffer = NULL;
+  }
 }
 
-void MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+void DisplayDevice::Clear()
 {
-  LPSTR bp = pDisplayBuf + (nMarqueeRow * nDisplayCols);
-  memmove(bp, bp+1, nDisplayCols-1);
-  bp[nDisplayCols-1] = pMarquee[nMarqueePos++];
-  DisplayInternal(nMarqueeRow, 0, bp, nDisplayCols);
-  if (nMarqueePos >= nMarqueeLen)
-    nMarqueePos = 0;
+  if (NULL != m_marquee) {
+    DeviceClearMarquee();
+    free(m_marquee);
+    m_marquee = NULL;
+  }
+  DeviceClear();
+  memset(m_buffer, ' ', m_cols * m_rows);
 }
 
-void DisplayUpdate(int row, int col, int width, LPCSTR str)
+void DisplayDevice::Display(int row, int col, int width, LPCSTR str)
 {
-  if ((row < 0) || (row >= nDisplayRows))
+  if ((row < 0) || (row >= m_rows))
     return;
 
   BOOL bDrawingMarquee = FALSE;
@@ -156,135 +294,65 @@ void DisplayUpdate(int row, int col, int width, LPCSTR str)
              ('\r' == str[length-1]))
         length--;
     }
-    if (length > nDisplayCols) {
+    if (length > m_cols) {
       // Marquee mode and text wide enough to need it.
-      if (NULL != pMarquee) {
-        if ((row == nMarqueeRow) &&
-            (length == nMarqueeLen) && 
-            !memcmp(str, pMarquee, length))
+      if (NULL != m_marquee) {
+        if ((row == m_marqueeRow) &&
+            (length == m_marqueeLen) && 
+            !memcmp(str, m_marquee, length))
           return;               // Same as presently active.
-        if (bMarqueeSimulated) {
-          KillTimer(NULL, idMarqueeTimer);
-          idMarqueeTimer = 0;
-        }
-        else
-          lcdDisableMarquee();
-        if (row != nMarqueeRow) {
+        DeviceClearMarquee();
+        if (row != m_marqueeRow) {
           // Only one row allowed to do a marquee at a time; display
           // what fits of the old row in ordinary mode.
-          memcpy(pDisplayBuf + (nMarqueeRow * nDisplayCols), pMarquee, nDisplayCols);
-          DisplayInternal(nMarqueeRow, 0, pMarquee, nDisplayCols);
+          memcpy(m_buffer + (m_marqueeRow * m_cols), m_marquee, m_cols);
+          DisplayInternal(m_marqueeRow, 0, m_marquee, m_cols);
         }
-        free(pMarquee);
-        pMarquee = NULL;
+        free(m_marquee);
+        m_marquee = NULL;
       }
-      if (nMarqueePixelWidth == 0) {
-        // For CrystalFontz, LCDriver mistakenly sends the speed value
-        // straight to the \022 command, as though the device command
-        // units were msec.  Actually, they are 1/96sec.  So, 16 is
-        // the right value for one char/sec.
-        nMarqueePixelWidth = 1; // One pixel.
-        nMarqueeSpeed = 16;     // One character / second.
-
-        HKEY hkey;
-        if (ERROR_SUCCESS == RegOpenKey(HKEY_LOCAL_MACHINE,
-                                        "Software\\Girder3\\SoftPlugins\\LCD", 
-                                        &hkey)) {
-          BYTE buf[32];
-          DWORD dwType, dwLen;
-          dwLen = sizeof(buf);
-          if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MarqueeSimulated", NULL,
-                                               &dwType, buf, &dwLen)) {
-            switch (dwType) {
-            case REG_DWORD:
-              bMarqueeSimulated = !!*(DWORD*)&buf;
-              break;
-            case REG_SZ:
-              bMarqueeSimulated = !_stricmp((LPCSTR)buf, "True");
-              break;
-            }
-          }
-          if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MarqueePixelWidth", NULL,
-                                               &dwType, buf, &dwLen)) {
-            switch (dwType) {
-            case REG_DWORD:
-              nMarqueePixelWidth = (int)*(DWORD*)&buf;
-              break;
-            case REG_SZ:
-              nMarqueePixelWidth = atoi((LPCSTR)buf);
-              break;
-            }
-          }
-          if (ERROR_SUCCESS == RegQueryValueEx(hkey, "MarqueeSpeed", NULL,
-                                               &dwType, buf, &dwLen)) {
-            switch (dwType) {
-            case REG_DWORD:
-              nMarqueeSpeed = (int)*(DWORD*)&buf;
-              break;
-            case REG_SZ:
-              nMarqueeSpeed = atoi((LPCSTR)buf);
-              break;
-            }
-          }
-        }
-      }
-      if (bMarqueeSimulated || 
-          (LCD_RESULT_NOERROR == lcdEnableMarquee(str, length, row, 
-                                                  nMarqueePixelWidth, nMarqueeSpeed))) {
-        pMarquee = (LPSTR)malloc(length + 1);
-        memcpy(pMarquee, str, length);
-        pMarquee[length] = '\0';
-        memset(pDisplayBuf + (row * nDisplayCols), 0xFE, nDisplayCols);
+      m_marquee = (LPSTR)malloc(length + 1);
+      memcpy(m_marquee, str, length);
+      m_marquee[length] = '\0';
+      m_marqueeLen = length;
+      m_marqueeRow = row;
+      DeviceSetMarquee();
 #ifdef _DEBUG
-        {
-          char dbuf[1024];
-          sprintf(dbuf, "LCD: @%d<<<: '", row);
-          char *ep = dbuf + strlen(dbuf);
-          size_t nb = length;
-          if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
-            nb = sizeof(dbuf) - (ep - dbuf) - 3;
-          memcpy(ep, str, nb);
-          strcpy(ep + nb, "'\n");
-          OutputDebugString(dbuf);
-        }
-#endif
-        nMarqueeRow = row;
-        if (!bMarqueeSimulated)
-          return;
-        nMarqueePos = nDisplayCols;
-        nMarqueeLen = length;
-        idMarqueeTimer = SetTimer(NULL, 0, 
-                                  // Keep time units consistent for now.
-                                  (nMarqueeSpeed * 125) / (nMarqueePixelWidth * 2), 
-                                  MarqueeTimer);
-        bDrawingMarquee = (0 != idMarqueeTimer);
+      {
+        char dbuf[1024];
+        sprintf(dbuf, "LCD: @%d<<<: '", row);
+        char *ep = dbuf + strlen(dbuf);
+        size_t nb = length;
+        if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
+          nb = sizeof(dbuf) - (ep - dbuf) - 3;
+        memcpy(ep, str, nb);
+        strcpy(ep + nb, "'\n");
+        OutputDebugString(dbuf);
       }
+#endif
+      return;
     }
-    // Fits as normal rest of line (or simulated or error enabling marquee).
+    // Fits as normal rest of line.
     col = 0;
   }
-  else if (col >= nDisplayCols)
+  else if (col >= m_cols)
     return;
 
-  if (!bDrawingMarquee && (NULL != pMarquee) && (row == nMarqueeRow)) {
-    if (bMarqueeSimulated) {
-      KillTimer(NULL, idMarqueeTimer);
-      idMarqueeTimer = 0;
-    }
-    else
-      lcdDisableMarquee();
+  if ((NULL != m_marquee) && (row == m_marqueeRow)) {
+    // Displaying over a previous marquee row.
+    DeviceClearMarquee();
     // Display what fits of scrolling in ordinary mode.
-    memcpy(pDisplayBuf + (row * nDisplayCols), pMarquee, nDisplayCols);
-    DisplayInternal(row, 0, pMarquee, nDisplayCols);
-    free(pMarquee);
-    pMarquee = NULL;
+    memcpy(m_buffer + (row * m_cols), m_marquee, m_cols);
+    DisplayInternal(row, 0, m_marquee, m_cols);
+    free(m_marquee);
+    m_marquee = NULL;
   }
 
-  int ncols = nDisplayCols - col;
+  int ncols = m_cols - col;
   if ((width <= 0) || (width > ncols))
     width = ncols;
   LPSTR start = NULL, end;
-  LPSTR bp = pDisplayBuf + (row * nDisplayCols) + col;
+  LPSTR bp = m_buffer + (row * m_cols) + col;
   while (width-- > 0) {
     char ch = *str;
     if (('\0' == ch) || ('\n' == ch) || ('\r' == ch))
@@ -308,93 +376,300 @@ void DisplayUpdate(int row, int col, int width, LPCSTR str)
   DisplayInternal(row, col, start, (end - start));
 }
 
-void DisplayCommon(DisplayCommandState& state, LPCSTR str)
+void DisplayDevice::DisplayInternal(int row, int col, LPCSTR str, int length)
 {
-  if (!DisplayOpen(state)) 
-    return;
-  DisplayUpdate(state.m_command->ivalue1, state.m_command->ivalue2, 
-                state.m_command->ivalue3, str);
-  state.SetStatus(str);
+  DeviceDisplay(row, col, str, length);
+
+#ifdef _DEBUG
+  {
+    char dbuf[1024];
+    sprintf(dbuf, "LCD: @%d,%d: '", row, col);
+    char *ep = dbuf + strlen(dbuf);
+    size_t nb = length;
+    if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
+      nb = sizeof(dbuf) - (ep - dbuf) - 3;
+    memcpy(ep, str, nb);
+    strcpy(ep + nb, "'\n");
+    OutputDebugString(dbuf);
+  }
+#endif
 }
 
-void DisplayString(DisplayCommandState& state)
+void DisplayDevice::SetSize(int width, int height)
 {
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
-  DisplayCommon(state, buf);
+  Close();
+  m_cols = width;
+  m_rows = height;
 }
 
-void DisplayVariable(DisplayCommandState& state)
+static DisplayDevice *g_marqueeDevice;
+
+static void WINAPI MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
-  char buf[1024];
-  SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
-  DisplayCommon(state, buf);
+  g_marqueeDevice->StepSimulatedMarquee();
 }
 
-void DisplayFilename(DisplayCommandState& state)
+void DisplayDevice::SetSimulatedMarquee()
 {
-  char buf[1024];
-  SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
-  PCHAR sp = strrchr(buf, '\\');
-  if (NULL != sp)
-    sp++;
-  else if (NULL != strstr(buf, "://")) // A URL
-    sp = strrchr(buf, '/') + 1;
-  else
-    sp = buf;
-  PCHAR ep = strrchr(sp, '.');
-  if (NULL != ep)
-    *ep = '\0';
-  DisplayCommon(state, sp);
+  memcpy(m_buffer + (m_marqueeRow * m_cols), m_marquee, m_cols);
+  DisplayInternal(m_marqueeRow, 0, m_marquee, m_cols);
+  m_marqueePos = m_cols;
+  g_marqueeDevice = this;
+  m_marqueeTimer = SetTimer(NULL, 0, 
+                            // From msec / pixel to ms / char assuming 6 pixels per char.
+                            (m_marqueeSpeed * 6) / m_marqueePixelWidth,
+                            MarqueeTimer);
 }
 
-void DisplayCurrentTime(DisplayCommandState& state)
+void DisplayDevice::ClearSimulatedMarquee()
 {
-  const char *fmt = state.m_command->svalue1;
-  if ((NULL == fmt) || ('\0' == *fmt))
-    fmt = "%H:%M:%S";
-
-  time_t ltime;
-  struct tm *now;
-  char buf[128];
-  
-  time(&ltime);
-  now = localtime(&ltime);
-  strftime(buf, sizeof(buf), fmt, now);
-  DisplayCommon(state, buf);
+  KillTimer(NULL, m_marqueeTimer);
+  m_marqueeTimer = 0;
+  g_marqueeDevice = NULL;
 }
 
-void DisplayScreen(DisplayCommandState& state)
+void DisplayDevice::StepSimulatedMarquee()
 {
-  if (!DisplayOpen(state)) 
-    return;
+  LPSTR bp = m_buffer + (m_marqueeRow * m_cols);
+  memmove(bp, bp+1, m_cols-1);
+  bp[m_cols-1] = m_marquee[m_marqueePos++];
+  DisplayInternal(m_marqueeRow, 0, bp, m_cols);
+  if (m_marqueePos >= m_marqueeLen)
+    m_marqueePos = 0;
+}
 
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
-  for (int pass = 0; pass <= 1; pass++) { // Do marquee after others.
-    PCHAR pval = buf;
-    for (int i = 0; i < nDisplayRows; i++) {
-      if (!(state.m_command->ivalue1 & (1 << i))) { // Enabled
-        if (pass == !!(state.m_command->ivalue2 & (1 << i))) { // Marquee
-          DisplayUpdate(i, (pass) ? -1 : 0, -1, pval);
-        }
+void DisplayDevice::Test()
+{
+  Display(0, 0, -1, "LCD 2.0");
+  Display(1, -1, -1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  for (int i = 2; i < m_rows; i++) {
+    Display(i, i, -1, "***");
+  }
+}
+
+BOOL DisplayDevice::OpenSerial(BOOL asynch)
+{
+  CloseSerial();
+
+  if (asynch)
+    m_outputEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+  m_portHandle = CreateFile(m_port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+                            OPEN_EXISTING, (asynch) ? FILE_FLAG_OVERLAPPED : 0, NULL);
+  if (NULL == m_portHandle) {
+    DisplayWin32Error(NULL, GetLastError());
+    return FALSE;
+  }
+
+  DCB dcb;
+  if (!GetCommState(m_portHandle, &dcb)) {
+    DisplayWin32Error(NULL, GetLastError());
+    return FALSE;
+  }
+  dcb.BaudRate = m_portSpeed;
+  dcb.ByteSize = 8;
+  dcb.Parity = NOPARITY;
+  dcb.StopBits = ONESTOPBIT;
+  dcb.fRtsControl = (m_portRTS) ? RTS_CONTROL_ENABLE : RTS_CONTROL_DISABLE;
+  dcb.fDtrControl = (m_portDTR) ? DTR_CONTROL_ENABLE : DTR_CONTROL_DISABLE;
+  if (!SetCommState(m_portHandle, &dcb)) {
+    DisplayWin32Error(NULL, GetLastError());
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+BOOL DisplayDevice::WriteSerial(LPBYTE data, size_t len)
+{
+  DWORD nb;
+  if (NULL == m_outputEvent)
+    return WriteFile(m_portHandle, data, len, &nb, NULL);
+
+  OVERLAPPED overlapped;
+  memset(&overlapped, 0, sizeof(overlapped));
+  overlapped.hEvent = m_outputEvent;
+  if (WriteFile(m_portHandle, data, len, &nb, &overlapped))
+    return TRUE;
+  if (ERROR_IO_PENDING != GetLastError())
+    return FALSE;
+  return GetOverlappedResult(m_portHandle, &overlapped, &nb, TRUE);
+}
+
+void DisplayDevice::CloseSerial()
+{
+  if (NULL != m_portHandle) {
+    CloseHandle(m_portHandle);
+    m_portHandle = NULL;
+  }
+  if (NULL != m_outputEvent) {
+    CloseHandle(m_outputEvent);
+    m_outputEvent = NULL;
+  }
+}
+
+static DWORD WINAPI SerialInputThread(LPVOID lpParam)
+{
+  DisplayDevice *device = (DisplayDevice *)lpParam;
+
+  OVERLAPPED overlapped;
+  memset(&overlapped, 0, sizeof(overlapped));
+  overlapped.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+  while (TRUE) {
+    HANDLE handles[2];
+    int nh = 0;
+    handles[nh++] = device->m_inputStopEvent;
+
+    BYTE buf[1];
+    DWORD nb;
+    HANDLE ph = device->m_portHandle;
+    if (NULL != ph) {
+      if (ReadFile(ph, buf, sizeof(buf), &nb, &overlapped)) {
+        if (nb > 0)
+          device->DeviceInput(buf[0]);
+        continue;
       }
-      PCHAR next = strchr(pval, '\n');
-      if (NULL != next)
-        pval = next + 1;
-      else
-        pval += strlen(pval);
+      if (ERROR_IO_PENDING == GetLastError())
+        handles[nh++] = overlapped.hEvent;
+    }
+    if (WAIT_OBJECT_0 == WaitForMultipleObjects(nh, handles, FALSE, INFINITE)) {
+      if (NULL != ph)
+        CancelIo(ph);
+      break;
+    }
+    if (GetOverlappedResult(ph, &overlapped, &nb, TRUE)) {
+      if (nb > 0)
+        device->DeviceInput(buf[0]);
     }
   }
-  state.SetStatus("LCD screen");
+
+  CloseHandle(overlapped.hEvent);
+  return 0;
 }
 
-void DisplayCommand(p_command command,
-                    PCHAR status, int statuslen)
+BOOL DisplayDevice::EnableSerialInput()
 {
-  DisplayCommandState state(command,
-                            status, statuslen);
-  DisplayAction *action = FindDisplayAction(command);
-  if (NULL != action)
-    (*action->function)(state);
+  m_inputStopEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+  DWORD dwThreadId;
+  m_inputThread = CreateThread(NULL, 0, SerialInputThread, this, 0, &dwThreadId);
+  if (NULL == m_inputThread) {
+    DisplayWin32Error(NULL, GetLastError());
+    return FALSE;
+  }
+  return TRUE;
+}
+
+void DisplayDevice::DisableSerialInput()
+{
+  if (NULL == m_inputThread)
+    return;
+
+  SetEvent(m_inputStopEvent);
+  CloseHandle(m_inputStopEvent);
+  m_inputStopEvent = NULL;
+
+  WaitForSingleObject(m_inputThread, INFINITE);
+  CloseHandle(m_inputThread);
+  m_inputThread = NULL;
+}
+
+BOOL DisplayDevice::DeviceOpen()
+{
+  return TRUE;
+}
+
+void DisplayDevice::DeviceClose()
+{
+}
+
+void DisplayDevice::DeviceClear()
+{
+}
+
+void DisplayDevice::DeviceSetMarquee()
+{
+  SetSimulatedMarquee();
+}
+
+void DisplayDevice::DeviceClearMarquee()
+{
+  ClearSimulatedMarquee();
+}
+
+BOOL DisplayDevice::DeviceHasSetSize()
+{
+  return FALSE;
+}
+
+BOOL DisplayDevice::DeviceHasContrast()
+{
+  return FALSE;
+}
+
+BOOL DisplayDevice::DeviceHasBrightness()
+{
+  return FALSE;
+}
+
+BOOL DisplayDevice::DeviceHasBacklight()
+{
+  return FALSE;
+}
+
+BOOL DisplayDevice::DeviceHasKeypad()
+{
+  return FALSE;
+}
+
+BOOL DisplayDevice::DeviceEnableInput()
+{
+  return FALSE;
+}
+
+void DisplayDevice::DeviceDisableInput()
+{
+}
+
+void DisplayDevice::DeviceInput(BYTE b)
+{
+  char buf[8];
+  sprintf(buf, "%02X", b);
+  DisplaySendEvent(buf);
+}
+
+int DisplayDevice::DeviceGetGPOs()
+{
+  return 0;
+}
+
+void DisplayDevice::DeviceSetGPO(int gpo, BOOL on)
+{
+}
+
+void DisplayDevice::DeviceLoadSettings(HKEY hkey)
+{
+}
+
+void DisplayDevice::DeviceSaveSettings(HKEY hkey)
+{
+}
+
+LCD_API void DisplayWin32Error(HWND parent, DWORD dwErr)
+{
+  HLOCAL pMsgBuf = NULL;
+  char buf[128];
+  LPSTR pMsg;
+  if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		    NULL, dwErr, 0, (LPTSTR)&pMsgBuf, 0, NULL)) {
+    pMsg = (LPSTR)pMsgBuf;
+  }
+  else {
+    sprintf(buf, "Err: %lX", dwErr);
+    pMsg = buf;
+  }
+  MessageBox(parent, pMsg, "Error", MB_OK | MB_ICONERROR);
+  if (NULL != pMsgBuf)
+    LocalFree(pMsgBuf);
 }
