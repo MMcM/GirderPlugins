@@ -1,12 +1,14 @@
 LIBRARY RegSetValue
 EXPORTS 
-   close_dll
-   command_execute
-   command_changed
-   command_gui
-   command_controls
-   command_clear
-   name_dll
-   setsupportex
-   init_dllex
+	gir_close
+	gir_open
 
+	gir_version
+	gir_name
+	gir_description
+	gir_devicenum
+	gir_requested_api
+	gir_command_gui
+	gir_command_changed
+
+	gir_event
