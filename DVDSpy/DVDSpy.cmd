@@ -17,3 +17,5 @@ copy WMPSpy.wmz "..\Windows Media Player\Skins"
 copy gen_DVDSpy.dll ..\Winamp\Plugins
 
 regsvr32 int_DVDSpy.dll 
+
+copy RealSpy.dll "..\Common Files\Real\Plugins"

@@ -1,4 +1,8 @@
 
+1.50    12/15/2002      MMcM    Add support for RealOne player.
+
+1.49    12/13/2002      MMcM    ATI MMC enhancements.
+
 1.48    12/08/2002      MMcM    Make better use of LUA in samples.
 
 1.47    11/10/2002      MMcM    Background UI plugin for WMP 9 in place of skin.
