@@ -1,4 +1,8 @@
 
+1.40    10/12/2002      Flo     Add support for Digital CD Player.
+
+1.39    10/11/2002      MMcM    Fill out ShowShifter in DVD2LCD scripts.
+
 1.38    10/08/2002      MMcM    Add DVD region to Disc.Insert event.
 
 1.37    09/04/2002      MMcM    Add more ShowShifter events.
