@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 2.0. &nbsp;MMcM 09/02
+Version 2.1. &nbsp;MMcM 09/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -39,7 +39,12 @@ These files must be in the Windows path; it is simplest to put them in
 the same folder where Girder is installed.  Only the file(s) for the
 device(s) being used is needed.  However, there is no harm in
 installing them all.  These are separate files because each depends on
-other device driver DLLs that may not be installed at all.
+other device driver DLLs that may not be installed at all.<p>
+</li>
+
+<li><kbd>AllChars.gml</kbd><br/>
+A Girder script for displaying all possible characters sixteen at a
+time.  Useful for working out a custom character map.<p>
 </li>
 
 </ul>
@@ -123,6 +128,7 @@ Several special actions that are also possible:
 <li>The contents of a string variable, interpreted as a filename.  Any
 directory and file type portion of the name are stripped before
 display.
+<li>Displaying a single character (such as a control character), given its integer code.
 </ul>
 <p>
 
@@ -151,6 +157,30 @@ marquee is simulated, with a lot more flickering, by redrawing the
 entire row periodically.  Crystalfontz displays can scroll by less
 than a single character width; the simulated display always draws
 whole characters.<p>
+</li>
+
+<li>Custom characters<br>
+
+Most displays allow up to eight application defined characters.  This
+plug-in takes care of managing the allocation of custom character
+indices based on what is being displayed.  The command specifies the
+position on the display and the bits that make up the character.<p>
+
+The character definition consists of eight numbers, one for each row.
+The five least significant bits of each number are the five dots of
+the row, with the most significant bit on the left.  For conventience,
+<code>0b</code> is allowed as a number prefix for binary numbers.  So,
+for example,
+<pre>
+    0b11110
+    0b10001
+    0b10001
+    0b11110
+    0b10100
+    0b10010
+    0b10001
+</pre>
+is shaped like a capital R.<p>
 </li>
 
 <li>Keypad input<br>
@@ -198,6 +228,16 @@ The number of columns.
 <tr><td><kbd>Rows</kbd></td>
 <td>
 The number of rows.
+</td>
+
+<tr><td><kbd>CharacterMap</kbd></td>
+<td>
+The device code to use for each character.  Many displays put
+characters like <code>¥</code> where <code>\</code> and <code>~</code>
+should be.  Most displays have accented European characters at non-standard
+indices.  Some displays have variants of <code>g</code>, <code>j</code>, <code>p</code>,
+<code>q</code>, and <code>y</code> with proper descenders at different codes; since
+the underline cursor is not used, these can yield a superior display.
 </td>
 
 <tr><td><kbd>MarqueePixelWidth</kbd></td>
@@ -256,12 +296,6 @@ Whether DTR is turned on for the serial line.  The default is on.
 <td>
 For LCDriver, whether a marquee is simulated in software.  Necessary
 when using LCDriver with a display other than Crystalfontz.
-</td>
-
-<tr><td><kbd>CrystalfontzFirmware</kbd></td>
-<td>
-The version number of the device firmware.  Some character drawing
-capabilities changed between version 1.3 and version 2.0.
 </td>
 
 <tr><td><kbd>ParallelStrobeDelay</kbd></td>
