@@ -14,13 +14,14 @@
 #define IDC_ROWL                        1007
 #define IDC_ROW                         1008
 #define IDC_ROW_SPIN                    1009
-#define IDC_COLL                        1010
-#define IDC_COL                         1011
-#define IDC_COL_SPIN                    1012
-#define IDC_USE_REST                    1013
-#define IDC_USE_WIDTH                   1014
-#define IDC_WIDTH                       1015
-#define IDC_WIDTH_SPIN                  1016
+#define IDC_USE_WRAP                    1010
+#define IDC_USE_COL                     1011
+#define IDC_COL                         1012
+#define IDC_COL_SPIN                    1013
+#define IDC_USE_REST                    1014
+#define IDC_USE_WIDTH                   1015
+#define IDC_WIDTH                       1016
+#define IDC_WIDTH_SPIN                  1017
 
 // Next default values for new objects
 // 
