@@ -7,7 +7,7 @@ $Header$
 
 DECLARE_COMPONENT_VERSION(
   "Foobar2000 / Girder DVDSpy component",
-  "0.1",
+  "1.63",
   "Spy on Foobar state/track info to pass to Girder DVDSpy")
 
 // Title Format string for Title event
