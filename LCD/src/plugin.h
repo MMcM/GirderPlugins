@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "2.8"
+#define PLUGINVERSION "2.10"
 
 extern HINSTANCE g_hInstance;
 extern s_functions_2 SF;
