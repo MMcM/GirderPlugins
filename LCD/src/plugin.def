@@ -9,9 +9,9 @@ EXPORTS
         gir_open
         gir_close
 
-;       gir_config
-;       gir_start
-;       gir_stop
+        gir_config
+        gir_start
+        gir_stop
 ;       gir_compare
 ;       gir_learn_event
 

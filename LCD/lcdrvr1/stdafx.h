@@ -3,8 +3,8 @@
 //      are changed infrequently
 //
 
-#if !defined(AFX_STDAFX_H__C628136E_3849_4D68_B605_EBA9DE32DF55__INCLUDED_)
-#define AFX_STDAFX_H__C628136E_3849_4D68_B605_EBA9DE32DF55__INCLUDED_
+#if !defined(AFX_STDAFX_H__7420BCEC_E258_49CF_838D_376EADE52302__INCLUDED_)
+#define AFX_STDAFX_H__7420BCEC_E258_49CF_838D_376EADE52302__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -12,15 +12,12 @@
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
-#include <commctrl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <time.h>
 
-#include <girder.h>
+#include <display.h>
+
+#include <lcdriver.h>
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
-#endif // !defined(AFX_STDAFX_H__C628136E_3849_4D68_B605_EBA9DE32DF55__INCLUDED_)
+#endif // !defined(AFX_STDAFX_H__7420BCEC_E258_49CF_838D_376EADE52302__INCLUDED_)

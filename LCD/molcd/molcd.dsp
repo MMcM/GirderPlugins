@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="LCD" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="molcd" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=LCD - Win32 Debug
+CFG=molcd - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "LCD.mak".
+!MESSAGE NMAKE /f "molcd.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "LCD.mak" CFG="LCD - Win32 Debug"
+!MESSAGE NMAKE /f "molcd.mak" CFG="molcd - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "LCD - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "LCD - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "molcd - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "molcd - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "LCD - Win32 Release"
+!IF  "$(CFG)" == "molcd - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -42,20 +42,20 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LCD_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "..\..\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LCD_EXPORTS" /Yu"stdafx.h" /FD /c
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MOLCD_EXPORTS" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /I "..\src" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MOLCD_EXPORTS" /Yu"stdafx.h" /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x413 /d "NDEBUG"
-# ADD RSC /l 0x413 /d "NDEBUG"
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib /nologo /dll /machine:I386 /out:"../LCD.dll"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib lcd.lib /nologo /dll /machine:I386 /out:"../../../molcd.dll" /libpath:"..\Release"
 
-!ELSEIF  "$(CFG)" == "LCD - Win32 Debug"
+!ELSEIF  "$(CFG)" == "molcd - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -68,53 +68,40 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LCD_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "LCD_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MOLCD_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\src" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "MOLCD_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
-# ADD BASE RSC /l 0x413 /d "_DEBUG"
-# ADD RSC /l 0x413 /d "_DEBUG"
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib /nologo /dll /debug /machine:I386 /out:"../LCD.dll" /pdbtype:sept
-# SUBTRACT LINK32 /map
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib lcd.lib /nologo /dll /debug /machine:I386 /out:"../../../molcd.dll" /pdbtype:sept /libpath:"..\Debug"
 
 !ENDIF 
 
 # Begin Target
 
-# Name "LCD - Win32 Release"
-# Name "LCD - Win32 Debug"
+# Name "molcd - Win32 Release"
+# Name "molcd - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\src\commands.cpp
+SOURCE=.\molcd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\display.cpp
+SOURCE=.\molcd.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\plugin.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\plugin.def
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\stdafx.cpp
+SOURCE=.\stdafx.cpp
 # ADD CPP /Yc"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\ui.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -122,31 +109,11 @@ SOURCE=.\src\ui.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\src\display.h
+SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\src\plugin.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\resource.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\stdafx.h
-# End Source File
-# End Group
-# Begin Group "Resource Files"
-
-# PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-# Begin Source File
-
-SOURCE=.\src\plugin.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\ui.rc
+SOURCE=.\stdafx.h
 # End Source File
 # End Group
 # End Target

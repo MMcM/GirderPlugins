@@ -3,14 +3,70 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "LCD"=.\LCD.dsp - Package Owner=<4>
+Project: "LCD"=".\LCD.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
-    begin source code control
-    LCD
-    .
-    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "cfontzlcd"=".\cfontzlcd\cfontzlcd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "lcdrvr1"=".\lcdrvr1\lcdrvr1.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "molcd"=".\molcd\molcd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "paralcd"=".\paralcd\paralcd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "simlcd"=".\simlcd\simlcd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
 }}}
 
 Package=<4>
