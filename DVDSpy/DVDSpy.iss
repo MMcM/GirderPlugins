@@ -82,6 +82,7 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "False"
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "True"; Components: windvd powerdvd adtv zp tt cineplayer ati ssf bsplay powerdivx radlight eugenes dvdstation
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "DVDTitles"; ValueType: string; ValueData: "{app}\DVDTitles.csv"; Components: dvdtitles; Flags: createvalueifdoesntexist
+; Events: wmp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.PlayState"; ValueType: string; Components: wmp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Status"; ValueType: string; Components: wmp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Duration"; ValueType: string; Components: wmp
@@ -89,6 +90,7 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WM
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.URL"; ValueType: string; Components: wmp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Title"; ValueType: string; Components: wmp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Close"; ValueType: string; Components: wmp
+; Events: real
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Duration"; ValueType: string; Components: real
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Elapsed"; ValueType: string; Components: real
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.URL"; ValueType: string; Components: real
@@ -98,6 +100,7 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Re
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Buffering"; ValueType: string; Components: real
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Contacting"; ValueType: string; Components: real
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Close"; ValueType: string; Components: real
+; Events: winamp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Elapsed"; ValueType: string; Components: winamp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.File"; ValueType: string; Components: winamp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Length"; ValueData:"of playlist"; ValueType: string; Components: winamp
@@ -106,6 +109,7 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Wi
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Title"; ValueType: string; Components: winamp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Duration"; ValueType: string; Components: winamp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Close"; ValueType: string; Components: winamp
+; Events: zp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.State"; ValueType: string; Components: zp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Time"; ValueType: string; Components: zp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.OSD"; ValueType: string; Components: zp
@@ -120,6 +124,7 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Zo
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Resolution"; ValueType: string; Components: zp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.FrameRate"; ValueType: string; Components: zp
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.AspectRatio"; ValueType: string; Components: zp
+; Events: mj
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playlist.Position"; ValueType: string; Components: mj
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playlist.Length"; ValueType: string; Components: mj
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Filename"; ValueType: string; Components: mj
@@ -133,11 +138,13 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Me
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.State"; ValueType: string; Components: mj
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.Elapsed"; ValueType: string; Components: mj
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.Duration"; ValueType: string; Components: mj
+; Events: eugenes
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Name"; ValueType: string; Components: eugenes
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Elapsed"; ValueType: string; Components: eugenes
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Duration"; ValueType: string; Components: eugenes
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.TitleNo"; ValueType: string; Components: eugenes
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Chapter"; ValueType: string; Components: eugenes
+; Events: adtv
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Volume"; ValueType: string; Components: adtv
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Mute"; ValueType: string; Components: adtv
 Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Mode"; ValueType: string; Components: adtv
