@@ -1,4 +1,8 @@
 
+1.52    01/01/2003      massi   Add support for DVD Station.
+
+1.51    12/18/2002      eLupus  Add support for Eugene's DVD player.
+
 1.50    12/15/2002      MMcM    Add support for RealOne player.
 
 1.49    12/13/2002      MMcM    ATI MMC enhancements.
