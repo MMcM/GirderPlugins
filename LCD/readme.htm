@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 1.13. &nbsp;MMcM 08/02
+Version 1.14. &nbsp;MMcM 08/02
 
 <h3>Prerequisites</h3>
 Before you can use this plug-in, you must install and configure 
@@ -26,6 +26,11 @@ characters.  The text can come from several places:
 <li>The contents of a string variable, as set by some other plug-in, or the event payload.
 <li>The current date and time, formatted using a <code>strftime</code> control string.
 </ul>
+<p>
+A number of lines of the display can be filled at once.  This does not
+give as fine control over placement or width.  It is most suitable when a number
+of variables are being expanded in the text.
+<p>
 Several special actions that are also possible:
 <ul>
 <li>Clearing the display.
