@@ -91,7 +91,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,12,0,25
+ FILEVERSION 1,13,0,27
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -107,7 +107,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "DVD Spy Girder plug-in\0"
-            VALUE "FileVersion", "1.12 (25)\0"
+            VALUE "FileVersion", "1.13 (27)\0"
             VALUE "InternalName", "DVDSpy\0"
             VALUE "OriginalFilename", "DVDSpy.DLL\0"
         END
