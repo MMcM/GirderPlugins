@@ -494,6 +494,8 @@ void DisplayDevice::Close()
   if (!IsOpen())
     return;
 
+  DisableInput();
+
   m_open = FALSE;
 
   if (NULL != m_marquee) {

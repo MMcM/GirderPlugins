@@ -49,8 +49,9 @@ void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)
 }
 
 /* Local variables */
-static DisplayDeviceList g_devices; // Active device(s).
 static CRITICAL_SECTION g_CS;   // Interlock devices and their settings.
+static DisplayDeviceList g_devices; // Active device(s).
+static BOOL g_inputEnabled = FALSE; // Enable input whenever device is open.
 
 class DisplayCriticalSection
 {
@@ -124,21 +125,24 @@ void DisplayRestore(PVOID state)
 BOOL DisplayEnableInput()
 {
   DisplayCriticalSection cs;
-  g_devices.LoadFromRegistry();
+  // Enable already open devices.
   for (DisplayDevice *device = g_devices.GetFirst(); 
        NULL != device; 
        device = device->GetNext()) {
+    if (!device->IsOpen()) continue;
     if (!device->EnableInput()) {
       DisplayDisableInput();
       return FALSE;
     }
   }
+  g_inputEnabled = TRUE;
   return TRUE;
 }
 
 void DisplayDisableInput()
 {
   DisplayCriticalSection cs;
+  g_inputEnabled = FALSE;
   for (DisplayDevice *device = g_devices.GetFirst(); 
        NULL != device; 
        device = device->GetNext()) {
@@ -175,30 +179,40 @@ void DisplayClose(LPCSTR devname)
     device->Close();
 }
 
+static DisplayDevice *DisplayOpen(LPCSTR devname)
+{
+  DisplayDevice *device = (NULL == devname) ? 
+    g_devices.GetDefault() : g_devices.Get(devname);
+  if (NULL == device)
+    return NULL;
+  if (!device->Open())
+    return NULL;
+  if (g_inputEnabled)
+    device->EnableInput();
+  return device;
+}
+
 void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname)
 {
   DisplayCriticalSection cs;
-  DisplayDevice *device = (NULL == devname) ? 
-    g_devices.GetDefault() : g_devices.Get(devname);
-  if ((NULL != device) && device->Open())
+  DisplayDevice *device = DisplayOpen(devname);
+  if (NULL != device)
     device->Display(row, col, width, str);
 }
 
 void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname)
 {
   DisplayCriticalSection cs;
-  DisplayDevice *device = (NULL == devname) ? 
-    g_devices.GetDefault() : g_devices.Get(devname);
-  if ((NULL != device) && device->Open())
+  DisplayDevice *device = DisplayOpen(devname);
+  if (NULL != device)
     device->DisplayCustomCharacter(row, col, CustomCharacter(bits));
 }
 
 void DisplayGPO(int gpo, BOOL on, LPCSTR devname)
 {
   DisplayCriticalSection cs;
-  DisplayDevice *device = (NULL == devname) ? 
-    g_devices.GetDefault() : g_devices.Get(devname);
-  if ((NULL != device) && device->Open())
+  DisplayDevice *device = DisplayOpen(devname);
+  if (NULL != device)
     device->SetGPO(gpo, on);
 }
 
@@ -208,9 +222,8 @@ void DisplayFanPower(int fan, double power, LPCSTR devname)
     power = power / 100.0;      // Must have meant percentage.
 
   DisplayCriticalSection cs;
-  DisplayDevice *device = (NULL == devname) ? 
-    g_devices.GetDefault() : g_devices.Get(devname);
-  if ((NULL != device) && device->Open())
+  DisplayDevice *device = DisplayOpen(devname);
+  if (NULL != device)
     device->SetFanPower(fan, power);
 }
 
@@ -255,6 +268,8 @@ BOOL DisplayOpen(DisplayCommandState& state)
     state.SetStatus("Could not open device.");
     return FALSE;
   }
+  if (g_inputEnabled)
+    state.m_device->EnableInput();
   return TRUE;
 }
 
