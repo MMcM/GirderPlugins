@@ -1,0 +1,14 @@
+
+1.13    08/11/2002      MMcM    Clean up code.
+
+1.12    06/18/2002      MMcM    Add marquee mode.
+
+1.10    05/19/2002      MMcM    Try to get rid of cursor on Matrix Orbital displays.
+
+1.9     05/18/2002      MMcM    Clean up 3.2 conversion.
+
+1.8     03/20/2002      MMcM    Girder 3.1 conversion.
+
+1.7     03/14/2002      MMcM    Use payload strings rather than text registers.
+
+1.6     03/02/2002      MMcM    Add file name display, stripping directory and type.
