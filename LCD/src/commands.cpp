@@ -11,22 +11,29 @@ LCD_API HWND LCD_DECL DisplayWindowParent()
   return SF.parent_hwnd;
 }
 
-LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, HWND parent)
+LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, LPCSTR msg, ...)
 {
+  char msgbuf[2048];
+  va_list args;
+  va_start(args, msg);
+
   HLOCAL pMsgBuf = NULL;
-  char buf[128];
+  char xbuf[16];
   LPSTR pMsg;
   if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 		    NULL, dwErr, 0, (LPTSTR)&pMsgBuf, 0, NULL)) {
     pMsg = (LPSTR)pMsgBuf;
   }
   else {
-    sprintf(buf, "Err: %lX", dwErr);
-    pMsg = buf;
+    sprintf(xbuf, "%lX", dwErr);
+    pMsg = xbuf;
   }
-  MessageBox(parent, pMsg, "LCD Error", MB_OK | MB_ICONERROR);
+  _snprintf(msgbuf, sizeof(msgbuf), "Error: %s", pMsg);
   if (NULL != pMsgBuf)
     LocalFree(pMsgBuf);
+
+  _vsnprintf(msgbuf + strlen(msgbuf), sizeof(msgbuf) - strlen(msgbuf), msg, args);
+  MessageBox(DisplayWindowParent(), msgbuf, "LCD Error", MB_OK | MB_ICONERROR);
 }
 
 void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)

@@ -722,6 +722,6 @@ protected:
 
 extern "C" {
 LCD_API HWND LCD_DECL DisplayWindowParent();
-LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, HWND parent = DisplayWindowParent());
+LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, LPCSTR msg, ...);
 LCD_API void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload = NULL);
 }

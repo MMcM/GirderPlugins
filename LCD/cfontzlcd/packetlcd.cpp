@@ -706,7 +706,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
           spkt->SetState(SendPacket::TRANSMITTING);
         else {
           // Is stopping this thread on device error too drastic?
-          DisplayWin32Error(GetLastError());
+          DisplayWin32Error(GetLastError(), "writing to %s", m_port);
           break;
         }
       }
@@ -727,7 +727,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
       }
       else {
         // Is stopping this thread on device error too drastic?
-        DisplayWin32Error(GetLastError());
+        DisplayWin32Error(GetLastError(), "reading from %s", m_port);
         break;
       }
     }
@@ -806,7 +806,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
       }
       else {
         // Is stopping this thread on device error too drastic?
-        DisplayWin32Error(GetLastError());
+        DisplayWin32Error(GetLastError(), "writing to %s", m_port);
         break;
       }
     }
@@ -818,7 +818,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
         }
         else {
           // Is stopping this thread on device error too drastic?
-          DisplayWin32Error(GetLastError());
+          DisplayWin32Error(GetLastError(), "reading from %s", m_port);
           break;
         }
       }

@@ -474,7 +474,7 @@ BOOL SimulatedLCD::DeviceOpen()
     wc.lpszClassName = g_szWndClass;
     g_wndClass = RegisterClass(&wc);
     if (NULL == g_wndClass) {
-      DisplayWin32Error(GetLastError());
+      DisplayWin32Error(GetLastError(), "registering '%s'", g_szWndClass);
       return FALSE;
     }
   }

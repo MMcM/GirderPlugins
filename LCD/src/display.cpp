@@ -987,7 +987,7 @@ FanMonitor *DisplayDevice::GetFan(int n, LPCSTR createPrefix)
   if (NULL == createPrefix)
     return NULL;
   char buf[32];
-  sprintf(buf, "%s%d", createPrefix, n);
+  _snprintf(buf, sizeof(buf), "%s%d", createPrefix, n);
   FanMonitor *fan = new FanMonitor(buf, n);
   *prev = fan;
   return fan;
@@ -1021,13 +1021,13 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
   m_portHandle = CreateFile(m_port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
                             OPEN_EXISTING, (asynch) ? FILE_FLAG_OVERLAPPED : 0, NULL);
   if (INVALID_HANDLE_VALUE == m_portHandle) {
-    DisplayWin32Error(GetLastError());
+    DisplayWin32Error(GetLastError(), "opening %s", m_port);
     return FALSE;
   }
 
   DCB dcb;
   if (!GetCommState(m_portHandle, &dcb)) {
-    DisplayWin32Error(GetLastError());
+    DisplayWin32Error(GetLastError(), "getting %s config", m_port);
     return FALSE;
   }
   dcb.BaudRate = m_portSpeed;
@@ -1040,7 +1040,7 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
   dcb.fRtsControl = (m_portRTS) ? RTS_CONTROL_ENABLE : RTS_CONTROL_DISABLE;
   dcb.fDtrControl = (m_portDTR) ? DTR_CONTROL_ENABLE : DTR_CONTROL_DISABLE;
   if (!SetCommState(m_portHandle, &dcb)) {
-    DisplayWin32Error(GetLastError());
+    DisplayWin32Error(GetLastError(), "setting %s config", m_port);
     return FALSE;
   }
 
@@ -1143,7 +1143,7 @@ BOOL DisplayDevice::EnableSerialInput()
   DWORD dwThreadId;
   m_inputThread = CreateThread(NULL, 0, SerialInputThread, this, 0, &dwThreadId);
   if (NULL == m_inputThread) {
-    DisplayWin32Error(GetLastError());
+    DisplayWin32Error(GetLastError(), "starting serial input thread");
     DisableSerialInput();
     return FALSE;
   }
@@ -1325,14 +1325,14 @@ DisplayDeviceFactory *DisplayDeviceFactory::GetFactory(LPCSTR name)
 
   HMODULE lib = LoadLibrary(name);
   if (NULL == lib) {
-    DisplayWin32Error(GetLastError());
+    DisplayWin32Error(GetLastError(), "loading %s", name);
     LeaveCriticalSection(&g_CS);
     return NULL;
   }
 
   CreateFun_t entry = (CreateFun_t)GetProcAddress(lib, "CreateDisplayDevice");
   if (NULL == entry) {
-    DisplayWin32Error(GetLastError());
+    DisplayWin32Error(GetLastError(), "in %s", name);
     FreeLibrary(lib);
     LeaveCriticalSection(&g_CS);
     return NULL;
@@ -2190,7 +2190,7 @@ int DOWSensor::GetNewNameIndex(LPCSTR prefix, DOWSensor *sensors)
 DOWSensor *DOWSensor::Create(LPCSTR prefix, int index, LPBYTE rom)
 {
   char name[128];
-  sprintf(name, "%s%d", prefix, index);
+  _snprintf(name, sizeof(name), "%s%d", prefix, index);
   return new DOWSensor(name, rom);
 }
 

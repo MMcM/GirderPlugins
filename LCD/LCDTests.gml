@@ -282,7 +282,7 @@ abcdefghijklmnopqrstuvwxyz
   </Group>
   <Group Name="Custom" Identifier="16" Enabled="TRUE">
     <Comments>Test custom characters</Comments>
-    <MultiGroup Name="00-0F" Identifier="17" Enabled="TRUE">
+    <MultiGroup Name="00-07" Identifier="17" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
