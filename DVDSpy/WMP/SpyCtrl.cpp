@@ -88,11 +88,12 @@ STDMETHODIMP CSpyCtrl::put_value(BSTR newVal)
   if (NULL == g_dvdspy)
     return S_OK;
 
-  char buf[256];
+  char buf[1024];
   LPSTR pbuf = buf;
 
   pbuf += copyBSTR(pbuf, m_event, sizeof(buf) - (pbuf - buf));
   *pbuf++ = '\0';
+  *pbuf++ = 1;
   pbuf += copyBSTR(pbuf, newVal, sizeof(buf) - (pbuf - buf));
   *pbuf++ = '\0';
 

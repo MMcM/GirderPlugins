@@ -114,9 +114,8 @@ void CALLBACK Timer(HWND, UINT, UINT, DWORD)
       strcpy(buf, "Winamp.");
       pbuf = buf + strlen(buf);
       strcpy(pbuf, g_extracts[i].szName);
-      pbuf += strlen(pbuf);
-      sprintf(pbuf, ".%d", i+1);
       pbuf += strlen(pbuf) + 1;
+      *pbuf++ = 1;
       switch (type) {
       case TYPE_INT:
         sprintf(pbuf, "%d", (int)lResult);
