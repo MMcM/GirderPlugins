@@ -9,7 +9,7 @@ $Header$
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="Sensor 1" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Sensor 1"/>
+      <EventString Name="Case" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Case"/>
       <Command Name="Set variable" Identifier="17" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -54,7 +54,7 @@ $Header$
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="Sensor 2" Identifier="20" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Sensor 2"/>
+      <EventString Name="CPU" Identifier="20" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="CPU"/>
       <Command Name="Set variable" Identifier="21" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
