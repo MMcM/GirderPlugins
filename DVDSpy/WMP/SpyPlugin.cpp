@@ -65,11 +65,11 @@ HRESULT CSpyPlugin::SetCore(IWMPCore *pCore)
 {
   HRESULT hr;
 
-  // release any existing WMP core interfaces
+  // Release any existing WMP core interfaces.
   ReleaseCore();
 
-  // If we get passed a NULL core, this  means
-  // that the plugin is being shutdown.
+  // If we get passed a NULL core, this means that the plugin is being
+  // shutdown.
 
   if (pCore == NULL) {
     return S_OK;
@@ -77,7 +77,7 @@ HRESULT CSpyPlugin::SetCore(IWMPCore *pCore)
 
   m_spCore = pCore;
 
-  // connect up the event interface
+  // Connect up the event interface.
   CComPtr<IConnectionPointContainer> spConnectionContainer;
 
   hr = m_spCore->QueryInterface(&spConnectionContainer);
@@ -402,13 +402,23 @@ void CSpyPlugin::CurrentPlaylistItemAvailable(BSTR bstrItemName)
 
 void CSpyPlugin::MediaChange(IDispatch * Item)
 {
+  if (!m_spCore) return;
+  CComPtr<IWMPControls> spControls;
+  if (FAILED(m_spCore->get_controls(&spControls))) return;
+  CComPtr<IWMPMedia> spCurrent;
+  if (FAILED(spControls->get_CurrentItem(&spCurrent))) return;
+  
+  // Only concerned about updates to title and duration while playing.
   CComQIPtr<IWMPMedia> spMedia = Item;
   if (!spMedia) return;
+  if (spMedia != spCurrent) return;
   
   CComBSTR bstrURL, bstrTitle, bstrDuration;
+#if 0
   if (SUCCEEDED(spMedia->get_sourceURL(&bstrURL))) {
     GirderEvent("WMP.URL", bstrURL);
   }
+#endif
   if (SUCCEEDED(spMedia->get_name(&bstrTitle))) {
     GirderEvent("WMP.Title", bstrTitle);
   }
@@ -423,6 +433,19 @@ void CSpyPlugin::CurrentMediaItemAvailable(BSTR bstrItemName)
 
 void CSpyPlugin::CurrentItemChange(IDispatch *pdispMedia)
 {
+  CComQIPtr<IWMPMedia> spMedia = pdispMedia;
+  if (!spMedia) return;
+  
+  CComBSTR bstrURL, bstrTitle, bstrDuration;
+  if (SUCCEEDED(spMedia->get_sourceURL(&bstrURL))) {
+    GirderEvent("WMP.URL", bstrURL);
+  }
+  if (SUCCEEDED(spMedia->get_name(&bstrTitle))) {
+    GirderEvent("WMP.Title", bstrTitle);
+  }
+  if (SUCCEEDED(spMedia->get_durationString(&bstrDuration))) {
+    GirderEvent("WMP.Duration", bstrDuration);
+  }
 }
 
 void CSpyPlugin::MediaCollectionChange()
