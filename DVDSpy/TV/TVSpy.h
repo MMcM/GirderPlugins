@@ -72,6 +72,7 @@ public:
   CChannel **m_channels;
   HWND m_dvdspy;
   CSlinkx m_slinke;
+  int m_slinkePorts;
   CString m_cableDeviceFile;
   CString m_switchDeviceFile;
   CString m_switchCableCommand;

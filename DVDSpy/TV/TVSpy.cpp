@@ -160,6 +160,7 @@ void CTVSpyApp::LoadProfileSettings()
   m_chanMinDigits = GetProfileInt("Settings", "ChannelMinDigits", 0);
   m_chanDigitPause = GetProfileInt("Settings", "ChannelDigitPause", 0);
   m_cableEnterCommand = GetProfileString("Settings", "CableEnterCommand", "");
+  m_slinkePorts = GetProfileInt("Settings", "SlinkePorts", 0xFF0);
   m_cableDeviceFile = GetProfileString("Settings", "CableDeviceFile", ""); // cable.cde
   m_switchDeviceFile = GetProfileString("Settings", "SwitchDeviceFile", ""); // switch.cde
   m_switchCableCommand = GetProfileString("Settings", "SwitchCableCommand", "cable");
@@ -183,6 +184,7 @@ void CTVSpyApp::SaveProfileSettings()
   WriteProfileInt("Settings", "ChannelMinDigits", m_chanMinDigits);
   WriteProfileInt("Settings", "ChannelDigitPause", m_chanDigitPause);
   WriteProfileString("Settings", "CableEnterCommand", m_cableEnterCommand);
+  WriteProfileInt("Settings", "SlinkePorts", m_slinkePorts);
   WriteProfileString("Settings", "CableDeviceFile", m_cableDeviceFile);
   WriteProfileString("Settings", "SwitchDeviceFile", m_switchDeviceFile);
   WriteProfileString("Settings", "SwitchCableCommand", m_switchCableCommand);
@@ -727,9 +729,8 @@ BOOL CTVSpyApp::InitSlinke()
 #endif
     return FALSE;
   }
-  // All IR outputs.
   if (!m_cableDeviceFile.IsEmpty()) {
-    if (m_slinke.AddDevice("switch", m_switchDeviceFile, 1, 1, 0xFF0) < 0) {
+    if (m_slinke.AddDevice("switch", m_switchDeviceFile, 1, 1, m_slinkePorts) < 0) {
 #ifdef _DEBUG
       AfxMessageBox("Could not open Slink-e device file");
 #endif
@@ -737,7 +738,7 @@ BOOL CTVSpyApp::InitSlinke()
     }
   }
   if (!m_switchDeviceFile.IsEmpty()) {
-    if (m_slinke.AddDevice("cable", m_cableDeviceFile, 1, 1, 0xFF0) < 0) {
+    if (m_slinke.AddDevice("cable", m_cableDeviceFile, 1, 1, m_slinkePorts) < 0) {
 #ifdef _DEBUG
       AfxMessageBox("Could not open Slink-e device file");
 #endif
