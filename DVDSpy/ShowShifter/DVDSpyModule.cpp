@@ -8,17 +8,19 @@ class ControlMonitor
 {
 public:
   ControlMonitor(LPTSTR szIdent) : m_sIdent(szIdent) {
+    m_bMonitorVisible = FALSE;
   }
   ~ControlMonitor() {
   }
   
   void Reset() {
-    m_sLabel.Empty();
+    m_sValue.Empty();
   }
-  void Update(BSTR sLabel, MonitorCallback *pDVDSpy);
+  void Update(BSTR sValue, MonitorCallback *pDVDSpy);
 
   CComBSTR m_sIdent;
-  CComBSTR m_sLabel;
+  CComBSTR m_sValue;
+  BOOL m_bMonitorVisible;
 };
 
 class MonitorCallback
@@ -85,12 +87,17 @@ STDMETHODIMP CDVDSpyModule::Init(IHMNVortress * pVortress)
   
   DWORD dwIndex = 0;
   while (TRUE) {
-    char szName[128];
-    DWORD dwLen = sizeof(szName);
-    if (ERROR_SUCCESS != RegEnumValue(idents, dwIndex++, szName, &dwLen,
-                                      NULL, NULL, NULL, NULL))
+    char szName[128], szValue[128];
+    DWORD dwType, dwNLen, dwVLen;
+    dwNLen = sizeof(szName);
+    dwVLen = sizeof(szValue);
+    if (ERROR_SUCCESS != RegEnumValue(idents, dwIndex++, szName, &dwNLen,
+                                      NULL, &dwType, (LPBYTE)szValue, &dwVLen))
       break;
-    m_monitors.push_back(new ControlMonitor(szName));
+    ControlMonitor *cm = new ControlMonitor(szName);
+    if ((REG_SZ == dwType) && !_stricmp(szValue, "visible"))
+      cm->m_bMonitorVisible = TRUE;
+    m_monitors.push_back(cm);
     TRACE(_T("Spy monitoring %s\n"), szName);
   }
 
@@ -204,14 +211,22 @@ STDMETHODIMP CDVDSpyModule::OnTimeout(IHMNTimer * pTimer, DWORD dwUserData)
   for (vector<ControlMonitor*>::iterator iter = m_monitors.begin();
        iter != m_monitors.end(); iter++) {
     ControlMonitor *pMonitor = *iter;
-    CComBSTR sLabel;
+    CComBSTR sValue;
     if (!!pPage) {
       CComPtr<IHMNControl> pControl;
       hr = pPage->GetDescendant(pMonitor->m_sIdent, &pControl);
-      if (SUCCEEDED(hr))
-        hr = pControl->GetLabel(&sLabel);
+      if (SUCCEEDED(hr)) {
+        if (pMonitor->m_bMonitorVisible) {
+          hr = pControl->IsVisible();
+          if (SUCCEEDED(hr)) {
+            sValue = (S_FALSE == hr) ? "invisible" : "visible";
+          }
+        }
+        else
+          hr = pControl->GetLabel(&sValue);
+      }
     }
-    pMonitor->Update(sLabel, m_pDVDSpy);
+    pMonitor->Update(sValue, m_pDVDSpy);
   }
 
   m_csMonitor.Unlock();
@@ -219,18 +234,18 @@ STDMETHODIMP CDVDSpyModule::OnTimeout(IHMNTimer * pTimer, DWORD dwUserData)
   return S_OK;
 }
 
-void ControlMonitor::Update(BSTR sLabel, MonitorCallback *pDVDSpy)
+void ControlMonitor::Update(BSTR sValue, MonitorCallback *pDVDSpy)
 {
-  if (m_sLabel == sLabel) return;
+  if (m_sValue == sValue) return;
 
   USES_CONVERSION;
 
-  m_sLabel = sLabel;
+  m_sValue = sValue;
 
-  if (!m_sLabel)
+  if (!m_sValue)
     pDVDSpy->ControlGone(OLE2T(m_sIdent));
   else
-    pDVDSpy->ControlChanged(OLE2T(m_sIdent), OLE2T(m_sLabel));
+    pDVDSpy->ControlChanged(OLE2T(m_sIdent), OLE2T(m_sValue));
 }
 
 void MonitorCallback::ModuleChanged(LPCTSTR szName)
