@@ -39,27 +39,31 @@ BOOL CALLBACK ConfigDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lP
 
       HFunctions.I18NTranslateEx("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
-      return 0;
+      return FALSE;
     }
 
   case WM_DESTROY: 
     PostQuitMessage(0); 
-    return 0;
+    return FALSE;
+
+  case WM_CLOSE: 
+    EndDialog(hwnd, FALSE);
+    return TRUE;
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
     case IDOK:
       EndDialog(hwnd, TRUE);
-      return 1;
+      return TRUE;
 
     case IDCANCEL:
       EndDialog(hwnd, FALSE);
-      return 1;
+      return TRUE;
     }
     break;
 
   }
-  return 0;
+  return FALSE;
 }
 
 DWORD WINAPI ConfigThread( LPVOID lpParameter )
@@ -101,6 +105,9 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
         LPSTR pb = buf;
         while ('\0' != *pb) {
           if (DRIVE_CDROM == GetDriveType(pb)) {
+            char cd = *pb;
+            if ((cd >= 'a') && (cd <= 'z'))
+              cd -= 'a' - 'A';  // Happens sometimes, maybe on XP?
             for (int i = 0; i < 2; i++) {
               char ebuf[256];
               strcpy(ebuf, "Disc.");
@@ -110,7 +117,7 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
                 strcat(ebuf, "Eject");
               LPSTR pe = ebuf + strlen(ebuf);
               *pe++ = '.';
-              *pe++ = *pb;
+              *pe++ = cd;
               *pe++ = '\0';
               SendMessage(events, LB_ADDSTRING, 0, (LPARAM)ebuf);
             }
@@ -160,12 +167,16 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
       if (NULL != hKey)
         RegCloseKey(hKey);
 
-      return 0;
+      return FALSE;
     }
 
   case WM_DESTROY: 
     PostQuitMessage(0); 
-    return 0;
+    return FALSE;
+
+  case WM_CLOSE: 
+    EndDialog(hwnd, FALSE);
+    return TRUE;
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
@@ -182,11 +193,11 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
           *sp = '\0';
         GirderEvent(buf);
       }
-      return 1;
+      return TRUE;
 
     case IDCLOSE:
       EndDialog(hwnd, TRUE);
-      return 1;
+      return TRUE;
     }
     break;
 
@@ -195,11 +206,11 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
       HWND events = GetDlgItem(hwnd, IDC_EVENTS);
       LRESULT pos = SendMessage(events, LB_FINDSTRINGEXACT, 0, lParam);
       SendMessage(events, LB_SETCURSEL, (WPARAM)pos, 0);
+      return TRUE;
     }
-    break;
 
   }
-  return 0;
+  return FALSE;
 }
 
 DWORD WINAPI LearnThread( LPVOID lpParameter )
