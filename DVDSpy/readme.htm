@@ -1,0 +1,122 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>DVDSpy plug-in</title>
+</head>
+
+<body>
+
+<h1>Girder plug-in for software DVD players</h1>
+Version 1.6. &nbsp;MMcM 11/01
+
+<h3>Use</h3>
+
+This plug-in intercepts various Windows messages that are used by
+WinDVD and PowerDVD to update their own windows with the information
+about the DVD currently being played.  When this information has
+changed, a Girder event is generated.  The associated information is
+placed in Girder registers.<p>
+
+It also intercepts calls to Windows text drawing functions as used by
+accessDTV and exposes it similarly.<p>
+
+<table border="yes">
+<tr><th>Code</th>
+<th>Meaning</th>
+<th>Register 1</th>
+<th>String register 1</th>
+</tr>
+
+<tr><td>Disc.Insert.<i>X</i></td>
+<td>A new DVD was inserted into drive <i>X:</i></td>
+<td>The volume serial number</td>
+<td>The volume name or disc title (see below)</td>
+</tr>
+
+<tr><td>Disc.Eject.<i>X</i></td>
+<td>The DVD was ejected from drive <i>X:</i></td>
+</tr>
+
+<tr><td>WinDVD.0</td>
+<td>Chapter changed</i></td>
+<td></td>
+<td>New chapter (two digits)</td>
+</tr>
+
+<tr><td>WinDVD.1</td>
+<td>Elapsed time changed</i></td>
+<td></td>
+<td>New time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>WinDVD.2</td>
+<td>Video mode changed</i></td>
+<td></td>
+<td>New mode (e.g. MPEG)</td>
+</tr>
+
+<tr><td>WinDVD.4</td>
+<td>Audio mode changed</i></td>
+<td></td>
+<td>New mode (e.g. BOTH)</td>
+</tr>
+
+<tr><td>PowerDVD.Title</td>
+<td>Title of video window changed</i></td>
+<td></td>
+<td>New title (file name if playing file instead of disc)</td>
+</tr>
+
+<tr><td>PowerDVD.Time</td>
+<td>Elapsed time changed</i></td>
+<td></td>
+<td>New time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>accessDTV.Channel</td>
+<td>The big channel digits changed</i></td>
+<td></td>
+<td>New digits (NN.n)</td>
+</tr>
+
+<tr><td>accessDTV.ChanText</td>
+<td>The channel description changed</i></td>
+<td></td>
+<td>New description (NNN.n XXXX_XX)</td>
+</tr>
+
+</table><p>
+
+The registry key
+<kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy</kbd> can
+contain a string value <kbd>DVDTitles</kbd> giving the name of a
+comma-separated (CSV) flat file containing a database of disc titles.
+The first line of the file is the name of the fields in the file.  The
+file must at least contain fields named <kbd>Title</kbd> and
+<kbd>Serial Number</kbd>.  It can have any number of additional
+fields.<p>
+
+If the disc is not included in the above database, then the PCFriendly
+<kbd>disc.id</kbd> file, if present, is used for the title.
+Otherwise, the volume name is used as a last resort.<p>
+
+A good place to display the extracted text is on an LCD display, using
+the LCD Software plug-in.  See the 
+<a href="../../software/lcd/readme.htm">readme</a> file for that plug-in
+for more details.  A sample Girder file is included that displays some
+information in a format suitable for 4x20 displays.<p>
+
+<h3>Disclaimer</h3>
+You use this plug-in at your own risk.
+
+<h3>Contact</h3>
+To report problems or make suggestions, post a message to the Girder
+forum, rather than sending email directly.
+
+</body>
+
+</html>
