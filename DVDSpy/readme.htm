@@ -10,7 +10,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.58. &nbsp;MMcM 02/04
+Version 1.59. &nbsp;MMcM 03/04
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -84,20 +84,20 @@ See <a href="#Real">below</a> for more information.<p>
 <li><kbd>gen_DVDSpy.dll</kbd><br/>
 A Winamp plugin that sends events to DVDSpy.<p>
 
-This file is needed for spying on Winamp.  It should be copied to the
-Winamp plugins folder, which is usually <kbd>C:\Program
-Files\Winamp\Plugins</kbd>.  See <a href="#Winamp">below</a> for more
-information.<p> 
+This file is needed for spying on Winamp (version 2 or 5).  It should
+be copied to the Winamp plugins folder, which is usually
+<kbd>C:\Program Files\Winamp\Plugins</kbd>.
+See <a href="#Winamp">below</a> for more information.<p>
 </li>
 
 <li><kbd>int_DVDSpy.dll</kbd><br/>
-A Media Jukebox plug-in that sends events to DVDSpy.  It works with
-version 8; it does not work with version 7.2<p>
+A Media Jukebox plug-in that sends events to DVDSpy.<p>
 
-This file is needed for spying on Media Jukebox.  It should be copied
-to any convenient folder (the Girder installation folder is fine) and
-self-registered by running <kbd>regsvr32 int_DVDSpy.dll</kbd>.  Once
-registered, it should show up in Media Jukebox's Plug-in Manager.
+This file is needed for spying on Media Jukebox.  It works with
+version 8 or 9; it does not work with version 7.2.  It should be
+copied to any convenient folder (the Girder installation folder is
+fine) and self-registered by running <kbd>regsvr32 int_DVDSpy.dll</kbd>.
+Once registered, it should show up in Media Jukebox's Plug-in Manager.
 See <a href="#MJ">below</a> for more information.<p>
 </li>
 
@@ -105,14 +105,14 @@ See <a href="#MJ">below</a> for more information.<p>
 A ShowShifter Control Module that sends events to DVDSpy.<p>
 
 This file is needed for spying on ShowShifter at the UI level.  It
-should be copied to any convenient folder (the Girder installation
-folder is fine, as is the ShowShifter folder) and self-registered by
-running <kbd>regsvr32 ShowShifterSpy.dll</kbd>.  If not installed in
-the ShowShifter directory, that directory will need to be in the
-Windows path while registering.  Nothing special needs to be done for
-it to run properly, only to register.  See <a
-href="#ShowShifter">below</a> for more information on ShowShifter UI
-events.<p>
+works with version 3.01.  It should be copied to any convenient folder
+(the Girder installation folder is fine, as is the ShowShifter folder)
+and self-registered by running <kbd>regsvr32 ShowShifterSpy.dll</kbd>.
+If not installed in the ShowShifter directory, that directory will
+need to be in the Windows path while registering.  Nothing special
+needs to be done for it to run properly, only to register.  See
+<a href="#ShowShifter">below</a> for more information on ShowShifter
+UI events.<p>
 </li>
 
 <li><kbd>TVSpy.exe</kbd><br/>

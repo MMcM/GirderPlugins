@@ -18,7 +18,7 @@ int Init();
 
 static winampGeneralPurposePlugin g_plugin = {
   GPPHDR_VER,
-  "Girder / DVDSpy plugin",
+  "Girder / DVDSpy plug-in v1.59",
   Init,
   Config,
   Quit,
