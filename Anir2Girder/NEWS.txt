@@ -2,9 +2,11 @@ NEWS
 ====
 
 --- CURRENT (CVS)
+
+
+--- 0.4.0
 * New setting: Send repeat events (hold button down)
 * Mouse pad is starting to work
-
 
 
 --- 0.3.0

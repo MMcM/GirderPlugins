@@ -311,11 +311,22 @@ BOOL CAnirRemoteControl::IsRepeatSignal(int nIndex)
            ((nWidth2 >= 10000) && (nWidth2 <= 130000)) &&
            ((nWidth3 >= 1500)  && (nWidth3 <= 2700)) &&
            ((nWidth4 >= 1500)  && (nWidth4 <= 2700));
+
+  int val =(nWidth1 <= 1200) &&
+           ((nWidth2 >= 7500) && (nWidth2 <= 130000)) &&
+           ((nWidth3 >= 1500)  && (nWidth3 <= 2700)) &&
+           ((nWidth4 >= 1500)  && (nWidth4 <= 2700));
+
+  if (val)
+	  MYTRACE("%d %d %d %d\n",
+	  	  nWidth1, nWidth2, nWidth3, nWidth4);
+  return val;
 */
-  return   (nWidth1 <= 10000) &&
-           ((nWidth2 >= 5000) && (nWidth2 <= 130000)) &&
-           ((nWidth3 >= 1500)  && (nWidth3 <= 10000)) &&
-           ((nWidth4 >= 1500)  && (nWidth4 <= 10000));
+  return   (nWidth1 <= 1200) &&
+           ((nWidth2 >= 7500) && (nWidth2 <= 130000)) &&
+           ((nWidth3 >= 1500)  && (nWidth3 <= 2700)) &&
+           ((nWidth4 >= 1500)  && (nWidth4 <= 2700));
+
 }
 
 BOOL CAnirRemoteControl::IsBitSignal(int nIndex, BOOL& bBit)

@@ -16,9 +16,9 @@ The event string Girder receives has the following format:
 $name:$key:$repeat
 
 name	- The name of the device (changeable, default "Anir")
-key		- Key value
+key	- Key value
 repeat	- Holding buttun gives "1", otherwise "0"
-		  (This is always "0" if repeat events are disabled)
+	  (This is always "0" if repeat events are disabled)
 
 
 

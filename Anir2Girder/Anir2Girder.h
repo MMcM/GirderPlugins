@@ -32,7 +32,7 @@
 
 
 // Version and basic info
-#define PLUGINVERSION		"0.3.0"
+#define PLUGINVERSION		"0.4.0"
 #define PLUGINNAME			"Anir Remote"
 #define PLUGINDESCRIPTION	"Animax Anir Remote plugin.(C) 2002,2003 by Tom Skoglund."
 #define PLUGINDEVICEID		53
