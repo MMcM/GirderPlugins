@@ -185,3 +185,66 @@ void GetDVDTitle(LPCSTR disc, LPSTR title, size_t tsize, LPDWORD volser)
   }
 
 }
+
+// Get the DVD title attributes
+BOOL GetDVDVideoAttribs(LPCSTR disc, LPCSTR *aspect, LPCSTR *display, LPCSTR *standard)
+{
+  FILE *m_file;
+  char file[MAX_PATH];
+  char v_attribs;
+
+  strcpy(file, disc);
+  strcat(file, "video_ts\\vts_01_0.ifo");
+
+  m_file = fopen(file, "rb");
+  if (NULL == m_file)
+    return FALSE;
+
+  if (fseek(m_file, VTSTT_VOBS_ATTRIB_OFFSET, 0)) {
+    fclose(m_file);
+    return FALSE;
+  }
+
+  if (fread(&v_attribs, 1, sizeof(v_attribs), m_file) != sizeof(v_attribs)) {
+    fclose(m_file);
+    return FALSE;
+  }
+
+  switch (v_attribs & VIDEO_ATTRIB_ASPECT_MASK) {
+  case VIDEO_ATTRIB_ASPECT_4X3:
+    *aspect = "4:3";
+    break;
+  case VIDEO_ATTRIB_ASPECT_16X9:
+    *aspect = "16:9";
+    break;
+  default:
+    *aspect = "unknown";
+    break;
+  }
+
+  if (v_attribs & VIDEO_ATTRIB_DISPLAY_PANSCAN) {
+    if (v_attribs & VIDEO_ATTRIB_DISPLAY_LETTERBOX) {
+      *display = "none";
+    }
+    else {
+      *display = "letterbox";
+    }
+  }
+  else {
+    if (v_attribs & VIDEO_ATTRIB_DISPLAY_LETTERBOX) {
+      *display = "pan-scan";
+    }
+    else {
+      *display = "both";
+    }
+  }
+
+  if (v_attribs & VIDEO_ATTRIB_STANDARD_PAL) {
+    *standard = "PAL";
+  }
+  else {
+    *standard = "NTSC";
+  }
+
+  return TRUE;
+}
