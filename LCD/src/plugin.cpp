@@ -50,6 +50,7 @@ extern "C" int WINAPI
 gir_close()
 {
   CloseCommandUI();
+  DisplayClose();
   return GIR_TRUE;
 }
 
