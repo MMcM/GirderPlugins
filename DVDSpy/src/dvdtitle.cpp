@@ -105,7 +105,7 @@ LPCSTR CSVParser::NextField()
 BOOL LookupDVDTitle(DWORD volser, LPSTR title, size_t tsize)
 {
   HKEY hkey;
-  if (ERROR_SUCCESS != RegOpenKey(HKEY_CURRENT_USER, 
+  if (ERROR_SUCCESS != RegOpenKey(HKEY_LOCAL_MACHINE, 
                                   "Software\\Girder3\\HardPlugins\\DVDSpy", 
                                   &hkey))
     return FALSE;

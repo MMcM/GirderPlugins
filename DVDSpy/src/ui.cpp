@@ -121,7 +121,7 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
 
       // Registry can specify events not known to the hook itself, such as WMP.
       HKEY hKey = NULL;
-      if (ERROR_SUCCESS == RegOpenKey(HKEY_CURRENT_USER, 
+      if (ERROR_SUCCESS == RegOpenKey(HKEY_LOCAL_MACHINE, 
                                       "Software\\Girder3\\HardPlugins\\DVDSpy\\Events", 
                                       &hKey)) {
         DWORD dwIndex = 0;
