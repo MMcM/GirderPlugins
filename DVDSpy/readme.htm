@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.48. &nbsp;MMcM 12/02
+Version 1.50. &nbsp;MMcM 12/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -71,6 +71,15 @@ usually <kbd>c:\Program Files\Windows Media Player\Skins</kbd>.  See
 <a href="#WMPSpy">below</a> for more information.<p>
 </li>
 
+<li><kbd>RealSpy.dll</kbd><br/>
+A RealSystem plug-in that sends events to DVDSpy.<p>
+
+This file is needed for spying on RealOne Player.  It should be copied
+to the Real plug-ins directory, which is usually 
+<kbd>c:\Program Files\Common Files\Real\Plugins</kbd>.
+See <a href="#Real">below</a> for more information.<p>
+</li>
+
 <li><kbd>gen_DVDSpy.dll</kbd><br/>
 A Winamp plugin that sends events to DVDSpy.<p>
 
@@ -103,6 +112,12 @@ Windows path while registering.  Nothing special needs to be done for
 it to run properly, only to register.  See <a
 href="#ShowShifter">below</a> for more information on ShowShifter UI
 events.<p>
+</li>
+
+<li><kbd>TVSpy.exe</kbd><br/>
+A helper application to lookup program guide information and/or switch
+an external TV tuner such as a set-top box.
+See <a href="#TV">below</a> for more information.<p>
 </li>
 
 <li><kbd>DVDSpy.cmd</kbd><br/>
@@ -620,6 +635,11 @@ top)</td>
 <td>ATI application closed</td>
 </tr>
 
+<tr><td><code>ATI.TV.Channel</code></td>
+<td>TV channel changed</td>
+<td>New channel number</td>
+</tr>
+
 <tr></tr>
 
 <tr><td><code>WMP.Status</code></td>
@@ -653,6 +673,52 @@ top)</td>
 
 <tr></tr>
 
+<tr><td><code>Real.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>Real.Buffering</code></td>
+<td>Playback is buffering</td>
+<td>Percentage complete</td>
+</tr>
+
+<tr><td><code>Real.Contacting</code></td>
+<td>Playback is contacting remote host</td>
+<td>Host name</td>
+</tr>
+
+<tr><td><code>Real.Duration</code></td>
+<td>Total time changed</td>
+<td>New total time (<code>MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>Real.Elapsed</code></td>
+<td>Time position changed</td>
+<td>New elapsed time (<code>MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>Real.URL</code></td>
+<td>Media source changed</td>
+<td>New current media URL</td>
+</tr>
+
+<tr><td><code>Real.Title</code></td>
+<td>Media title changed</td>
+<td>New current title</td>
+</tr>
+
+<tr><td><code>Real.Author</code></td>
+<td>Media author changed</td>
+<td>New current author</td>
+</tr>
+
+<tr><td><code>Real.Close</code></td>
+<td>Program closed</td>
+</tr>
+
+<tr></tr>
+
 <tr><td><code>Winamp.Status</code></td>
 <td>Status changed</td>
 <td>New status (<code>STOP</code>, <code>PLAY</code>, <code>PAUSE</code>)</td>
@@ -673,7 +739,7 @@ top)</td>
 <td>New total time (<code>MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>Winamp.Elasped</code></td>
+<tr><td><code>Winamp.Elapsed</code></td>
 <td>Time position changed</td>
 <td>New elapsed time (<code>MM:SS</code>)</td>
 </tr>
@@ -997,6 +1063,9 @@ produces events no matter which skin is in use.  It may not produce
 events when the player is embedded in a web page, since plugins are
 controlled separately there.<p>
 
+<a name="Real"/>
+It includes a RealSystem plug-in that exposes state changes.<p>
+
 <a name="Winamp"/>
 It includes a Winamp general plugin that exposes state changes.  The
 file <kbd>gen_DVDSpy.dll</kbd> needs to be copied into the
@@ -1024,6 +1093,16 @@ inside Media Jukebox to set the interval (in milliseconds) at which it
 checks for state changes.  Communication between the plug-in and
 Girder can also be manually reset, should Girder have started after
 Media Jukebox, for instance.<p>
+
+<a name="TV"/>
+It includes a helper application for use with TV tuners.  If Guide+ is
+installed for an ATI tuner, program information can be obtained for
+the current channel.  In this case, the program can be run on a
+channel changed event.<p>
+
+If an external TV tuner is controlled by a Slink-e IR blaster, it can
+also be switched at the same time.  In this case, the program can be
+invoked as the associated command for a channel in ShowShifter.<p>
 
 <a name="DVDTitles"/>
 The registry key
