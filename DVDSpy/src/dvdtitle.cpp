@@ -278,3 +278,26 @@ BOOL GetDVDAttribs(LPCSTR disc,
 
   return TRUE;
 }
+
+// Get 64-bit disc id.  This is computed from the contents (file dates
+// and lengths, perhaps).  COM must have been initialized before
+// calling this.  Hopefully that won't be a problem on older operating
+// systems.
+void GetDVDDiscID(LPCSTR disc, ULONGLONG *discid)
+{
+  HRESULT hr;
+
+  IDvdInfo2 *dvdInfo = NULL;
+  hr = CoCreateInstance(CLSID_DVDNavigator, NULL, CLSCTX_ALL, 
+                        IID_IDvdInfo2, (void**)&dvdInfo);
+  if (FAILED(hr)) return;
+
+  OLECHAR olevol[MAX_PATH];
+  MultiByteToWideChar(CP_ACP, 0, disc, -1, 
+                      olevol, sizeof(olevol) / sizeof(OLECHAR));
+  wcscat(olevol, OLESTR("\\video_ts"));
+
+  hr = dvdInfo->GetDiscID(olevol, discid);
+
+  dvdInfo->Release();
+}
