@@ -96,6 +96,10 @@ SOURCE=.\src\dvdtitle.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\src\eugenes.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\src\monitor.cpp
 # End Source File
 # Begin Source File
