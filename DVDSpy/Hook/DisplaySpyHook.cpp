@@ -3,6 +3,10 @@
 #include "stdafx.h"
 #include "DisplaySpyHook.h"
 
+#ifdef _DEBUG
+#define _TRACE
+#endif
+
 #define ASSERT(x) _ASSERTE(x)
 #define countof(x) sizeof(x)/sizeof(x[0])
 
@@ -61,6 +65,8 @@ const UINT MATCH_SECOND_TIMER = 1019;
 const UINT MATCH_PATCH = 1020;
 const UINT MATCH_MEDIA_SPY = 1030;
 const UINT MATCH_WINDVD_SETIMAGE = 1031;
+const UINT MATCH_MODULE_PATHNAME = 1501;
+const UINT MATCH_MODULE_VERSION = 1502;
 
 const UINT EXTRACT_CONSTANT = 2001;
 const UINT EXTRACT_GETTEXT = 2002;
@@ -73,7 +79,10 @@ const UINT EXTRACT_HWND = 2008;
 const UINT EXTRACT_CLASS = 2009;
 const UINT EXTRACT_CONTROLID = 2010;
 const UINT EXTRACT_SB_GETTEXT = 2015;
-const UINT EXTRACT_LPARAM_TIME_BCD = 2020;
+const UINT EXTRACT_LPARAM_SUBSTR = 2020;
+const UINT EXTRACT_LPARAM_STR_BEFORE = 2021;
+const UINT EXTRACT_LPARAM_STR_AFTER = 2022;
+const UINT EXTRACT_LPARAM_TIME_BCD = 2025;
 const UINT EXTRACT_MEDIA_SPY = 2030;
 const UINT EXTRACT_WINDVD_SETIMAGE = 2031;
 
@@ -374,7 +383,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
-#if 0
+#if 1
     // Calls to TextOut / DrawText at some point perhaps through bitmap.
     BEGIN_NMATCH(TextImage)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
@@ -578,6 +587,83 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH() 
 
+  BEGIN_NMODULE(Eugenes,station)
+      ENTRY_STR(MATCH_MODULE_PATHNAME, "Eugene")
+    // The main window's class is TFMain, but it does not reliably get these messages.
+
+    BEGIN_NMATCH(Init)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SHOWWINDOW)
+      ENTRY_NUM(MATCH_WPARAM, TRUE)
+      ENTRY_STR(MATCH_CLASS, "TfDisplayForm")
+      ENTRY0(MATCH_ONCE)
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_HWND)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "TThreadWindow")
+     BEGIN_EXTRACT()
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_NMODULE(DVDStation,station)
+
+    BEGIN_NMATCH(Title.1)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
+      ENTRY_STR(MATCH_CLASS, "Title")
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(5,4))
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(Title.2)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
+      ENTRY_STR(MATCH_CLASS, "Title")
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,2))
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "DVDST")
+     BEGIN_EXTRACT()
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_MODULE(MyHD)
+
+#if 1
+    BEGIN_NMATCH(TextImage)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
+     BEGIN_EXTRACT()
+      NENTRY0(Window,ENTRY_EVENT|EXTRACT_HWND)
+      NENTRY0(Caption,ENTRY_EVENT|EXTRACT_GETTEXT)
+      NENTRY0(Class,ENTRY_EVENT|EXTRACT_CLASS)
+      NENTRY0(ControlID,ENTRY_EVENT|EXTRACT_CONTROLID)
+      NENTRY0(Position,ENTRY_EVENT|EXTRACT_WPARAM_POINT)
+      NENTRY0(Text,ENTRY_EVENT|EXTRACT_LPARAM_STR)
+    END_MATCH()
+#else
+    // There are two windows displaying what looks to be channel info.
+    // More experimentation is needed to determine which is best and
+    // whether either has additional PSIP info.
+    BEGIN_NMATCH(Channel)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTIMAGE)
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(25,60))
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+#endif
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_GETTEXT, "Remote Controller")
+     BEGIN_EXTRACT()
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
+    END_MATCH()
+
 #if 0
   // Uncomment this and edit to begin adding a new application.
   BEGIN_MODULE(XXX)
@@ -705,89 +791,86 @@ BOOL DoMatch2(const MatchEntry *pEntry, MatchContext nCtx,
         return FALSE;
     }
   }
-  switch (nCtx) {
-  case CONTEXT_WNDPROC:
-  case CONTEXT_GETMSG:
-    switch (BASE_CODE(pEntry->nCode)) {
-    case MATCH_REGISTERED_MESSAGE:
-      if (0 == pEntry->dwVal)
-        ((MatchEntry*)pEntry)->dwVal = RegisterWindowMessage(pEntry->szVal);
-      /* falls through */
-    case MATCH_MESSAGE:
-      return (nMsg == (UINT)pEntry->dwVal);
-    case MATCH_WPARAM:
-      return (wParam == (WPARAM)pEntry->dwVal);
-    case MATCH_LPARAM:
-      return (lParam == (LPARAM)pEntry->dwVal);
-    case MATCH_LPARAM_STR:
-      return !strcmp((LPCSTR)lParam, pEntry->szVal);
-    case MATCH_GETTEXT:
-      {
-        char szBuf[256];
-        GetWindowText(hWnd, szBuf, sizeof(szBuf));
-        return !strcmp(szBuf, pEntry->szVal);
-      }
-    case MATCH_CLASS:
-      {
-        char szCName[256];
-        GetClassName(hWnd, szCName, sizeof(szCName));
-        return !strcmp(szCName, pEntry->szVal);
-      }
-    case MATCH_CLASS_PREFIX:
-      {
-        char szCName[256];
-        GetClassName(hWnd, szCName, sizeof(szCName));
-        return !strncmp(szCName, pEntry->szVal, strlen(pEntry->szVal));
-      }
-    case MATCH_CONTROLID:
-      {
-        LONG lID = GetWindowLong(hWnd, GWL_ID);
-        return (lID == (LONG)pEntry->dwVal);
-      }
-    case MATCH_NOTIFY_CODE:
-      {
-        if (WM_NOTIFY != nMsg)
-          return FALSE;
-        LPNMHDR pnmh = (LPNMHDR)lParam;
-        return (pnmh->code == pEntry->dwVal);
-      }
-    case MATCH_NOTIFY_FROM:
-      {
-        if (WM_NOTIFY != nMsg)
-          return FALSE;
-        LPNMHDR pnmh = (LPNMHDR)lParam;
-        return (pnmh->idFrom == pEntry->dwVal);
-      }
-    case MATCH_ONCE:
-      return (((MatchEntry*)pEntry)->dwVal++ == 0);
-    case MATCH_SECOND_TIMER:
-      {
-        if (WM_TIMER != nMsg)
-          return FALSE;
-        ULONG ulNow = GetTickCount();
-        if ((ulNow - pEntry->dwVal) < 900)
-          return FALSE;           // Less than a second (more or less) since last time.
-        char szCName[256];
-        GetClassName(hWnd, szCName, sizeof(szCName));
-        if (!strcmp(szCName, "VideoRenderer"))
-          return FALSE;           // Try not to interfere with playback.
-        ((MatchEntry*)pEntry)->dwVal = ulNow;
-        return TRUE;
-      }
-    case MATCH_MEDIA_SPY:
-      return MatchMediaSpy((UINT)pEntry->dwVal);
-    case MATCH_WINDVD_SETIMAGE:
-      return MatchWinDVDSetImage(hWnd, (UINT)pEntry->dwVal, (HBITMAP)lParam);
+  switch (BASE_CODE(pEntry->nCode)) {
+  case MATCH_REGISTERED_MESSAGE:
+    if (0 == pEntry->dwVal)
+      ((MatchEntry*)pEntry)->dwVal = RegisterWindowMessage(pEntry->szVal);
+    /* falls through */
+  case MATCH_MESSAGE:
+    if ((CONTEXT_WNDPROC != nCtx) && (CONTEXT_GETMSG != nCtx))
+      return FALSE;
+    return (nMsg == (UINT)pEntry->dwVal);
+  case MATCH_WPARAM:
+    return (wParam == (WPARAM)pEntry->dwVal);
+  case MATCH_LPARAM:
+    return (lParam == (LPARAM)pEntry->dwVal);
+  case MATCH_LPARAM_STR:
+    return !strcmp((LPCSTR)lParam, pEntry->szVal);
+  case MATCH_GETTEXT:
+    {
+      char szBuf[256];
+      GetWindowText(hWnd, szBuf, sizeof(szBuf));
+      return !strcmp(szBuf, pEntry->szVal);
     }
-    break;
-  case CONTEXT_PATCH:
-    switch (BASE_CODE(pEntry->nCode)) {
-    case MATCH_PATCH:
-      return (nMsg == (UINT)pEntry->dwVal);
+  case MATCH_CLASS:
+    {
+      char szCName[256];
+      GetClassName(hWnd, szCName, sizeof(szCName));
+      return !strcmp(szCName, pEntry->szVal);
     }
-    break;
+  case MATCH_CLASS_PREFIX:
+    {
+      char szCName[256];
+      GetClassName(hWnd, szCName, sizeof(szCName));
+      return !strncmp(szCName, pEntry->szVal, strlen(pEntry->szVal));
+    }
+  case MATCH_CONTROLID:
+    {
+      LONG lID = GetWindowLong(hWnd, GWL_ID);
+      return (lID == (LONG)pEntry->dwVal);
+    }
+  case MATCH_NOTIFY_CODE:
+    {
+      if (WM_NOTIFY != nMsg)
+        return FALSE;
+      LPNMHDR pnmh = (LPNMHDR)lParam;
+      return (pnmh->code == pEntry->dwVal);
+    }
+  case MATCH_NOTIFY_FROM:
+    {
+      if (WM_NOTIFY != nMsg)
+        return FALSE;
+      LPNMHDR pnmh = (LPNMHDR)lParam;
+      return (pnmh->idFrom == pEntry->dwVal);
+    }
+  case MATCH_ONCE:
+    return (((MatchEntry*)pEntry)->dwVal++ == 0);
+  case MATCH_SECOND_TIMER:
+    {
+      if (WM_TIMER != nMsg)
+        return FALSE;
+      ULONG ulNow = GetTickCount();
+      if ((ulNow - pEntry->dwVal) < 900)
+        return FALSE;           // Less than a second (more or less) since last time.
+      char szCName[256];
+      GetClassName(hWnd, szCName, sizeof(szCName));
+      if (!strcmp(szCName, "VideoRenderer"))
+        return FALSE;           // Try not to interfere with playback.
+      ((MatchEntry*)pEntry)->dwVal = ulNow;
+      return TRUE;
+    }
+  case MATCH_PATCH:
+    if (CONTEXT_PATCH != nCtx)
+      return FALSE;
+    return (nMsg == (UINT)pEntry->dwVal);
+  case MATCH_MEDIA_SPY:
+    return MatchMediaSpy((UINT)pEntry->dwVal);
+  case MATCH_WINDVD_SETIMAGE:
+    return MatchWinDVDSetImage(hWnd, (UINT)pEntry->dwVal, (HBITMAP)lParam);
+  default:
+    ASSERT(FALSE);
+    return FALSE;
   }
-  return FALSE;
 }
 
 BOOL DoMatch1(const MatchEntry *pEntry, MatchContext nCtx,
@@ -870,6 +953,52 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
       size_t prefixLen = strlen(pEntry->szVal);
       if (!strncmp(szBuf, pEntry->szVal, prefixLen))
         memmove(szBuf, szBuf + prefixLen, strlen(szBuf) - prefixLen + 1);
+    }
+    break;
+  case EXTRACT_LPARAM_SUBSTR:
+    {
+      LPCSTR szData = (LPCSTR)lParam;
+      size_t nOff = LOWORD(pEntry->dwVal);
+      size_t nLen = HIWORD(pEntry->dwVal);
+      size_t nDLen = strlen(szData);
+      if (nDLen <= nOff) {
+        *szBuf = '\0';
+        break;
+      }
+      nDLen -= nOff;
+      if (nLen > nDLen)
+        nLen = nDLen;
+      if (nLen >= nSize)
+        nLen = nSize - 1;
+      memcpy(szBuf, szData + nOff, nLen);
+      szBuf[nLen] = '\0';
+    }
+    break;
+  case EXTRACT_LPARAM_STR_BEFORE:
+    {
+      LPCSTR szData = (LPCSTR)lParam;
+      LPCSTR szMatch = strstr(szData, pEntry->szVal);
+      if (NULL == szMatch) {
+        *szBuf = '\0';
+        break;
+      }
+      size_t nLen = szMatch - szData;
+      if (nLen >= nSize)
+        nLen = nSize - 1;
+      memcpy(szBuf, szData, nLen);
+      szBuf[nLen] = '\0';
+    }
+    break;
+  case EXTRACT_LPARAM_STR_AFTER:
+    {
+      LPCSTR szData = (LPCSTR)lParam;
+      LPCSTR szMatch = strstr(szData, pEntry->szVal);
+      if (NULL == szMatch) {
+        *szBuf = '\0';
+        break;
+      }
+      szMatch += strlen(pEntry->szVal);
+      strncpy(szBuf, szMatch, nSize);
     }
     break;
   case EXTRACT_LPARAM_TIME_BCD:
@@ -967,19 +1096,20 @@ BOOL GetMutex(DWORD timeout)
 // interesting messages.
 void IndexMatches(BOOL bAll)
 {
-  char szModBuf[MAX_PATH];
-  LPCSTR szModule;
-  DWORD dwFlags = 0;
+  char szModulePathName[MAX_PATH], szModuleFileName[64];
+  LPCSTR szModuleName = szModuleFileName;
+  DWORD dwModuleFlags = 0;
   if (!bAll) {
-    GetModuleFileName(NULL, szModBuf, sizeof(szModBuf));
-    LPSTR pend = strrchr(szModBuf, '.');
-    if (NULL != pend)
-      *pend = '\0';             // Remove extension.
-    szModule = strrchr(szModBuf, '\\');
-    if (NULL != szModule)
-      szModule++;               // Remove directory.
+    GetModuleFileName(NULL, szModulePathName, sizeof(szModulePathName));
+    LPSTR psz = strrchr(szModulePathName, '\\');
+    if (NULL != psz)
+      psz++;                    // Remove directory.
     else
-      szModule = szModBuf;
+      psz = szModulePathName;
+    strncpy(szModuleFileName, psz, sizeof(szModuleFileName));
+    psz = strrchr(szModuleFileName, '.');
+    if (NULL != psz)
+      *psz = '\0';              // Remove extension.
   }
   size_t nOffset = 1, nMatches = 0, nBegin = 0;
   for (size_t i = 0; i < countof(g_matches); i++) {
@@ -991,12 +1121,12 @@ void IndexMatches(BOOL bAll)
         BOOL bMatch = FALSE;
         size_t nKey = strlen(szKey);
         if ('*' == szKey[nKey-1]) // Allow trailing wildcard for prefix match.
-          bMatch = !_strnicmp(szKey, szModule, nKey-1);
+          bMatch = !_strnicmp(szKey, szModuleFileName, nKey-1);
         else
-          bMatch = !_stricmp(szKey, szModule);
+          bMatch = !_stricmp(szKey, szModuleFileName);
         if (bMatch) {
-          szModule = g_matches[i].szName; // Our name for it.
-          dwFlags = g_matches[i].dwVal;
+          szModuleName = g_matches[i].szName; // Our name for it.
+          dwModuleFlags = g_matches[i].dwVal;
           nBegin = i + 1;       // First module entry.
         }
       }
@@ -1006,6 +1136,26 @@ void IndexMatches(BOOL bAll)
         nMatches++;             // Count matches in module (or all).
       else
         nOffset++;              // Count matches before module.
+    }
+    else if (!bAll && nBegin && !nMatches) {
+      // A module match predicate.
+      BOOL bMatch = TRUE;
+      switch (BASE_CODE(g_matches[i].nCode)) {
+      case MATCH_MODULE_PATHNAME:
+        bMatch = (NULL != strstr(szModulePathName, g_matches[i].szVal));
+        break;
+      case MATCH_MODULE_VERSION:
+        // TODO: Something involving GetFileVersionInfo.  Maybe load
+        // dynamically to avoid pulling VERSION.DLL into every
+        // process.
+        break;
+      }
+      if (g_matches[i].nCode & ENTRY_NOT)
+        bMatch = !bMatch;
+      if (bMatch)
+        nBegin = i + 1;
+      else
+        nBegin = 0;
     }
   }
 
@@ -1019,19 +1169,21 @@ void IndexMatches(BOOL bAll)
     if (ENTRY_MODULE == g_matches[i].nCode) {
       if (!bAll) 
         break;
-      szModule = g_matches[i].szName;
-      i++;
+      szModuleName = g_matches[i].szName;
+      while ((++i < countof(g_matches)) && (ENTRY_BEGIN != g_matches[i].nCode)) {
+        ASSERT((1500 < BASE_CODE(g_matches[i].nCode)) && 
+               (2000 > BASE_CODE(g_matches[i].nCode)));
+      }
       continue;
     }
-    ASSERT(ENTRY_BEGIN == g_matches[i].nCode);
-    pMatches[j].szModule = szModule;
+    pMatches[j].szModule = szModuleName;
     pMatches[j].szMatch = g_matches[i].szName;
     i++;
     pMatches[j].nMatches = 0;
     pMatches[j].pMatches = g_matches+i;
     while ((i < countof(g_matches)) && (ENTRY_EXTRACT != g_matches[i++].nCode)) {
       ASSERT((1000 < BASE_CODE(g_matches[i-1].nCode)) && 
-             (2000 > BASE_CODE(g_matches[i-1].nCode)));
+             (1500 > BASE_CODE(g_matches[i-1].nCode)));
       pMatches[j].nMatches++;
     }
     pMatches[j].nExtracts = 0;
@@ -1048,8 +1200,8 @@ void IndexMatches(BOOL bAll)
   g_nMatchOffset = nOffset;
   g_nMatches = nMatches;
 
-  g_dwModuleFlags = dwFlags;
-  if (dwFlags & MODULE_NO_WIN16_CWP) {
+  g_dwModuleFlags = dwModuleFlags;
+  if (dwModuleFlags & MODULE_NO_WIN16_CWP) {
     OSVERSIONINFO osinfo;
     osinfo.dwOSVersionInfoSize = sizeof(osinfo);
     if (GetVersionEx(&osinfo) &&
@@ -1060,7 +1212,14 @@ void IndexMatches(BOOL bAll)
       g_bNoCallWndProc = TRUE;
   }
 
-  if (nMatches > 0) {
+  if (!bAll && (nMatches > 0)) {
+#ifdef _TRACE
+  {
+    char szBuf[2048];
+    sprintf(szBuf, "%s spy hooks chosen for %s\n", szModuleName, szModulePathName);
+    OutputDebugString(szBuf);
+  }
+#endif
     // Clear any buffers from a previous run of this same program.
     size_t nLimit = nOffset + nMatches;
     if (GetMutex(100)) {
@@ -1229,6 +1388,12 @@ int WINAPI PatchDrawText(HDC hDC, LPSTR lpString, int nCount,
   return nResult;
 }
 
+PROC *ExtTextOutIAT = NULL;
+BOOL (WINAPI *OrigExtTextOut)(HDC, int, int, UINT, CONST RECT *,LPCSTR, UINT, CONST INT *) = NULL;
+
+PROC *TabbedTextOutIAT = NULL;
+BOOL (WINAPI *OrigTabbedTextOut)(HDC, int, int, LPCSTR, int, int, LPINT, int) = NULL;
+
 PROC *BitBltIAT = NULL;
 BOOL (WINAPI *OrigBitBlt)(HDC, int, int, int, int, HDC, int, int, DWORD) = NULL;
 
@@ -1239,12 +1404,11 @@ HDC g_hdcTextImage = NULL;
 LPSTR g_szTextImage = NULL;
 size_t g_nTextImage = 0;
 
-BOOL WINAPI PatchTITextOut(HDC hDC, int nX, int nY, LPSTR lpString, int nCount)
+void PatchTIText(HDC hDC, int nX, int nY, LPCSTR lpString, int nCount)
 {
-  BOOL bResult = (*OrigTextOut)(hDC, nX, nY, lpString, nCount);
   char ch = lpString[nCount];
   if ('\0' != ch)
-    lpString[nCount] = '\0';
+    ((LPSTR)lpString)[nCount] = '\0';
   HWND hWnd = WindowFromDC(hDC);
   if (NULL != hWnd)
     DoMessage(CONTEXT_PATCH, hWnd,
@@ -1261,31 +1425,41 @@ BOOL WINAPI PatchTITextOut(HDC hDC, int nX, int nY, LPSTR lpString, int nCount)
     memcpy(g_szTextImage, lpString, nCount + 1);
   }
   if ('\0' != ch)
-    lpString[nCount] = ch;
+    ((LPSTR)lpString)[nCount] = ch;
+}
+
+BOOL WINAPI PatchTITextOut(HDC hDC, int nX, int nY, LPCSTR lpString, int nCount)
+{
+  BOOL bResult = (*OrigTextOut)(hDC, nX, nY, lpString, nCount);
+  PatchTIText(hDC, nX, nY, lpString, nCount);
   return bResult;
 }
 
-int WINAPI PatchTIDrawText(HDC hDC, LPSTR lpString, int nCount, 
+BOOL WINAPI PatchTIExtTextOut(HDC hDC, int nX, int nY, UINT fuOptions,
+                              CONST RECT *lpRect, LPCSTR lpString, UINT nCount,
+                              CONST INT *lpDx)
+{
+  BOOL bResult = (*OrigExtTextOut)(hDC, nX, nY, fuOptions, lpRect, 
+                                   lpString, nCount, lpDx);
+  PatchTIText(hDC, nX, nY, lpString, nCount);
+  return bResult;
+}
+
+BOOL WINAPI PatchTITabbedTextOut(HDC hDC, int nX, int nY, LPCSTR lpString, int nCount,
+                                 int nTabPositions, LPINT lpnTabStopPositions,
+                                 int nTabOrigin)
+{
+  BOOL bResult = (*OrigTabbedTextOut)(hDC, nX, nY, lpString, nCount, 
+                                      nTabPositions, lpnTabStopPositions, nTabOrigin);
+  PatchTIText(hDC, nX, nY, lpString, nCount);
+  return bResult;
+}
+
+int WINAPI PatchTIDrawText(HDC hDC, LPCSTR lpString, int nCount, 
                            LPRECT lpRect, UINT uFormat)
 {
   int nResult = (*OrigDrawText)(hDC, lpString, nCount, lpRect, uFormat);
-  char ch = lpString[nCount];
-  if ('\0' != ch)
-    lpString[nCount] = '\0';
-  HWND hWnd = WindowFromDC(hDC);
-  if (NULL != hWnd)
-    DoMessage(CONTEXT_PATCH, hWnd,
-              PATCH_TEXTIMAGE, (WPARAM)MAKELONG(lpRect->left,lpRect->top), (LPARAM)lpString);
-  else {
-    g_hdcTextImage = hDC;
-    if (g_nTextImage < (size_t)nCount + 1) {
-      g_nTextImage = nCount + 1;
-      g_szTextImage = (LPSTR)realloc(g_szTextImage, g_nTextImage);
-    }
-    memcpy(g_szTextImage, lpString, nCount + 1);
-  }
-  if ('\0' != ch)
-    lpString[nCount] = ch;
+  PatchTIText(hDC, lpRect->left, lpRect->top, lpString, nCount);
   return nResult;
 }
 
@@ -1363,6 +1537,14 @@ void InstallPatches()
                              (PROC)PatchTITextOut, &TextOutIAT, (PROC*)&OrigTextOut))
             PatchFunction("GDI32.DLL", "TextOutA", "MFC42",
                           (PROC)PatchTITextOut, &TextOutIAT, (PROC*)&OrigTextOut);
+        }
+        if (NULL == ExtTextOutIAT) {
+          PatchFunction("GDI32.DLL", "ExtTextOutA", szDefMod,
+                        (PROC)PatchTIExtTextOut, &ExtTextOutIAT, (PROC*)&OrigExtTextOut);
+        }
+        if (NULL == TabbedTextOutIAT) {
+          PatchFunction("GDI32.DLL", "TabbedTextOutA", szDefMod,
+                        (PROC)PatchTITabbedTextOut, &TabbedTextOutIAT, (PROC*)&OrigTabbedTextOut);
         }
         if (NULL == DrawTextIAT) {
           if (!PatchFunction("GDI32.DLL", "DrawTextA", szDefMod,
@@ -1863,8 +2045,21 @@ int WINAPI PatchPowerDVDStretchDIBits
         ((XSrc % nSrcWidth) == 0) &&
         (YSrc == (lpBitsInfo->bmiHeader.biHeight - nSrcHeight)) &&
         (iUsage == 0) &&
-        (dwRop == SRCCOPY)))
+        (dwRop == SRCCOPY))) {
+#ifdef _TRACE
+    {
+      char szBuf[1024];
+      sprintf(szBuf, "PowerDVD: StretchDIBits %X(%X) %d,%d %dx%d <- %d,%d %dx%d %X [%d] %dx%d %d %X\n",
+              hDC, WindowFromDC(hDC), 
+              XDest, YDest, nDestWidth, nDestHeight,
+              XSrc, YSrc, nSrcWidth, nSrcHeight,
+              lpbits, lpBitsInfo->bmiHeader.biSize, lpBitsInfo->bmiHeader.biWidth, lpBitsInfo->bmiHeader.biHeight, 
+              iUsage, dwRop);
+      OutputDebugString(szBuf);
+    }
+#endif
     return nResult;
+  }
 
   if (!g_skinDVDRegistryLoaded)
     PDVDLoadRegistry();
@@ -1873,10 +2068,10 @@ int WINAPI PatchPowerDVDStretchDIBits
   POINT ptSize = { nDestWidth, nDestHeight }, ptPos = { XDest, YDest };
   size_t nOff = (XSrc / nSrcWidth), nLen = (lpBitsInfo->bmiHeader.biWidth / nSrcWidth);
 
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char szBuf[1024];
-    sprintf(szBuf, "PowerDVD: %X, %d/%d %dx%d %d,%d\n", 
+    sprintf(szBuf, "PowerDVD: StretchDIBits %X, %d/%d %dx%d %d,%d\n", 
             hWnd, nOff, nLen, ptSize.x, ptSize.y, ptPos.x, ptPos.y);
     OutputDebugString(szBuf);
   }
@@ -2008,14 +2203,17 @@ HANDLE WINAPI PatchWinDVDLoadImage(HINSTANCE hinst, LPCSTR lpszName, UINT uType,
   if (NULL != psz)
     *psz = '\0';
   
+#ifdef _TRACE
+  {
+    char szBuf[1024];
+    sprintf(szBuf, "WinDVD: LoadImage %s => %X\n", szName, hResult);
+    OutputDebugString(szBuf);
+  }
+#endif
+
   for (size_t i = 0; i < countof(g_WinDVDImages); i++) {
     if (!_stricmp(g_WinDVDImages[i].szName, szName)) {
       g_WinDVDImages[i].hBitmap = (HBITMAP)hResult;
-#ifdef _DEBUG
-      char szBuf[1024];
-      sprintf(szBuf, "WinDVD: %s %lX\n", szName, hResult);
-      OutputDebugString(szBuf);
-#endif
       break;
     }
   }
@@ -2049,6 +2247,11 @@ void WDVDLoadRegistry()
 
 BOOL MatchWinDVDSetImage(HWND hWnd, UINT nType, HBITMAP hBitmap)
 {
+  RECT rcWnd, rcParent;
+  GetWindowRect(hWnd, &rcWnd);
+  GetWindowRect(GetParent(hWnd), &rcParent);
+  POINT ptPos = { rcWnd.left - rcParent.left, rcWnd.top - rcParent.top };
+
   WinDVDImage *pImage = NULL;
   for (size_t i = 0; i < countof(g_WinDVDImages); i++) {
     if (g_WinDVDImages[i].hBitmap == hBitmap) {
@@ -2056,24 +2259,22 @@ BOOL MatchWinDVDSetImage(HWND hWnd, UINT nType, HBITMAP hBitmap)
       break;
     }
   }
+
+#ifdef _TRACE
+  {
+    char szBuf[1024];
+    sprintf(szBuf, "WinDVD: SetImage %X(%d,%d) %X(%s)\n", 
+            hWnd, ptPos.x, ptPos.y, hBitmap, 
+            (NULL != pImage) ? pImage->szValue : "?");
+    OutputDebugString(szBuf);
+  }
+#endif
+
   if (NULL == pImage)
     return FALSE;
 
   if (!g_skinDVDRegistryLoaded)
     WDVDLoadRegistry();
-
-  RECT rcWnd, rcParent;
-  GetWindowRect(hWnd, &rcWnd);
-  GetWindowRect(GetParent(hWnd), &rcParent);
-  POINT ptPos = { rcWnd.left - rcParent.left, rcWnd.top - rcParent.top };
-
-#ifdef _DEBUG
-  {
-    char szBuf[1024];
-    sprintf(szBuf, "WinDVD: %d,%d %s\n", ptPos.x, ptPos.y, pImage->szValue);
-    OutputDebugString(szBuf);
-  }
-#endif
 
   switch (nType) {
   case SKINDVD_STATUS:
@@ -2275,11 +2476,17 @@ BOOL APIENTRY DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
   switch (dwReason) {
   case DLL_PROCESS_ATTACH:
+#ifdef _TRACE
+    OutputDebugString("DisplaySpyHook.DLL loading.\n");
+#endif
     g_hInst = hInstance;
     IndexMatches(FALSE);
     InstallPatches();
     break;
   case DLL_PROCESS_DETACH:
+#ifdef _TRACE
+    OutputDebugString("DisplaySpyHook.DLL unloading.\n");
+#endif
     RemovePatches();
     if (NULL != g_pMatches)
       delete [] g_pMatches;
