@@ -2,7 +2,7 @@
 // Microsoft Developer Studio generated include file.
 // Used by ui.rc
 //
-#define PLUGINICON                      101
+#define IDI_DVDSPY                      101
 #define IDD_CONFIG_DIALOG               102
 #define IDD_LEARN_DIALOG                103
 #define IDC_LEARN                       1000
