@@ -9,32 +9,73 @@ HINSTANCE g_hInstance;
 // See http://www.matrixorbital.com/products.htm for list of
 // supported displays.
 
+typedef BYTE (*BrightnessFunc_t)(int);
+
+// This is used by LCDs for backlight brightness, except older models
+// that do not have any way of setting it.
+// Some VFD manuals (e.g. VK-240-24-USB sect. 8.8) claim to use this,
+// but don't.
+static BYTE BrightnessContinuous(int percent)
+{
+  return (percent * 0xFF) / 100;
+}
+
+// This is what most VFD manuals claim for brightness.
+// None seem to actually use it.
+static BYTE BrightnessSteppedUp(int percent)
+{
+  if (percent <= 25)
+    return 0;
+  else if (percent <= 50)
+    return 1;
+  else if (percent <= 75)
+    return 2;
+  else
+    return 3;
+}
+
+// This is what VFDs actually seem to use.
+// Only the VK-204-25 claims this.
+static BYTE BrightnessSteppedDown(int percent)
+{
+  if (percent > 75)
+    return 0;
+  else if (percent > 50)
+    return 1;
+  else if (percent > 25)
+    return 2;
+  else
+    return 3;
+}
+
 struct DeviceEntry {
   const char *devname;
   int cols;
   int rows;
   BOOL vfd;
-  BOOL usb;
+  BrightnessFunc_t brightnessFunc;
   BOOL keypad;
   int gpos;
+  BOOL dow_pwm;
 } DeviceEntries[] = {
-  { "LCD2021", 20, 2, FALSE, FALSE, FALSE, 1 },
-  { "LCD4021", 40, 2, FALSE, FALSE, FALSE, 1 },
-  { "LCD2041", 20, 4, FALSE, FALSE, FALSE, 1 },
-  { "LCD4041", 40, 4, FALSE, FALSE, FALSE, 1 },
-  { "LK162", 16, 2, FALSE, FALSE, TRUE, 6 },
-  { "LK202", 20, 2, FALSE, FALSE, TRUE, 6 },
-  { "LK204", 20, 4, FALSE, FALSE, TRUE, 6 },
-  { "LK202U", 20, 2, FALSE, TRUE, TRUE, 6 },
-  { "LK204U", 20, 4, FALSE, TRUE, TRUE, 6 },
-  { "LK402", 40, 2, FALSE, FALSE, TRUE, 7 },
-  { "LK404", 40, 4, FALSE, FALSE, TRUE, 1 },
-  { "VFD2021", 20, 2, TRUE, FALSE, FALSE, 1 },
-  { "VFD2041", 20, 4, TRUE, FALSE, FALSE, 1 },
-  { "VK202", 20, 2, TRUE, FALSE, TRUE, 6 },
-  { "VK204", 20, 4, TRUE, FALSE, TRUE, 6 },
-  { "VK202U", 20, 2, TRUE, TRUE, TRUE, 6 },
-  { "VK204U", 20, 4, TRUE, TRUE, TRUE, 6 },
+  { "LCD2021", 20, 2, FALSE, NULL, FALSE, 1 },
+  { "LCD4021", 40, 2, FALSE, NULL, FALSE, 1 },
+  { "LCD2041", 20, 4, FALSE, NULL, FALSE, 1 },
+  { "LCD4041", 40, 4, FALSE, NULL, FALSE, 1 },
+  { "LK162", 16, 2, FALSE, NULL, TRUE, 6 },
+  { "LK202", 20, 2, FALSE, NULL, TRUE, 6 },
+  { "LK204", 20, 4, FALSE, NULL, TRUE, 6 },
+  { "LK204PC", 20, 4, FALSE, BrightnessContinuous, TRUE, 6, TRUE },
+  { "LK202U", 20, 2, FALSE, BrightnessContinuous, TRUE, 6, TRUE },
+  { "LK204U", 20, 4, FALSE, BrightnessContinuous, TRUE, 6, TRUE },
+  { "LK402", 40, 2, FALSE, NULL, TRUE, 7 },
+  { "LK404", 40, 4, FALSE, NULL, TRUE, 1 },
+  { "VFD2021", 20, 2, TRUE, BrightnessSteppedDown, FALSE, 1 },
+  { "VFD2041", 20, 4, TRUE, BrightnessSteppedDown, FALSE, 1 },
+  { "VK202", 20, 2, TRUE, BrightnessSteppedDown, TRUE, 6 },
+  { "VK204", 20, 4, TRUE, BrightnessSteppedDown, TRUE, 6 },
+  { "VK202U", 20, 2, TRUE, BrightnessSteppedDown, TRUE, 6, TRUE },
+  { "VK204U", 20, 4, TRUE, BrightnessSteppedDown, TRUE, 6, TRUE },
 };
 
 #define countof(x) sizeof(x)/sizeof(x[0])
@@ -62,7 +103,8 @@ public:
   virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
-  BOOL m_vfd, m_usb, m_keypad;
+  BOOL m_vfd, m_keypad, m_dow_pwm;
+  BrightnessFunc_t m_brightnessFunc;
   int m_gpos;
   int m_debounceTime;
 };
@@ -75,8 +117,9 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
       m_cols = entry->cols;
       m_rows = entry->rows;
       m_vfd = entry->vfd;
-      m_usb = entry->usb;
       m_keypad = entry->keypad;
+      m_dow_pwm = entry->dow_pwm;
+      m_brightnessFunc = entry->brightnessFunc;
       m_gpos = entry->gpos;
       break;
     }
@@ -104,23 +147,6 @@ MatrixOrbitalDisplay::~MatrixOrbitalDisplay()
 {
 }
 
-inline static BYTE rangeFF(int percent)
-{
-  return (percent * 0xFF) / 100;
-}
-
-inline static BYTE range03(int percent)
-{
-  if (percent <= 25)
-    return 0;
-  else if (percent <= 50)
-    return 1;
-  else if (percent <= 75)
-    return 2;
-  else
-    return 3;
-}
-
 BOOL MatrixOrbitalDisplay::DeviceOpen()
 {
   if (!OpenSerial(m_enableInput))
@@ -142,16 +168,16 @@ BOOL MatrixOrbitalDisplay::DeviceOpen()
   if (m_vfd) {
     buf[nb++] = 0xFE;
     buf[nb++] = 0x59;           // Set brightness ...
-    buf[nb++] = (m_usb) ? rangeFF(m_brightness) : range03(m_brightness);
+    buf[nb++] = (*m_brightnessFunc)(m_brightness);
   }
   else {
     buf[nb++] = 0xFE;
     buf[nb++] = 0x50;           // Set contrast ...
-    buf[nb++] = rangeFF(m_contrast);
-    if (m_usb) {
+    buf[nb++] = BrightnessContinuous(m_contrast);
+    if (NULL != m_brightnessFunc) {
       buf[nb++] = 0xFE;
       buf[nb++] = 0x99;           // Set backlight brightness ...
-      buf[nb++] = rangeFF(m_brightness);
+      buf[nb++] = (*m_brightnessFunc)(m_brightness);
     }
   }
   if (m_keypad) {
@@ -230,7 +256,7 @@ BOOL MatrixOrbitalDisplay::DeviceHasContrast()
 
 BOOL MatrixOrbitalDisplay::DeviceHasBrightness()
 {
-  return m_vfd || m_usb;
+  return (NULL != m_brightnessFunc);
 }
 
 BOOL MatrixOrbitalDisplay::DeviceHasKeypad()
