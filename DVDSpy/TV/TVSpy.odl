@@ -1,0 +1,38 @@
+// TVSpy.odl : type library source for TVSpy.exe
+
+// This file will be processed by the MIDL compiler to produce the
+// type library (TVSpy.tlb).
+
+[ uuid(B7E10520-AC5E-492C-89C0-31FCA1B45679), version(1.0) ]
+library TVSpy
+{
+  importlib("stdole32.tlb");
+  importlib("stdole2.tlb");
+
+  [ uuid(A2ABCDE7-D3EC-4C07-A408-5C998A787D57) ]
+    dispinterface ITVSpy
+    {
+    properties:
+      // NOTE - ClassWizard will maintain property information here.
+      //    Use extreme caution when editing this section.
+      //{{AFX_ODL_PROP(CTVSpyAutoProxy)
+      //}}AFX_ODL_PROP
+			
+    methods:
+      // NOTE - ClassWizard will maintain method information here.
+      //    Use extreme caution when editing this section.
+      //{{AFX_ODL_METHOD(CTVSpyAutoProxy)
+      [id(1)] void SetChannel(short channel);
+      //}}AFX_ODL_METHOD
+
+    };
+
+  [ uuid(A0B48ED3-EEB4-4566-9C5A-3B47BE71F7B1) ]
+    coclass TVSpy
+    {
+      [default] dispinterface ITVSpy;
+    };
+
+  //{{AFX_APPEND_ODL}}
+  //}}AFX_APPEND_ODL}}
+};
