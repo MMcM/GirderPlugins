@@ -1,0 +1,6 @@
+LIBRARY	MEDIASPY.DLL
+EXPORTS
+	DllGetClassObject PRIVATE
+	DllRegisterServer PRIVATE
+	DllUnregisterServer PRIVATE
+        MediaSpyGetCurrentObject PRIVATE
