@@ -65,7 +65,7 @@ BOOL ParallelLCD::DeviceOpen()
   m_ndevs = ((m_rows * m_cols) + 79) / 80; // 80 chars / device, round up.
 
   for (int dev = 0; dev < m_ndevs; dev++) {
-    WriteIR(0x38, dev); // Function set: DL=1 (b-bit), N=1 (2 lines), F=0 (5x8)
+    WriteIR(0x38, dev); // Function set: DL=1 (8-bit), N=1 (2 lines), F=0 (5x8)
     WriteIR(0x38, dev); // again
     WriteIR(0x06, dev); // Entry mode set: I/D=1 (incr), S=0 (no shift)
     WriteIR(0x0C, dev); // Display control: D=1 (on), C=0 (cursor off), B=0 (blink off)
