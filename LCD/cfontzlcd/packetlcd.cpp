@@ -217,7 +217,7 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
     // Don't wait more than 2ms between characters.  This is important
     // because we specify a read buffer that is larger than the
     // packet.
-    timeouts.ReadIntervalTimeout=2;
+    timeouts.ReadIntervalTimeout = 2;
     SetCommTimeouts(m_portHandle, &timeouts);
   }
 
@@ -453,7 +453,8 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
   olOutput.hEvent = m_outputEvent;
   if (NULL == olOutput.hEvent) return;
   memset(&olInput, 0, sizeof(olInput));
-  olInput.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+  olInput.hEvent = m_inputEvent;
+  if (NULL == olInput.hEvent) return;
 
   DWORD nbOutput, nbInput;
   BYTE inputBuf[32];
@@ -467,7 +468,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
   while (TRUE) {
     DWORD timeout = INFINITE;
     HANDLE handles[4];
-    int nh = 0;
+    DWORD nh = 0;
     handles[nh++] = stopEvent;
     handles[nh++] = sendEvent;
 
@@ -703,8 +704,6 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
     delete rpkt;
 
   CancelIo(portHandle);
-
-  CloseHandle(olInput.hEvent);
 }
 
 void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
@@ -764,14 +763,14 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
     if (m_inputEnabled) {
       switch (rpkt->GetType()) {
       case 0x80:
-        if (1 == rpkt->GetDataLength()) {
+        if (m_enableKeypad && (1 == rpkt->GetDataLength())) {
           char buf[8];
           sprintf(buf, "%d", rpkt->GetData()[0]); // Decimal as in manual.
           MapInput(buf);
         }
         break;
       case 0x81:
-        if (4 == rpkt->GetDataLength()) {
+        if (m_enableFans && (4 == rpkt->GetDataLength())) {
           char event[8], payload[16];
           sprintf(event, "FAN%d", rpkt->GetData()[0] + 1);
           int tach = rpkt->GetData()[1];
@@ -790,7 +789,7 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
         }
         break;
       case 0x82:
-        if (3 == rpkt->GetDataLength()) {
+        if (m_enableSensors && (3 == rpkt->GetDataLength())) {
           char event[8], payload[16];
           sprintf(event, "TEMP%d", rpkt->GetData()[0] + 1);
           int count = (rpkt->GetData()[1] << 8) + rpkt->GetData()[2];

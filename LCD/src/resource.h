@@ -9,14 +9,19 @@
 #define IDD_DISPLAY                     105
 #define IDD_KEYPAD                      106
 #define IDD_KEYPAD_ENTRY                107
-#define IDD_COMMAND                     108
-#define IDS_NEW_NAME                    101
+#define IDD_SENSORS                     108
+#define IDD_SENSOR                      109
+#define IDD_COMMAND                     110
+#define IDS_NEW_DEVICE_NAME             101
 #define IDS_NAME                        102
 #define IDS_DEVICE                      103
 #define IDS_BACKLIGHT                   104
 #define IDS_BRIGHTNESS                  105
 #define IDS_INPUT                       106
 #define IDS_EVENT                       107
+#define IDS_NEW_SENSOR_NAME             115
+#define IDS_ROM                         113
+#define IDS_TEMPERATURE                 114
 #define IDS_VARIABLE                    108
 #define IDS_VALUE                       109
 #define IDS_BUTTON                      110
@@ -52,6 +57,9 @@
 #define IDC_PASSTHRU                    1028
 #define IDC_INPUT                       1029
 #define IDC_EVENT                       1030
+#define IDC_SENSORS                     1066
+#define IDC_DETECT                      1067
+#define IDC_INTERVAL                    1068
 #define IDC_DISPLAYL                    1031
 #define IDC_DISPLAY                     1032
 #define IDC_TYPEL                       1033
@@ -95,7 +103,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        110
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1066
-#define _APS_NEXT_SYMED_VALUE           110
+#define _APS_NEXT_CONTROL_VALUE         1069
+#define _APS_NEXT_SYMED_VALUE           116
 #endif
 #endif

@@ -172,8 +172,11 @@ DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 
   m_contrast = m_brightness = 50;
 
-  m_enableInput = FALSE;
-  m_inputThread = m_inputStopEvent = m_outputEvent = NULL;
+  m_enableKeypad = m_enableFans = m_enableSensors = FALSE;
+  m_sensors = NULL;
+  m_sensorInterval = 0;         // A reasonable default probably depends on device.
+
+  m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
 }
 
 DisplayDevice::DisplayDevice(const DisplayDevice& other)
@@ -208,14 +211,26 @@ DisplayDevice::DisplayDevice(const DisplayDevice& other)
   m_contrast = other.m_contrast;
   m_brightness = other.m_brightness;
 
-  m_enableInput = other.m_enableInput;
-  m_inputThread = m_inputStopEvent = m_outputEvent = NULL;
+  m_enableKeypad = other.m_enableKeypad;
+  m_enableFans = other.m_enableFans;
+  m_enableSensors = other.m_enableSensors;
+  DOWSensor **psensor = &m_sensors;
+  for (DOWSensor *sensor = other.m_sensors; NULL != sensor; sensor = sensor->GetNext()) {
+    DOWSensor *nsensor = new DOWSensor(*sensor);
+    *psensor = nsensor;
+    psensor = &nsensor->GetNext();
+  }
+  *psensor = NULL;
+  m_sensorInterval = other.m_sensorInterval;
+
+  m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
 }
 
 DisplayDevice::~DisplayDevice()
 {
   free(m_name);
   free(m_devtype);
+  DOWSensor::Destroy(m_sensors);
 }
 
 void DisplayDevice::SetName(LPCSTR name)
@@ -336,8 +351,15 @@ void DisplayDevice::LoadSettings(HKEY hkey)
   }
     
   if (HasKeypad()) {
-    GetSettingBool(hkey, "EnableInput", m_enableInput);
+    GetSettingBool(hkey, "EnableInput", m_enableKeypad); // Compatible value name.
     m_inputMap.LoadFromRegistry(hkey);
+  }
+
+  if (HasSensors()) {
+    GetSettingBool(hkey, "EnableSensors", m_enableSensors);
+    if (IM_EDITABLE == HasSensorInterval())
+      GetSettingInt(hkey, "SensorInterval", *(int*)&m_sensorInterval);
+    DOWSensor::LoadFromRegistry(hkey, &m_sensors);
   }
 
   switch (GetPortType()) {
@@ -374,8 +396,15 @@ void DisplayDevice::SaveSettings(HKEY hkey)
   }
 
   if (HasKeypad()) {
-    SetSettingBool(hkey, "EnableInput", m_enableInput);
+    SetSettingBool(hkey, "EnableInput", m_enableKeypad); // Compatible value name.
     m_inputMap.SaveToRegistry(hkey);
+  }
+
+  if (HasSensors()) {
+    SetSettingBool(hkey, "EnableSensors", m_enableSensors);
+    if (IM_EDITABLE == HasSensorInterval())
+      SetSettingInt(hkey, "SensorInterval", m_sensorInterval);
+    DOWSensor::SaveToRegistry(hkey, m_sensors);
   }
 
   switch (GetPortType()) {
@@ -885,7 +914,7 @@ void DisplayDevice::Test()
   CustomCharacter cust1("0b11110 0b10001 0b10001 0b11110 0b10100 0b10010 0b10001");
   CustomCharacter cust2("0b01111 0b10001 0b10001 0b01111 0b00101 0b01001 0b10001");
 
-  Display(0, 0, 10, "LCD 3.1");
+  Display(0, 0, 10, "LCD 3.2");
   Display(1, -1, -1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   DisplayCustomCharacter(0, 10, cust1);
   DisplayCustomCharacter(0, 11, cust2);
@@ -900,8 +929,10 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
 {
   CloseSerial();
 
-  if (asynch)
+  if (asynch) {
     m_outputEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+    m_inputEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+  }
   
   m_portHandle = CreateFile(m_port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
                             OPEN_EXISTING, (asynch) ? FILE_FLAG_OVERLAPPED : 0, NULL);
@@ -929,7 +960,7 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
   return TRUE;
 }
 
-BOOL DisplayDevice::WriteSerial(LPBYTE data, size_t len)
+BOOL DisplayDevice::WriteSerial(LPBYTE data, DWORD len)
 {
   DWORD nb;
   if (NULL == m_outputEvent)
@@ -945,11 +976,46 @@ BOOL DisplayDevice::WriteSerial(LPBYTE data, size_t len)
   return GetOverlappedResult(m_portHandle, &overlapped, &nb, TRUE);
 }
 
+BOOL DisplayDevice::ReadSerial(LPBYTE data, DWORD len, LPDWORD plen, DWORD timeout)
+{
+  if (NULL == m_inputEvent)
+    return ReadFile(m_portHandle, data, len, plen, NULL);
+  
+  OVERLAPPED overlapped;
+  memset(&overlapped, 0, sizeof(overlapped));
+  overlapped.hEvent = m_inputEvent;
+  if (ReadFile(m_portHandle, data, len, plen, &overlapped))
+    return TRUE;
+  if (ERROR_IO_PENDING != GetLastError())
+    return FALSE;
+
+  HANDLE handles[2];
+  DWORD nh = 0;
+  if (NULL != m_inputStopEvent)
+    handles[nh++] = m_inputStopEvent;
+  handles[nh++] = overlapped.hEvent;
+  DWORD hn = WaitForMultipleObjects(nh, handles, FALSE, timeout);
+  if (hn != nh-1)
+    CancelIo(m_portHandle);     // Timeout or stopped.
+  // It may still complete before CancelIo takes effect.
+  if (GetOverlappedResult(m_portHandle, &overlapped, plen, FALSE))
+    return TRUE;
+  if (WAIT_TIMEOUT == hn) {
+    *plen = 0;
+    return TRUE;
+  }
+  return FALSE;
+}
+
 void DisplayDevice::CloseSerial()
 {
   if (NULL != m_portHandle) {
     CloseHandle(m_portHandle);
     m_portHandle = NULL;
+  }
+  if (NULL != m_inputEvent) {
+    CloseHandle(m_inputEvent);
+    m_inputEvent = NULL;
   }
   if (NULL != m_outputEvent) {
     CloseHandle(m_outputEvent);
@@ -966,43 +1032,20 @@ static DWORD WINAPI SerialInputThread(LPVOID lpParam)
 
 void DisplayDevice::DeviceSerialInputThread()
 {
-  HANDLE stopEvent = m_inputStopEvent;
-  if (NULL == stopEvent) return;
-
-  HANDLE portHandle = m_portHandle;
-  if (NULL == portHandle) return;
-
-  OVERLAPPED overlapped;
-  memset(&overlapped, 0, sizeof(overlapped));
-  overlapped.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-
   while (TRUE) {
-    HANDLE handles[2];
-    int nh = 0;
-    handles[nh++] = stopEvent;
-
-    // Even if the device has multi-byte input, it will need to
-    // reassemble across buffer boundaries, so use the simplest
-    // protocol for passing it the data.
+    // This default just treats each input byte as keypad input.
+    // Something more complicated is needed if there are multi-byte inputs
+    // or polling tasks or anything like that.
     BYTE buf[1];
     DWORD nb;
-    if (ReadFile(portHandle, buf, sizeof(buf), &nb, &overlapped)) {
-      if (nb > 0)
-        DeviceInput(buf[0]);
-      continue;
-    }
-    if (ERROR_IO_PENDING == GetLastError())
-      handles[nh++] = overlapped.hEvent;
-    if (WAIT_OBJECT_0 == WaitForMultipleObjects(nh, handles, FALSE, INFINITE))
+    if (!ReadSerial(buf, sizeof(buf), &nb))
       break;
-    if (GetOverlappedResult(portHandle, &overlapped, &nb, TRUE)) {
-      if (nb > 0)
-        DeviceInput(buf[0]);
+    if (m_enableKeypad && (nb > 0)) {
+      char input[8];
+      sprintf(input, "%02X", buf[0]);
+      MapInput(input);
     }
   }
-
-  CancelIo(portHandle);
-  CloseHandle(overlapped.hEvent);
 }
 
 BOOL DisplayDevice::EnableSerialInput()
@@ -1013,6 +1056,7 @@ BOOL DisplayDevice::EnableSerialInput()
   m_inputThread = CreateThread(NULL, 0, SerialInputThread, this, 0, &dwThreadId);
   if (NULL == m_inputThread) {
     DisplayWin32Error(GetLastError());
+    DisableSerialInput();
     return FALSE;
   }
   return TRUE;
@@ -1020,17 +1064,17 @@ BOOL DisplayDevice::EnableSerialInput()
 
 void DisplayDevice::DisableSerialInput()
 {
-  if (NULL == m_inputThread)
-    return;
+  if (NULL != m_inputThread) {
+    SetEvent(m_inputStopEvent);
+    WaitForSingleObject(m_inputThread, INFINITE);
+    CloseHandle(m_inputThread);
+    m_inputThread = NULL;
+  }
 
-  SetEvent(m_inputStopEvent);
-  WaitForSingleObject(m_inputThread, INFINITE);
-
-  CloseHandle(m_inputStopEvent);
-  m_inputStopEvent = NULL;
-
-  CloseHandle(m_inputThread);
-  m_inputThread = NULL;
+  if (NULL != m_inputStopEvent) {
+    CloseHandle(m_inputStopEvent);
+    m_inputStopEvent = NULL;
+  }
 }
 
 int DisplayDevice::DeviceNCustomCharacters()
@@ -1088,18 +1132,11 @@ BOOL DisplayDevice::DeviceHasKeypad()
 
 BOOL DisplayDevice::DeviceEnableInput()
 {
-  return FALSE;
+  return TRUE;
 }
 
 void DisplayDevice::DeviceDisableInput()
 {
-}
-
-void DisplayDevice::DeviceInput(BYTE b)
-{
-  char buf[8];
-  sprintf(buf, "%02X", b);
-  MapInput(buf);
 }
 
 BOOL DisplayDevice::DeviceHasKeypadLegends()
@@ -1128,6 +1165,29 @@ int DisplayDevice::DeviceGetGPOs()
 }
 
 void DisplayDevice::DeviceSetGPO(int gpo, BOOL on)
+{
+}
+
+int DisplayDevice::DeviceGetFans()
+{
+  return 0;
+}
+
+void DisplayDevice::DeviceSetFanPower(int fan, double dutyCycle)
+{
+}
+
+BOOL DisplayDevice::DeviceHasSensors()
+{
+  return FALSE;
+}
+
+DisplayDevice::IntervalMode DisplayDevice::DeviceHasSensorInterval()
+{
+  return IM_NONE;
+}
+
+void DisplayDevice::DeviceDetectSensors(LPCSTR prefix)
 {
 }
 
@@ -1687,5 +1747,197 @@ void InputMap::SaveToRegistry(HKEY hkey)
       DisplayDevice::SetSettingString(subkey, entry->m_input, entry->m_event);
     }
     RegCloseKey(subkey);
+  }
+}
+
+DOWSensor::DOWSensor(LPCSTR name, LPCBYTE rom)
+{
+  m_name = _strdup(name);
+  memcpy(m_rom, rom, sizeof(m_rom));
+  m_enabled = TRUE;
+  m_value = NULL;
+  m_updateTime = 0;
+  m_next = NULL;
+}
+
+DOWSensor::DOWSensor(const DOWSensor& other)
+{
+  m_name = _strdup(other.m_name);
+  memcpy(m_rom, other.m_rom, sizeof(m_rom));
+  m_enabled = other.m_enabled;
+  m_value = NULL;
+  m_updateTime = 0;
+  m_next = NULL;
+}
+
+DOWSensor::~DOWSensor()
+{
+  free(m_name);
+  free(m_value);
+}
+
+void DOWSensor::SetName(LPCSTR name)
+{
+  free(m_name);
+  m_name = _strdup(name);
+}
+
+void DOWSensor::Clear()
+{
+  free(m_value);
+  m_value = NULL;
+  m_updateTime = GetTickCount();
+}
+
+BOOL DOWSensor::LoadFromScratchpad(LPCBYTE pb, size_t nb)
+{
+  char buf[128];
+  LPCSTR newvalue = NULL;
+
+  switch (m_rom[0]) {
+  case 0x10:                    // DS18S20
+    if (nb >= 2) {
+      double temp = ((double)*(SHORT UNALIGNED*)pb) / 2.0;
+      if (nb >= 8) {
+        temp = temp - 0.25 + ((pb[7] - pb[6]) / pb[7]);
+      }
+      sprintf(buf, "%.1f", temp);
+      newvalue = buf;
+    }
+    break;
+  case 0x22:                    // DS1822
+  case 0x28:                    // DS18B20
+    if (nb >= 2) {
+      double temp = ((double)*(SHORT UNALIGNED*)pb) / 16.0;
+      sprintf(buf, "%.1f", temp);
+      newvalue = buf;
+    }
+    break;
+  }
+
+  m_updateTime = GetTickCount();
+  
+  if (NULL == newvalue) {
+    if (NULL == m_value)
+      return FALSE;
+    free(m_value);
+    m_value = NULL;
+    return TRUE;
+  }
+  if ((NULL != m_value) && !strcmp(newvalue, m_value))
+    return FALSE;
+  free(m_value);
+  m_value = _strdup(newvalue);
+  return TRUE;
+}
+
+void DOWSensor::LoadFromRegistry(HKEY hkey, DOWSensor **sensors)
+{
+  HKEY subkey;
+  if (ERROR_SUCCESS == RegOpenKey(hkey, "Sensors", &subkey)) {
+    Destroy(*sensors);
+
+    char name[128], data[32];
+    DWORD dwIndex, dwType, namel, datal;
+    dwIndex = 0; 
+    while (TRUE) {
+      namel = sizeof(name); 
+      datal = sizeof(data);
+      if (ERROR_SUCCESS != RegEnumValue(subkey, dwIndex++, name, &namel, NULL, &dwType,
+                                        (LPBYTE)data, &datal))
+        break;
+      if (REG_SZ == dwType) {
+        if (namel > 0) {
+          DOWSensor *sensor = new DOWSensor(name, data);
+          *sensors = sensor;
+          sensors = &sensor->m_next;
+        }
+      }
+    }
+
+    *sensors = NULL;
+    
+    RegCloseKey(subkey);
+  }
+}
+
+DOWSensor::DOWSensor(LPCSTR name, LPCSTR entry)
+{
+  m_name = _strdup(name);
+  m_value = NULL;
+  m_updateTime = 0;
+  m_next = NULL;
+
+  char buf[32];
+  strncpy(buf, entry, sizeof(buf));
+  LPSTR pb = buf;
+
+  if ('*' == *pb) {
+    m_enabled = FALSE;
+    pb++;
+  }
+  else
+    m_enabled = TRUE;
+  for (int i = 7; i >= 0; i--) {
+    m_rom[i] = (BYTE)strtoul(pb + i * 2, NULL, 16);
+    pb[i * 2] = '\0';
+  }
+}
+
+void DOWSensor::SaveToRegistry(HKEY hkey, DOWSensor *sensors)
+{
+  HKEY subkey;
+  if (ERROR_SUCCESS == RegCreateKey(hkey, "Sensors", &subkey)) {
+    for (DOWSensor *sensor = sensors; NULL != sensor; sensor = sensor->m_next) {
+      char buf[32];
+      LPSTR pb = buf;
+      if (!sensor->m_enabled)
+        *pb++ = '*';
+      for (int i = 0; i < 8; i++)
+        sprintf(pb + i * 2, "%02X", sensor->m_rom[i]);
+      DisplayDevice::SetSettingString(subkey, sensor->m_name, buf);
+    }
+    RegCloseKey(subkey);
+  }
+}
+
+// Determine a basis for naming newly detected sensors.  Want a number
+// at least as large as the number already named, but also larger than
+// any name ending with a number already.
+int DOWSensor::GetNewNameIndex(LPCSTR prefix, DOWSensor *sensors)
+{
+  int n = 0;
+  int m = 0;
+  for (DOWSensor *sensor = sensors; NULL != sensor; sensor = sensor->m_next) {
+    n++;
+    if (!_strnicmp(sensor->GetName(), prefix, strlen(prefix))) {
+      char *endptr = NULL;
+      long s = strtol(sensor->GetName() + strlen(prefix), &endptr, 10);
+      if (*endptr == '\0') {
+        if (m < s)
+          m = s;
+      }
+    }
+  }
+  if (n < m)
+    n = m;
+  return n;
+}
+
+// These next couple also ensure that the right heap is used.
+
+DOWSensor *DOWSensor::Create(LPCSTR prefix, int index, LPBYTE rom)
+{
+  char name[128];
+  sprintf(name, "%s%d", prefix, index);
+  return new DOWSensor(name, rom);
+}
+
+void DOWSensor::Destroy(DOWSensor *sensors)
+{
+  while (NULL != sensors) {
+    DOWSensor *sensor = sensors;
+    sensors = sensor->m_next;
+    delete sensor;
   }
 }

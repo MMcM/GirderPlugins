@@ -168,6 +168,57 @@ protected:
   InputMapEntry *m_entries;
 };
 
+class LCD_API DOWSensor
+{
+public:
+  DOWSensor(LPCSTR name, LPCBYTE rom);
+  DOWSensor(const DOWSensor& other);
+  ~DOWSensor();
+
+  LPCSTR GetName() const {
+    return m_name;
+  }
+  void SetName(LPCSTR name);
+
+  LPCBYTE GetROM() const {
+    return m_rom;
+  }
+  BOOL IsEnabled() const {
+    return m_enabled;
+  }
+  void SetEnabled(BOOL enabled) {
+    m_enabled = enabled;
+  }
+  LPCSTR GetValue() const {
+    return m_value;
+  }
+  DWORD GetUpdateTime() const {
+    return m_updateTime;
+  }
+  DOWSensor*& GetNext() {
+    return m_next;
+  }
+
+  void Clear();
+  BOOL LoadFromScratchpad(LPCBYTE pb, size_t nb);
+
+  static void LCD_DECL LoadFromRegistry(HKEY hkey, DOWSensor **sensors);
+  static void LCD_DECL SaveToRegistry(HKEY hkey, DOWSensor *sensors);
+  DOWSensor(LPCSTR name, LPCSTR entry);
+
+  static int LCD_DECL GetNewNameIndex(LPCSTR prefix, DOWSensor *sensors);
+  static DOWSensor* LCD_DECL Create(LPCSTR prefix, int index, LPBYTE rom);
+  static void LCD_DECL Destroy(DOWSensor *sensors);
+
+protected:
+  LPSTR m_name;
+  BYTE m_rom[8];
+  BOOL m_enabled;
+  LPSTR m_value;
+  DWORD m_updateTime;
+  DOWSensor *m_next;
+};
+
 class DisplayDeviceFactory;
 
 class LCD_API DisplayDevice
@@ -275,20 +326,14 @@ public:
   BOOL HasKeypad() {
     return DeviceHasKeypad();
   }
+  BOOL GetEnableKeypad() const {
+    return m_enableKeypad;
+  }
+  void SetEnableKeypad(BOOL enable) {
+    m_enableKeypad = enable;
+  }
   InputMap& GetInputMap() {
     return m_inputMap;
-  }
-  BOOL GetEnableInput() const {
-    return m_enableInput;
-  }
-  void SetEnableInput(BOOL enable) {
-    m_enableInput = enable;
-  }
-  BOOL EnableInput() {
-    return DeviceEnableInput();
-  }
-  void DisableInput() {
-    DeviceDisableInput();
   }
   BOOL HasKeypadLegends() {
     return DeviceHasKeypadLegends();
@@ -303,11 +348,51 @@ public:
     DeviceSetKeypadLegend(button, legend);
   }
 
+  enum IntervalMode { IM_NONE, IM_EDITABLE, IM_FIXED };
+
   int GetGPOs() {
     return DeviceGetGPOs();
   }
   void SetGPO(int gpo, BOOL on) {
     DeviceSetGPO(gpo, on);
+  }
+  int GetFans() {
+    return DeviceGetFans();
+  }
+  void SetFanPower(int fan, double dutyCycle) {
+    DeviceSetFanPower(fan, dutyCycle);
+  }
+
+  BOOL HasSensors() {
+    return DeviceHasSensors();
+  }
+  BOOL GetEnableSensors() const {
+    return m_enableSensors;
+  }
+  void SetEnableSensors(BOOL enable) {
+    m_enableSensors = enable;
+  }
+  IntervalMode HasSensorInterval() {
+    return DeviceHasSensorInterval();
+  }
+  DWORD GetSensorInterval() const {
+    return m_sensorInterval;
+  }
+  void SetSensorInterval(DWORD interval) {
+    m_sensorInterval = interval;
+  }
+  DOWSensor *GetSensors() {
+    return m_sensors;
+  }
+  void DetectSensors(LPCSTR prefix) {
+    DeviceDetectSensors(prefix);
+  }
+  
+  BOOL EnableInput() {
+    return DeviceEnableInput();
+  }
+  void DisableInput() {
+    DeviceDisableInput();
   }
 
   HKEY GetSettingsKey();
@@ -345,13 +430,17 @@ protected:
   virtual void DeviceSerialInputThread();
   virtual BOOL DeviceEnableInput();
   virtual void DeviceDisableInput();
-  virtual void DeviceInput(BYTE b);
   virtual BOOL DeviceHasKeypadLegends();
   virtual LPCSTR *DeviceGetKeypadButtonChoices();
   virtual LPCSTR *DeviceGetKeypadLegendChoices();
   virtual void DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend);
   virtual int DeviceGetGPOs();
   virtual void DeviceSetGPO(int gpo, BOOL on);
+  virtual int DeviceGetFans();
+  virtual void DeviceSetFanPower(int fan, double dutyCycle);
+  virtual BOOL DeviceHasSensors();
+  virtual IntervalMode DeviceHasSensorInterval();
+  virtual void DeviceDetectSensors(LPCSTR prefix);
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 
@@ -370,7 +459,8 @@ protected:
   void MapInput(LPCSTR input);
 
   BOOL OpenSerial(BOOL asynch = FALSE);
-  BOOL WriteSerial(LPBYTE data, size_t len);
+  BOOL WriteSerial(LPBYTE data, DWORD len);
+  BOOL ReadSerial(LPBYTE data, DWORD len, LPDWORD plen, DWORD timeout = INFINITE);
   BOOL EnableSerialInput();
   void DisableSerialInput();
   void CloseSerial();
@@ -404,9 +494,17 @@ protected:
 
   int m_contrast, m_brightness;
 
+  BOOL m_enableKeypad;
   InputMap m_inputMap;
-  BOOL m_enableInput;
-  HANDLE m_inputThread, m_inputStopEvent, m_outputEvent;
+
+  BOOL m_enableFans;
+  // ...
+
+  BOOL m_enableSensors;
+  DOWSensor *m_sensors;
+  DWORD m_sensorInterval;
+
+  HANDLE m_inputThread, m_inputEvent, m_inputStopEvent, m_outputEvent;
 };
 
 class LCD_API DisplayDeviceFactory

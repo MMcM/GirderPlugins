@@ -426,6 +426,7 @@ static void SaveDisplaySettings(HWND hwnd)
 }
 
 static void FillKeypadPage(LPPROPSHEETPAGE ppsp);
+static void FillSensorsPage(LPPROPSHEETPAGE ppsp);
 
 // Create new edit device and set fresh state from it.
 static void CreateEditDevice(HWND hwnd)
@@ -464,17 +465,34 @@ static void CreateEditDevice(HWND hwnd)
   HWND sheet = GetParent(hwnd);
 
   if (NULL != g_editDevice) {
-    BOOL keypad = g_editDevice->HasKeypad();
-    int index = PropSheet_IdToIndex(sheet, IDD_KEYPAD);
-    if (keypad != (index >= 0)) {
-      if (keypad) {
-        PROPSHEETPAGE page;
-        FillKeypadPage(&page);
-        HPROPSHEETPAGE hpage = CreatePropertySheetPage(&page);
-        PropSheet_AddPage(sheet, hpage);
+    {
+      BOOL keypad = g_editDevice->HasKeypad();
+      int index = PropSheet_IdToIndex(sheet, IDD_KEYPAD);
+      if (keypad != (index >= 0)) {
+        if (keypad) {
+          PROPSHEETPAGE page;
+          FillKeypadPage(&page);
+          HPROPSHEETPAGE hpage = CreatePropertySheetPage(&page);
+          PropSheet_AddPage(sheet, hpage);
+        }
+        else {
+          PropSheet_RemovePage(sheet, index, NULL);
+        }
       }
-      else {
-        PropSheet_RemovePage(sheet, index, NULL);
+    }
+    {
+      BOOL sensors = g_editDevice->HasSensors();
+      int index = PropSheet_IdToIndex(sheet, IDD_SENSORS);
+      if (sensors != (index >= 0)) {
+        if (sensors) {
+          PROPSHEETPAGE page;
+          FillSensorsPage(&page);
+          HPROPSHEETPAGE hpage = CreatePropertySheetPage(&page);
+          PropSheet_AddPage(sheet, hpage);
+        }
+        else {
+          PropSheet_RemovePage(sheet, index, NULL);
+        }
       }
     }
   }
@@ -605,7 +623,7 @@ static void LoadKeypadSettings(HWND hwnd)
   HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
   ListView_DeleteAllItems(list);
   if (NULL != g_editDevice) {
-    Button_SetCheck(GetDlgItem(hwnd, IDC_ENABLED), g_editDevice->GetEnableInput());
+    Button_SetCheck(GetDlgItem(hwnd, IDC_ENABLED), g_editDevice->GetEnableKeypad());
     LV_ITEM lvi;
     memset(&lvi, 0, sizeof(LVITEM));
     InputMap& inputMap = g_editDevice->GetInputMap();
@@ -628,7 +646,7 @@ static void LoadKeypadSettings(HWND hwnd)
 static void SaveKeypadSettings(HWND hwnd)
 {
   if (NULL == g_editDevice) return;
-  g_editDevice->SetEnableInput(Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLED)));
+  g_editDevice->SetEnableKeypad(Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLED)));
   InputMap& inputMap = g_editDevice->GetInputMap();
   inputMap.Clear();
 
@@ -732,6 +750,8 @@ static BOOL CALLBACK KeypadPageDialogProc(HWND hwnd, UINT uMsg,
     {
       HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
       char title[128];
+
+      ListView_SetExtendedListViewStyle(list, LVS_EX_FULLROWSELECT);
 
       LV_COLUMN lvc;
       memset(&lvc, 0, sizeof(lvc));
@@ -843,6 +863,256 @@ static void FillKeypadPage(LPPROPSHEETPAGE ppsp)
   ppsp->pfnDlgProc = KeypadPageDialogProc;
 }
 
+void UpdateSensorsButtonEnabling(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+  BOOL enable = FALSE;
+  int nSelItem = ListView_GetNextItem(list, -1, LVNI_SELECTED);
+  if (nSelItem >= 0) {
+    enable = TRUE;
+  }
+  Button_Enable(GetDlgItem(hwnd, IDC_EDIT), enable);
+}
+
+static void LoadSensorsSettings(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_SENSORS);
+  ListView_DeleteAllItems(list);
+  if (NULL != g_editDevice) {
+    Button_SetCheck(GetDlgItem(hwnd, IDC_ENABLED), g_editDevice->GetEnableSensors());
+
+    DisplayDevice::IntervalMode im = g_editDevice->HasSensorInterval();
+    ShowWindow(GetDlgItem(hwnd, IDC_INTERVAL), 
+               (im == DisplayDevice::IM_NONE) ? SW_HIDE : SW_SHOW);
+    if (im != DisplayDevice::IM_NONE) {
+      char buf[32];
+      sprintf(buf, "%d", g_editDevice->GetSensorInterval());
+      Edit_SetText(GetDlgItem(hwnd, IDC_INTERVAL), buf);
+      Edit_Enable(GetDlgItem(hwnd, IDC_INTERVAL), (im == DisplayDevice::IM_EDITABLE));
+    }
+
+    LV_ITEM lvi;
+    memset(&lvi, 0, sizeof(LVITEM));
+    for (DOWSensor *sensor = g_editDevice->GetSensors(); 
+         NULL != sensor; 
+         sensor = sensor->GetNext()) {
+      lvi.mask = LVIF_TEXT | LVIF_STATE | LVIF_PARAM;
+      lvi.iSubItem = 0;
+      if (sensor->IsEnabled())
+        lvi.state = INDEXTOSTATEIMAGEMASK(2);
+      else
+        lvi.state = INDEXTOSTATEIMAGEMASK(1);
+      lvi.stateMask = LVIS_STATEIMAGEMASK;
+      lvi.pszText = (LPSTR)sensor->GetName();
+      lvi.lParam = (LPARAM)sensor;
+      lvi.iItem = ListView_InsertItem(list, &lvi); // May move when sorted.
+      // I'm not sure why this is necessary.  There is a notification
+      // of it changing back right away from the insert.
+      ListView_SetItemState(list, lvi.iItem, lvi.state, LVIS_STATEIMAGEMASK);
+      lvi.mask = LVIF_TEXT;
+      lvi.iSubItem = 1;
+      char buf[17];
+      for (int i = 0; i < 8; i++)
+        sprintf(buf + i * 2, "%02X", sensor->GetROM()[i]);
+      lvi.pszText = buf;
+      ListView_SetItem(list, &lvi);
+      lvi.iSubItem = 2;
+      lvi.pszText = (LPSTR)sensor->GetValue();
+      if (NULL != lvi.pszText)
+        ListView_SetItem(list, &lvi);
+    }
+  }
+  UpdateSensorsButtonEnabling(hwnd);
+}
+
+static void SaveSensorsSettings(HWND hwnd)
+{
+  if (NULL == g_editDevice) return;
+  g_editDevice->SetEnableSensors(Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLED)));
+  if (DisplayDevice::IM_EDITABLE == g_editDevice->HasSensorInterval()) {
+    char buf[32];
+    Edit_GetText(GetDlgItem(hwnd, IDC_INTERVAL), buf, sizeof(buf));
+    g_editDevice->SetSensorInterval(strtoul(buf, NULL, 10));
+  }
+}
+
+static BOOL CALLBACK SensorDialogProc(HWND hwnd, UINT uMsg, 
+                                      WPARAM wParam, LPARAM lParam)
+{
+  switch (uMsg) {
+  case WM_INITDIALOG:
+    {
+      SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
+                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_PLUGIN)));
+
+      SetWindowLong(hwnd, DWL_USER, lParam);
+
+      DOWSensor *sensor = (DOWSensor *)lParam;
+      Edit_SetText(GetDlgItem(hwnd, IDC_NAME), sensor->GetName());
+      return TRUE;
+    }
+
+  case WM_COMMAND:
+    switch (LOWORD(wParam)) {
+    case IDOK:
+      {
+        char buf[128];
+        DOWSensor *sensor = (DOWSensor *)GetWindowLong(hwnd, DWL_USER);
+        Edit_GetText(GetDlgItem(hwnd, IDC_NAME), buf, sizeof(buf));
+        sensor->SetName(buf);
+      }
+      EndDialog(hwnd, TRUE);
+      return TRUE;
+
+    case IDCANCEL:
+      EndDialog(hwnd, FALSE);
+      return TRUE;
+    }
+    break;
+  }
+  return FALSE;
+}
+
+static void EditSensor(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_SENSORS);
+  int index = ListView_GetNextItem(list, -1, LVNI_SELECTED);
+  if (index < 0) return;
+  DOWSensor *sensor = (DOWSensor *)ListView_GetItemData(list, index);
+  if (NULL == sensor) return;
+  int result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_SENSOR), 
+                              GetParent(hwnd), SensorDialogProc, (LPARAM)sensor);
+  if (result) {
+    ListView_SetItemText(list, index, 0, (LPSTR)sensor->GetName());
+    SetPageModified(hwnd);
+  }
+}
+
+static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg, 
+                                           WPARAM wParam, LPARAM lParam)
+{
+  switch (uMsg) {
+  case WM_INITDIALOG:
+    {
+      HWND list = GetDlgItem(hwnd, IDC_SENSORS);
+      char title[128];
+
+      ListView_SetExtendedListViewStyle(list, LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
+
+      LV_COLUMN lvc;
+      memset(&lvc, 0, sizeof(lvc));
+      lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+      lvc.cx = 75;
+      if (LoadString(g_hInstance, IDS_NAME, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "Name";
+      lvc.iSubItem = 0;
+      ListView_InsertColumn(list, 0, &lvc);
+      lvc.cx = 125;
+      if (LoadString(g_hInstance, IDS_ROM, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "ROM";
+      lvc.iSubItem = 1;
+      ListView_InsertColumn(list, 1, &lvc);
+      lvc.cx = 50;
+      if (LoadString(g_hInstance, IDS_TEMPERATURE, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "Temp";
+      lvc.iSubItem = 2;
+      ListView_InsertColumn(list, 2, &lvc);
+    }
+    LoadSensorsSettings(hwnd);
+    return TRUE;
+
+  case WM_COMMAND:
+    switch (LOWORD(wParam)) {
+    case IDC_DETECT:
+      {
+        DisplayEnterCS();
+        DisplayClose();
+        char prefix[128];
+        if (!LoadString(g_hInstance, IDS_NEW_SENSOR_NAME, prefix, sizeof(prefix) - 2))
+          strncpy(prefix, "Sensor", sizeof(prefix) - 2);
+        g_editDevice->DetectSensors(prefix);
+        DisplayLeaveCS();
+        LoadSensorsSettings(hwnd);
+        SetPageModified(hwnd);
+      }
+      return TRUE;
+
+    case IDC_EDIT:
+      EditSensor(hwnd);
+      return TRUE;
+
+    case IDC_ENABLED:
+      SetPageModified(hwnd);
+      break;
+    }
+    break;
+
+  case WM_NOTIFY:
+    {
+      LPNMHDR phdr = (LPNMHDR)lParam;
+      switch (phdr->code) {
+      case PSN_SETACTIVE:
+        break;
+      case PSN_KILLACTIVE:
+        break;
+      case PSN_APPLY:
+        SaveSensorsSettings(hwnd);
+        OnApply(hwnd, lParam);
+        break;
+      case NM_DBLCLK:
+        EditSensor(hwnd);
+        break;
+      case LVN_ITEMCHANGED:
+        {
+          LPNMLISTVIEW pNMLIST = (LPNMLISTVIEW)phdr;
+          if ((pNMLIST->uNewState ^ pNMLIST->uOldState) & LVNI_SELECTED) {
+            UpdateSensorsButtonEnabling(hwnd);
+          }
+          if ((pNMLIST->uNewState ^ pNMLIST->uOldState) & LVIS_STATEIMAGEMASK) {
+            HWND list = pNMLIST->hdr.hwndFrom;
+            int index = pNMLIST->iItem;
+            BOOL check = ListView_GetCheckState(list, index);
+            DOWSensor *sensor = (DOWSensor *)ListView_GetItemData(list, index);
+            if (NULL != sensor)
+              sensor->SetEnabled(check);
+          }
+        }
+        break;
+      }
+    }
+    break;
+
+  case PSM_QUERYSIBLINGS:
+    switch (wParam) {
+    case PSQS_NEW_DEVICE:
+      LoadSensorsSettings(hwnd);
+      break;
+    case PSQS_SAVE_FOR_TEST:
+      SaveSensorsSettings(hwnd);
+      break;
+    }
+    break;
+
+  }
+
+  return FALSE;
+}
+
+static void FillSensorsPage(LPPROPSHEETPAGE ppsp)
+{
+  ppsp->dwSize = sizeof(PROPSHEETPAGE);
+  ppsp->dwFlags = PSP_DEFAULT;
+  ppsp->hInstance = g_hInstance;
+  ppsp->pszTemplate = MAKEINTRESOURCE(IDD_SENSORS);
+  ppsp->pfnDlgProc = SensorsPageDialogProc;
+}
+
 static int PropertySheetCallback(HWND hwnd, UINT uMsg, LPARAM lParam)
 {
   switch (uMsg) {
@@ -865,8 +1135,12 @@ static int EditDevice(DisplayDevice *dev)
     FillGeneralPage(pages + nPages++);
   nStartPage = nPages;
   FillDisplayPage(pages + nPages++);
-  if ((NULL != g_editDevice) && g_editDevice->HasKeypad())
-    FillKeypadPage(pages + nPages++);
+  if (NULL != g_editDevice) {
+    if (g_editDevice->HasKeypad())
+      FillKeypadPage(pages + nPages++);
+    if (g_editDevice->HasSensors())
+      FillSensorsPage(pages + nPages++);
+  }
 
   PROPSHEETHEADERA pshead;
   pshead.dwSize = sizeof(pshead);
@@ -918,7 +1192,7 @@ static void FillDisplaysList(HWND hwnd)
   memset(&lvi, 0, sizeof(LVITEM));
   for (DisplayDevice *dev = g_editDevices.GetFirst(); NULL != dev; 
        dev = dev->GetNext()) {
-    lvi.mask = LVIF_TEXT | LVIF_STATE | LVIF_PARAM | LVIS_SELECTED;
+    lvi.mask = LVIF_TEXT | LVIF_STATE | LVIF_PARAM;
     lvi.iSubItem = 0;
     if (dev->IsDefault())
       lvi.state = INDEXTOSTATEIMAGEMASK(3);
@@ -973,7 +1247,7 @@ static void EditSelectedDevice(HWND hwnd, BOOL copy)
       ndev = fact->CreateDisplayDevice(DisplayDevices->dev);
       if (NULL == ndev) return;
       if (NULL == g_editDevices.GetFirst()) ndev->SetDefault(TRUE);
-      LoadString(g_hInstance, IDS_NEW_NAME, name, sizeof(name)-3);
+      LoadString(g_hInstance, IDS_NEW_DEVICE_NAME, name, sizeof(name)-3);
     }
     // Add a number to the end to make a unique name.
     size_t idx = strlen(name);
@@ -1009,6 +1283,8 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
       SetWindowText(hwnd, PLUGINNAME);
 
       HWND list = GetDlgItem(hwnd, IDC_DISPLAYS);
+
+      ListView_SetExtendedListViewStyle(list, LVS_EX_FULLROWSELECT);
 
       if (NULL == g_hChecks)
         g_hChecks = ImageList_LoadBitmap(g_hInstance, MAKEINTRESOURCE(IDB_CHECKS),
@@ -1050,6 +1326,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
       DisplayEnterCS();
       DisplayClose();
       g_editDevices.SaveToRegistry();
+      Button_Enable(GetDlgItem(hwnd, IDC_APPLY), FALSE);
       DisplayLeaveCS();
       return TRUE;
 
@@ -1105,8 +1382,9 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
           HWND list = GetDlgItem(hwnd, IDC_DISPLAYS);
           LVHITTESTINFO hti;
           hti.pt = pNMITEM->ptAction;
-          int nHitItem = ListView_HitTest(list, &hti);
-          if (hti.flags & LVHT_ONITEMSTATEICON) {
+          int nHitItem = ListView_SubItemHitTest(list, &hti);
+          if ((hti.flags & LVHT_ONITEMSTATEICON) &&
+              (hti.iSubItem == 0)) {
             DisplayDevice *dev = (DisplayDevice *)ListView_GetItemData(list, nHitItem);
             UINT nState = ListView_GetItemState(list, nHitItem, LVIS_STATEIMAGEMASK);
             switch (nState) {

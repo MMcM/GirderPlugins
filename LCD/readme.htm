@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 3.1. &nbsp;MMcM 05/04
+Version 3.2. &nbsp;MMcM 05/04
 
 <h3>Supported displays</h3>
 These displays are believed to work with this plug-in.  Often similar displays
@@ -424,6 +424,29 @@ backlit LCD.  A number between 0 and 100.  The default is
 <tr><td><kbd>EnableInput</kbd></td>
 <td>
 Translate keypad button presses into Girder events.
+</td>
+
+<tr><td><kbd>InputMap</kbd></td>
+<td>
+This is actually a subkey.  Each of its values maps a raw keypad input to an event.
+If the default value is <kbd>*</kbd>, unknown inputs are sent through as is.
+</td>
+
+<tr><td><kbd>EnableSensors</kbd></td>
+<td>
+Translate temperatute sensor changes into Girder events.
+</td>
+
+<tr><td><kbd>SensorInterval</kbd></td>
+<td>
+The interval in milliseconds between reads of the sensors.
+</td>
+
+<tr><td><kbd>Sensors</kbd></td>
+<td>
+This is actually a subkey.  Each of its values gives the name for a
+sensor.  If the sensor unique id starts with <kbd>*</kbd>, the sensor
+is disabled.
 </td>
 
 <tr><td><kbd>Port</kbd></td>

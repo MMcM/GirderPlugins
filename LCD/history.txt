@@ -1,3 +1,5 @@
+3.2     05/18/2004      MMcM    Add temperature sensor monitoring.
+
 3.1     05/14/2004      MMcM    Add settable keypad mapping.
 
 3.0     05/09/2004      MMcM    Add support for multiple display devices at once.

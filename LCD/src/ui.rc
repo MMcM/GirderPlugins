@@ -162,6 +162,34 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,101,69,50,14
 END
 
+IDD_SENSORS DIALOG DISCARDABLE  0, 0, 250, 175
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Sensors"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "Enable &temperture sensors",IDC_ENABLED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,10,150,10
+    CONTROL         "Sensors",IDC_SENSORS,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | WS_BORDER | 
+                    WS_TABSTOP,7,30,170,100
+    PUSHBUTTON      "&Rename...",IDC_EDIT,190,45,50,14
+    PUSHBUTTON      "&Detect",IDC_DETECT,190,65,50,14
+    LTEXT           "Monitoring &interval:",IDC_STATIC,10,140,70,8
+    EDITTEXT        IDC_INTERVAL,85,137,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "ms",IDC_STATIC,130,140,10,8
+END
+
+IDD_SENSOR DIALOG DISCARDABLE  0, 0, 186, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rename sensor"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Name:",IDC_STATIC,15,20,19,8
+    EDITTEXT        IDC_NAME,60,17,100,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,35,50,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,101,50,50,14
+END
+
 IDD_COMMAND DIALOG DISCARDABLE  0, 0, 300, 200
 STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
@@ -247,8 +275,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,38
- PRODUCTVERSION 3,1,0,0
+ FILEVERSION 3,2,0,39
+ PRODUCTVERSION 3,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -264,12 +292,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "LCD Girder plug-in\0"
-            VALUE "FileVersion", "3.1 (38)\0"
+            VALUE "FileVersion", "3.2 (39)\0"
             VALUE "InternalName", "LCD\0"
             VALUE "LegalCopyright", "Copyright \251 2001-2004 Mike McMahon\0"
             VALUE "OriginalFilename", "LCD.DLL\0"
             VALUE "ProductName", "LCD\0"
-            VALUE "ProductVersion", "3.1\0"
+            VALUE "ProductVersion", "3.2\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -288,13 +316,16 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_NEW_NAME            "LCD"
+    IDS_NEW_DEVICE_NAME     "LCD"
     IDS_NAME                "Name"
     IDS_DEVICE              "Device"
     IDS_BACKLIGHT           "Backlight:"
     IDS_BRIGHTNESS          "Brightness:"
     IDS_INPUT               "Input"
     IDS_EVENT               "Event"
+    IDS_NEW_SENSOR_NAME     "Sensor"
+    IDS_ROM                 "ROM"
+    IDS_TEMPERATURE         "Temp"
     IDS_VARIABLE            "Variable:"
     IDS_VALUE               "Value:"
     IDS_BUTTON              "Button:"

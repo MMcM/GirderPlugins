@@ -101,10 +101,9 @@ BOOL DisplayEnableInput()
   for (DisplayDevice *device = g_devices.GetFirst(); 
        NULL != device; 
        device = device->GetNext()) {
-    if (device->GetEnableInput()) {
-      if (!device->EnableInput()) {
-        return FALSE;
-      }
+    if (!device->EnableInput()) {
+      DisplayDisableInput();
+      return FALSE;
     }
   }
   return TRUE;
@@ -149,7 +148,7 @@ void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname)
 {
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
-  if ((NULL != device) && device->IsEnabled() && device->Open())
+  if ((NULL != device) && device->Open())
     device->Display(row, col, width, str);
 }
 
@@ -157,7 +156,7 @@ void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname)
 {
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
-  if ((NULL != device) && device->IsEnabled() && device->Open())
+  if ((NULL != device) && device->Open())
     device->DisplayCustomCharacter(row, col, CustomCharacter(bits));
 }
 
@@ -198,10 +197,6 @@ BOOL DisplayOpen(DisplayCommandState& state)
 {
   if (NULL == state.m_device) {
     state.SetStatus("Could not find device.");
-    return FALSE;
-  }
-  else if (!state.m_device->IsEnabled()) {
-    state.SetStatus("Device is not enabled.");
     return FALSE;
   }
   if (!state.m_device->Open()) {

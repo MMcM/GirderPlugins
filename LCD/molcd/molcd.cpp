@@ -107,6 +107,15 @@ const char *KEYPAD_15 =
   "X	Left\n"
   ;
 
+struct DisplayReturnPacket {
+  BYTE preamble[2];
+  BYTE size;
+  BYTE type;
+  BYTE data[1];
+};
+
+const BYTE CONT = 0x80;
+
 class MatrixOrbitalDisplay : public DisplayDevice
 {
 public:
@@ -125,13 +134,22 @@ public:
   virtual BOOL DeviceHasKeypad();
   virtual BOOL DeviceEnableInput();
   virtual void DeviceDisableInput();
-  virtual void DeviceInput(BYTE b);
+  virtual void DeviceSerialInputThread();
   virtual int DeviceGetGPOs();
   virtual void DeviceSetGPO(int gpo, BOOL on);
+  virtual int DeviceGetFans();
+  virtual void DeviceSetFanPower(int fan, double dutyCycle);
+  virtual BOOL DeviceHasSensors();
+  virtual IntervalMode DeviceHasSensorInterval();
+  virtual void DeviceDetectSensors(LPCSTR prefix);
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
+  DWORD CheckSensors();
+  void UpdateSensors(BOOL detect);
+  DisplayReturnPacket *ReadReturnPacket();
+
   BOOL m_vfd, m_keypad, m_dow_pwm;
   BrightnessFunc_t m_brightnessFunc;
   int m_gpos;
@@ -176,6 +194,8 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(DisplayDeviceFactory *factory, LPCSTR
     m_characterMap[i] = ' ';
 
   m_debounceTime = 52;
+
+  m_sensorInterval = 5000;
 }
 
 MatrixOrbitalDisplay::MatrixOrbitalDisplay(const MatrixOrbitalDisplay& other)
@@ -200,7 +220,7 @@ DisplayDevice *MatrixOrbitalDisplay::Duplicate() const
 
 BOOL MatrixOrbitalDisplay::DeviceOpen()
 {
-  if (!OpenSerial(m_enableInput))
+  if (!OpenSerial(m_enableKeypad || m_enableFans || m_enableSensors))
     return FALSE;
 
   BYTE buf[128];
@@ -317,6 +337,9 @@ BOOL MatrixOrbitalDisplay::DeviceHasKeypad()
 
 BOOL MatrixOrbitalDisplay::DeviceEnableInput()
 {
+  if (!m_enableKeypad && !m_enableFans && !m_enableSensors)
+    return TRUE;
+
   if (!Open()) return FALSE;    // Get a port handle.
   return EnableSerialInput();
 }
@@ -326,12 +349,32 @@ void MatrixOrbitalDisplay::DeviceDisableInput()
   DisableSerialInput();
 }
 
-void MatrixOrbitalDisplay::DeviceInput(BYTE b)
+void MatrixOrbitalDisplay::DeviceSerialInputThread()
 {
-  char buf[2];
-  buf[0] = b;
-  buf[1] = '\0';
-  MapInput(buf);
+  while (TRUE) {
+    DWORD stime = CheckSensors();
+
+    DWORD now = GetTickCount();
+    DWORD timeout = INFINITE;
+
+    if (INFINITE != stime) {
+      if (stime <= now) continue;
+      DWORD delta = stime - now;
+      if (timeout > delta)
+        timeout = delta;
+    }
+
+    BYTE buf[1];
+    DWORD nb;
+    if (!ReadSerial(buf, sizeof(buf), &nb, timeout))
+      break;
+    if (m_enableKeypad && (nb > 0)) {
+      char input[2];
+      input[0] = buf[0];
+      input[1] = '\0';
+      MapInput(input);
+    }
+  }
 }
 
 int MatrixOrbitalDisplay::DeviceGetGPOs()
@@ -350,6 +393,160 @@ void MatrixOrbitalDisplay::DeviceSetGPO(int gpo, BOOL on)
   WriteSerial(buf, nb);
 }
 
+int MatrixOrbitalDisplay::DeviceGetFans()
+{
+  if (m_dow_pwm)
+    return 4;
+  else
+    return 0;
+}
+
+void MatrixOrbitalDisplay::DeviceSetFanPower(int fan, double dutyCycle)
+{
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 0xFE;
+  buf[nb++] = 0xC0;             // PWM Value
+  int pwm;
+  if (dutyCycle < 0.0)
+    pwm = 0;
+  else if (dutyCycle > 1.0)
+    pwm = 255;
+  else
+    pwm = (BYTE)(dutyCycle * 255.0);
+  buf[nb++] = pwm;
+  WriteSerial(buf, nb);
+}
+
+BOOL MatrixOrbitalDisplay::DeviceHasSensors()
+{
+  return m_dow_pwm;
+}
+
+DisplayDevice::IntervalMode MatrixOrbitalDisplay::DeviceHasSensorInterval()
+{
+  return (m_dow_pwm) ? IM_EDITABLE : IM_NONE;
+}
+
+void MatrixOrbitalDisplay::DeviceDetectSensors(LPCSTR prefix)
+{
+  if (!Open()) return;          // Get a port handle.
+
+  int n = DOWSensor::GetNewNameIndex(prefix, m_sensors);
+
+  DOWSensor *oldSensors = m_sensors;
+  DOWSensor **psensor = &m_sensors;
+
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 0xFE;
+  buf[nb++] = 0xC8;             // 1-wire
+  buf[nb++] = 2;                // Search
+  WriteSerial(buf, nb);
+  
+  while (TRUE) {
+    DisplayReturnPacket *drp = ReadReturnPacket();
+    if (NULL == drp) break;
+    if ((0x31 == drp->type) && (10 == (drp->size & ~CONT)) &&
+        (0x00 == drp->data[0]) && (0x00 == drp->data[9])) {
+      DOWSensor *sensor = NULL;
+      DOWSensor **prev = &oldSensors;
+      while (TRUE) {
+        sensor = *prev;
+        if (NULL == sensor) break;
+        if (!memcmp(sensor->GetROM(), drp->data+1, 8)) {
+          *prev = sensor->GetNext(); // Unlink and reuse.
+          break;
+        }
+        prev = &sensor->GetNext();
+      }
+      if (NULL == sensor)
+        sensor = DOWSensor::Create(prefix, ++n, drp->data+1);
+      *psensor = sensor;
+      psensor = &sensor->GetNext();
+    }
+    BOOL cont = ((drp->size & CONT) != 0);
+    free(drp);
+    if (!cont) break;
+  }
+
+  *psensor = NULL;
+  
+  DOWSensor::Destroy(oldSensors);
+
+  UpdateSensors(TRUE);
+  Close();
+}
+
+DWORD MatrixOrbitalDisplay::CheckSensors()
+{
+  // Since we process them all in one broadcast, we just need to find
+  // the first enabled sensor to get the update time.
+  DOWSensor *sensor = m_sensors;
+  while ((NULL != sensor) && !sensor->IsEnabled())
+    sensor = sensor->GetNext();
+  if (NULL == sensor)
+    return INFINITE;
+
+  DWORD nextUpdate = sensor->GetUpdateTime() + m_sensorInterval;
+  if (nextUpdate > GetTickCount())
+    return nextUpdate;
+  
+  UpdateSensors(FALSE);
+
+  // Just in case the update didn't take, we return a time relative to
+  // now so that we are sure of waiting.
+  return GetTickCount() + m_sensorInterval;
+}
+
+void MatrixOrbitalDisplay::UpdateSensors(BOOL detect)
+{
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 0xFE;
+  buf[nb++] = 0xC8;             // 1-wire
+  buf[nb++] = 1;                // Transaction
+  buf[nb++] = 0x01;             // Reset bus, no CRC
+  buf[nb++] = 16;               // Send 16 bits
+  buf[nb++] = 0;                // Read 0 bits
+  buf[nb++] = 0xCC;             // Skip ROM
+  buf[nb++] = 0x44;             // Convert T
+  WriteSerial(buf, nb);
+  
+  DisplayReturnPacket *drp = ReadReturnPacket();
+  if (NULL == drp) return;
+  free(drp);
+
+  for (DOWSensor *sensor = m_sensors; NULL != sensor; sensor = sensor->GetNext()) {
+    if (!detect && !sensor->IsEnabled()) continue;
+
+    nb = 0;
+    buf[nb++] = 0xFE;
+    buf[nb++] = 0xC8;           // 1-wire
+    buf[nb++] = 1;              // Transaction
+    buf[nb++] = 0x03;           // Reset bus, CRC
+    buf[nb++] = 80;             // Send 80 bits
+    buf[nb++] = 72;             // Read 72 bits
+    buf[nb++] = 0x55;           // Match ROM
+    memcpy(buf+nb, sensor->GetROM(), 8); // ROM
+    nb += 8;
+    buf[nb++] = 0xBE;             // Read Scratchpad
+    WriteSerial(buf, nb);
+  
+    drp = ReadReturnPacket();
+    if (NULL == drp) continue;
+    if ((0x31 == drp->type) && (11 == (drp->size & ~CONT)) &&
+        (0x00 == drp->data[0]) && (0x00 == drp->data[10])) {
+      if (sensor->LoadFromScratchpad(drp->data+1, 9)) {
+        if (!detect) {
+          DisplaySendEvent(sensor->GetName(), sensor->GetValue());
+        }
+      }
+    }    
+    free(drp);
+  }
+}
+
 void MatrixOrbitalDisplay::DeviceLoadSettings(HKEY hkey)
 {
   if (m_keypad)
@@ -360,6 +557,68 @@ void MatrixOrbitalDisplay::DeviceSaveSettings(HKEY hkey)
 {
   if (m_keypad)
     SetSettingInt(hkey, "DebounceTime", m_debounceTime);
+}
+
+DisplayReturnPacket *MatrixOrbitalDisplay::ReadReturnPacket()
+{
+  // We are expecting a packet response.  Therefore there are at least
+  // 4 bytes waiting.  It is also possible that the user pressed a
+  // keypad button just as our request was being sent out.  In that
+  // case, that byte is ahead of the actual packet and needs to be
+  // dealt with.  Additionally, this routine can be called from the
+  // main thread or a UI thread or the input thread.  In the last
+  // case, it must deal with a stop request from the main thread.  In
+  // the other cases, no input thread is running (yet), so no
+  // synchronization there is needed.
+  BYTE hdr[4];
+  size_t off = 0;
+  while (off < sizeof(hdr)) {
+    DWORD nb = sizeof(hdr) - off;
+    if (!ReadSerial(hdr + off, nb, &nb, 100))
+      return NULL;
+    while ((off == 0) && (nb > 0)) {
+      BYTE b = hdr[off];
+      if (0x23 == b) {
+        off++;
+        nb--;
+      }
+      else {
+        // This is not the expected first preamble byte; it may be a button push.
+        if (('A' <= b) && ('Z' >= b)) {
+          if (m_enableKeypad && (NULL != m_inputThread)) {
+            char input[2];
+            input[0] = b;
+            input[1] = '\0';
+            MapInput(input);
+          }
+          if (--nb > 0)
+            memmove(hdr, hdr+1, nb);
+          continue;
+        }
+        // Or garbage.
+        PurgeComm(m_portHandle, PURGE_RXCLEAR);
+        return NULL;
+      }
+    }
+    if ((off == 1) && (nb > 0) && (0x2A != hdr[off])) {
+      // Garbage in the second byte cannot be accounted for by timing.
+      PurgeComm(m_portHandle, PURGE_RXCLEAR);
+      return NULL;
+    }
+    off += nb;
+  }
+  size_t len = sizeof(hdr) + (hdr[2] & ~CONT);
+  LPBYTE result = (LPBYTE)malloc(len);
+  memcpy(result, hdr, sizeof(hdr));
+  while (off < len) {
+    DWORD nb = len - off;
+    if (!ReadSerial(result + off, nb, &nb, 100)) {
+      free(result);
+      return NULL;
+    }
+    off += nb;
+  }
+  return (DisplayReturnPacket *)result;
 }
 
 extern "C" __declspec(dllexport)
