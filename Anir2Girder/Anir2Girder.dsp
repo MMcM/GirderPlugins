@@ -53,7 +53,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 /nologo /version:0.3 /subsystem:windows /dll /machine:I386 /out:"bin\Anir2Girder.dll"
+# ADD LINK32 /nologo /version:0.4 /subsystem:windows /dll /machine:I386 /out:"bin\Anir2Girder.dll"
 
 !ELSEIF  "$(CFG)" == "Anir2Girder - Win32 Debug"
 
@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 /nologo /version:0.3 /subsystem:windows /dll /debug /machine:I386 /out:"bin\Anir2Girder.dll" /pdbtype:sept
+# ADD LINK32 /nologo /version:0.4 /subsystem:windows /dll /debug /machine:I386 /out:"bin\Anir2Girder.dll" /pdbtype:sept
 
 !ENDIF 
 
@@ -246,6 +246,10 @@ SOURCE=.\COPYING.txt
 # Begin Source File
 
 SOURCE=.\NEWS.txt
+# End Source File
+# Begin Source File
+
+SOURCE=.\README.htm
 # End Source File
 # Begin Source File
 
