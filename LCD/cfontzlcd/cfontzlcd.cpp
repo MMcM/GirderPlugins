@@ -29,7 +29,8 @@ public:
   CrystalfontzLCD(HWND parent, LPCSTR devname);
   ~CrystalfontzLCD();
   
-  virtual void DeviceDisplay(int row, int col, LPCSTR str, int length);
+  virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
+  virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
@@ -38,12 +39,9 @@ public:
   virtual BOOL DeviceHasContrast();
   virtual BOOL DeviceHasBrightness();
   virtual BOOL DeviceHasBacklight();
-  virtual void DeviceLoadSettings(HKEY hkey);
-  virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
   BOOL m_backlight;
-  char m_firmware[4];
 };
 
 CrystalfontzLCD::CrystalfontzLCD(HWND parent, LPCSTR devname)
@@ -61,9 +59,38 @@ CrystalfontzLCD::CrystalfontzLCD(HWND parent, LPCSTR devname)
   strcpy(m_port, "COM1");
   m_portSpeed = CBR_19200;
 
-  // The interesting transition is from 1.3 to 2.0 because the
-  // character set changed.
-  strcpy(m_firmware, "2.0");
+  // Custom characters are 128-135.
+  for (i = 0; i < 8; i++) {
+    m_characterMap[i] = 128 + i;
+    m_characterMap[128 + i] = i;
+  }
+  // Version 2.0 of the CGROM has various other rearrangements,
+  // including the following for ISO-8859-1L.
+  if (FALSE) {
+    m_characterMap['$'] = 0xA2; // Has ¤
+    m_characterMap[0xA2] = '$';
+    m_characterMap['@'] = 0xA0; // Has ¡
+    m_characterMap[0xA0] = '@';
+    m_characterMap['['] = 0xFA; // Has Ä
+    m_characterMap[0xFA] = '[';
+    m_characterMap['\\'] = 0xFB; // Has Ö
+    m_characterMap[0xFB] = '\\';
+    m_characterMap[']'] = 0xFC; // Has Ñ
+    m_characterMap[0xFC] = ']';
+    m_characterMap['^'] = 0x0D; // Has Ü
+    m_characterMap[0x0D] = '^';
+    m_characterMap['_'] = 0xC4; // Has §
+    m_characterMap[0xC4] = '_';
+  //m_characterMap['`'] = ???;  // Has ¿ -- backquote does not appear to be anyplace
+    m_characterMap['{'] = 0xFD; // Has ä
+    m_characterMap[0xFD] = '{';
+    m_characterMap['|'] = 0xFE; // Has ö
+    m_characterMap[0xFE] = '|';
+    m_characterMap['}'] = 0xFF; // Has ñ
+    m_characterMap[0xFF] = '}';
+    m_characterMap['~'] = 0xCE; // Has ü
+    m_characterMap[0xCE] = '~';
+  }
 }
 
 CrystalfontzLCD::~CrystalfontzLCD()
@@ -109,7 +136,7 @@ void CrystalfontzLCD::DeviceClear()
   WriteSerial(buf, nb);
 }
 
-void CrystalfontzLCD::DeviceDisplay(int row, int col, LPCSTR str, int length)
+void CrystalfontzLCD::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
   BYTE buf[128];
   int nb = 0;
@@ -121,10 +148,25 @@ void CrystalfontzLCD::DeviceDisplay(int row, int col, LPCSTR str, int length)
     buf[nb++] = row;
   }
   for (int i = 0; i < length; i++) {
-    char ch = str[i];
-    // TODO: Translate character set?
-    buf[nb++] = ch;
+    BYTE b = str[i];
+    if (b < 32) {
+      // A control character: escape it.
+      buf[nb++] = 30;           // Send Data Directly to the LCD Controller
+      buf[nb++] = 1;            // Data Memory
+    }
+    buf[nb++] = b;
   }
+  WriteSerial(buf, nb);
+}
+
+void CrystalfontzLCD::DeviceDefineCustomCharacter(int index, const CustomCharacter& cust)
+{
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 25;               // Set Custom Character Bitmap
+  buf[nb++] = index;
+  for (int i = 0; i < NCUSTROWS; i++)
+    buf[nb++] = cust.GetBits()[i];
   WriteSerial(buf, nb);
 }
 
@@ -178,16 +220,6 @@ BOOL CrystalfontzLCD::DeviceHasBrightness()
 BOOL CrystalfontzLCD::DeviceHasBacklight()
 {
   return m_backlight;
-}
-
-void CrystalfontzLCD::DeviceLoadSettings(HKEY hkey)
-{
-  GetSettingString(hkey, "CrystalfontzFirmware", m_firmware, sizeof(m_firmware));
-}
-
-void CrystalfontzLCD::DeviceSaveSettings(HKEY hkey)
-{
-  SetSettingString(hkey, "CrystalfontzFirmware", m_firmware);
 }
 
 extern "C" __declspec(dllexport)
