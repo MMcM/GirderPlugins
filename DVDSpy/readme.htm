@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.36. &nbsp;MMcM 09/02
+Version 1.37. &nbsp;MMcM 10/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -88,6 +88,20 @@ to any convenient folder (the Girder installation folder is fine) and
 self-registered by running <kbd>regsvr32 int_DVDSpy.dll</kbd>.  Once
 registered, it should show up in Media Jukebox's Plug-in Manager.
 See <a href="#MJ">below</a> for more information.<p>
+</li>
+
+<li><kbd>ShowShifterSpy.dll</kbd><br/>
+A ShowShifter Control Module that sends events to DVDSpy.<p>
+
+This file is needed for spying on ShowShifter at the UI level.  It
+should be copied to any convenient folder (the Girder installation
+folder is fine, as is the ShowShifter folder) and self-registered by
+running <kbd>regsvr32 ShowShifterSpy.dll</kbd>.  If not installed in
+the ShowShifter directory, that directory will need to be in the
+Windows path while registering.  Nothing special needs to be done for
+it to run properly, only to register.  See <a
+href="#ShowShifter">below</a> for more information on ShowShifter UI
+events.<p>
 </li>
 
 <li><kbd>ROTEnable.reg</kbd><br/>
@@ -602,24 +616,68 @@ top)</td>
 
 <tr></tr>
 
-<tr><td><code>ShowShifter.State</code></td>
+<tr><td><code>ShowShifter.DVD.State</code></td>
 <td>Playback state changed</td>
 <td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
 </tr>
 
-<tr><td><code>ShowShifter.Duration</code></td>
+<tr><td><code>ShowShifter.DVD.Domain</code></td>
+<td>Domain changed</td>
+<td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
+</tr>
+
+<tr><td><code>ShowShifter.DVD.TitleNo</code></td>
+<td>Title changed</td>
+<td>New title number (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>ShowShifter.DVD.Chapter</code></td>
+<td>Chapter changed</td>
+<td>New chapter (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>ShowShifter.DVD.Duration</code></td>
+<td>Total changed</td>
+<td>New total time (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>ShowShifter.DVD.Elapsed</code></td>
+<td>Position changed</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>ShowShifter.Media.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>ShowShifter.Media.Duration</code></td>
 <td>Duration changed</td>
 <td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>ShowShifter.Elapsed</code></td>
+<tr><td><code>ShowShifter.Media.Elapsed</code></td>
 <td>Position changed</td>
 <td>New current position (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>ShowShifter.File</code></td>
+<tr><td><code>ShowShifter.Media.File</code></td>
 <td>Source changed</td>
 <td>New source file name</td>
+</tr>
+
+<tr><td><code>ShowShifter.Module</code></td>
+<td>Active module changed</td>
+<td>New module name</td>
+</tr>
+
+<tr><td><code>ShowShifter.UI.<i>ident</i></code></td>
+<td>UIS control contents changed</td>
+<td>New control label string</td>
+</tr>
+
+<tr><td><code>ShowShifter.NoUI.<i>ident</i></code></td>
+<td>UIS control no longer present</td>
 </tr>
 
 <tr><td><code>ShowShifter.Close</code></td>
@@ -800,10 +858,26 @@ DVD player.  The MEDIASPY.DLL library must be registered using
 running.  Unregistering it should return things to normal.<p>
 
 <a name="ZoomPlayer"/>
-In order to receive the <code>ZoomPlayer.LCD.*</code> events, LCD output
-must be enabled in the Zoom Player Options dialog.  Before doing this,
-be sure that your script is following the license restrictions on use
-of this feature.<p>
+Information from Zoom Player comes from two layers.  The state of
+DirectShow filter graphs is extracted by MediaSpy, as described above.
+Higher level information is also available through Zoom Player's own
+LCD API.  These two sources overlap significantly, but neither is a
+superset of the other.  In order to receive the
+<code>ZoomPlayer.LCD.*</code> events, LCD output must be enabled in
+the Zoom Player Options dialog.  Before doing this, be sure that your
+script is following the license restrictions on use of this
+feature.<p>
+
+<a name="ShowShifter"/>
+Information from ShowShifter also comes from two layers.  Again, the
+state of DirectShow filter graphs is extracted by MediaSpy, as
+described above.  Information is also available about changes in the
+contents of controls in the ShowShifter user interface.  ShowShifter
+has its own UI system built on top of windows.  The identifiers for
+the controls that are monitored are gotten from the registry in
+<kbd>HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\ShowShifter\ControlIdents</kbd>.
+The identifiers for the controls on a given screen can be found in the
+corresponding UIS file in the ShowShifter config directory.<p>
 
 <a name="WMPSpy"/>
 It defines an ActiveX control element for use in Windows Media Player
