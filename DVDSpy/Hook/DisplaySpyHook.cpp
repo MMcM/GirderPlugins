@@ -59,11 +59,12 @@ const UINT MS_FILTER_GRAPH = 1;
 const UINT MS_DVD_NAVIGATOR = 2;
 const UINT MS_FG_DURATION = 3;
 const UINT MS_FG_POSITION = 4;
-const UINT MS_DVD_DOMAIN = 5;
-const UINT MS_DVD_TITLE = 6;
-const UINT MS_DVD_CHAPTER = 7;
-const UINT MS_DVD_TOTAL = 8;
-const UINT MS_DVD_TIME = 9;
+const UINT MS_FG_FILENAME = 5;
+const UINT MS_DVD_DOMAIN = 6;
+const UINT MS_DVD_TITLE = 7;
+const UINT MS_DVD_CHAPTER = 8;
+const UINT MS_DVD_TOTAL = 9;
+const UINT MS_DVD_TIME = 10;
 
 /*** Patterns that drive the hook to extract display information. ***/
 static MatchEntry g_matches[] = {
@@ -108,7 +109,7 @@ static MatchEntry g_matches[] = {
     END_MATCH()
     // This only happens when playing a .VOB file: the window title is
     // changed to the file in question.  Better than nothing.
-    BEGIN_MATCH(PowerDVD.Title,6)
+    BEGIN_MATCH(PowerDVD.Title,7)
       ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
       ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
      BEGIN_EXTRACT()
@@ -166,9 +167,10 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.OSD,6)
+    BEGIN_MATCH(ZoomPlayer.OSD,7)
       ENTRY_NUM(MATCH_MESSAGE, WM_PAINT)
       ENTRY_STR(MATCH_CLASS, "TPanel")
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TOSDForm")
@@ -222,6 +224,7 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
     BEGIN_MATCH(ATI.Close,0)
@@ -229,6 +232,19 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_MODULE(ShowShifter)
+
+    // Getting off the screen is tricky because SSF has its own window system of sorts.
+
+    BEGIN_MATCH(ShowShifter,4)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
 };
@@ -698,7 +714,10 @@ void RemovePatches()
 
 // We do not link to mediaspy.dll, since that would clutter up every process.
 LPFNGETCLASSOBJECT MediaSpyGetCurrentObject = NULL;
+typedef HRESULT (STDAPICALLTYPE * LPFNCONVERTOLE)(LPOLESTR, LPSTR, size_t,BOOL);
+LPFNCONVERTOLE MediaSpyConvertOle = NULL;
 static REFTIME fgDuration, fgPosition;
+static char szfgFileName[MAX_PATH];
 static DVD_DOMAIN dvdDomain;
 static DVD_PLAYBACK_LOCATION dvdLocation;
 static ULONG ulTotalTime;
@@ -715,19 +734,69 @@ BOOL MatchMediaSpy(UINT nClass)
     MediaSpyGetCurrentObject = (LPFNGETCLASSOBJECT)
       GetProcAddress(hInst, "MediaSpyGetCurrentObject");
     if (NULL == MediaSpyGetCurrentObject) return FALSE;
+    MediaSpyConvertOle = (LPFNCONVERTOLE)
+      GetProcAddress(hInst, "MediaSpyConvertOle");
+    if (NULL == MediaSpyConvertOle) return FALSE;
   }
   switch (nClass) {
   case MS_FILTER_GRAPH:
     {
-      IMediaPosition *pMP = NULL;
-      HRESULT hr = MediaSpyGetCurrentObject(CLSID_FilterGraph, IID_IMediaPosition, 
-                                            (void**)&pMP);
+      IFilterGraph *pFG = NULL;
+      HRESULT hr = MediaSpyGetCurrentObject(CLSID_FilterGraph, IID_IFilterGraph, 
+                                            (void**)&pFG);
       if (S_OK != hr) return FALSE; // Including S_FALSE for none.
-      hr = pMP->get_Duration(&fgDuration);
-      if (SUCCEEDED(hr))
-        hr = pMP->get_CurrentPosition(&fgPosition);
-      pMP->Release();
-      return SUCCEEDED(hr);
+      IMediaPosition *pMP = NULL;
+      hr = pFG->QueryInterface(IID_IMediaPosition, (void**)&pMP);
+      if (SUCCEEDED(hr)) {
+        hr = pMP->get_Duration(&fgDuration);
+        if (SUCCEEDED(hr))
+          hr = pMP->get_CurrentPosition(&fgPosition);
+        pMP->Release();
+      }
+      IEnumFilters *pEF = NULL;
+      BOOL bFound = FALSE;
+      hr = pFG->EnumFilters(&pEF);
+      if (SUCCEEDED(hr)) {
+        while (!bFound) {
+          IBaseFilter *pBF = NULL;
+          hr = pEF->Next(1, &pBF, NULL);
+          if (S_OK != hr) break;
+          IFileSourceFilter *pFSF = NULL;
+          hr = pBF->QueryInterface(IID_IFileSourceFilter, (void**)&pFSF);
+          if (SUCCEEDED(hr)) {
+            LPOLESTR wszFileName = NULL;
+            AM_MEDIA_TYPE mtype;
+            hr = pFSF->GetCurFile(&wszFileName, &mtype);
+            pFSF->Release();
+            if (SUCCEEDED(hr)) {
+              if (NULL != wszFileName)
+                hr = MediaSpyConvertOle(wszFileName, 
+                                        szfgFileName, sizeof(szfgFileName),
+                                        TRUE);
+              else {
+                // The filter may not support getting the filename,
+                // but the graph builder's render method will have
+                // given it the file's name.
+                FILTER_INFO finfo;
+                hr = pBF->QueryFilterInfo(&finfo);
+                if (SUCCEEDED(hr)) {
+                  hr = MediaSpyConvertOle(finfo.achName, 
+                                          szfgFileName, sizeof(szfgFileName),
+                                          FALSE);
+                  if (NULL != finfo.pGraph)
+                    finfo.pGraph->Release();
+                }
+              }
+              bFound = TRUE;
+            }
+          }
+          // Could look for a file sink as well to indicate that we are capturing.
+          pBF->Release();
+        }
+        pEF->Release();
+      }
+      pFG->Release();
+      return bFound;
     }
   case MS_DVD_NAVIGATOR:
     {
@@ -799,6 +868,9 @@ void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
     break;
   case MS_FG_POSITION:
     FormatREFTIME(fgPosition, szBuf, nSize);
+    break;
+  case MS_FG_FILENAME:
+    strncpy(szBuf, szfgFileName, nSize);
     break;
   case MS_DVD_DOMAIN:
     switch (dvdDomain) {
