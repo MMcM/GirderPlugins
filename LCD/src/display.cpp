@@ -1345,12 +1345,14 @@ DisplayDeviceFactory *DisplayDeviceFactory::GetFactory(LPCSTR name)
 
 void DisplayDeviceFactory::CloseAll()
 {
+  EnterCriticalSection(&g_CS);
   while (TRUE) {
     DisplayDeviceFactory *fact = g_extent;
     if (NULL == fact) break;
     g_extent = fact->m_next;
     delete fact;
   }
+  LeaveCriticalSection(&g_CS);
 }
 
 DisplayDevice *DisplayDeviceList::GetDefault()

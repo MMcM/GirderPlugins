@@ -24,7 +24,7 @@ LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, HWND parent)
     sprintf(buf, "Err: %lX", dwErr);
     pMsg = buf;
   }
-  MessageBox(parent, pMsg, "Error", MB_OK | MB_ICONERROR);
+  MessageBox(parent, pMsg, "LCD Error", MB_OK | MB_ICONERROR);
   if (NULL != pMsgBuf)
     LocalFree(pMsgBuf);
 }
@@ -42,8 +42,22 @@ void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)
 }
 
 /* Local variables */
-static CRITICAL_SECTION g_CS;   // Ensure events see consistent device Settings.
-static DisplayDeviceList g_devices;
+static DisplayDeviceList g_devices; // Active device(s).
+static CRITICAL_SECTION g_CS;   // Interlock devices and their settings.
+
+class DisplayCriticalSection
+{
+public:
+  DisplayCriticalSection()
+  {
+    EnterCriticalSection(&g_CS);
+  }
+
+  ~DisplayCriticalSection() 
+  {
+    LeaveCriticalSection(&g_CS);
+  }
+};
 
 /*** Display oriented routines ***/
 
@@ -72,6 +86,7 @@ void DisplayEndConfigUpdate()
 
 void DisplayClose()
 {
+  DisplayCriticalSection cs;
   for (DisplayDevice *device = g_devices.GetFirst(); 
        NULL != device; 
        device = device->GetNext())
@@ -81,11 +96,13 @@ void DisplayClose()
 
 void DisplayUnload()
 {
+  DisplayCriticalSection cs;
   DisplayDeviceFactory::CloseAll();
 }
 
 PVOID DisplaySave()
 {
+  DisplayCriticalSection cs;
   return g_devices.Save();
 }
 
@@ -93,11 +110,13 @@ void DisplayRestore(PVOID state)
 {
   if (NULL == state)
     return;
+  DisplayCriticalSection cs;
   g_devices.Restore(state);
 }
 
 BOOL DisplayEnableInput()
 {
+  DisplayCriticalSection cs;
   g_devices.LoadFromRegistry();
   for (DisplayDevice *device = g_devices.GetFirst(); 
        NULL != device; 
@@ -112,6 +131,7 @@ BOOL DisplayEnableInput()
 
 void DisplayDisableInput()
 {
+  DisplayCriticalSection cs;
   for (DisplayDevice *device = g_devices.GetFirst(); 
        NULL != device; 
        device = device->GetNext()) {
@@ -121,6 +141,7 @@ void DisplayDisableInput()
 
 int DisplayWidth(LPCSTR devname)
 {
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if (NULL == device)
@@ -130,6 +151,7 @@ int DisplayWidth(LPCSTR devname)
 
 int DisplayHeight(LPCSTR devname)
 {
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if (NULL == device)
@@ -139,6 +161,7 @@ int DisplayHeight(LPCSTR devname)
 
 void DisplayClose(LPCSTR devname)
 {
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if (NULL != device)
@@ -147,6 +170,7 @@ void DisplayClose(LPCSTR devname)
 
 void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname)
 {
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if ((NULL != device) && device->Open())
@@ -155,6 +179,7 @@ void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname)
 
 void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname)
 {
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if ((NULL != device) && device->Open())
@@ -163,6 +188,7 @@ void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname)
 
 void DisplayGPO(int gpo, BOOL on, LPCSTR devname)
 {
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if ((NULL != device) && device->Open())
@@ -174,6 +200,7 @@ void DisplayFanPower(int fan, double power, LPCSTR devname)
   if (power > 1)
     power = power / 100.0;      // Must have meant percentage.
 
+  DisplayCriticalSection cs;
   DisplayDevice *device = (NULL == devname) ? 
     g_devices.GetDefault() : g_devices.Get(devname);
   if ((NULL != device) && device->Open())
@@ -182,7 +209,7 @@ void DisplayFanPower(int fan, double power, LPCSTR devname)
 
 /*** Actual command routines ***/
 
-class DisplayCommandState
+class DisplayCommandState : public DisplayCriticalSection
 {
 public:
   p_command m_command;
@@ -197,14 +224,12 @@ public:
     : m_command(command),
       m_status(status), m_statuslen(statuslen) 
   {
-    EnterCriticalSection(&g_CS);
     EnterCriticalSection(&m_command->critical_section);    
   }
 
   ~DisplayCommandState() 
   {
     LeaveCriticalSection(&m_command->critical_section);
-    LeaveCriticalSection(&g_CS);
   }
   
   void SetStatus(LPCSTR status)
