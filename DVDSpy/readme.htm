@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.45. &nbsp;MMcM 10/02
+Version 1.47. &nbsp;MMcM 11/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -65,9 +65,10 @@ See <a href="#WMPSpy">below</a> for more information.<p>
 A Windows Media Player skin that sends events to DVDSpy.<p>
 
 This file (or one like it) is needed for spying on Windows Media
-Player.  It should be copied to the Windows Media Player skins folder,
-which is usually <kbd>c:\Program Files\Windows Media
-Player\Skins</kbd>.  See <a href="#WMPSpy">below</a> for more information.<p>
+Player version 7.  It is not needed for WMP 9.
+It should be copied to the Windows Media Player skins folder, which is
+usually <kbd>c:\Program Files\Windows Media Player\Skins</kbd>.  See
+<a href="#WMPSpy">below</a> for more information.<p>
 </li>
 
 <li><kbd>gen_DVDSpy.dll</kbd><br/>
@@ -972,7 +973,7 @@ corresponding UIS file in the ShowShifter config directory.<p>
 It defines an ActiveX control element for use in Windows Media Player
 skins and thereby exposes that player's state when a special skin is
 used.  The WMPSPY.DLL library must be registered using
-<kbd>regsvr32</kbd>.  It defines a new control element type,
+<kbd>regsvr32</kbd>.  For WMP 7, it defines a new control element type,
 <code>WMPSpy</code>, for use in skin definition (WMS) files.  This
 control has two properties, <code>event</code> for the Girder event
 name, and <code>value</code> the other for the associated value.  The
@@ -986,6 +987,15 @@ displayed using it.  This skin also makes the player full screen when
 playing, since Girder is presumably used to control it directly and to
 display its status someplace else.  More information on WMP skins is
 available in the Windows Media Player SDK.<p>
+
+In WMP 9, the <code>WMPSpy</code> element is not available, as skins
+are no longer extensible.  The <kbd>WMPSkin</kbd> skin still functions
+as a skin proper, but does not produce events.  Instead, the same
+WMPSPY.DLL defines a background UI plugin.  By default, this plugin is
+enabled, but it can be disabled from the WMP Options dialog.  It
+produces events no matter which skin is in use.  It may not produce
+events when the player is embedded in a web page, since plugins are
+controlled separately there.<p>
 
 <a name="Winamp"/>
 It includes a Winamp general plugin that exposes state changes.  The
