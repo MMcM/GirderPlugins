@@ -11,16 +11,18 @@
 <body>
 
 <h1>Girder plug-in for changing the registry</h1>
-Version 1.3. &nbsp;MMcM 05/02
+Version 1.4. &nbsp;MMcM 07/02
 
 <h3>Use</h3>
 
-This plug-in changes a string value in the Windows registry.  The key
-and value must already exist (mainly to prevent typos).  They are
+This plug-in changes a value in the Windows registry.  The key and
+value must already exist (mainly to prevent typos).  They are
 specified as <kbd><i>root</i>\<i>key</i>\<i>value</i></kbd>.  Root is
 <kbd>HKEY_CURRENT_USER</kbd> or <kbd>HKEY_LOCAL_MACHINE</kbd>.  The
 unnamed value can be specified by the empty suffix or (as in regedit)
-with <kbd>@</kbd>.<p>
+with <kbd>@</kbd>.  The new value string can contain variables to be
+expanded.  For <code>REG_DWORD</code>, the value can be decimal or
+hexidecimal with the <kbd>0x</kbd> prefix.<p>
 
 The sample file shows how to switch the current sound playback device.
 This only works well on Win2K/NT.  On WinME/98, a reboot is required.

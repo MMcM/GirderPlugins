@@ -23,6 +23,7 @@
         <ActionSubType>1</ActionSubType>
         <sValue1>HKEY_CURRENT_USER\Software\Microsoft\Multimedia\Sound Mapper\Playback</sValue1>
         <sValue2>SB Live! Wave Device</sValue2>
+        <iValue1>1</iValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -42,6 +43,7 @@
         <ActionSubType>1</ActionSubType>
         <sValue1>HKEY_CURRENT_USER\Software\Microsoft\Multimedia\Sound Mapper\Playback</sValue1>
         <sValue2>Delta AP</sValue2>
+        <iValue1>1</iValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>

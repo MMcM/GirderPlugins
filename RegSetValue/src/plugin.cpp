@@ -16,8 +16,7 @@
 #include "plugin.h"
 #include "ui.h"
 #include <stdio.h>
-
-
+#include <stdlib.h>
 
 
 
@@ -102,26 +101,44 @@ extern "C" int WINAPI gir_event(p_command command, char *eventstring, void * pay
   EnterCriticalSection(&command->critical_section);
 
   PCHAR pval = DecodeKeyValue(command->svalue1, &hkey);
-  
-
-  if (NULL == pval)
-  {
+  if (NULL == pval) {
     LeaveCriticalSection(&command->critical_section);
     return retContinue;
   }
 
-  LONG rc;
-  if (command->bvalue1) {
-    
-    DWORD value = command->lvalue1;
-    
-    rc = RegSetValueEx(hkey, pval, 0, REG_DWORD, (LPBYTE)&value, sizeof(value));
+  DWORD dwType, dwValue, cbData;
+  LPBYTE lpData;
+  char buf[1024];
+
+  dwType = command->ivalue1;
+  if (!dwType && command->bvalue1) {
+    // Old style numeric: no variables.
+    dwValue = command->lvalue1;
+    dwType = REG_DWORD;
   }
   else {
-    char buf[1024];
     SF.parse_reg_string(command->svalue2, buf, sizeof(buf));
-    rc = RegSetValueEx(hkey, pval, 0, REG_SZ, (LPBYTE)buf, strlen(buf));
+    if (!dwType)
+      dwType = REG_SZ;          // Old style string.
+    else if (REG_DWORD == dwType) {
+      // New style numeric: parse after expand; allow negative or
+      // unsigned and 0x hex prefix.
+      if ('-' == buf[0])
+        dwValue = strtol(buf, NULL, 0);
+      else
+        dwValue = strtoul(buf, NULL, 0);
+    }
   }
+  if (REG_DWORD == dwType) {
+    lpData = (LPBYTE)&dwValue;
+    cbData = sizeof(dwValue);
+  }
+  else {
+    lpData = (LPBYTE)buf;
+    cbData = strlen(buf);
+  }
+
+  LONG rc = RegSetValueEx(hkey, pval, 0, dwType, lpData, cbData);
   
   LeaveCriticalSection(&command->critical_section);
   
@@ -134,7 +151,6 @@ extern "C" int WINAPI gir_event(p_command command, char *eventstring, void * pay
   }
 
   strncpy(status, "Registry updated.", statuslen);
-
   return retContinue;
 }
 

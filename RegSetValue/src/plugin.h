@@ -11,7 +11,7 @@
 
 #define PLUGINNUM 117
 #define PLUGINNAME "RegSetValue"
-#define PLUGINVERSION "1.3"
+#define PLUGINVERSION "1.4"
 
 #include <girder.h>
 
