@@ -1,6 +1,6 @@
 /***************************************************************************************/
 /*                                                                                     */
-/*  Girder 3.0 Plugin                                                                  */
+/*  Girder 3.1 Plugin                                                                  */
 /*  User interface                                                                     */
 /*                                                                                     */
 /*  Copyright 2000 (c) Ron Bessems                                                     */
@@ -25,13 +25,13 @@ BOOL SaveUISettings(HWND hwnd)
   char buf[1024];
 
   GetWindowText(GetDlgItem(hwnd, IDC_KEY), buf, sizeof(buf));
-  ReallocPchar(&(CurCommand->svalue1), buf);
+  SF.ReallocPchar(&(CurCommand->svalue1), buf);
 
   GetWindowText(GetDlgItem(hwnd, IDC_VALUE), buf, sizeof(buf));
-  ReallocPchar(&(CurCommand->svalue2), buf);
+  SF.ReallocPchar(&(CurCommand->svalue2), buf);
 
   CurCommand->actiontype=PLUGINNUM;
-  SetCommand(CurCommand);
+  SF.SetCommand(CurCommand);
 
   HKEY hkey;
   PCHAR pval = DecodeKeyValue(CurCommand->svalue1, &hkey);
@@ -69,7 +69,7 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
   switch (uMsg) {
   case WM_INITDIALOG:
     {
-      PCHAR trans;
+      char trans[256];
       	
       hDialog = hwnd;
 
@@ -77,19 +77,19 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      trans=I18NTranslate("Ok");
+      SF.I18NTranslateEx("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      trans=I18NTranslate("Cancel");
+      SF.I18NTranslateEx("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
 
-      trans=I18NTranslate("Apply");
+      SF.I18NTranslateEx("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      trans=I18NTranslate("Key\\Name:");
+      SF.I18NTranslateEx("Key\\Name:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_KEYL), trans);
 	
-      trans=I18NTranslate("Value:");
+      SF.I18NTranslateEx("Value:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
 
       LoadUISettings(hwnd);
