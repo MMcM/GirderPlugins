@@ -25,6 +25,8 @@ struct ActionEntry {
   { "Previous", IPC_C_PREV },
   { "Set next playstring", IPC_C_SET_NEXT, TRUE },
   { "Set playlist position", IPC_C_TRACK, TRUE },
+  { "Next playlst", IPC_C_NEXT_PLAYLIST },
+  { "Previous playlist", IPC_C_PREV_PLAYLIST },
 
   { "Get state", IPC_R_STATE, FALSE, TRUE },
   { "Get playstring", IPC_R_PLAYSTRING, FALSE, TRUE },
