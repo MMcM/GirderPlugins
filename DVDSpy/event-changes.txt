@@ -1,0 +1,62 @@
+Old			New			Description
+
+accessDTV.ChanNoText	accessDTV.ChanNoText
+accessDTV.ChanText	accessDTV.ChanText.1
+accessDTV.Channel	accessDTV.Channel.2
+accessDTV.Close		accessDTV.Close
+
+ATI.Close		ATI.Close
+ATI.DVD.0		ATI.DVD.1		Domain
+ATI.DVD.1		ATI.DVD.2		Title
+ATI.DVD.2		ATI.DVD.3		Chapter
+ATI.DVD.3		ATI.DVD.4		Total
+ATI.DVD.4		ATI.DVD.5		Elapsed
+ATI.MMC.0		ATI.MMC.4		Total
+ATI.MMC.1		ATI.MMC.5		Elapsed
+
+Disc.Insert.x		Disc.Insert.x.9
+Disc.Eject.x		Disc.Eject.x
+
+PowerDVD.Time		PowerDVD.Time.5
+PowerDVD.Title		PowerDVD.Title.6
+
+TheaterTek.0		TheaterTek.1		Domain
+TheaterTek.1		TheaterTek.2		Title
+TheaterTek.2		TheaterTek.3		Chapter
+TheaterTek.3		TheaterTek.4		Total
+TheaterTek.4		TheaterTek.5		Elapsed
+TheaterTek.Close	TheaterTek.Close
+
+TV.Chan			TV.Chan.2
+TV.Program		TV.Program.1
+TV.Time			TV.Time.3
+
+WMP.Close		WMP.Close
+WMP.Duration		WMP.Duration.4
+WMP.Position		WMP.Position.5
+WMP.Status		WMP.Status.1
+WMP.Title		WMP.Title.6
+
+WinDVD.0		WinDVD.1		Chapter
+WinDVD.1		WinDVD.2		Elapsed
+WinDVD.2		WinDVD.3		Video
+WinDVD.4		WinDVD.5		Audio
+WinDVD.Close		WinDVD.Close
+
+Winamp.Elapsed		Winamp.Elapsed.5
+Winamp.Length		Winamp.Length.2		of playlist
+Winamp.Position		Winamp.Position.3	in playlist
+Winamp.Status		Winamp.Status.1
+Winamp.Title		Winamp.Title.6
+Winamp.Total		Winamp.Total.4
+Winamp.Close		Winamp.Close
+
+ZoomPlayer.Close	ZoomPlayer.Close
+ZoomPlayer.DVD.0	ZoomPlayer.DVD.1	Domain
+ZoomPlayer.DVD.1	ZoomPlayer.DVD.2	Title
+ZoomPlayer.DVD.2	ZoomPlayer.DVD.3	Chapter
+ZoomPlayer.DVD.3	ZoomPlayer.DVD.4	Total
+ZoomPlayer.DVD.4	ZoomPlayer.DVD.5	Elapsed
+ZoomPlayer.Media.0	ZoomPlayer.Media.4	Total
+ZoomPlayer.Media.1	ZoomPlayer.Media.5	Elapsed
+ZoomPlayer.OSD		ZoomPlayer.OSD.6
