@@ -2,7 +2,7 @@ Changelog
 =========
 
 CURRENT (in CVS)
-
+- Removed NEWS.txt from dist. This file should be enough really.
 
 v.0.4.0 (04 feb 2003)
 - Added option to select if repeat button events should be sent
