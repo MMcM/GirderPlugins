@@ -38,22 +38,22 @@ Girder 3.0 DataFile
    Identifier=4
    Comments=
    <Vol Insert>
-   irstr=Disc.Insert.I
+   irstr=Disc.Insert.I.9
    Device=15
    Identifier=5
    Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=Title: [treg1]
+   sValue1=Title: [treg9]
    iValue1=1
-   iValue2=1
+   iValue2=9
    lValue1=2
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Domain>
+   <Domain.1>
    irstr=
    Device=-1
    Identifier=6
@@ -61,7 +61,7 @@ Girder 3.0 DataFile
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[treg]
+   sValue1=[treg1]
    iValue1=1
    iValue2=1
    lValue1=1
@@ -70,7 +70,7 @@ Girder 3.0 DataFile
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Title>
+   <Title.2>
    irstr=
    Device=-1
    Identifier=7
@@ -78,15 +78,15 @@ Girder 3.0 DataFile
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=T:[treg1]
-   iValue2=1
+   sValue1=T:[treg2]
+   iValue2=2
    lValue1=1
    lValue3=4
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Chapter>
+   <Chapter.3>
    irstr=
    Device=-1
    Identifier=8
@@ -94,8 +94,8 @@ Girder 3.0 DataFile
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=CH:[treg1]
-   iValue2=1
+   sValue1=CH:[treg3]
+   iValue2=3
    lValue1=1
    lValue2=5
    lValue3=5
@@ -103,7 +103,7 @@ Girder 3.0 DataFile
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Time>
+   <Total.4>
    irstr=
    Device=-1
    Identifier=9
@@ -111,16 +111,15 @@ Girder 3.0 DataFile
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[treg1]
-   iValue1=1
-   iValue2=1
+   sValue1=/[treg4]
+   iValue2=4
    lValue1=3
-   lValue3=8
+   lValue2=8
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Total>
+   <Time.5>
    irstr=
    Device=-1
    Identifier=10
@@ -128,10 +127,11 @@ Girder 3.0 DataFile
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=/[treg1]
-   iValue2=1
+   sValue1=[treg5]
+   iValue1=1
+   iValue2=5
    lValue1=3
-   lValue2=8
+   lValue3=8
    TopMost=TRUE
    Matchnum=1
    StateCount=1
@@ -154,16 +154,16 @@ Girder 3.0 DataFile
    Identifier=12
    Comments=
    <Chapter>
-   irstr=WinDVD.0
+   irstr=WinDVD.1
    Device=15
    Identifier=13
    Comments=
    enabled=TRUE
-   ActionType=4
-   ActionSubType=10
+   ActionType=118
+   ActionSubType=1
    sValue1=CH:[treg1]
    iValue2=1
-   lValue1=8
+   lValue1=1
    lValue2=5
    lValue3=5
    TopMost=TRUE
@@ -171,48 +171,50 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Time>
-   irstr=WinDVD.1
+   irstr=WinDVD.2
    Device=15
    Identifier=14
    Comments=
    enabled=TRUE
-   ActionType=4
-   ActionSubType=10
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg2]
    iValue1=1
-   iValue2=1
-   lValue1=9
+   iValue2=2
+   lValue1=3
+   lValue3=8
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Video>
-   irstr=WinDVD.2
+   irstr=WinDVD.3
    Device=15
    Identifier=15
    Comments=
    enabled=TRUE
-   ActionType=4
-   ActionSubType=10
-   sValue1=[treg1]
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg3]
    iValue1=1
-   iValue2=1
-   lValue1=6
+   iValue2=3
+   lValue1=1
    lValue3=4
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Audio>
-   irstr=WinDVD.4
+   irstr=WinDVD.5
    Device=15
    Identifier=16
    Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[treg1]
+   sValue1=[treg5]
    iValue1=1
-   iValue2=1
+   iValue2=5
    lValue1=1
    lValue2=11
    lValue3=4
@@ -238,33 +240,33 @@ Girder 3.0 DataFile
    enabled=TRUE
    Identifier=18
    Comments=
-   <Title>
-   irstr=PowerDVD.Title
+   <Time>
+   irstr=PowerDVD.Time.5
    Device=15
    Identifier=19
-   Comments=
-   enabled=TRUE
-   ActionType=118
-   ActionSubType=10
-   sValue1=[treg1]
-   iValue1=1
-   iValue2=1
-   lValue1=1
-   TopMost=TRUE
-   Matchnum=1
-   StateCount=1
-   StateBegin=1
-   <Time>
-   irstr=PowerDVD.Time
-   Device=15
-   Identifier=20
    Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=9
+   lValue1=10
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Title>
+   irstr=PowerDVD.Title.6
+   Device=15
+   Identifier=20
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=10
+   sValue1=[treg6]
+   iValue1=1
+   iValue2=6
+   lValue1=1
    TopMost=TRUE
    Matchnum=1
    StateCount=1
@@ -274,7 +276,7 @@ Girder 3.0 DataFile
    Identifier=21
    Comments=
    <Domain>
-   irstr=ZoomPlayer.DVD.0
+   irstr=ZoomPlayer.DVD.1
    Device=15
    Identifier=22
    Comments=
@@ -287,7 +289,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Title>
-   irstr=ZoomPlayer.DVD.1
+   irstr=ZoomPlayer.DVD.2
    Device=15
    Identifier=23
    Comments=
@@ -302,7 +304,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Chapter>
-   irstr=ZoomPlayer.DVD.2
+   irstr=ZoomPlayer.DVD.3
    Device=15
    Identifier=24
    Comments=
@@ -317,7 +319,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Total>
-   irstr=ZoomPlayer.DVD.3
+   irstr=ZoomPlayer.DVD.4
    Device=15
    Identifier=25
    Comments=
@@ -326,13 +328,13 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=10
+   lValue1=9
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Time>
-   irstr=ZoomPlayer.DVD.4
+   irstr=ZoomPlayer.DVD.5
    Device=15
    Identifier=26
    Comments=
@@ -341,15 +343,30 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=9
+   lValue1=10
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Duration>
-   irstr=ZoomPlayer.Media.0
+   irstr=ZoomPlayer.Media.4
    Device=15
    Identifier=27
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=9
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Position>
+   irstr=ZoomPlayer.Media.5
+   Device=15
+   Identifier=28
    Comments=
    enabled=TRUE
    ActionType=4
@@ -361,32 +378,17 @@ Girder 3.0 DataFile
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Position>
-   irstr=ZoomPlayer.Media.1
-   Device=15
-   Identifier=28
-   Comments=
-   enabled=TRUE
-   ActionType=4
-   ActionSubType=10
-   iValue1=1
-   iValue2=1
-   lValue1=9
-   TopMost=TRUE
-   Matchnum=1
-   StateCount=1
-   StateBegin=1
    <OSD>
-   irstr=ZoomPlayer.OSD
+   irstr=ZoomPlayer.OSD.6
    Device=15
    Identifier=29
    Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[treg1]
+   sValue1=[treg6]
    iValue1=1
-   iValue2=1
+   iValue2=6
    lValue1=1
    lValue2=11
    TopMost=TRUE
@@ -412,7 +414,7 @@ Girder 3.0 DataFile
    Identifier=31
    Comments=
    <Domain>
-   irstr=TheaterTek.0
+   irstr=TheaterTek.1
    Device=15
    Identifier=32
    Comments=
@@ -425,7 +427,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Title>
-   irstr=TheaterTek.1
+   irstr=TheaterTek.2
    Device=15
    Identifier=33
    Comments=
@@ -440,7 +442,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Chapter>
-   irstr=TheaterTek.2
+   irstr=TheaterTek.3
    Device=15
    Identifier=34
    Comments=
@@ -455,7 +457,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Total>
-   irstr=TheaterTek.3
+   irstr=TheaterTek.4
    Device=15
    Identifier=35
    Comments=
@@ -464,13 +466,13 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=10
+   lValue1=9
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Time>
-   irstr=TheaterTek.4
+   irstr=TheaterTek.5
    Device=15
    Identifier=36
    Comments=
@@ -479,7 +481,7 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=9
+   lValue1=10
    TopMost=TRUE
    Matchnum=1
    StateCount=1
@@ -503,7 +505,7 @@ Girder 3.0 DataFile
    Identifier=38
    Comments=
    <Domain>
-   irstr=ATI.DVD.0
+   irstr=ATI.DVD.1
    Device=15
    Identifier=39
    Comments=
@@ -516,7 +518,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Title>
-   irstr=ATI.DVD.1
+   irstr=ATI.DVD.2
    Device=15
    Identifier=40
    Comments=
@@ -531,7 +533,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Chapter>
-   irstr=ATI.DVD.2
+   irstr=ATI.DVD.3
    Device=15
    Identifier=41
    Comments=
@@ -546,7 +548,7 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Total>
-   irstr=ATI.DVD.3
+   irstr=ATI.DVD.4
    Device=15
    Identifier=42
    Comments=
@@ -555,13 +557,13 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=10
+   lValue1=9
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Time>
-   irstr=ATI.DVD.4
+   irstr=ATI.DVD.5
    Device=15
    Identifier=43
    Comments=
@@ -570,13 +572,13 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=9
+   lValue1=10
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Duration>
-   irstr=ATI.MMC.0
+   irstr=ATI.MMC.4
    Device=15
    Identifier=44
    Comments=
@@ -585,13 +587,13 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=10
+   lValue1=9
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Position>
-   irstr=ATI.MMC.1
+   irstr=ATI.MMC.5
    Device=15
    Identifier=45
    Comments=
@@ -600,7 +602,7 @@ Girder 3.0 DataFile
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=9
+   lValue1=10
    TopMost=TRUE
    Matchnum=1
    StateCount=1
@@ -623,16 +625,32 @@ Girder 3.0 DataFile
    enabled=TRUE
    Identifier=47
    Comments=
-   (Chan)
-   enabled=TRUE
-   irstr=TV.Chan
+   <Program>
+   irstr=TV.Program.1
    Device=15
    Identifier=48
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg1]
+   iValue1=1
+   iValue2=1
+   lValue1=2
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   (Chan)
+   enabled=TRUE
+   irstr=TV.Chan.2
+   Device=15
+   Identifier=49
    Comments=
    {Prefix}
    irstr=
    Device=-1
-   Identifier=49
+   Identifier=50
    Comments=
    enabled=TRUE
    ActionType=118
@@ -647,14 +665,14 @@ Girder 3.0 DataFile
    {Chan}
    irstr=
    Device=-1
-   Identifier=50
+   Identifier=51
    Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[reg1]
+   sValue1=[reg2]
    lValue1=1
-   lValue2=5
+   lValue2=2
    lValue3=3
    TopMost=TRUE
    Matchnum=1
@@ -663,47 +681,31 @@ Girder 3.0 DataFile
    {Call}
    irstr=
    Device=-1
-   Identifier=51
+   Identifier=52
    Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[treg1]
+   sValue1=[treg2]
    iValue1=1
-   iValue2=1
+   iValue2=2
    lValue1=1
    lValue2=9
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Program>
-   irstr=TV.Program
-   Device=15
-   Identifier=52
-   Comments=
-   enabled=TRUE
-   ActionType=118
-   ActionSubType=1
-   sValue1=[treg1]
-   iValue1=1
-   iValue2=1
-   lValue1=2
-   TopMost=TRUE
-   Matchnum=1
-   StateCount=1
-   StateBegin=1
    <Time>
-   irstr=TV.Time
+   irstr=TV.Time.3
    Device=15
    Identifier=53
    Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
-   sValue1=[treg1]
+   sValue1=[treg3]
    iValue1=1
-   iValue2=1
+   iValue2=3
    lValue1=3
    TopMost=TRUE
    Matchnum=1
@@ -713,62 +715,10 @@ Girder 3.0 DataFile
    enabled=TRUE
    Identifier=54
    Comments=
-   (Channel)
-   enabled=TRUE
-   irstr=accessDTV.Channel
+   <ChanText>
+   irstr=accessDTV.ChanText.1
    Device=15
    Identifier=55
-   Comments=
-   {Prefix}
-   irstr=
-   Device=-1
-   Identifier=56
-   Comments=
-   enabled=TRUE
-   ActionType=118
-   ActionSubType=1
-   sValue1=HDTV
-   lValue1=1
-   lValue3=5
-   TopMost=TRUE
-   Matchnum=1
-   StateCount=1
-   StateBegin=1
-   {Chan}
-   irstr=
-   Device=-1
-   Identifier=57
-   Comments=
-   enabled=TRUE
-   ActionType=118
-   ActionSubType=1
-   sValue1=[treg1]
-   iValue1=1
-   iValue2=1
-   lValue1=1
-   lValue2=5
-   TopMost=TRUE
-   Matchnum=1
-   StateCount=1
-   StateBegin=1
-   {Clear Text}
-   irstr=
-   Device=-1
-   Identifier=58
-   Comments=
-   enabled=TRUE
-   ActionType=118
-   ActionSubType=1
-   iValue2=1
-   lValue1=2
-   TopMost=TRUE
-   Matchnum=1
-   StateCount=1
-   StateBegin=1
-   <ChanText>
-   irstr=accessDTV.ChanText
-   Device=15
-   Identifier=59
    Comments=
    enabled=TRUE
    ActionType=118
@@ -784,14 +734,66 @@ Girder 3.0 DataFile
    <ChanNoText>
    irstr=accessDTV.ChanNoText
    Device=15
-   Identifier=60
+   Identifier=56
    Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=59
+   lValue1=55
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   (Channel)
+   enabled=TRUE
+   irstr=accessDTV.Channel.2
+   Device=15
+   Identifier=57
+   Comments=
+   {Prefix}
+   irstr=
+   Device=-1
+   Identifier=58
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=HDTV
+   lValue1=1
+   lValue3=5
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   {Chan}
+   irstr=
+   Device=-1
+   Identifier=59
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg2]
+   iValue1=1
+   iValue2=2
+   lValue1=1
+   lValue2=5
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   {Clear Text}
+   irstr=
+   Device=-1
+   Identifier=60
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   iValue2=2
+   lValue1=2
    TopMost=TRUE
    Matchnum=1
    StateCount=1
@@ -815,7 +817,7 @@ Girder 3.0 DataFile
    Identifier=62
    Comments=
    <Status>
-   irstr=WMP.Status
+   irstr=WMP.Status.1
    Device=15
    Identifier=63
    Comments=
@@ -826,15 +828,29 @@ Girder 3.0 DataFile
    iValue1=1
    iValue2=1
    lValue1=1
-   lValue2=11
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Duration>
-   irstr=WMP.Duration
+   irstr=WMP.Duration.4
    Device=15
    Identifier=64
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=9
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Position>
+   irstr=WMP.Position.5
+   Device=15
+   Identifier=65
    Comments=
    enabled=TRUE
    ActionType=4
@@ -847,9 +863,43 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    <Title>
-   irstr=WMP.Title
+   irstr=WMP.Title.6
    Device=15
-   Identifier=65
+   Identifier=66
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg6]
+   iValue1=1
+   iValue2=6
+   lValue1=2
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Close>
+   irstr=WMP.Close
+   Device=15
+   Identifier=67
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=4
+   lValue1=11
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+[Winamp Display]
+   enabled=TRUE
+   Identifier=68
+   Comments=
+   <Status>
+   irstr=Winamp.Status.1
+   Device=15
+   Identifier=69
    Comments=
    enabled=TRUE
    ActionType=118
@@ -857,15 +907,51 @@ Girder 3.0 DataFile
    sValue1=[treg1]
    iValue1=1
    iValue2=1
-   lValue1=2
+   lValue1=1
+   lValue3=6
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Length>
+   irstr=Winamp.Length.2
+   Device=15
+   Identifier=70
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=/[treg2]
+   iValue2=2
+   lValue1=1
+   lValue2=10
+   lValue3=3
    TopMost=TRUE
    Matchnum=1
    StateCount=1
    StateBegin=1
    <Position>
-   irstr=WMP.Position
+   irstr=Winamp.Position.3
    Device=15
-   Identifier=66
+   Identifier=71
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg3]
+   iValue1=1
+   iValue2=3
+   lValue1=1
+   lValue2=8
+   lValue3=2
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Total>
+   irstr=Winamp.Total.4
+   Device=15
+   Identifier=72
    Comments=
    enabled=TRUE
    ActionType=4
@@ -877,10 +963,41 @@ Girder 3.0 DataFile
    Matchnum=1
    StateCount=1
    StateBegin=1
-   <Close>
-   irstr=WMP.Close
+   <Time>
+   irstr=Winamp.Elapsed.5
    Device=15
-   Identifier=67
+   Identifier=73
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=10
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Title>
+   irstr=Winamp.Title.6
+   Device=15
+   Identifier=74
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg6]
+   iValue1=1
+   iValue2=6
+   lValue1=2
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Close>
+   irstr=Winamp.Close
+   Device=15
+   Identifier=75
    Comments=
    enabled=TRUE
    ActionType=4
