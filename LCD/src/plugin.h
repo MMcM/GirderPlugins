@@ -11,7 +11,7 @@
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "1.10"
+#define PLUGINVERSION "1.12"
 
 
 #include <girder.h>
@@ -38,21 +38,22 @@ extern LPSTR pDisplayBuf;
 class DisplayCommandState;
 
 enum DisplayValueType {
-  valNONE, valSTR, valINT
+  valNONE, valSTR, valINT, valVAR
 };
 
 struct DisplayAction
 {
+  const char *key;
   const char *name;
   DisplayValueType valueType;
   void (*function)(DisplayCommandState& state);
 };
 
-extern DisplayAction DisplayActions[];
+extern DisplayAction *FindDisplayAction(p_command command);
+
+extern void DisplayString(DisplayCommandState& state);
+extern void DisplayVariable(DisplayCommandState& state);
+extern void DisplayCurrentTime(DisplayCommandState& state);
+extern void DisplayFilename(DisplayCommandState& state);
 extern void DisplayClose(DisplayCommandState& state);
 extern void DisplayClear(DisplayCommandState& state);
-extern void DisplayString(DisplayCommandState& state);
-extern void DisplayStringRegister(DisplayCommandState& state);
-extern void DisplayCurrentTime(DisplayCommandState& state);
-extern void DisplayPayload(DisplayCommandState& state);
-extern void DisplayFilenamePayload(DisplayCommandState& state);
