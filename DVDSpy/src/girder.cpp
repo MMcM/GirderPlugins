@@ -52,12 +52,13 @@ void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 #else
   if (WaitForSingleObject(hSMSem, 2500)==WAIT_OBJECT_0) {
     strncpy(pMessageBuffer, event, 1024);
-    size_t msglen = strlen(pMessageBuffer) + 1;
+    size_t msglen = 0;          // Meaning no payload.
     if (NULL != payload) {
+      msglen = strlen(pMessageBuffer) + 1;
       if (msglen + pllen > 1024)
         pllen = 1024 - msglen;
       memcpy(pMessageBuffer + msglen, payload, pllen);
-      msglen += pllen;
+      msglen += pllen;          // Total length including event name.
     }
     PostMessage(hTargetWindow, WM_HARDWAREEVENT, PLUGINNUM, msglen);
   }
@@ -78,7 +79,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef _DEBUG
   {
     char dbuf[1024];
-    sprintf(dbuf, "DVDSpy monitor window started.");
+    sprintf(dbuf, "DVDSpy monitor window started.\n");
     OutputDebugString(dbuf);
   }
 #endif
@@ -87,7 +88,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef _DEBUG
   {
     char dbuf[1024];
-    sprintf(dbuf, "DVDSpy monitor window ended.");
+    sprintf(dbuf, "DVDSpy monitor window ended.\n");
     OutputDebugString(dbuf);
   }
 #endif
@@ -321,7 +322,7 @@ extern "C" void WINAPI support_device(PCHAR Buffer, BYTE Length)
 
 extern "C" void WINAPI version_device(PCHAR Buffer, BYTE Length)
 {
-  strncpy(Buffer, "1.19", Length);
+  strncpy(Buffer, "1.20", Length);
 }
 
 extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)
