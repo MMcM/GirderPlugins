@@ -24,8 +24,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmt1;
-mbmt1 = format(&#34;%2.0fC&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmt1 = format(&#34;%2.0fC&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -70,8 +69,7 @@ mbmt1 = format(&#34;%2.0fC&#34;, strtodouble(pld1));</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmt2;
-mbmt2 = format(&#34;%2.0fC&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmt2 = format(&#34;%2.0fC&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -116,8 +114,7 @@ mbmt2 = format(&#34;%2.0fC&#34;, strtodouble(pld1));</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmf1;
-mbmf1 = format(&#34;%4.0fRPM&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmf1 = format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -162,8 +159,7 @@ mbmf1 = format(&#34;%4.0fRPM&#34;, strtodouble(pld1));</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmf2;
-mbmf2 = format(&#34;%4.0fRPM&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmf2 = format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -208,8 +204,7 @@ mbmf2 = format(&#34;%4.0fRPM&#34;, strtodouble(pld1));</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmv1;
-mbmv1 = format(&#34;%2.2fV&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmv1 = format(&#34;%2.2fV&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -254,8 +249,7 @@ mbmv1 = format(&#34;%2.2fV&#34;, strtodouble(pld1));</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmv2;
-mbmv2 = format(&#34;%2.2fV&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmv2 = format(&#34;%2.2fV&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -300,8 +294,7 @@ mbmv2 = format(&#34;%2.2fV&#34;, strtodouble(pld1));</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>string mbmv3;
-mbmv3 = format(&#34;%2.2fV&#34;, strtodouble(pld1));</sValue1>
+        <sValue1>mbmv3 = format(&#34;%2.2fV&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
