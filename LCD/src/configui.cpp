@@ -545,11 +545,24 @@ static BOOL CALLBACK DisplayPageDialogProc(HWND hwnd, UINT uMsg,
       DisplayDeviceEntry *selent = NULL;
       if (NULL != g_editDevice)
         selent = FindDeviceEntry(g_editDevice);
-      
+
+      LPCSTR lastlib = NULL;
+      BOOL notfound = FALSE;
+
       HWND combo = GetDlgItem(hwnd, IDC_DEVICE);
       int selidx = 0;
       for (size_t i = 0; i < countof(DisplayDevices); i++) {
         DisplayDeviceEntry *entry = DisplayDevices+i;
+        if (entry != selent) {
+          if ((NULL == lastlib) || strcmp(lastlib, entry->lib)) {
+            lastlib = entry->lib;
+            // Do not include device if library not installed.
+            char buf[MAX_PATH], *bp;
+            notfound = (SearchPath(NULL, entry->lib, ".DLL", 
+                                   sizeof(buf), buf, &bp) == 0);
+          }
+          if (notfound) continue;
+        }
         int idx = ComboBox_AddString(combo, entry->desc);
         ComboBox_SetItemData(combo, idx, entry);
         if (entry == selent)
