@@ -1605,8 +1605,7 @@ end
       <ActionSubType>34</ActionSubType>
       <sValue1>local gdir = GetDirectory("GIRDERDIR")
 DVDDataCommand = "\"" .. gdir .. "\\DVDData.vbs\" " ..
---"-cache-directory \"" .. gdir .. "\\DVDData\" " ..
-  "-cache-directory \"C:\\Program Files\\girder32\\DVDData\" " ..
+  "-cache-directory \"" .. gdir .. "\\DVDData\" " ..
   "-girder-event DVDData " .. DVDDataCommand
 result = 1
 </sValue1>
@@ -1907,8 +1906,7 @@ function AddWeatherLocation(accid)
 end
 
 local fname
---fname = GetDirectory("GIRDERDIR") .. "\\WeatherSettings.lua"
-fname = "C:\\Program Files\\girder32\\WeatherSettings.lua"
+fname = GetDirectory("GIRDERDIR") .. "\\WeatherSettings.lua"
 
 dofile(fname)
 </sValue1>
@@ -2367,7 +2365,7 @@ Not available
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>38</lValue1>
-      <EventString Name="PowerDVD.Title" Identifier="145" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.TitleNo"/>
+      <EventString Name="PowerDVD.TitleNo" Identifier="145" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.TitleNo"/>
     </Command>
     <Command Name="Chapter" Identifier="146" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -3767,8 +3765,8 @@ result = idx
           <StateBegin>1</StateBegin>
           <StateCurrent>1</StateCurrent>
           <StateInvert>FALSE</StateInvert>
-          <Binary Encoding="Base64">hQAAAAIAAAAjAQAABgAAAAAAAAAFAAAACAAAACYAAAAQAAAAKgAAABoAAAA5AAAAIQAAABcAAAAp&#13;
-AAAAIwEAADEAAAA6AAAAcGxkMgA9PQAiVGl0bGUiACJDaGFwdGVyIgAiVGltZSIAIlN0YXRlIgAi&#13;
+          <Binary Encoding="Base64">hQAAAAIAAAAjAQAABgAAAAAAAAAFAAAACAAAACYAAAAQAAAAKgAAABoAAAA5AAAAIQAAABcAAAAp
+AAAAIwEAADEAAAA6AAAAcGxkMgA9PQAiVGl0bGUiACJDaGFwdGVyIgAiVGltZSIAIlN0YXRlIgAi
 QW5nbGUiACJUb3RhbCIAAAAAAA==</Binary>
           <OSD>FALSE</OSD>
           <Submatch>FALSE</Submatch>
@@ -5991,6 +5989,271 @@ result = idx
       <bValue3>FALSE</bValue3>
       <lValue1>15</lValue1>
       <EventString Name="cdplayer.Close" Identifier="490" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Close"/>
+    </Command>
+  </Group>
+  <Group Name="Eugene's Display" Identifier="491" Enabled="TRUE">
+    <Comments>Eugene's DVD player state *ON*</Comments>
+    <Command Name="Name" Identifier="492" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>70</lValue1>
+      <EventString Name="Eugenes.Name" Identifier="493" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Name"/>
+    </Command>
+    <Command Name="TitleNo" Identifier="494" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>38</lValue1>
+      <EventString Name="Eugenes.TitleNo" Identifier="495" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.TitleNo"/>
+    </Command>
+    <Command Name="Chapter" Identifier="496" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>42</lValue1>
+      <EventString Name="Eugenes.Chapter" Identifier="497" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Chapter"/>
+    </Command>
+    <Command Name="Duration" Identifier="498" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>58</lValue1>
+      <EventString Name="Eugenes.Duration" Identifier="499" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Duration"/>
+    </Command>
+    <Command Name="Elapsed" Identifier="500" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>57</lValue1>
+      <EventString Name="Eugenes.Elapsed" Identifier="501" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Elapsed"/>
+    </Command>
+    <Command Name="Close" Identifier="502" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>15</lValue1>
+      <EventString Name="Eugenes.Close" Identifier="503" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Close"/>
+    </Command>
+  </Group>
+  <Group Name="DVD Station Display" Identifier="504" Enabled="TRUE">
+    <Comments>Hollywood+ DVD Station player *ON*</Comments>
+    <MultiGroup Name="Title #1" Identifier="505" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="DVDStation.Title.1" Identifier="506" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Title.1"/>
+      <Command Name="Open" Identifier="507" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>1</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Domain" Identifier="508" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>31</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Title #2" Identifier="509" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="DVDStation.Title.2" Identifier="510" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Title.2"/>
+      <Command Name="Split" Identifier="511" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>34</ActionSubType>
+        <sValue1>function split(str)
+  local result = {}
+  local idx = 1, nidx1, nidx2
+  repeat
+    nidx1, nidx2 = strfind(str, "%s+", idx)
+    if nidx1 ~= 1 then
+      tinsert(result, 1, strsub(str, idx, (nidx1 or 0) - 1))
+    end
+    idx = nidx2 and (nidx2 + 1)
+  until not idx
+  return result
+end
+
+local flds = split(pld1)
+PlayerElapsed = flds[1]
+result = (PlayerChapter ~= flds[2]) or (PlayerTitleNo ~= flds[3])
+PlayerChapter = flds[2]
+PlayerTitleNo = flds[3]
+</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>43</lValue1>
+      </Command>
+      <Command Name="Time" Identifier="512" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <Command Name="Close" Identifier="513" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>15</lValue1>
+      <EventString Name="DVDStation.Close" Identifier="514" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Close"/>
     </Command>
   </Group>
 </Girder>
