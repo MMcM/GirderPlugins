@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 1.10. &nbsp;MMcM 05/02
+Version 1.12. &nbsp;MMcM 06/02
 
 <h3>Prerequisites</h3>
 Before you can use this plug-in, you must install and configure 
@@ -22,17 +22,15 @@ This plug-in displays bits of text on chosen area of the display.
 The area is specified by the starting row and column and the number of
 characters.  The text can come from several places:
 <ul>
-<li>A fixed string, possibly expanding registers
-(<kbd>[reg<i>n</i>]</kbd>) or text registers (<kbd>[treg<i>n</i>]</kbd>).
-<li>The contents of a string register, as set by some other plug-in.
+<li>A fixed string, possibly expanding variables.
+<li>The contents of a string variable, as set by some other plug-in, or the event payload.
 <li>The current date and time, formatted using a <code>strftime</code> control string.
 </ul>
 Several special actions that are also possible:
 <ul>
 <li>Clearing the display.
 <li>Closing the display so that it can be used by other applications.
-<li>The contents of a payload string.
-<li>The contents of a payload string, interpreted as a filename.  Any
+<li>The contents of a string variable, interpreted as a filename.  Any
 directory and file type portion of the name are stripped before
 display.
 </ul>
@@ -40,10 +38,39 @@ display.
 
 The most interesting use is with the DVDSpy Hardware plug-in, which
 generates events when the state of a software DVD player changes.
-These events are accompanied by text in string register #1.  See the
-<a href="../../hardware/dvdspy/readme.htm">readme</a> file for that
+These events are accompanied by payload text, which can be displayed
+using variable <code>pld<i>n</i></code>.  See the <a
+href="../../hardware/dvdspy/readme.htm">readme</a> file for that
 plug-in for more details.  A sample Girder file is included that
 displays some information in a format suitable for 4x20 displays.<p>
+
+<h3>Marquee mode</h3>
+LCDriver supports continuous horizontal scrolling display for some
+devices.  (Apparently only CrystalFontz displays.)  This can be
+simulated, with a lot more flickering, by redrawing the entire row
+periodically.  Text which is too large to display all at once (up to
+twice the width of the display) can be displayed in this way by
+choosing Marquee.  The text occupies the entire row; neither the
+starting column nor the width is given.  Only one such row can be
+active at a time.  If the actual text fits in the row, it is displayed
+normally.<p>
+
+The registry key
+<kbd>HKEY_LOCAL_MACHINE\Software\Girder3\SoftPlugins\LCD</kbd> can
+contain a <kbd>MarqueePixelWidth</kbd> value, specifying the amount
+that the display scrolls each step.  <kbd>1</kbd> gives smooth
+scrolling; <kbd>6</kbd> scrolls one character at a time.  A
+<kbd>MarqueeSpeed</kbd> value specifies the time between steps, in
+units of 1/96 second.  <kbd>16</kbd> scrolls six times per second, or
+one character per second with pixel width <kbd>1</kbd>.  <kbd>96</kbd>
+scrolls once a second, or one character per second with pixel width
+<kbd>6</kbd>.  If a <kbd>MarqueeSimulated</kbd> value is set to
+<kbd>True</kbd>, the row is redrawn at the specified frequency by the
+plug-in.  <kbd>MarqueePixelWidth</kbd> is taken into account when
+computing the actual speed, but the row is always be drawn on a
+character boundary.  If missing or set to <kbd>False</kbd>, the
+LCDriver API function is used.  In that case, if the display does not
+support marquee, as much of the text as fits is displayed normally.<p>
 
 <h3>Disclaimer</h3>
 You use this plug-in at your own risk.
