@@ -1129,8 +1129,6 @@ BOOL MatchMediaSpy(UINT nClass)
                 }
                 bFound = TRUE;
                 hr = pBF->GetState(0, &sourceFilterState);
-                if (S_OK != hr)         // Various intermediate conditions
-                  sourceFilterState = (FILTER_STATE)-1;
               }
             }
             // Could look for a file sink as well to indicate that we are capturing.
@@ -1175,9 +1173,7 @@ BOOL MatchMediaSpy(UINT nClass)
       hr = pDVD->QueryInterface(IID_IBaseFilter, (void**)&pBF);
       pDVD->Release();
       if (SUCCEEDED(hr)) {
-        hr = pBF->GetState(0, &sourceFilterState);
-        if (S_OK != hr)         // Various intermediate conditions
-          sourceFilterState = (FILTER_STATE)-1;
+        hr = pBF->GetState(0, &sourceFilterState); // OK if in transition or no cueing.
         FILTER_INFO finfo;
         hr = pBF->QueryFilterInfo(&finfo);
         pBF->Release();
@@ -1246,8 +1242,6 @@ void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
     case State_Running:
       strncpy(szBuf, "Playing", nSize);
       break;
-    default:
-      szBuf[0] = '\0';
     }
     break;
   case MS_FG_VIDEO_POSITION:
