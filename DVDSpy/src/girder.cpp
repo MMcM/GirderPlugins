@@ -52,13 +52,14 @@ void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 #else
   if (WaitForSingleObject(hSMSem, 2500)==WAIT_OBJECT_0) {
     strncpy(pMessageBuffer, event, 1024);
+    size_t msglen = strlen(pMessageBuffer) + 1;
     if (NULL != payload) {
-      size_t elen = strlen(pMessageBuffer) + 1;
-      if (elen + pllen > 1024)
-        pllen = 1024 - elen;
-      memcpy(pMessageBuffer + elen, payload, pllen);
+      if (msglen + pllen > 1024)
+        pllen = 1024 - msglen;
+      memcpy(pMessageBuffer + msglen, payload, pllen);
+      msglen += pllen;
     }
-    PostMessage(hTargetWindow, WM_HARDWAREEVENT, PLUGINNUM, pllen);
+    PostMessage(hTargetWindow, WM_HARDWAREEVENT, PLUGINNUM, msglen);
   }
 #ifdef _DEBUG
   else {
@@ -320,7 +321,7 @@ extern "C" void WINAPI support_device(PCHAR Buffer, BYTE Length)
 
 extern "C" void WINAPI version_device(PCHAR Buffer, BYTE Length)
 {
-  strncpy(Buffer, "1.18", Length);
+  strncpy(Buffer, "1.19", Length);
 }
 
 extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)
