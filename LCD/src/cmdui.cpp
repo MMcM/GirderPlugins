@@ -198,14 +198,15 @@ static void FillValueListChoices(HWND hwnd, UINT ctlid, UINT strid, LPCSTR *choi
 // Show position inputs and optionally load from edited command.
 static void ShowPositionInputs(HWND hwnd, UINT ctlid, BOOL reload)
 {
-  int sw = (IDC_ROW == ctlid) ? SW_SHOW : SW_HIDE;
+  int sw = ((IDC_WIDTH == ctlid) || (IDC_ROW == ctlid)) ? SW_SHOW : SW_HIDE;
   ShowWindow(GetDlgItem(hwnd, IDC_ROWL), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_ROW), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_USE_COL), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_COL), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_COL_SPIN), sw);
+  sw = (IDC_WIDTH == ctlid) ? SW_SHOW : SW_HIDE;
+  ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_USE_REST), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), sw);
   ShowWindow(GetDlgItem(hwnd, IDC_WIDTH), sw);
@@ -213,10 +214,12 @@ static void ShowPositionInputs(HWND hwnd, UINT ctlid, BOOL reload)
 
   if (reload) {
     UpDown_SetPos(GetDlgItem(hwnd, IDC_ROW_SPIN),
-                  (IDC_ROW == ctlid) ? g_editCommand->ivalue1 : 0);
+                  ((IDC_WIDTH == ctlid) || (IDC_ROW == ctlid)) ? 
+                  g_editCommand->ivalue1 : 0);
     UpDown_SetPos(GetDlgItem(hwnd, IDC_COL_SPIN),
-                  (IDC_ROW == ctlid) ? g_editCommand->ivalue2 : 0);
-    BOOL wrap = (IDC_ROW == ctlid) && (g_editCommand->ivalue2 < 0);
+                  ((IDC_WIDTH == ctlid) || (IDC_ROW == ctlid)) ?
+                  g_editCommand->ivalue2 : 0);
+    BOOL wrap = (IDC_WIDTH == ctlid) && (g_editCommand->ivalue2 < 0);
     Button_SetCheck(GetDlgItem(hwnd, IDC_USE_WRAP), wrap);
     Button_SetCheck(GetDlgItem(hwnd, IDC_USE_COL), !wrap);
     UpDown_SetPos(GetDlgItem(hwnd, IDC_WIDTH_SPIN), g_editCommand->ivalue3);
@@ -224,7 +227,7 @@ static void ShowPositionInputs(HWND hwnd, UINT ctlid, BOOL reload)
     EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), !wrap);
     EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), !wrap);
     EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), !wrap);
-    BOOL rest = (wrap || (IDC_ROW != ctlid) || (g_editCommand->ivalue3 <= 0));
+    BOOL rest = (wrap || (IDC_WIDTH != ctlid) || (g_editCommand->ivalue3 <= 0));
     Button_SetCheck(GetDlgItem(hwnd, IDC_USE_REST), rest);
     Button_SetCheck(GetDlgItem(hwnd, IDC_USE_WIDTH), !rest);
     EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !rest);
@@ -339,7 +342,11 @@ static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice,
     UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), commandDevice->GetHeight() - 1, 0);
     UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), commandDevice->GetWidth() - 1, 0);
     ShowValueInputs(hwnd, action->valueType, reload);
-    ShowPositionInputs(hwnd, IDC_ROW, reload);
+    ShowPositionInputs(hwnd, 
+                       ((DisplayCharacter == action->function) ||
+                        (DisplayCustomCharacter == action->function)) ?
+                       IDC_ROW : IDC_WIDTH, 
+                       reload);
     ShowScreenInputs(hwnd, FALSE, reload);
   }
 }
