@@ -26,13 +26,25 @@ public:
 FutabaVFDDisplay::FutabaVFDDisplay(DisplayDeviceFactory *factory, LPCSTR devtype)
   : DisplayDevice(factory, devtype)
 {
-  // TODO: There are models with sizes other than just these two.
-  if ((NULL != devtype) && !strcmp(devtype, "M402")) {
+  // TODO: There are models with sizes other than just these three.
+  if (NULL == devtype) {
+    m_cols = 20;                // Compatibility with older settings
+    m_rows = 4;
+  }
+  else if (!strcmp(devtype, "M202")) {
+    m_cols = 20;
+    m_rows = 2;
+  }
+  else if (!strcmp(devtype, "M204")) {
+    m_cols = 20;
+    m_rows = 4;
+  }
+  else if (!strcmp(devtype, "M402")) {
     m_cols = 40;
     m_rows = 2;
   }
   else {
-    m_cols = 20;
+    m_cols = 20;                // Default
     m_rows = 4;
   }
   m_portType = portSERIAL;
