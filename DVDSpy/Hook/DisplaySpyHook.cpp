@@ -224,6 +224,15 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(accessDTV)
 
+#if 0
+    // accessDTV itself is now Girder aware
+    BEGIN_NMATCH(Channel)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(50,43))
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
     BEGIN_NMATCH(ChanText)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
@@ -240,12 +249,13 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-    BEGIN_NMATCH(Channel)
+    BEGIN_NMATCH(Elapsed)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
-      ENTRY_NUM(MATCH_WPARAM, MAKELONG(50,43))
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(25,359))
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
+#endif
 
 #if 0
     // This worked in the first beta version.  It has understandably
@@ -271,13 +281,6 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 #endif
   
-    BEGIN_NMATCH(Elapsed)
-      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
-      ENTRY_NUM(MATCH_WPARAM, MAKELONG(25,359))
-     BEGIN_EXTRACT()
-      ENTRY0(EXTRACT_LPARAM_STR)
-    END_MATCH()
-
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")

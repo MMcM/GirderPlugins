@@ -10,7 +10,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.60. &nbsp;MMcM 04/04
+Version 1.61. &nbsp;MMcM 06/04
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -349,28 +349,34 @@ If you do see events, then double check the OSD PopUp settings.
 
 <tr></tr>
 
-<tr><td><code>accessDTV.ChanText</code></td>
-<td>The channel description changed</td>
-<td>New description (<code>NNN.n XXXX_XX</code>)</td>
-</tr>
-
-<tr><td><code>accessDTV.ChanNoText</code></td>
-<td>The channel description was not present</td>
-</tr>
-
 <tr><td><code>accessDTV.Channel</code></td>
 <td>The big channel digits changed</td>
 <td>New digits (<code>NN.n</code>)</td>
 </tr>
 
-<tr><td><code>accessDTV.Duration</code></td>
+<tr><td><code>accessDTV.ChannelPSIP</code></td>
+<td>The channel description changed</td>
+<td>New description (<code>NNN.n XXXX_XX</code>)</td>
+</tr>
+
+<tr><td><code>accessDTV.ProgramLength</code></td>
 <td>File duration changed</td>
 <td>New total duration (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>accessDTV.Elapsed</code></td>
+<tr><td><code>accessDTV.PlaybackPosition</code></td>
 <td>File position changed</td>
 <td>New elapsed time (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>accessDTV.RecordElapsed</code></td>
+<td>Recording position changed</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>accessDTV.SignalMeter</code></td>
+<td>Signal meter changed</td>
+<td>New signal strength (percentage)</td>
 </tr>
 
 <tr><td><code>accessDTV.Close</code></td>
