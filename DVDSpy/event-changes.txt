@@ -1,66 +1,66 @@
-Old			New			Description
+1.12			1.13			1.14
 
-accessDTV.ChanNoText	accessDTV.ChanNoText
-accessDTV.ChanText	accessDTV.ChanText.1
-accessDTV.Channel	accessDTV.Channel.2
-accessDTV.Close		accessDTV.Close
+accessDTV.ChanNoText	accessDTV.ChanNoText	accessDTV.ChanNoText
+accessDTV.ChanText	accessDTV.ChanText.1	accessDTV.ChanText
+accessDTV.Channel	accessDTV.Channel.2	accessDTV.Channel
+accessDTV.Close		accessDTV.Close		accessDTV.Close
 
-ATI.Close		ATI.Close
-ATI.DVD.0		ATI.DVD.1		Domain
-ATI.DVD.1		ATI.DVD.2		Title
-ATI.DVD.2		ATI.DVD.3		Chapter
-ATI.DVD.3		ATI.DVD.4		Total
-ATI.DVD.4		ATI.DVD.5		Elapsed
-ATI.MMC.0		ATI.MMC.4		Total
-ATI.MMC.1		ATI.MMC.5		Elapsed
-ATI.MMC.2		ATI.MMC.6		Source file
+ATI.Close		ATI.Close		ATI.Close
+ATI.DVD.0		ATI.DVD.1		ATI.DVD.Domain
+ATI.DVD.1		ATI.DVD.2		ATI.DVD.Title
+ATI.DVD.2		ATI.DVD.3		ATI.DVD.Chapter
+ATI.DVD.3		ATI.DVD.4		ATI.DVD.Total
+ATI.DVD.4		ATI.DVD.5		ATI.DVD.Time
+ATI.MMC.0		ATI.MMC.4		ATI.MMC.Duration
+ATI.MMC.1		ATI.MMC.5		ATI.MMC.Position
+ATI.MMC.2		ATI.MMC.6		ATI.MMC.File
 
-Disc.Insert.x		Disc.Insert.x.9
-Disc.Eject.x		Disc.Eject.x
+Disc.Insert.x		Disc.Insert.x.9		Disc.Insert.x
+Disc.Eject.x		Disc.Eject.x		Disc.Eject.x
 
-PowerDVD.Time		PowerDVD.Time.5
-PowerDVD.Title		PowerDVD.Title.7
+PowerDVD.Time		PowerDVD.Time.5		PowerDVD.Time
+PowerDVD.Title		PowerDVD.Title.7	PowerDVD.Title
 
-TheaterTek.0		TheaterTek.1		Domain
-TheaterTek.1		TheaterTek.2		Title
-TheaterTek.2		TheaterTek.3		Chapter
-TheaterTek.3		TheaterTek.4		Total
-TheaterTek.4		TheaterTek.5		Elapsed
-TheaterTek.Close	TheaterTek.Close
+TheaterTek.0		TheaterTek.1		TheaterTek.Domain
+TheaterTek.1		TheaterTek.2		TheaterTek.Title
+TheaterTek.2		TheaterTek.3		TheaterTek.Chapter
+TheaterTek.3		TheaterTek.4		TheaterTek.Total
+TheaterTek.4		TheaterTek.5		TheaterTek.Time
+TheaterTek.Close	TheaterTek.Close	TheaterTek.Close
 
-TV.Chan			TV.Chan.2
-TV.Program		TV.Program.1
-TV.Time			TV.Time.3
+TV.Chan			TV.Chan.2		TV.Chan
+TV.Program		TV.Program.1		TV.Program
+TV.Time			TV.Time.3		TV.Program
 
-WinDVD.0		WinDVD.1		Chapter
-WinDVD.1		WinDVD.2		Elapsed
-WinDVD.2		WinDVD.3		Video
-WinDVD.4		WinDVD.5		Audio
-WinDVD.Close		WinDVD.Close
+WinDVD.0		WinDVD.1		WinDVD.Chapter
+WinDVD.1		WinDVD.2		WinDVD.Time
+WinDVD.2		WinDVD.3		WinDVD.Video
+WinDVD.4		WinDVD.5		WinDVD.Audio
+WinDVD.Close		WinDVD.Close		WinDVD.Close
 
-Winamp.Elapsed		Winamp.Elapsed.5
-Winamp.File		Winamp.File.6
-Winamp.Length		Winamp.Length.2		of playlist
-Winamp.Position		Winamp.Position.3	in playlist
-Winamp.Status		Winamp.Status.1
-Winamp.Title		Winamp.Title.7
-Winamp.Total		Winamp.Total.4
-Winamp.Close		Winamp.Close
+Winamp.Elapsed		Winamp.Elapsed.5	Winamp.Elapsed
+Winamp.File		Winamp.File.6		Winamp.File
+Winamp.Length		Winamp.Length.2		Winamp.Length
+Winamp.Position		Winamp.Position.3	Winamp.Position
+Winamp.Status		Winamp.Status.1		Winamp.Status
+Winamp.Title		Winamp.Title.7		Winamp.Title
+Winamp.Total		Winamp.Total.4		Winamp.Total
+Winamp.Close		Winamp.Close		Winamp.Close
 
-WMP.Close		WMP.Close
-WMP.Duration		WMP.Duration.4
-WMP.Position		WMP.Position.5
-WMP.Status		WMP.Status.1
-WMP.Title		WMP.Title.7
-WMP.URL			WMP.URL.6
+WMP.Close		WMP.Close		WMP.Close
+WMP.Duration		WMP.Duration.4		WMP.Duration
+WMP.Position		WMP.Position.5		WMP.Position
+WMP.Status		WMP.Status.1		WMP.Status
+WMP.Title		WMP.Title.7		WMP.Title
+WMP.URL			WMP.URL.6		WMP.URL
 
-ZoomPlayer.Close	ZoomPlayer.Close
-ZoomPlayer.DVD.0	ZoomPlayer.DVD.1	Domain
-ZoomPlayer.DVD.1	ZoomPlayer.DVD.2	Title
-ZoomPlayer.DVD.2	ZoomPlayer.DVD.3	Chapter
-ZoomPlayer.DVD.3	ZoomPlayer.DVD.4	Total
-ZoomPlayer.DVD.4	ZoomPlayer.DVD.5	Elapsed
-ZoomPlayer.Media.0	ZoomPlayer.Media.4	Total
-ZoomPlayer.Media.1	ZoomPlayer.Media.5	Elapsed
-ZoomPlayer.Media.2	ZoomPlayer.Media.6	Source file
-ZoomPlayer.OSD		ZoomPlayer.OSD.7
+ZoomPlayer.Close	ZoomPlayer.Close	ZoomPlayer.Close
+ZoomPlayer.DVD.0	ZoomPlayer.DVD.1	ZoomPlayer.DVD.Domain
+ZoomPlayer.DVD.1	ZoomPlayer.DVD.2	ZoomPlayer.DVD.Title
+ZoomPlayer.DVD.2	ZoomPlayer.DVD.3	ZoomPlayer.DVD.Chapter
+ZoomPlayer.DVD.3	ZoomPlayer.DVD.4	ZoomPlayer.DVD.Total
+ZoomPlayer.DVD.4	ZoomPlayer.DVD.5	ZoomPlayer.DVD.Time
+ZoomPlayer.Media.0	ZoomPlayer.Media.4	ZoomPlayer.Media.Duration
+ZoomPlayer.Media.1	ZoomPlayer.Media.5	ZoomPlayer.Media.Position
+ZoomPlayer.Media.2	ZoomPlayer.Media.6	ZoomPlayer.Media.File
+ZoomPlayer.OSD		ZoomPlayer.OSD.7	ZoomPlayer.OSD
