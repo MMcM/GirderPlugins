@@ -3,16 +3,35 @@
 #include "stdafx.h"
 #include "plugin.h"
 
-void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow)
+static HWND g_hwndSpy, g_hwndZP;
+
+// We initiate this process by seeing the creation of the ZoomPlayer main window.
+// At that time, we cannot yet send the rendezvous message.  We have to wait for
+// things to settle down a little bit first.  1sec seems enough; .5 sec does not.
+// Since Zoom Player remembers the name in its registry settings, this only really
+// needs to work once right after installing.
+DWORD WINAPI ZoomPlayerInitThread(LPVOID param)
 {
-  HWND hwndZP = (HWND)strtoul(data, NULL, 16);
+  Sleep(1000);
 
   char szName[128];
-  GetWindowText(hMonitorWindow, szName, sizeof(szName));
+  GetWindowText(g_hwndSpy, szName, sizeof(szName));
   ATOM nName = GlobalAddAtom(szName);
   // Tell ZoomPlayer to send LCD messages to our monitor window.
-  SendMessage(hwndZP, WM_APP+49, nName, 200);
+  SendMessage(g_hwndZP, WM_APP+49, nName, 200);
   GlobalDeleteAtom(nName);
+
+  return 0;
+}
+
+void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow)
+{
+  g_hwndSpy = hMonitorWindow;
+  g_hwndZP = (HWND)strtoul(data, NULL, 16);
+
+  DWORD dwThreadId;
+  HANDLE hThread = CreateThread(NULL, 0, ZoomPlayerInitThread, NULL, 0, &dwThreadId);
+  CloseHandle(hThread);
 }
 
 enum LCDMessageType { TYPE_NONE, TYPE_ATOM, TYPE_INT, TYPE_STATE, TYPE_MODE };
@@ -22,7 +41,7 @@ struct LCDMessage {
   const char *szName;           // Event suffix.
   LCDMessageType type;          // Data type.
 } LCDMessages[] = {
-  // Messages as of ZPLCD120.
+  // Messages as of ZPLCD130.
   { 1000, "State", TYPE_STATE },
   { 1100, "Time", TYPE_ATOM },
   { 1200, "OSD", TYPE_ATOM },
