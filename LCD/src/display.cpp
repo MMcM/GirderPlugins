@@ -106,6 +106,15 @@ void DisplayDevice::SetSettingBinary(HKEY hkey, LPCSTR valkey,
     RegSetValueEx(hkey, valkey, NULL, REG_BINARY, value, vallen);
 }
 
+static inline BOOL AllDigits(LPCSTR str)
+{
+  while (TRUE) {
+    char ch = *str++;
+    if ('\0' == ch) return TRUE;
+    if ((ch < '0') || (ch > '9')) return FALSE;
+  }
+}
+
 BOOL Delay::LoadSetting(HKEY hkey, LPCSTR valkey)
 {
   BYTE buf[64];
@@ -119,7 +128,7 @@ BOOL Delay::LoadSetting(HKEY hkey, LPCSTR valkey)
       SetDelay(((double)*(DWORD*)&buf) / 1000.0);
       return TRUE;
     case REG_SZ:
-      if ((NULL == strchr((LPCSTR)buf, '.')) && (NULL == strchr((LPCSTR)buf, 'e'))) {
+      if (AllDigits((LPCSTR)buf)) {
         // Again for compatibility, a string without a decimal point or exponent
         // is milliseconds.
         SetDelay(strtod((LPCSTR)buf, NULL) / 1000.0);
@@ -138,7 +147,7 @@ void Delay::SaveSetting(HKEY hkey, LPCSTR valkey) const
 {
   char buf[64];
   sprintf(buf, "%g", m_delay);
-  if ((NULL == strchr(buf, '.')) && (NULL == strchr(buf, 'e')))
+  if (AllDigits(buf))
     strcat(buf, ".0");          // See compatibility interpretation above.
   RegSetValueEx(hkey, valkey, NULL, REG_SZ, (LPBYTE)buf, strlen(buf));
 }
