@@ -23,7 +23,7 @@ const UINT ENTRY_EXTRACT = 3;
 const UINT ENTRY_END = 4;
 
 #define BEGIN_MODULE(x) ENTRY_STR(ENTRY_MODULE,#x)
-#define BEGIN_MATCH(x) ENTRY_STR(ENTRY_BEGIN,#x)
+#define BEGIN_MATCH(x,r) ENTRY(ENTRY_BEGIN,#x,r)
 #define BEGIN_EXTRACT() ENTRY0(ENTRY_EXTRACT)
 #define END_MATCH() ENTRY0(ENTRY_END)
 
@@ -73,7 +73,7 @@ static MatchEntry g_matches[] = {
     // This is an update to the tracker bar in the status bar in the
     // display window.  When it happens, the status bar fields have been
     // changed as well (via MFC).
-    BEGIN_MATCH(WinDVD)
+    BEGIN_MATCH(WinDVD,1)
       ENTRY_NUM(MATCH_MESSAGE, TBM_SETPOS)
       ENTRY_NUM(MATCH_CONTROLID, 1)
       ENTRY_STR(MATCH_CLASS, TRACKBAR_CLASS)
@@ -87,7 +87,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 7) // Audio mode
     END_MATCH()
 
-    BEGIN_MATCH(WinDVD.Close)
+    BEGIN_MATCH(WinDVD.Close,0)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "WinDVDClass")
      BEGIN_EXTRACT()
@@ -96,17 +96,9 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(POWERDVD)
 
-    // This only happens when playing a .VOB file: the window title is
-    // changed to the file in question.  Better than nothing.
-    BEGIN_MATCH(PowerDVD.Title)
-      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
-      ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
-     BEGIN_EXTRACT()
-      ENTRY0(EXTRACT_LPARAM_STR)
-    END_MATCH()
     // This only has the time.  The title# and chapter# are displayed as
     // graphics in the "remote" window.
-    BEGIN_MATCH(PowerDVD.Time)
+    BEGIN_MATCH(PowerDVD.Time,5)
       ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
       ENTRY_STR(MATCH_CLASS, "Static")
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "#32770")
@@ -114,17 +106,18 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
-
-  BEGIN_MODULE(accessDTV)
-
-    BEGIN_MATCH(accessDTV.Channel)
-      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
-      ENTRY_NUM(MATCH_WPARAM, MAKELONG(50,43))
+    // This only happens when playing a .VOB file: the window title is
+    // changed to the file in question.  Better than nothing.
+    BEGIN_MATCH(PowerDVD.Title,6)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
+      ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-    BEGIN_MATCH(accessDTV.ChanText)
+  BEGIN_MODULE(accessDTV)
+
+    BEGIN_MATCH(accessDTV.ChanText,1)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
       ENTRY_STR(ENTRY_NOT|MATCH_LPARAM_STR, "XXXXXXXXXXXXXX")
@@ -132,7 +125,7 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-    BEGIN_MATCH(accessDTV.ChanNoText)
+    BEGIN_MATCH(accessDTV.ChanNoText,0)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
       ENTRY_STR(MATCH_LPARAM_STR, "XXXXXXXXXXXXXX")
@@ -140,7 +133,14 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-    BEGIN_MATCH(accessDTV.Close)
+    BEGIN_MATCH(accessDTV.Channel,2)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(50,43))
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_MATCH(accessDTV.Close,0)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
      BEGIN_EXTRACT()
@@ -149,7 +149,7 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(zplayer)
 
-    BEGIN_MATCH(ZoomPlayer.DVD)
+    BEGIN_MATCH(ZoomPlayer.DVD,1)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
@@ -160,7 +160,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.Media)
+    BEGIN_MATCH(ZoomPlayer.Media,4)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
@@ -168,7 +168,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.OSD)
+    BEGIN_MATCH(ZoomPlayer.OSD,6)
       ENTRY_NUM(MATCH_MESSAGE, WM_PAINT)
       ENTRY_STR(MATCH_CLASS, "TPanel")
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TOSDForm")
@@ -176,7 +176,7 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_GETTEXT)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.Close)
+    BEGIN_MATCH(ZoomPlayer.Close,0)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "TMainForm")
      BEGIN_EXTRACT()
@@ -185,7 +185,7 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(TheaterTek DVD)
 
-    BEGIN_MATCH(TheaterTek)
+    BEGIN_MATCH(TheaterTek,1)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
@@ -196,7 +196,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
     END_MATCH()
 
-    BEGIN_MATCH(TheaterTek.Close)
+    BEGIN_MATCH(TheaterTek.Close,0)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "Overlay")
      BEGIN_EXTRACT()
@@ -205,7 +205,7 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(ATIMMC)
 
-    BEGIN_MATCH(ATI.DVD)
+    BEGIN_MATCH(ATI.DVD,1)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
@@ -216,7 +216,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
     END_MATCH()
 
-    BEGIN_MATCH(ATI.MMC)
+    BEGIN_MATCH(ATI.MMC,4)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
@@ -224,7 +224,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
     END_MATCH()
 
-    BEGIN_MATCH(ATI.Close)
+    BEGIN_MATCH(ATI.Close,0)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
      BEGIN_EXTRACT()
@@ -248,6 +248,7 @@ const size_t MAX_BUFS = 16;
 struct MatchIndexEntry
 {
   LPCSTR szName;                // Name of this match event.
+  int nRegister;                // First text register.
   size_t nMatches;              // Number of match predicates.
   MatchEntry *pMatches;         // Pointer to first match predicate.
   size_t nExtracts;             // Number of match extracts.
@@ -368,7 +369,7 @@ BOOL DoMatch(const MatchIndexEntry *pEntry,
 }
 
 void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
-               HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+                HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
   if (pEntry->nCode & ENTRY_HWND_NOTIFY) {
     if (WM_NOTIFY != nMsg) {
@@ -535,7 +536,9 @@ void IndexMatches(BOOL bAll)
       continue;
     }
     ASSERT(ENTRY_BEGIN == g_matches[i].nCode);
-    pMatches[j].szName = g_matches[i++].szVal;
+    pMatches[j].szName = g_matches[i].szVal;
+    pMatches[j].nRegister = g_matches[i].dwVal;
+    i++;
     pMatches[j].nMatches = 0;
     pMatches[j].pMatches = g_matches+i;
     while ((i < countof(g_matches)) && (ENTRY_EXTRACT != g_matches[i++].nCode)) {
@@ -910,6 +913,17 @@ size_t DISPLAYSPYHOOK_API DS_GetMatchIndex(LPCSTR szName)
     if (!strcmp(szName, g_pMatches[i].szName))
       return i;
   return (size_t)-1;
+}
+
+// Get text register for match.
+int DISPLAYSPYHOOK_API DS_GetMatchRegister(size_t nCurrent)
+{
+  if (NULL == g_pMatches)
+    IndexMatches(TRUE);
+  if (nCurrent >= g_nMatches)
+    return 0;
+  else
+    return g_pMatches[nCurrent].nRegister;
 }
 
 // Enable a particular match.
