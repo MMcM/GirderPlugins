@@ -41,6 +41,7 @@
       <EventString Name="Winamp.Title" Identifier="69" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
       <EventString Name="BSPlayer.File" Identifier="10149" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
       <EventString Name="PowerDivX.File" Identifier="10150" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
+      <EventString Name="MediaJukebox.File.Name" Identifier="10155" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Name"/>
       <Command Name="Set Register" Identifier="70" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -88,6 +89,7 @@
       <StateInvert>FALSE</StateInvert>
       <EventString Name="accessDTV.Channel" Identifier="73" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
       <EventString Name="Winamp.Position" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
+      <EventString Name="MediaJukebox.Playlist.Position" Identifier="10156" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Position"/>
       <Command Name="Set Register" Identifier="75" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -278,6 +280,7 @@
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
       <EventString Name="Winamp.Length" Identifier="10110" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
+      <EventString Name="MediaJukebox.Playlist.Length" Identifier="10157" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Length"/>
       <Command Name="Set Register" Identifier="10111" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -335,6 +338,7 @@
       <EventString Name="Winamp.Elapsed" Identifier="10122" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
       <EventString Name="BSPlayer.Elapsed" Identifier="10151" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
       <EventString Name="PowerDivX.Elapsed" Identifier="10152" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
+      <EventString Name="MediaJukebox.Playback.Elapsed" Identifier="10158" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Elapsed"/>
       <Command Name="Set Register" Identifier="10123" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -390,6 +394,7 @@
       <EventString Name="Winamp.Duration" Identifier="10132" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
       <EventString Name="BSPlayer.Duration" Identifier="10153" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
       <EventString Name="PowerDivX.Duration" Identifier="10154" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
+      <EventString Name="MediaJukebox.Playback.Duration" Identifier="10159" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Duration"/>
       <Command Name="Set Register" Identifier="10133" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -441,6 +446,7 @@
       <EventString Name="ZoomPlayer.OSD" Identifier="10138" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
       <EventString Name="WMP.Status" Identifier="10139" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
       <EventString Name="Winamp.Status" Identifier="10140" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
+      <EventString Name="MediaJukebox.Playback.State" Identifier="10160" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
       <Command Name="Set Register" Identifier="10141" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
