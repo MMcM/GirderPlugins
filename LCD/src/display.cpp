@@ -892,6 +892,9 @@ void DisplayDevice::DeviceSerialInputThread()
     int nh = 0;
     handles[nh++] = stopEvent;
 
+    // Even if the device has multi-byte input, it will need to
+    // reassemble across buffer boundaries, so use the simplest
+    // protocol for passing it the data.
     BYTE buf[1];
     DWORD nb;
     if (ReadFile(portHandle, buf, sizeof(buf), &nb, &overlapped)) {

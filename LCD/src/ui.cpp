@@ -204,7 +204,7 @@ static void LoadConfigSettings(HWND hwnd)
       HWND combo = GetDlgItem(hwnd, IDC_SPEED);
       SendMessage(combo, CB_RESETCONTENT, 0, 0);
       int selidx = 0;
-      for (int i = 1; i < sizeof(speeds); i++) {
+      for (int i = 1; i < countof(speeds); i++) {
         char speed[8];
         sprintf(speed, "%d", speeds[i]);
         int idx = SendMessage(combo, CB_ADDSTRING, 0, (LPARAM)speed);
