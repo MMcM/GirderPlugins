@@ -1,0 +1,8 @@
+Changelog
+=========
+
+
+v.0.3.0 
+- First public release
+- Official device id is now 53
+- New option to select if button up events should be sent

@@ -1,0 +1,24 @@
+; Anir2Girder.def : Declares the module parameters for the DLL.
+
+LIBRARY      "Anir2Girder"
+DESCRIPTION  'Anir2Girder Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here
+
+	gir_name
+	gir_description
+	gir_version
+	gir_devicenum
+	gir_requested_api
+
+	gir_open
+	gir_close
+	
+	gir_config
+	gir_command_gui
+
+	gir_start
+	gir_stop
+
+	gir_command_changed
