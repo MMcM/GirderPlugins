@@ -940,6 +940,10 @@ static void LoadFansSettings(HWND hwnd)
       lvi.iSubItem = 1;
       lvi.pszText = (LPSTR)fan->GetName();
       ListView_SetItem(list, &lvi);
+      lvi.iSubItem = 2;
+      lvi.pszText = (LPSTR)fan->GetValue();
+      if (NULL != lvi.pszText)
+        ListView_SetItem(list, &lvi);
     }
     UpDown_SetPos(GetDlgItem(hwnd, IDC_PPR_SPIN), ppr);
   }
@@ -1033,19 +1037,41 @@ static BOOL CALLBACK FansPageDialogProc(HWND hwnd, UINT uMsg,
         lvc.pszText = "Fan";
       lvc.iSubItem = 0;
       ListView_InsertColumn(list, 0, &lvc);
-      lvc.cx = 200;
+      lvc.cx = 125;
       if (LoadString(g_hInstance, IDS_EVENT, title, sizeof(title)))
         lvc.pszText = title;
       else
         lvc.pszText = "Event";
       lvc.iSubItem = 1;
       ListView_InsertColumn(list, 1, &lvc);
+      lvc.mask |= LVCF_FMT;
+      lvc.fmt = LVCFMT_RIGHT;
+      lvc.cx = 75;
+      if (LoadString(g_hInstance, IDS_RPM, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "RPM";
+      lvc.iSubItem = 2;
+      ListView_InsertColumn(list, 2, &lvc);
     }
     LoadFansSettings(hwnd);
     return TRUE;
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
+    case IDC_REFRESH:
+      {
+        PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
+        DisplayEnterCS();
+        DisplayClose();
+        g_editDevice->CheckFans();
+        g_editDevice->Close();
+        DisplayLeaveCS();
+        LoadFansSettings(hwnd);
+        SetPageModified(hwnd);
+      }
+      return TRUE;
+
     case IDC_EDIT:
       EditFan(hwnd);
       return TRUE;
@@ -1067,6 +1093,9 @@ static BOOL CALLBACK FansPageDialogProc(HWND hwnd, UINT uMsg,
       case PSN_APPLY:
         SaveFansSettings(hwnd);
         OnApply(hwnd, lParam);
+        break;
+      case UDN_DELTAPOS:
+        SetPageModified(hwnd);
         break;
       case NM_DBLCLK:
         EditFan(hwnd);
@@ -1153,7 +1182,9 @@ static void LoadSensorsSettings(HWND hwnd)
          sensor = sensor->GetNext()) {
       lvi.mask = LVIF_TEXT | LVIF_STATE | LVIF_PARAM;
       lvi.iSubItem = 0;
-      if (sensor->IsEnabled())
+      if (!sensor->IsKnown())
+        lvi.state = INDEXTOSTATEIMAGEMASK(0);
+      else if (sensor->IsEnabled())
         lvi.state = INDEXTOSTATEIMAGEMASK(2);
       else
         lvi.state = INDEXTOSTATEIMAGEMASK(1);
@@ -1261,7 +1292,7 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
       if (LoadString(g_hInstance, IDS_EVENT, title, sizeof(title)))
         lvc.pszText = title;
       else
-        lvc.pszText = "Name";
+        lvc.pszText = "Event";
       lvc.iSubItem = 0;
       ListView_InsertColumn(list, 0, &lvc);
       lvc.cx = 125;
@@ -1271,6 +1302,8 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
         lvc.pszText = "ROM";
       lvc.iSubItem = 1;
       ListView_InsertColumn(list, 1, &lvc);
+      lvc.mask |= LVCF_FMT;
+      lvc.fmt = LVCFMT_RIGHT;
       lvc.cx = 50;
       if (LoadString(g_hInstance, IDS_TEMPERATURE, title, sizeof(title)))
         lvc.pszText = title;
@@ -1284,14 +1317,16 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
-    case IDC_DETECT:
+    case IDC_REFRESH:
       {
+        PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
         DisplayEnterCS();
         DisplayClose();
         char prefix[128];
         if (!LoadString(g_hInstance, IDS_NEW_SENSOR_NAME, prefix, sizeof(prefix) - 2))
           strncpy(prefix, "Sensor", sizeof(prefix) - 2);
         g_editDevice->DetectSensors(prefix);
+        g_editDevice->Close();
         DisplayLeaveCS();
         LoadSensorsSettings(hwnd);
         SetPageModified(hwnd);

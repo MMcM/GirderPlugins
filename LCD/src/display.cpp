@@ -1230,6 +1230,10 @@ DisplayDevice::IntervalMode DisplayDevice::DeviceHasFanInterval()
   return IM_NONE;
 }
 
+void DisplayDevice::DeviceCheckFans()
+{
+}
+
 BOOL DisplayDevice::DeviceHasSensors()
 {
   return FALSE;
@@ -1807,9 +1811,10 @@ FanMonitor::FanMonitor(LPCSTR name, int number)
 {
   m_name = _strdup(name);
   m_number = number;
-  m_ppr = 2;
+  m_ppr = 1;
   m_enabled = FALSE;
   m_anonymous = TRUE;
+  m_value = NULL;
   m_updateTime = 0;
   m_next = NULL;
 }
@@ -1821,6 +1826,7 @@ FanMonitor::FanMonitor(const FanMonitor& other)
   m_ppr = other.m_ppr;
   m_enabled = other.m_enabled;
   m_anonymous = other.m_anonymous;
+  m_value = NULL;
   m_updateTime = 0;
   m_next = NULL;
 }
@@ -1841,6 +1847,31 @@ void FanMonitor::SetEnabled(BOOL enabled)
 {
   m_enabled = enabled;
   m_anonymous = FALSE;
+}
+
+BOOL FanMonitor::SetValue(LPCSTR value)
+{
+  m_updateTime = GetTickCount();
+  
+  if (NULL == value) {
+    if (NULL == m_value)
+      return FALSE;
+    free(m_value);
+    m_value = NULL;
+    return TRUE;
+  }
+  if ((NULL != m_value) && !strcmp(value, m_value))
+    return FALSE;
+  free(m_value);
+  m_value = _strdup(value);
+  return TRUE;
+}
+
+BOOL FanMonitor::SetRPM(int rpm)
+{
+  char buf[16];
+  sprintf(buf, "%d", rpm);
+  return SetValue(buf);
 }
 
 void FanMonitor::LoadFromRegistry(HKEY hkey, FanMonitor **fans)
@@ -1909,6 +1940,7 @@ void FanMonitor::SaveToRegistry(HKEY hkey, FanMonitor *fans)
 FanMonitor::FanMonitor(LPCSTR name, LPCSTR entry)
 {
   m_name = _strdup(name);
+  m_value = NULL;
   m_updateTime = 0;
   m_next = NULL;
 
@@ -1920,7 +1952,7 @@ FanMonitor::FanMonitor(LPCSTR name, LPCSTR entry)
     m_enabled = TRUE;
   m_anonymous = FALSE;
   m_number = atoi(entry);
-  m_ppr = 2;
+  m_ppr = 1;
 }
 
 DOWSensor::DOWSensor(LPCSTR name, LPCBYTE rom)
@@ -1949,6 +1981,18 @@ DOWSensor::~DOWSensor()
   free(m_value);
 }
 
+BOOL DOWSensor::IsKnown() const
+{
+  switch (GetFamily()) {
+  case DS18S20:
+  case DS1822:
+  case DS18B20:
+    return TRUE;
+  default:
+    return FALSE;
+  }
+}
+
 void DOWSensor::SetName(LPCSTR name)
 {
   free(m_name);
@@ -1965,42 +2009,42 @@ void DOWSensor::Clear()
 BOOL DOWSensor::LoadFromScratchpad(LPCBYTE pb, size_t nb)
 {
   char buf[128];
-  LPCSTR newvalue = NULL;
+  LPCSTR value = NULL;
 
-  switch (m_rom[0]) {
-  case 0x10:                    // DS18S20
+  switch (GetFamily()) {
+  case DS18S20:
     if (nb >= 2) {
       double temp = ((double)*(SHORT UNALIGNED*)pb) / 2.0;
       if (nb >= 8) {
         temp = temp - 0.25 + ((pb[7] - pb[6]) / pb[7]);
       }
       sprintf(buf, "%.1f", temp);
-      newvalue = buf;
+      value = buf;
     }
     break;
-  case 0x22:                    // DS1822
-  case 0x28:                    // DS18B20
+  case DS1822:
+  case DS18B20:
     if (nb >= 2) {
       double temp = ((double)*(SHORT UNALIGNED*)pb) / 16.0;
       sprintf(buf, "%.1f", temp);
-      newvalue = buf;
+      value = buf;
     }
     break;
   }
 
   m_updateTime = GetTickCount();
   
-  if (NULL == newvalue) {
+  if (NULL == value) {
     if (NULL == m_value)
       return FALSE;
     free(m_value);
     m_value = NULL;
     return TRUE;
   }
-  if ((NULL != m_value) && !strcmp(newvalue, m_value))
+  if ((NULL != m_value) && !strcmp(value, m_value))
     return FALSE;
   free(m_value);
-  m_value = _strdup(newvalue);
+  m_value = _strdup(value);
   return TRUE;
 }
 
@@ -2066,6 +2110,8 @@ void DOWSensor::SaveToRegistry(HKEY hkey, DOWSensor *sensors)
       LPSTR pb = buf;
       if (!sensor->m_enabled)
         *pb++ = '*';
+      // Formatted as 8 bytes rather than one 64-bit integer, which
+      // would put family last.
       for (int i = 0; i < 8; i++)
         sprintf(pb + i * 2, "%02X", sensor->m_rom[i]);
       DisplayDevice::SetSettingString(subkey, sensor->m_name, buf);

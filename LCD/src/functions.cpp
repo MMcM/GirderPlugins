@@ -103,7 +103,7 @@ int luaGPO(lua_State *L)
     return 0;
   }
   DisplayGPO((int)lua_tonumber(L, 1), 
-             lua_isnil(L, 2) ? FALSE : (lua_tonumber(L, 2) != 0.0),
+             lua_isnumber(L, 2) && (lua_tonumber(L, 2) != 0.0),
              dev);
   return 0;
 }

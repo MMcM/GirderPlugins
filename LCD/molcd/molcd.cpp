@@ -140,6 +140,7 @@ public:
   virtual int DeviceGetNFans();
   virtual void DeviceSetFanPower(int fan, double dutyCycle);
   virtual IntervalMode DeviceHasFanInterval();
+  virtual void DeviceCheckFans();
   virtual BOOL DeviceHasSensors();
   virtual IntervalMode DeviceHasSensorInterval();
   virtual void DeviceDetectSensors(LPCSTR prefix);
@@ -147,7 +148,8 @@ public:
   virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
-  DWORD CheckFans();
+  void SetupFans();
+  DWORD CheckFans(BOOL forConfig = FALSE);
   DWORD CheckSensors();
   void UpdateSensors(BOOL detect);
   DisplayReturnPacket *ReadReturnPacket();
@@ -353,9 +355,10 @@ void MatrixOrbitalDisplay::DeviceDisableInput()
 
 void MatrixOrbitalDisplay::DeviceSerialInputThread()
 {
+  if (m_enableFans) SetupFans();
   while (TRUE) {
-    DWORD ftime = CheckFans();
-    DWORD stime = CheckSensors();
+    DWORD ftime = (m_enableFans) ? CheckFans() : INFINITE;
+    DWORD stime = (m_enableSensors) ? CheckSensors() : INFINITE;
 
     DWORD now = GetTickCount();
     DWORD timeout = INFINITE;
@@ -377,11 +380,17 @@ void MatrixOrbitalDisplay::DeviceSerialInputThread()
     DWORD nb;
     if (!ReadSerial(buf, sizeof(buf), &nb, timeout))
       break;
-    if (m_enableKeypad && (nb > 0)) {
-      char input[2];
-      input[0] = buf[0];
-      input[1] = '\0';
-      MapInput(input);
+    if (nb > 0) {
+      BYTE b = buf[0];
+      if (('A' <= b) && ('Z' >= b)) {
+        // Keypad button
+        if (m_enableKeypad) {
+          char input[2];
+          input[0] = b;
+          input[1] = '\0';
+          MapInput(input);
+        }
+      }
     }
   }
 }
@@ -433,10 +442,80 @@ DisplayDevice::IntervalMode MatrixOrbitalDisplay::DeviceHasFanInterval()
   return (m_dow_pwm) ? IM_EDITABLE : IM_NONE;
 }
 
-DWORD MatrixOrbitalDisplay::CheckFans()
+void MatrixOrbitalDisplay::DeviceCheckFans()
 {
-  // TODO: add monitoring.
-  return INFINITE;
+  if (!Open()) return;          // Get a port handle.
+  CheckFans(TRUE);
+}
+
+void MatrixOrbitalDisplay::SetupFans()
+{
+  // Space out fan monitoring, since it takes some time.
+  int nfans = 0;
+
+  for (FanMonitor *fan = m_fans; NULL != fan; fan = fan->GetNext()) {
+    if (fan->IsEnabled()) {
+      nfans++;
+    }
+  }
+
+  DWORD delta = m_fanInterval / nfans;
+
+  DWORD time = GetTickCount();
+  if (time < m_fanInterval)
+    time = 0;
+  else
+    time -= m_fanInterval;
+
+  for (fan = m_fans; NULL != fan; fan = fan->GetNext()) {
+    if (fan->IsEnabled()) {
+      time += delta;
+      fan->SetUpdateTime(time);
+    }
+  }
+}
+
+DWORD MatrixOrbitalDisplay::CheckFans(BOOL forConfig)
+{
+  DWORD earliest = INFINITE;
+
+  for (FanMonitor *fan = m_fans; NULL != fan; fan = fan->GetNext()) {
+    if (forConfig || fan->IsEnabled()) {
+      DWORD next = fan->GetUpdateTime() + m_fanInterval;
+      if (next <= GetTickCount()) {
+        BYTE buf[128];
+        int nb = 0;
+        buf[nb++] = 0xFE;
+        buf[nb++] = 0xC1;         // Return fan RPM
+        buf[nb++] = fan->GetNumber();
+        WriteSerial(buf, nb);
+  
+        DisplayReturnPacket *drp = ReadReturnPacket();
+        if (NULL == drp) continue;
+        if ((0x52 == drp->type) && (3 == (drp->size & ~CONT)) &&
+            (fan->GetNumber() == drp->data[0])) {
+          USHORT period = (drp->data[1] << 8) + drp->data[2]; // MSB first
+          BOOL changed;
+          if (period == 0xFFFF) {
+            changed = fan->SetValue(NULL);
+          }
+          else {
+            int rpm = 18750000 / (period * fan->GetPulsesPerRevolution());
+            changed = fan->SetRPM(rpm);
+          }
+          if (!forConfig && changed) {
+            DisplaySendEvent(fan->GetName(), fan->GetValue());
+          }
+          next = fan->GetUpdateTime() + m_fanInterval;
+        }
+        free(drp);
+      }
+      if (earliest > next)
+        earliest = next;
+    }
+  }
+
+  return earliest;
 }
 
 BOOL MatrixOrbitalDisplay::DeviceHasSensors()
@@ -496,7 +575,6 @@ void MatrixOrbitalDisplay::DeviceDetectSensors(LPCSTR prefix)
   DOWSensor::Destroy(oldSensors);
 
   UpdateSensors(TRUE);
-  Close();
 }
 
 DWORD MatrixOrbitalDisplay::CheckSensors()

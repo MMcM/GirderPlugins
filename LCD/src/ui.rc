@@ -173,6 +173,7 @@ BEGIN
                     LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | 
                     WS_TABSTOP,7,30,170,100
     PUSHBUTTON      "&Rename...",IDC_EDIT,190,45,50,14
+    PUSHBUTTON      "Re&fresh",IDC_REFRESH,190,65,50,14
     LTEXT           "Monitoring &interval:",IDC_INTERVALL,10,140,70,8
     EDITTEXT        IDC_INTERVAL,85,137,40,14,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "ms",IDC_INTERVALL2,130,140,10,8
@@ -204,7 +205,7 @@ BEGIN
                     LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOSORTHEADER |
                     WS_BORDER | WS_TABSTOP,7,30,170,100
     PUSHBUTTON      "&Rename...",IDC_EDIT,190,45,50,14
-    PUSHBUTTON      "&Detect",IDC_DETECT,190,65,50,14
+    PUSHBUTTON      "&Detect",IDC_REFRESH,190,65,50,14
     LTEXT           "Monitoring &interval:",IDC_INTERVALL,10,140,70,8
     EDITTEXT        IDC_INTERVAL,85,137,40,14,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "ms",IDC_INTERVALL2,130,140,10,8
@@ -355,6 +356,7 @@ BEGIN
     IDS_EVENT               "Event"
     IDS_NEW_FAN_NAME        "Fan"
     IDS_FAN                 "Fan"
+    IDS_RPM                 "RPM"
     IDS_NEW_SENSOR_NAME     "Sensor"
     IDS_ROM                 "ROM"
     IDS_TEMPERATURE         "Temp"

@@ -23,15 +23,16 @@
 #define IDS_EVENT                       107
 #define IDS_NEW_FAN_NAME                108
 #define IDS_FAN                         109
-#define IDS_NEW_SENSOR_NAME             110
-#define IDS_ROM                         111
-#define IDS_TEMPERATURE                 112
-#define IDS_VARIABLE                    113
-#define IDS_VALUE                       114
-#define IDS_BUTTON                      115
-#define IDS_LEGEND                      116
-#define IDS_GPOL                        117
-#define IDS_FANL                        118
+#define IDS_RPM                         110
+#define IDS_NEW_SENSOR_NAME             111
+#define IDS_ROM                         112
+#define IDS_TEMPERATURE                 113
+#define IDS_VARIABLE                    114
+#define IDS_VALUE                       115
+#define IDS_BUTTON                      116
+#define IDS_LEGEND                      117
+#define IDS_GPOL                        118
+#define IDS_FANL                        119
 #define IDC_APPLY                       1000
 #define IDC_DISPLAYS                    1001
 #define IDC_ADD                         1002
@@ -64,13 +65,13 @@
 #define IDC_INPUT                       1029
 #define IDC_EVENT                       1030
 #define IDC_FANS                        1031
-#define IDC_PPR                         1032
-#define IDC_PPR_SPIN                    1033
-#define IDC_SENSORS                     1034
-#define IDC_DETECT                      1035
-#define IDC_INTERVALL                   1036
-#define IDC_INTERVAL                    1037
-#define IDC_INTERVALL2                  1038
+#define IDC_REFRESH                     1032
+#define IDC_INTERVALL                   1033
+#define IDC_INTERVAL                    1034
+#define IDC_INTERVALL2                  1035
+#define IDC_PPR                         1036
+#define IDC_PPR_SPIN                    1037
+#define IDC_SENSORS                     1038
 #define IDC_DISPLAYL                    1039
 #define IDC_DISPLAY                     1040
 #define IDC_TYPEL                       1041
@@ -114,6 +115,6 @@
 #define _APS_NEXT_RESOURCE_VALUE        113
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1073
-#define _APS_NEXT_SYMED_VALUE           119
+#define _APS_NEXT_SYMED_VALUE           120
 #endif
 #endif

@@ -193,6 +193,11 @@ public:
   void SetPulsesPerRevolution(int ppr) {
     m_ppr = ppr;
   }
+  LPCSTR GetValue() const {
+    return m_value;
+  }
+  BOOL SetValue(LPCSTR value);
+  BOOL SetRPM(int rpm);
   DWORD GetUpdateTime() const {
     return m_updateTime;
   }
@@ -212,6 +217,7 @@ protected:
   int m_number;
   int m_ppr;
   BOOL m_enabled, m_anonymous;
+  LPSTR m_value;
   DWORD m_updateTime;
   FanMonitor *m_next;
 };
@@ -231,6 +237,11 @@ public:
   LPCBYTE GetROM() const {
     return m_rom;
   }
+  enum { DS18S20 = 0x10, DS1822 = 0x22, DS18B20 = 0x28 };
+  BYTE GetFamily() const {
+    return m_rom[0];
+  }
+  BOOL IsKnown() const;
   BOOL IsEnabled() const {
     return m_enabled;
   }
@@ -260,7 +271,7 @@ public:
 
 protected:
   LPSTR m_name;
-  BYTE m_rom[8];
+  BYTE m_rom[8];                // LSB-first as transmitted on bus.
   BOOL m_enabled;
   LPSTR m_value;
   DWORD m_updateTime;
@@ -435,6 +446,9 @@ public:
     return m_fans;
   }
   FanMonitor *GetFan(int n, LPCSTR createPrefix = NULL);
+  void CheckFans() {
+    DeviceCheckFans();
+  }
 
   BOOL HasSensors() {
     return DeviceHasSensors();
@@ -512,6 +526,7 @@ protected:
   virtual int DeviceGetNFans();
   virtual void DeviceSetFanPower(int fan, double dutyCycle);
   virtual IntervalMode DeviceHasFanInterval();
+  virtual void DeviceCheckFans();
   virtual BOOL DeviceHasSensors();
   virtual IntervalMode DeviceHasSensorInterval();
   virtual void DeviceDetectSensors(LPCSTR prefix);
