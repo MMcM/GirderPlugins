@@ -7,23 +7,31 @@
 
 struct MatchEntry
 {
+  LPCSTR szName;
   UINT nCode;
   LPCSTR szVal;
   DWORD dwVal;
 };
 
-#define ENTRY0(n) { n },
-#define ENTRY(n,s,l) { n, s, l },
-#define ENTRY_STR(n,s) { n, s },
-#define ENTRY_NUM(n,l) { n, NULL, l },
+#define ENTRY0(c) { NULL, c },
+#define ENTRY(c,s,l) { NULL, c, s, l },
+#define ENTRY_STR(c,s) { NULL, c, s },
+#define ENTRY_NUM(c,l) { NULL, c, NULL, l },
+
+#define NENTRY0(n,c) { #n, c },
+#define NENTRY(n,c,s,l) { #n, c, s, l },
+#define NENTRY_STR(n,c,s) { #n, c, s },
+#define NENTRY_NUM(n,c,l) { #n, c, NULL, l },
 
 const UINT ENTRY_MODULE = 1;
 const UINT ENTRY_BEGIN = 2;
 const UINT ENTRY_EXTRACT = 3;
 const UINT ENTRY_END = 4;
 
-#define BEGIN_MODULE(x) ENTRY_STR(ENTRY_MODULE,#x)
-#define BEGIN_MATCH(x,r) ENTRY(ENTRY_BEGIN,#x,r)
+#define BEGIN_MODULE(x) BEGIN_NMODULE(x,x)
+#define BEGIN_NMODULE(n,x) NENTRY_STR(n,ENTRY_MODULE,#x)
+#define BEGIN_MATCH() ENTRY0(ENTRY_BEGIN)
+#define BEGIN_NMATCH(n) NENTRY0(n,ENTRY_BEGIN)
 #define BEGIN_EXTRACT() ENTRY0(ENTRY_EXTRACT)
 #define END_MATCH() ENTRY0(ENTRY_END)
 
@@ -74,32 +82,32 @@ static MatchEntry g_matches[] = {
     // This is an update to the tracker bar in the status bar in the
     // display window.  When it happens, the status bar fields have been
     // changed as well (via MFC).
-    BEGIN_MATCH(WinDVD,1)
+    BEGIN_MATCH()
       ENTRY_NUM(MATCH_MESSAGE, TBM_SETPOS)
       ENTRY_NUM(MATCH_CONTROLID, 1)
       ENTRY_STR(MATCH_CLASS, TRACKBAR_CLASS)
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, STATUSCLASSNAME)
       ENTRY_STR(ENTRY_HWND_GRANDPARENT|MATCH_CLASS, "WinDVDClass")
      BEGIN_EXTRACT()
-      ENTRY(ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, "Chapter: ", 3) // Chapter
-      ENTRY(ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, "Time: ", 4) // Time
-      ENTRY_NUM(ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 5) // Video mode
-      ENTRY_NUM(ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 6) // Not sure
-      ENTRY_NUM(ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 7) // Audio mode
+      NENTRY(Chapter,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, "Chapter: ", 3)
+      NENTRY(Time,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, "Time: ", 4)
+      NENTRY_NUM(Video,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 5)
+      NENTRY_NUM(Field6,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 6)
+      NENTRY_NUM(Audio,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 7)
     END_MATCH()
 
-    BEGIN_MATCH(WinDVD.Close,0)
+    BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "WinDVDClass")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_MODULE(POWERDVD)
+  BEGIN_NMODULE(PowerDVD,POWERDVD)
 
     // This only has the time.  The title# and chapter# are displayed as
     // graphics in the "remote" window.
-    BEGIN_MATCH(PowerDVD.Time,5)
+    BEGIN_NMATCH(Time)
       ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
       ENTRY_STR(MATCH_CLASS, "Static")
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "#32770")
@@ -109,7 +117,7 @@ static MatchEntry g_matches[] = {
     END_MATCH()
     // This only happens when playing a .VOB file: the window title is
     // changed to the file in question.  Better than nothing.
-    BEGIN_MATCH(PowerDVD.Title,7)
+    BEGIN_NMATCH(Title)
       ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
       ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
      BEGIN_EXTRACT()
@@ -118,7 +126,7 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(accessDTV)
 
-    BEGIN_MATCH(accessDTV.ChanText,1)
+    BEGIN_NMATCH(ChanText)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
       ENTRY_STR(ENTRY_NOT|MATCH_LPARAM_STR, "XXXXXXXXXXXXXX")
@@ -126,7 +134,7 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-    BEGIN_MATCH(accessDTV.ChanNoText,0)
+    BEGIN_NMATCH(ChanNoText)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(51,71))
       ENTRY_STR(MATCH_LPARAM_STR, "XXXXXXXXXXXXXX")
@@ -134,43 +142,43 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-    BEGIN_MATCH(accessDTV.Channel,2)
+    BEGIN_NMATCH(Channel)
       ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
       ENTRY_NUM(MATCH_WPARAM, MAKELONG(50,43))
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-    BEGIN_MATCH(accessDTV.Close,0)
+    BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_MODULE(zplayer)
+  BEGIN_NMODULE(ZoomPlayer,zplayer)
 
-    BEGIN_MATCH(ZoomPlayer.DVD,1)
+    BEGIN_NMATCH(DVD)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(Title, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Total, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Time, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.Media,4)
+    BEGIN_NMATCH(Media)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Position, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.OSD,7)
+    BEGIN_NMATCH(OSD)
       ENTRY_NUM(MATCH_MESSAGE, WM_PAINT)
       ENTRY_STR(MATCH_CLASS, "TPanel")
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TOSDForm")
@@ -178,56 +186,56 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_GETTEXT)
     END_MATCH()
 
-    BEGIN_MATCH(ZoomPlayer.Close,0)
+    BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "TMainForm")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_MODULE(TheaterTek DVD)
+  BEGIN_NMODULE(TheaterTek,TheaterTek DVD)
 
-    BEGIN_MATCH(TheaterTek,1)
+    BEGIN_MATCH()
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(Title, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Total, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Time, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
     END_MATCH()
 
-    BEGIN_MATCH(TheaterTek.Close,0)
+    BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "Overlay")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_MODULE(ATIMMC)
+  BEGIN_NMODULE(ATI,ATIMMC)
 
-    BEGIN_MATCH(ATI.DVD,1)
+    BEGIN_NMATCH(DVD)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(Title, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Total, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Time, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
     END_MATCH()
 
-    BEGIN_MATCH(ATI.MMC,4)
+    BEGIN_NMATCH(MMC)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Position, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
-    BEGIN_MATCH(ATI.Close,0)
+    BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
      BEGIN_EXTRACT()
@@ -238,13 +246,13 @@ static MatchEntry g_matches[] = {
 
     // Getting off the screen is tricky because SSF has its own window system of sorts.
 
-    BEGIN_MATCH(ShowShifter,4)
+    BEGIN_MATCH()
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_DURATION)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_POSITION)
-      ENTRY_NUM(EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Position, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
     END_MATCH()
 
 };
@@ -263,8 +271,8 @@ const size_t MAX_BUFS = 16;
 
 struct MatchIndexEntry
 {
-  LPCSTR szName;                // Name of this match event.
-  int nRegister;                // First text register.
+  LPCSTR szModule;              // Name from module.
+  LPCSTR szMatch;               // Name from match.
   size_t nMatches;              // Number of match predicates.
   MatchEntry *pMatches;         // Pointer to first match predicate.
   size_t nExtracts;             // Number of match extracts.
@@ -508,12 +516,13 @@ BOOL GetMutex(DWORD timeout)
 // interesting messages.
 void IndexMatches(BOOL bAll)
 {
-  char szModBuf[MAX_PATH], *szModule = NULL;
+  char szModBuf[MAX_PATH];
+  LPCSTR szModule;
   if (!bAll) {
     GetModuleFileName(NULL, szModBuf, sizeof(szModBuf));
-    szModule = strrchr(szModBuf, '.');
-    if (NULL != szModule)
-      *szModule = '\0';         // Remove extension.
+    LPSTR pend = strrchr(szModBuf, '.');
+    if (NULL != pend)
+      *pend = '\0';             // Remove extension.
     szModule = strrchr(szModBuf, '\\');
     if (NULL != szModule)
       szModule++;               // Remove directory.
@@ -526,8 +535,10 @@ void IndexMatches(BOOL bAll)
       if (!bAll) {
         if (nBegin)
           break;                // End of found module.
-        else if (!_stricmp(g_matches[i].szVal, szModule))
+        else if (!_stricmp(g_matches[i].szVal, szModule)) {
+          szModule = g_matches[i].szName; // Our name for it.
           nBegin = i + 1;       // First module entry.
+        }
       }
     }
     else if (ENTRY_BEGIN == g_matches[i].nCode) {
@@ -548,12 +559,13 @@ void IndexMatches(BOOL bAll)
     if (ENTRY_MODULE == g_matches[i].nCode) {
       if (!bAll) 
         break;
+      szModule = g_matches[i].szName;
       i++;
       continue;
     }
     ASSERT(ENTRY_BEGIN == g_matches[i].nCode);
-    pMatches[j].szName = g_matches[i].szVal;
-    pMatches[j].nRegister = g_matches[i].dwVal;
+    pMatches[j].szModule = szModule;
+    pMatches[j].szMatch = g_matches[i].szName;
     i++;
     pMatches[j].nMatches = 0;
     pMatches[j].pMatches = g_matches+i;
@@ -965,37 +977,50 @@ size_t DISPLAYSPYHOOK_API DS_GetMatchIndexCount(size_t nCurrent)
     return g_pMatches[nCurrent].nExtracts;
 }
 
-// Get name of match.
-void DISPLAYSPYHOOK_API DS_GetMatchName(size_t nCurrent, char *szBuf, size_t nSize)
+// Get name of event.
+void DISPLAYSPYHOOK_API DS_GetName(size_t nMatch, size_t nIndex,
+                                   char *szBuf, size_t nSize)
 {
   if (NULL == g_pMatches)
     IndexMatches(TRUE);
-  if (nCurrent >= g_nMatches)
-    *szBuf = '\0';
-  else
-    strncpy(szBuf, g_pMatches[nCurrent].szName, nSize);
-}
-
-// Get index of match, given name.
-size_t DISPLAYSPYHOOK_API DS_GetMatchIndex(LPCSTR szName)
-{
-  if (NULL == g_pMatches)
-    IndexMatches(TRUE);
-  for (size_t i = 0; i < g_nMatches; i++)
-    if (!strcmp(szName, g_pMatches[i].szName))
-      return i;
-  return (size_t)-1;
-}
-
-// Get text register for match.
-int DISPLAYSPYHOOK_API DS_GetMatchRegister(size_t nCurrent)
-{
-  if (NULL == g_pMatches)
-    IndexMatches(TRUE);
-  if (nCurrent >= g_nMatches)
-    return 0;
-  else
-    return g_pMatches[nCurrent].nRegister;
+  *szBuf = '\0';
+  if ((nMatch >= g_nMatches) ||
+      (nIndex >= g_pMatches[nMatch].nExtracts))
+    return;
+  BOOL bFirst = TRUE;
+  LPCSTR szName = g_pMatches[nMatch].szModule;
+  if (NULL != szName) {
+    bFirst = FALSE;
+    strncpy(szBuf, szName, nSize);
+    size_t nLength = strlen(szBuf);
+    szBuf += nLength;
+    nSize -= nLength;
+    if (nSize <= 1) return;
+  }
+  szName = g_pMatches[nMatch].szMatch;
+  if (NULL != szName) {
+    if (bFirst)
+      bFirst = FALSE;
+    else {
+      *szBuf++ = '.';
+      nSize--;
+    }
+    strncpy(szBuf, szName, nSize);
+    size_t nLength = strlen(szBuf);
+    szBuf += nLength;
+    nSize -= nLength;
+    if (nSize <= 1) return;
+  }
+  szName = g_pMatches[nMatch].pExtracts[nIndex].szName;
+  if (NULL != szName) {
+    if (bFirst)
+      bFirst = FALSE;
+    else {
+      *szBuf++ = '.';
+      nSize--;
+    }
+    strncpy(szBuf, szName, nSize);
+  }
 }
 
 // Enable a particular match.
