@@ -10,7 +10,7 @@
 <body>
 
 <h1>Girder plug-in for PowerMate</h1>
-Version 1.1. &nbsp;MMcM 01/03
+Version 1.2. &nbsp;MMcM 02/03
 
 <h3>Use</h3>
 
@@ -53,17 +53,16 @@ control its LED brightness or the sound card volume.<p>
 </ul>
 
 <li>
-The plug-in does not use non-blocking I/O yet.  As a result, disabling
-input or exiting Girder may hang until the knob is turned.  This makes
-it impractical for production use at the moment.
-</li>
-
-<li>
 The <kbd>PowrMate.sys</kbd> device driver must be installed, but the
 <kbd>PowerMate.exe</kbd> program must not be running.  Normally it
 starts with Windows.  You may need to remove it from
 <kbd>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</kbd>
 using regedit.
+</li>
+
+<li>
+The PowerMate device driver must be version 1.5 or newer.  Non-blocking I/O does not
+work properly in earlier releases and the plug-in depends upon it.
 </li>
 
 </ul>

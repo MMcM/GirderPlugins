@@ -76,7 +76,7 @@ HANDLE GetDeviceViaInterface( GUID* pGuid, DWORD instance)
 	HANDLE rv = CreateFile( ifDetail->DevicePath, 
 		GENERIC_READ | GENERIC_WRITE,
 		FILE_SHARE_READ | FILE_SHARE_WRITE,
-		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);  //  FILE_FLAG_OVERLAPPED | FILE_ATTRIBUTE_NORMAL
+		NULL, OPEN_EXISTING, FILE_FLAG_OVERLAPPED | FILE_ATTRIBUTE_NORMAL, NULL);
 	if( rv==INVALID_HANDLE_VALUE) rv = NULL;
 
 	delete ifDetail;
@@ -87,15 +87,35 @@ HANDLE GetDeviceViaInterface( GUID* pGuid, DWORD instance)
 /*** Control functions ***/
 
 BOOL g_bRunning = FALSE;
+HANDLE g_hEvent = NULL;
 
 DWORD WINAPI DeviceThread(LPVOID lpParam)
 {
   HANDLE hPowerMate = (HANDLE)lpParam;
+
+  OVERLAPPED overlapped;
+  memset(&overlapped, 0, sizeof(overlapped));
+  overlapped.hEvent = g_hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+
+  DWORD rc = 0;
   while (g_bRunning) {
-    signed char data[8];
+    signed char data[3];
     DWORD dwBytes;
-    if (!ReadFile(hPowerMate, data, sizeof(data), &dwBytes, NULL)) {
-      return GetLastError();                   // TODO: How to best report error?
+    if (!ReadFile(hPowerMate, data, sizeof(data), &dwBytes, &overlapped)) {
+      rc = GetLastError();
+      if (ERROR_IO_PENDING != rc) break;
+      WaitForSingleObject(overlapped.hEvent, INFINITE);
+      if (!GetOverlappedResult(hPowerMate, &overlapped, &dwBytes, FALSE)) {
+        rc = GetLastError();
+        if (ERROR_IO_INCOMPLETE == rc) {
+          // The main thread wants us to stop sending events.
+          CancelIo(hPowerMate);
+          if (!g_bRunning) {
+            rc = 0;
+          }
+        }
+        break;
+      }
     }
     if (dwBytes != 3) continue;
 
@@ -133,7 +153,11 @@ DWORD WINAPI DeviceThread(LPVOID lpParam)
     }
     SF.send_event(event, payload, pllen, PLUGINNUM);
   }
-  return 0;
+
+  g_hEvent = NULL;
+  CloseHandle(overlapped.hEvent);
+
+  return rc;
 }
 
 HANDLE g_hPowerMate = NULL;
@@ -171,6 +195,7 @@ BOOL DeviceStop()
     return TRUE;
   g_bRunning = FALSE;
   if (NULL != g_hThread) {
+    SetEvent(g_hEvent);         // Awaken from asynch read.
     WaitForSingleObject(g_hThread, 5000);
     CloseHandle(g_hThread);
     g_hThread = NULL;
