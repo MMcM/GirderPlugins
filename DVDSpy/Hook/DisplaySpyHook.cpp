@@ -48,7 +48,8 @@ const UINT MATCH_LPARAM = 1003;
 const UINT MATCH_LPARAM_STR = 1004;
 const UINT MATCH_GETTEXT = 1005;
 const UINT MATCH_CLASS = 1006;
-const UINT MATCH_CONTROLID = 1007;
+const UINT MATCH_CLASS_PREFIX = 1007;
+const UINT MATCH_CONTROLID = 1008;
 const UINT MATCH_NOTIFY_CODE = 1010;
 const UINT MATCH_NOTIFY_FROM = 1011;
 const UINT MATCH_PATCH = 1020;
@@ -107,7 +108,7 @@ static MatchEntry g_matches[] = {
 
     // This only has the time.  The title# and chapter# are displayed as
     // graphics in the "remote" window.
-    BEGIN_NMATCH(Time)
+    BEGIN_NMATCH(Elapsed)
       ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
       ENTRY_STR(MATCH_CLASS, "Static")
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "#32770")
@@ -149,9 +150,31 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
+    // This works in the beta version.  Who knows what the final version will be like.
+    BEGIN_NMATCH(Elapsed)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
+      ENTRY_NUM(MATCH_CONTROLID, 1114)
+      ENTRY_STR(MATCH_CLASS, "Static")
+      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "#32770")
+      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_GETTEXT, "accessDTV")
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(Duration)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
+      ENTRY_NUM(MATCH_CONTROLID, 1115)
+      ENTRY_STR(MATCH_CLASS, "Static")
+      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "#32770")
+      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_GETTEXT, "accessDTV")
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+  
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
+      ENTRY_STR(MATCH_CLASS_PREFIX, "Afx:")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
@@ -340,6 +363,12 @@ BOOL DoMatch2(const MatchEntry *pEntry,
       char szCName[256];
       GetClassName(hWnd, szCName, sizeof(szCName));
       return !strcmp(szCName, pEntry->szVal);
+    }
+  case MATCH_CLASS_PREFIX:
+    {
+      char szCName[256];
+      GetClassName(hWnd, szCName, sizeof(szCName));
+      return !strncmp(szCName, pEntry->szVal, strlen(pEntry->szVal));
     }
   case MATCH_CONTROLID:
     {
@@ -818,20 +847,21 @@ BOOL MatchMediaSpy(UINT nClass)
       if (S_OK != hr) return FALSE; // Including S_FALSE for none.
       hr = pDVD->GetCurrentDomain(&dvdDomain);
       if (SUCCEEDED(hr)) {
-        hr = pDVD->GetCurrentLocation(&dvdLocation);
-        if (VFW_E_DVD_INVALIDDOMAIN == hr) {
+        if (DVD_DOMAIN_Title == dvdDomain) {
+          hr = pDVD->GetCurrentLocation(&dvdLocation);
+          if (SUCCEEDED(hr)) {
+            hr = pDVD->GetTotalTitleTime(&ulTotalTime);
+            if (VFW_S_DVD_NON_ONE_SEQUENTIAL == hr) {
+              ulTotalTime = 0xFFFFFFFF;
+              hr = S_OK;
+            }
+          }
+        }
+        else {
           dvdLocation.TitleNum = 0xFFFFFFFF;
           dvdLocation.ChapterNum = 0xFFFFFFFF;
           dvdLocation.TimeCode = 0xFFFFFFFF;
-          hr = S_OK;
-        }
-      }
-      if (SUCCEEDED(hr)) {
-        hr = pDVD->GetTotalTitleTime(&ulTotalTime);
-        if ((VFW_E_DVD_INVALIDDOMAIN == hr) ||
-            (VFW_S_DVD_NON_ONE_SEQUENTIAL == hr)) {
           ulTotalTime = 0xFFFFFFFF;
-          hr = S_OK;
         }
       }
       pDVD->Release();
