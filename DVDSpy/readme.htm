@@ -11,7 +11,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.10. &nbsp;MMcM 01/02
+Version 1.12. &nbsp;MMcM 02/02
 
 <h3>Use</h3>
 
@@ -33,15 +33,19 @@ It defines an ActiveX control element for use in Windows Media Player
 skins and thereby exposes that player's state when a special skin is
 used.<p>
 
+It includes a Winamp general plugin that exposes state changes.<p>
+
 <table border="yes">
 <tr><th>Code</th>
 <th>Meaning</th>
-<th>Register 1</th>
-<th>String register 1</th>
+<th>Register</th>
+<th>Integer</th>
+<th>String</th>
 </tr>
 
-<tr><td>Disc.Insert.<i>X</i></td>
+<tr><td>Disc.Insert.<i>X</i>.9</td>
 <td>A new DVD was inserted into drive <i>X:</i></td>
+<td align="right">9</td>
 <td>The volume serial number</td>
 <td>The volume name or disc title (see below)</td>
 </tr>
@@ -52,26 +56,30 @@ used.<p>
 
 <tr></tr>
 
-<tr><td>WinDVD.0</td>
+<tr><td>WinDVD.1</td>
 <td>Chapter changed</td>
+<td align="right">1</td>
 <td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>WinDVD.1</td>
+<tr><td>WinDVD.2</td>
 <td>Elapsed time changed</td>
+<td align="right">2</td>
 <td></td>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>WinDVD.2</td>
+<tr><td>WinDVD.3</td>
 <td>Video mode changed</td>
+<td align="right">3</td>
 <td></td>
 <td>New mode (e.g. MPEG)</td>
 </tr>
 
-<tr><td>WinDVD.4</td>
+<tr><td>WinDVD.5</td>
 <td>Audio mode changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New mode (e.g. BOTH)</td>
 </tr>
@@ -82,28 +90,25 @@ used.<p>
 
 <tr></tr>
 
-<tr><td>PowerDVD.Title</td>
-<td>Title of video window changed</td>
-<td></td>
-<td>New title (file name if playing file instead of disc)</td>
-</tr>
-
-<tr><td>PowerDVD.Time</td>
+<tr><td>PowerDVD.Time.5</td>
 <td>Elapsed time changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
-<tr></tr>
-
-<tr><td>accessDTV.Channel</td>
-<td>The big channel digits changed</td>
+<tr><td>PowerDVD.Title.6</td>
+<td>Title of video window changed</td>
+<td align="right">6</td>
 <td></td>
-<td>New digits (NN.n)</td>
+<td>New title (file name if playing file instead of disc)</td>
 </tr>
 
-<tr><td>accessDTV.ChanText</td>
+<tr></tr>
+
+<tr><td>accessDTV.ChanText.1</td>
 <td>The channel description changed</td>
+<td align="right">1</td>
 <td></td>
 <td>New description (NNN.n XXXX_XX)</td>
 </tr>
@@ -112,56 +117,71 @@ used.<p>
 <td>The channel description was not present</td>
 </tr>
 
+<tr><td>accessDTV.Channel.2</td>
+<td>The big channel digits changed</td>
+<td align="right">2</td>
+<td></td>
+<td>New digits (NN.n)</td>
+</tr>
+
 <tr><td>accessDTV.Close</td>
 <td>ADTV application closed</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>ZoomPlayer.DVD.0</td>
+<tr><td>ZoomPlayer.DVD.1</td>
 <td>Domain changed</td>
+<td align="right">1</td>
 <td></td>
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.1</td>
+<tr><td>ZoomPlayer.DVD.2</td>
 <td>Title changed</td>
+<td align="right">2</td>
 <td></td>
 <td>New title (NN)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.2</td>
+<tr><td>ZoomPlayer.DVD.3</td>
 <td>Chapter changed</td>
+<td align="right">3</td>
 <td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.3</td>
+<tr><td>ZoomPlayer.DVD.4</td>
 <td>Total changed</td>
+<td align="right">4</td>
 <td></td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.4</td>
+<tr><td>ZoomPlayer.DVD.5</td>
 <td>Location changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.0</td>
+<tr><td>ZoomPlayer.Media.4</td>
 <td>Duration changed</td>
+<td align="right">4</td>
 <td></td>
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.1</td>
+<tr><td>ZoomPlayer.Media.5</td>
 <td>Position changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.OSD</td>
+<tr><td>ZoomPlayer.OSD.6</td>
 <td>OSD caption changed</td>
+<td align="right">6</td>
 <td></td>
 <td>New OSD message (Play, Pause, ...)</td>
 </tr>
@@ -172,32 +192,37 @@ used.<p>
 
 <tr></tr>
 
-<tr><td>TheaterTek.0</td>
+<tr><td>TheaterTek.1</td>
 <td>Domain changed</td>
+<td align="right">1</td>
 <td></td>
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>TheaterTek.1</td>
+<tr><td>TheaterTek.2</td>
 <td>Title changed</td>
+<td align="right">2</td>
 <td></td>
 <td>New title (NN)</td>
 </tr>
 
-<tr><td>TheaterTek.2</td>
+<tr><td>TheaterTek.3</td>
 <td>Chapter changed</td>
+<td align="right">3</td>
 <td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>TheaterTek.3</td>
+<tr><td>TheaterTek.4</td>
 <td>Total changed</td>
+<td align="right">4</td>
 <td></td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>TheaterTek.4</td>
+<tr><td>TheaterTek.5</td>
 <td>Location changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
@@ -208,44 +233,51 @@ used.<p>
 
 <tr></tr>
 
-<tr><td>ATI.DVD.0</td>
+<tr><td>ATI.DVD.1</td>
 <td>Domain changed</td>
+<td align="right">1</td>
 <td></td>
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>ATI.DVD.1</td>
+<tr><td>ATI.DVD.2</td>
 <td>Title changed</td>
+<td align="right">2</td>
 <td></td>
 <td>New title (NN)</td>
 </tr>
 
-<tr><td>ATI.DVD.2</td>
+<tr><td>ATI.DVD.3</td>
 <td>Chapter changed</td>
+<td align="right">3</td>
 <td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>ATI.DVD.3</td>
+<tr><td>ATI.DVD.4</td>
 <td>Total changed</td>
+<td align="right">4</td>
 <td></td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.DVD.4</td>
+<tr><td>ATI.DVD.5</td>
 <td>Location changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.MMC.0</td>
+<tr><td>ATI.MMC.4</td>
 <td>Duration changed</td>
+<td align="right">4</td>
 <td></td>
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.MMC.1</td>
+<tr><td>ATI.MMC.5</td>
 <td>Position changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
@@ -256,32 +288,84 @@ used.<p>
 
 <tr></tr>
 
-<tr><td>WMP.Status</td>
+<tr><td>WMP.Status.1</td>
 <td>Media player status changed</td>
+<td align="right">1</td>
 <td></td>
 <td>New player status</td>
 </tr>
 
-<tr><td>WMP.Title</td>
-<td>Media name changed</td>
-<td></td>
-<td>New current media name</td>
-</tr>
-
-<tr><td>WMP.Duration</td>
+<tr><td>WMP.Duration.4</td>
 <td>Media duration changed</td>
+<td align="right">4</td>
 <td></td>
 <td>New total time (MM:SS)</td>
 </tr>
 
-<tr><td>WMP.Position</td>
+<tr><td>WMP.Position.5</td>
 <td>Media player position changed</td>
+<td align="right">5</td>
 <td></td>
 <td>New elapsed time (MM:SS)</td>
 </tr>
 
+<tr><td>WMP.Title.6</td>
+<td>Media name changed</td>
+<td align="right">6</td>
+<td></td>
+<td>New current media name</td>
+</tr>
+
 <tr><td>WMP.Close</td>
 <td>Media player closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td>Winamp.Status.1</td>
+<td>Status changed</td>
+<td align="right">1</td>
+<td></td>
+<td>New status (STOP, PLAY, PAUSE)</td>
+</tr>
+
+<tr><td>Winamp.Length.2</td>
+<td>Playlist length changed</td>
+<td align="right">2</td>
+<td></td>
+<td>New playlist length</td>
+</tr>
+
+<tr><td>Winamp.Position.3</td>
+<td>Playlist position changed</td>
+<td align="right">3</td>
+<td></td>
+<td>New playlist position (1-based)</td>
+</tr>
+
+<tr><td>Winamp.Total.4</td>
+<td>Total time changed</td>
+<td align="right">4</td>
+<td></td>
+<td>New total time (MM:SS)</td>
+</tr>
+
+<tr><td>Winamp.Elasped.5</td>
+<td>Time position changed</td>
+<td align="right">5</td>
+<td></td>
+<td>New elapsed time (MM:SS)</td>
+</tr>
+
+<tr><td>Winamp.Title.6</td>
+<td>Track title changed</td>
+<td align="right">6</td>
+<td></td>
+<td>New current title</td>
+</tr>
+
+<tr><td>Winamp.Close</td>
+<td>Program closed</td>
 </tr>
 
 </table><p>
@@ -308,6 +392,19 @@ Girder is presumably used to control it directly and to display its
 status someplace else.  More information on WMP skins is available in
 the Windows Media Player SDK.<p>
 
+In order for the Winamp plugin to be accessible, it needs to be copied
+into the <kbd>Plugins</kbd> subdirectory of the Winamp installation
+directory, which is usually <kbd>C:\Program Files\Winamp</kbd>.  Once
+installed, the plugin can be configured from inside Winamp to set the
+interval (in milliseconds) at which it checks for state changes.<p>
+
+The registry key
+<kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy\Events</kbd>
+can contain string values that specify events that are generated by
+means other than the hook.  This is needed for Learn mode to work
+properly from inside Girder.  The file <kbd>DVDSpy.reg</kbd> installs
+the events included in this package.<p>
+
 The registry key
 <kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy</kbd> can
 contain a string value <kbd>DVDTitles</kbd> giving the name of a
@@ -326,6 +423,18 @@ the LCD Software plug-in.  See the
 <a href="../../software/lcd/readme.htm">readme</a> file for that plug-in
 for more details.  A sample Girder file is included that displays some
 information in a format suitable for 4x20 displays.<p>
+
+<h3>Extending</h3>
+
+Sending a <code>WM_COPYDATA</code> message to the top-level window
+whose name is <code>"Girder DVDSpy Monitor Window"</code> generates an
+event inside Girder.  The <code>dwData</code> of the message is the
+integer value, and the <code>lpData</code> is two adjacent
+null-terminated strings for the event name and the string value,
+respectively.  The <code>cbData</code> must be the entire length,
+including the second null character.<p>
+
+This is how the WMP and Winamp interfaces work.<p>
 
 <h3>Disclaimer</h3>
 You use this plug-in at your own risk.
