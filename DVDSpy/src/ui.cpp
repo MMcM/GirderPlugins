@@ -111,6 +111,10 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
               LPSTR pe = ebuf + strlen(ebuf);
               *pe++ = '.';
               *pe++ = *pb;
+              if (0 == i) {
+                *pe++ = '.';
+                *pe++ = '9';
+              }
               *pe++ = '\0';
               SendMessage(events, LB_ADDSTRING, 0, (LPARAM)ebuf);
             }
@@ -118,22 +122,61 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
           pb += strlen(pb) + 1;
         }
       }
+
+      // Registry can specify events not known to the hook itself, such as WMP.
+      HKEY hKey = NULL;
+      if (ERROR_SUCCESS == RegOpenKey(HKEY_CURRENT_USER, 
+                                      "Software\\Girder3\\HardPlugins\\DVDSpy\\Events", 
+                                      &hKey)) {
+        DWORD dwIndex = 0;
+        while (TRUE) {
+          char szName[128], szValue[128];
+          DWORD dwType, dwNLen = sizeof(szName), dwLen = sizeof(szValue);
+          if (ERROR_SUCCESS != RegEnumValue(hKey, dwIndex++, szName, &dwNLen,
+                                            NULL, &dwType, (LPBYTE)szValue, &dwLen))
+            break;
+          if (REG_SZ != dwType) continue;
+          if (dwLen > 1) {
+            strcat(szName, " (");
+            strcat(szName, szValue);
+            strcat(szName, ")");
+          }
+          SendMessage(events, LB_ADDSTRING, 0, (LPARAM)szName);
+        }
+      }
+
+      // Do ones not mentioned in the registry.
       size_t nmatches = DS_GetMatchCount();
       for (size_t i = 0; i < nmatches; i++) {
         char szName[128];
         DS_GetMatchName(i, szName, sizeof(szName));
+        LPSTR end = szName + strlen(szName);
+        int nreg = DS_GetMatchRegister(i);
         size_t nindex = DS_GetMatchIndexCount(i);
-        if (nindex <= 1)
-          SendMessage(events, LB_ADDSTRING, 0, (LPARAM)szName);
-        else {
-          LPSTR end = szName + strlen(szName);
-          for (size_t j = 0; j < nindex; j++) {
-            sprintf(end, ".%d", j);
+        if (nindex <= 1) {
+          if (nreg > 0)
+            sprintf(end, ".%d", nreg);
+          if ((NULL == hKey) ||
+              (ERROR_SUCCESS != RegQueryValueEx(hKey, szName, 
+                                                NULL, NULL, NULL, NULL))) {
             SendMessage(events, LB_ADDSTRING, 0, (LPARAM)szName);
+          }
+        }
+        else {
+          for (size_t j = 0; j < nindex; j++) {
+            sprintf(end, ".%d", nreg + j);
+            if ((NULL == hKey) ||
+                (ERROR_SUCCESS != RegQueryValueEx(hKey, szName, 
+                                                  NULL, NULL, NULL, NULL))) {
+              SendMessage(events, LB_ADDSTRING, 0, (LPARAM)szName);
+            }
           }
         }
       }
       SendMessage(hwnd, WM_USER+100, 0, lParam);
+
+      if (NULL != hKey)
+        RegCloseKey(hKey);
 
       return 0;
     }
@@ -152,6 +195,9 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
         memset(buf, 0, sizeof(buf));
         if (LB_ERR != pos)
           SendMessage(events, LB_GETTEXT, (WPARAM)pos, (LPARAM)buf);
+        char *sp = strstr(buf, " ("); // Trim off any description.
+        if (NULL != sp)
+          *sp = '\0';
         GirderEvent(buf);
       }
       return 1;
