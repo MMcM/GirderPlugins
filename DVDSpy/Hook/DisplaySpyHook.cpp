@@ -312,10 +312,22 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 
   BEGIN_MODULE(ShowShifter)
-  // Getting information off the screen is tricky because SSF has its
-  // own window system of sorts.
+  // Getting information off the screen uses a separate module built
+  // with the program's SDK.
 
-    BEGIN_MATCH()
+    BEGIN_NMATCH(DVD)
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(TitleNo, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Media)
       ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
