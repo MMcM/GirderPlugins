@@ -122,16 +122,17 @@ protected:
   SendPacket *m_next;
 };
 
-CrystalfontzPacketLCD::CrystalfontzPacketLCD(LPCSTR devname)
+CrystalfontzPacketLCD::CrystalfontzPacketLCD(LPCSTR devname, 
+                                             int cols, int rows, BOOL newCommands)
 {
-  m_hasSendData = !strcmp(devname, "631");
+  m_hasSendData = newCommands;
 
-  m_cols = 16;
-  m_rows = 2;
+  m_cols = cols;
+  m_rows = rows;
 
   m_portType = portSERIAL;
   strcpy(m_port, "COM1");
-  m_portSpeed = CBR_115200;
+  m_portSpeed = (newCommands) ? CBR_115200 : CBR_19200;
 
   m_inputEnabled = FALSE;
 
@@ -148,6 +149,15 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
 {
   if (!OpenSerial(TRUE))
     return FALSE;
+
+  COMMTIMEOUTS timeouts;
+  if (GetCommTimeouts(m_portHandle, &timeouts)) {
+    // Don't wait more than 2ms between characters.  This is important
+    // because we specify a read buffer that is larger than the
+    // packet.
+    timeouts.ReadIntervalTimeout=2;
+    SetCommTimeouts(m_portHandle, &timeouts);
+  }
 
   m_sendEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
@@ -178,8 +188,8 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
       strcpy(dbgbuf, "PKTLCD: Version: ");
       dbp = dbgbuf + strlen(dbgbuf);
       memcpy(dbp, (LPCSTR)rpkt->GetData(), rpkt->GetDataLength());
-	  dbp += rpkt->GetDataLength();
-      strcpy(dbp + rpkt->GetDataLength(), "\n");
+      dbp += rpkt->GetDataLength();
+      strcpy(dbp, "\n");
       OutputDebugString(dbgbuf);
     }
 #endif
@@ -650,8 +660,36 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
           if (NULL != event)
             DisplaySendEvent(event);
         }
+        break;
+      case 0x81:
+        if (4 == rpkt->GetDataLength()) {
+          char event[8], payload[16];
+          sprintf(event, "FAN%d", rpkt->GetData()[0] + 1);
+          int tach = rpkt->GetData()[1];
+          int ticks = (rpkt->GetData()[2] << 8) + rpkt->GetData()[3];
+          if (tach < 3)
+            strcpy(payload, "STOP");
+          else if (tach < 4)
+            strcpy(payload, "SLOW");
+          else if (0xFF == tach)
+            strcpy(payload, "????");
+          else {
+            int ppr = 1;
+            sprintf(payload, "%5d", ((27692308 / ppr) * (tach - 3) / ticks));
+          }
+          DisplaySendEvent(event, payload);
+        }
+        break;
+      case 0x82:
+        if (3 == rpkt->GetDataLength()) {
+          char event[8], payload[16];
+          sprintf(event, "TEMP%d", rpkt->GetData()[0] + 1);
+          int count = (rpkt->GetData()[1] << 8) + rpkt->GetData()[2];
+          sprintf(payload, "%9.4f", (double)count / 16.0);
+          DisplaySendEvent(event, payload);
+        }
+        break;
       }
-      break;
     }
     break;
   }
@@ -661,6 +699,8 @@ void CrystalfontzPacketLCD::Receive(ReceivePacket *rpkt)
 
 void CrystalfontzPacketLCD::SendOneWay(SendPacket *spkt)
 {
+  spkt->UpdateCRC();
+
   // If anything depended on the limited speed of the device to clock
   // their program, we would need to limit the number of packets that
   // could be in the send queue and wait here sometimes.

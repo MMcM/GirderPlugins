@@ -8,7 +8,7 @@ class SendPacket;
 class CrystalfontzPacketLCD : public DisplayDevice
 {
 public:
-  CrystalfontzPacketLCD(LPCSTR devname);
+  CrystalfontzPacketLCD(LPCSTR devname, int cols, int rows, BOOL newCommands);
   ~CrystalfontzPacketLCD();
   
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);

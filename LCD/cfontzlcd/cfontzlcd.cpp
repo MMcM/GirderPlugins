@@ -18,14 +18,14 @@ struct DeviceEntry {
   BOOL packet;
   int cols;
   int rows;
-  BOOL backlight;
+  BOOL flag;                    // backlight or new commands
 } DeviceEntries[] = {
   { "632SS", FALSE, 16, 2, FALSE },
   { "632SG", FALSE, 16, 2, TRUE },
   { "634SS", FALSE, 20, 4, FALSE },
   { "634SG", FALSE, 20, 4, TRUE },
-  { "633", TRUE },
-  { "631", TRUE },
+  { "633", TRUE, 16, 2, FALSE },
+  { "631", TRUE, 20, 2, TRUE },
 };
 
 extern "C" __declspec(dllexport)
@@ -35,10 +35,11 @@ DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
     DeviceEntry *entry = DeviceEntries + i;
     if (!strcmp(name, entry->devname)) {
       if (entry->packet)
-        return new CrystalfontzPacketLCD(name);
+        return new CrystalfontzPacketLCD(name, entry->cols, entry->rows, 
+                                         entry->flag);
       else
         return new CrystalfontzStreamLCD(name, entry->cols, entry->rows, 
-                                         entry->backlight);
+                                         entry->flag);
     }
   }
   return NULL;

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Header$ -->
+<!-- LCD Command Tests
+$Header$
+-->
 <Girder>
   <Group Name="Commands" Identifier="1" Enabled="TRUE">
     <Comments>Test each command type</Comments>
@@ -2420,340 +2422,815 @@ pqrstuvwxyz{|}~</sValue1>
     </Command>
   </Group>
   <Group Name="Keypad" Identifier="112" Enabled="TRUE">
-    <Comments>Test keypad events</Comments>
-    <MultiGroup Name="Up" Identifier="113" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="I" Identifier="114" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="I"/>
-      <Command Name="Display" Identifier="115" Enabled="TRUE">
+    <Group Name="Matrix Orbital" Identifier="113" Enabled="TRUE">
+      <Comments>Test keypad events</Comments>
+      <MultiGroup Name="Up" Identifier="114" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>0x1F</sValue1>
-        <sValue2>*</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="116" Enabled="TRUE">
+        <EventString Name="I" Identifier="115" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="I"/>
+        <Command Name="Display" Identifier="116" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x1F</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="117" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Up</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Down" Identifier="118" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>Up</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="Down" Identifier="117" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="J" Identifier="118" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="J"/>
-      <Command Name="Display" Identifier="119" Enabled="TRUE">
+        <EventString Name="J" Identifier="119" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="J"/>
+        <Command Name="Display" Identifier="120" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x1C</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="121" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Down</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Left" Identifier="122" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>0x1C</sValue1>
-        <sValue2>*</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="120" Enabled="TRUE">
+        <EventString Name="O" Identifier="123" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="O"/>
+        <Command Name="Display" Identifier="124" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x1E</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="125" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Left</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Right" Identifier="126" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>Down</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="Left" Identifier="121" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="O" Identifier="122" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="O"/>
-      <Command Name="Display" Identifier="123" Enabled="TRUE">
+        <EventString Name="E" Identifier="127" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="E"/>
+        <Command Name="Display" Identifier="128" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x1D</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="129" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Right</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Enter" Identifier="130" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>0x1E</sValue1>
-        <sValue2>*</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="124" Enabled="TRUE">
+        <EventString Name="H" Identifier="131" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="H"/>
+        <Command Name="Display" Identifier="132" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x9D</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="133" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Enter</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="F2" Identifier="134" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>Left</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="Right" Identifier="125" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="E" Identifier="126" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="E"/>
-      <Command Name="Display" Identifier="127" Enabled="TRUE">
+        <EventString Name="M" Identifier="135" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="M"/>
+        <Command Name="Display" Identifier="136" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>F2</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="137" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>F2</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="F1" Identifier="138" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>0x1D</sValue1>
-        <sValue2>*</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="128" Enabled="TRUE">
+        <EventString Name="N" Identifier="139" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="N"/>
+        <Command Name="Display" Identifier="140" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>F1</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="141" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>F1</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+    </Group>
+    <Group Name="Crystalfontz" Identifier="142" Enabled="TRUE">
+      <Comments>Test keypad events</Comments>
+      <MultiGroup Name="Up" Identifier="143" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>Right</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="Enter" Identifier="129" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="H" Identifier="130" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="H"/>
-      <Command Name="Display" Identifier="131" Enabled="TRUE">
+        <EventString Name="UP_PRESS" Identifier="144" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="UP_PRESS"/>
+        <Command Name="Display" Identifier="145" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>Up</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="146" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Up</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Down" Identifier="147" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>0x9D</sValue1>
-        <sValue2>*</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="132" Enabled="TRUE">
+        <EventString Name="DOWN_PRESS" Identifier="148" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="DOWN_PRESS"/>
+        <Command Name="Display" Identifier="149" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>Down</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="150" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Down</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Left" Identifier="151" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>Enter</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="F2" Identifier="133" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="M" Identifier="134" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="M"/>
-      <Command Name="Display" Identifier="135" Enabled="TRUE">
+        <EventString Name="LEFT_PRESS" Identifier="152" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="LEFT_PRESS"/>
+        <Command Name="Display" Identifier="153" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>Left</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="154" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Left</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Right" Identifier="155" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>F2</sValue1>
-        <sValue2>s</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="136" Enabled="TRUE">
+        <EventString Name="RIGHT_PRESS" Identifier="156" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="RIGHT_PRESS"/>
+        <Command Name="Display" Identifier="157" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>Right</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="158" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Right</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Enter" Identifier="159" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>F2</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="F1" Identifier="137" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="N" Identifier="138" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="N"/>
-      <Command Name="Display" Identifier="139" Enabled="TRUE">
+        <EventString Name="ENTER_PRESS" Identifier="160" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="ENTER_PRESS"/>
+        <Command Name="Display" Identifier="161" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>Enter</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="162" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Enter</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Exit" Identifier="163" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>F1</sValue1>
-        <sValue2>s</sValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="OSD" Identifier="140" Enabled="TRUE">
+        <EventString Name="EXIT_PRESS" Identifier="164" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="EXIT_PRESS"/>
+        <Command Name="Display" Identifier="165" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>Exit</sValue1>
+          <sValue2>s</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="166" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Exit</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Upper Left" Identifier="167" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>9</ActionSubType>
-        <sValue1>F1</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
+        <EventString Name="UL_PRESS" Identifier="168" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="UL_PRESS"/>
+        <Command Name="Display" Identifier="169" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x16</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="170" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Upper Left</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Upper Right" Identifier="171" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <EventString Name="UR_PRESS" Identifier="172" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="UR_PRESS"/>
+        <Command Name="Display" Identifier="173" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x17</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="174" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Upper Right</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Lower Left" Identifier="175" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <EventString Name="LL_PRESS" Identifier="176" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="LL_PRESS"/>
+        <Command Name="Display" Identifier="177" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x18</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="178" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Lower Left</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="Lower Right" Identifier="179" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <EventString Name="LR_PRESS" Identifier="180" Enabled="TRUE" Invert="FALSE" Device="118" IrStr="LR_PRESS"/>
+        <Command Name="Display" Identifier="181" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>118</ActionType>
+          <ActionSubType>1</ActionSubType>
+          <sValue1>0x19</sValue1>
+          <sValue2>*</sValue2>
+          <iValue3>-1</iValue3>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+        <Command Name="OSD" Identifier="182" Enabled="TRUE">
+          <StateCount>1</StateCount>
+          <StateBegin>1</StateBegin>
+          <StateCurrent>1</StateCurrent>
+          <StateInvert>FALSE</StateInvert>
+          <OSD>FALSE</OSD>
+          <Submatch>FALSE</Submatch>
+          <Topmost>TRUE</Topmost>
+          <OneMatch>FALSE</OneMatch>
+          <UseVar>FALSE</UseVar>
+          <MatchHidden>FALSE</MatchHidden>
+          <MatchNum>1</MatchNum>
+          <ActionType>4</ActionType>
+          <ActionSubType>9</ActionSubType>
+          <sValue1>Lower Right</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+        </Command>
+      </MultiGroup>
+    </Group>
   </Group>
-  <Group Name="Functions" Identifier="141" Enabled="TRUE">
+  <Group Name="Functions" Identifier="183" Enabled="TRUE">
     <Comments>Test LCD LUA extension functions</Comments>
-    <Command Name="Script" Identifier="142" Enabled="TRUE">
+    <Command Name="Script" Identifier="184" Enabled="TRUE">
       <Comments>Open in script editor</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>

@@ -21,7 +21,7 @@ struct DisplayDeviceEntry {
   { "Crystalfontz 634SS (20x4)", "CFONTZLCD", "634SS" },
   { "Crystalfontz 634SG (20x4, backlight)", "CFONTZLCD", "634SG" },
   { "Crystalfontz 633 (16x2, backlight, keypad)", "CFONTZLCD", "633" },
-  { "Crystalfontz 631 (16x2, backlight, keypad)", "CFONTZLCD", "631" },
+  { "Crystalfontz 631 (20x2, backlight, keypad)", "CFONTZLCD", "631" },
   { "Matrix Orbital LCD2021 (20x2)", "MOLCD", "LCD2021" }, // discontinued 7/20/00
   { "Matrix Orbital LCD4021 (40x2)", "MOLCD", "LCD4021" },
   { "Matrix Orbital LCD2041 (20x4)", "MOLCD", "LCD2041" },

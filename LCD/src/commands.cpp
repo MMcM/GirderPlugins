@@ -6,9 +6,16 @@ $Header$
 #include "plugin.h"
 #include "display.h"
 
-void LCD_DECL DisplaySendEvent(LPCSTR event)
+void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)
 {
-  SF.send_event((PCHAR)event, NULL, 0, PLUGINNUM);
+  if (NULL == payload)
+    SF.send_event((PCHAR)event, NULL, 0, PLUGINNUM);
+  else {
+    char buf[128];
+    buf[0] = 1;
+    strcpy(buf+1, payload);
+    SF.send_event((PCHAR)event, buf, strlen(buf+1)+2, PLUGINNUM);
+  }
 }
 
 CRITICAL_SECTION g_CS;          // Ensure events see consistent device Settings.
