@@ -1,4 +1,5 @@
 // Local copies of GUID values.
+// $Header$
 
 // NB: No stdafx
 #define INITGUID

@@ -1,0 +1,7 @@
+Release
+Debug
+*.tlb
+*_p.c
+*_i.c
+dlldata.c
+ShowShifterSpy.h

@@ -1,4 +1,5 @@
 // SpyCtrl.cpp : Implementation of CSpyCtrl
+// $Header$
 #include "stdafx.h"
 #include "WMPSpy.h"
 #include "SpyCtrl.h"

@@ -1,4 +1,6 @@
-/* Monitor thread */
+/* Monitor thread 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

@@ -1,3 +1,4 @@
+; $Header$
 LIBRARY GirderJava
 EXPORTS 
         gir_version

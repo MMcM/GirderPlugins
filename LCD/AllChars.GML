@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- $Header$ -->
 <Girder>
   <Group Name="Custom" Identifier="1" Enabled="TRUE">
     <MultiGroup Name="00-0F" Identifier="2" Enabled="TRUE">

@@ -1,4 +1,5 @@
 /* TVSpy -- DVDSpy helper application.
+ * $Header$
  * Get program information for display.
  * Switch external tuner using Slink-e.
  */

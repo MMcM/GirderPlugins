@@ -24,6 +24,7 @@
   Brennan Underwood
   brennan@nullsoft.com
 
+$Header$
 */
 
 #ifndef _GIRDER_H

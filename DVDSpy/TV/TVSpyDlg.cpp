@@ -1,5 +1,5 @@
 // TVSpyDlg.cpp : implementation file
-//
+// $Header$
 
 #include "stdafx.h"
 #include "Slinkx.h"

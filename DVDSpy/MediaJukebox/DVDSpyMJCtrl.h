@@ -1,4 +1,5 @@
 // DVDSpyMJCtrl.h : Declaration of the CDVDSpyMJCtrl
+// $Header$
 
 #ifndef __DVDSPYMJCTRL_H_
 #define __DVDSPYMJCTRL_H_

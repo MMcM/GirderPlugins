@@ -1,5 +1,5 @@
 // TVSpy.h : main header file for the TVSPY application
-//
+// $Header$
 
 #if !defined(AFX_TVSPY_H__778AEA94_9F76_45ED_AFC9_8A2655DF0A0A__INCLUDED_)
 #define AFX_TVSPY_H__778AEA94_9F76_45ED_AFC9_8A2655DF0A0A__INCLUDED_

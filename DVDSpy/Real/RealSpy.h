@@ -1,4 +1,5 @@
 // RealSpy.h -- header for plug-in object.
+// $Header$
 
 class CRealSpy : public IRMAPlugin,
                  public IRMAPlayerCreationSink

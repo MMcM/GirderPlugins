@@ -1,4 +1,6 @@
-/* Windows message hook running in player address space */
+/* Windows message hook running in player address space 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "DisplaySpyHook.h"

@@ -1,4 +1,5 @@
 // SpyCtrl.h : Declaration of the CSpyCtrl
+// $Header$
 
 #ifndef __SPYCTRL_H_
 #define __SPYCTRL_H_

@@ -1,3 +1,4 @@
+@rem $Header$
 cd java
 javac -g nl\girder\api\*.java
 jar -cf ..\..\..\GirderJava.jar nl\girder\api\*.class

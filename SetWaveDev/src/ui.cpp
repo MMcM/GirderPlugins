@@ -1,4 +1,6 @@
-/* User interface. */
+/* User interface. 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

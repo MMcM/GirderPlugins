@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- DVD Spy to 4x20 LCD sample -->
+<!-- DVD Spy to 4x20 LCD sample 
+$Header$
+-->
 <Girder>
   <Group Name="Clock" Identifier="1" Enabled="TRUE">
     <Comments>Periodic display</Comments>

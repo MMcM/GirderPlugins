@@ -1,5 +1,5 @@
 // WMPSpy.idl : IDL source for WMPSpy.dll
-//
+// $Header$
 
 // This file will be processed by the MIDL tool to
 // produce the type library (WMPSpy.tlb) and marshalling code.

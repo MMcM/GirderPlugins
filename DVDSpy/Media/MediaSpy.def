@@ -1,3 +1,4 @@
+; $Header$
 LIBRARY MEDIASPY.DLL
 EXPORTS
         DllGetClassObject PRIVATE

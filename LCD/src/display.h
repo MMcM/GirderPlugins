@@ -1,4 +1,6 @@
-/* Display device interface */
+/* Display device interface 
+$Header$
+*/
 
 typedef const BYTE *LPCBYTE;
 

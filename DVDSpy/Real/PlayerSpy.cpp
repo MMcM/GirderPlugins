@@ -1,4 +1,5 @@
 // PlayerSpy.h -- implementation of advice sink object.
+// $Header$
 
 #include "stdafx.h"
 #include "PlayerSpy.h"

@@ -1,3 +1,4 @@
+-- $Header$
 
 -- Location(s) to get weather data for (can use ZIP codes for USA).
 -- (Some tweaking of the GML samples will be required if more than one

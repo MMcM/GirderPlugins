@@ -24,6 +24,7 @@
   Brennan Underwood
   brennan@nullsoft.com
 
+$Header$
 */
 
 // Girder <-> Winamp communications log window: a simple scrolling list.

@@ -1,4 +1,6 @@
-/** RealSpy -- RealOne Player plug-in for DVDSpy **/
+/** RealSpy -- RealOne Player plug-in for DVDSpy 
+$Header$
+**/
 
 #include "stdafx.h"
 #include "RealSpy.h"

@@ -1,4 +1,6 @@
-/* Device control functions. */
+/* Device control functions. 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

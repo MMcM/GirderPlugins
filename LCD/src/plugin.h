@@ -1,4 +1,6 @@
-/* Global interfaces */
+/* Global interfaces 
+$Header$
+*/
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"

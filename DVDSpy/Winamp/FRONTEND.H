@@ -5,6 +5,8 @@
 ** By Justin Frankel. Updates by Christophe Thibault.
 ** Copyright (C) 1997-2000, Nullsoft Inc.
 ** Last updated: JUL.12.2000.
+**
+** $Header$
 ** 
 ** Introduction
 ** -----------------------

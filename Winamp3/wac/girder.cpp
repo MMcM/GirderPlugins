@@ -24,6 +24,8 @@
   Brennan Underwood
   brennan@nullsoft.com
 
+$Header$
+
 */
 
 // Girder Winamp component, based on Generic example.

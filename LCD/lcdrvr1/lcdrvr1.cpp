@@ -1,4 +1,6 @@
-/* LCDriver 1.x device implementation */
+/* LCDriver 1.x device implementation 
+$Header$
+*/
 
 #include "stdafx.h"
 

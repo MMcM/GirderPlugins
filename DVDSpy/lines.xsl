@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!--
-Select 4 line or 2 line version of LCD sample script.
+<!-- Select 4 line or 2 line version of LCD sample script.
+$Header$
 Commands / MultiGroups whose enabling should be changed are marked by Comments containing
 *4L* or *2L*.
 Also, those with *ON* or *OFF* are unconditionally set the specified way.

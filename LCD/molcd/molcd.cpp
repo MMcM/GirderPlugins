@@ -1,4 +1,6 @@
-/* Matrix Orbital device implementation */
+/* Matrix Orbital device implementation 
+$Header$
+*/
 
 #include "stdafx.h"
 

@@ -1,3 +1,4 @@
+// $Header$
 typedef struct {
 	int version;
 	char *description;

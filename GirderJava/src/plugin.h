@@ -1,4 +1,6 @@
-/* Global interfaces */
+/* Global interfaces 
+$Header$
+*/
 
 #define PLUGINNUM 43
 #define PLUGINNAME "Java"

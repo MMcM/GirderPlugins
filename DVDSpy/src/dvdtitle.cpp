@@ -1,4 +1,6 @@
-/* Compute DVD title */
+/* Compute DVD title 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

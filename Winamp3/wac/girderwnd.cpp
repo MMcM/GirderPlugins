@@ -24,6 +24,7 @@
   Brennan Underwood
   brennan@nullsoft.com
 
+$Header$
 */
 
 // Background window that receives changes from Winamp and forwards them to Girder.

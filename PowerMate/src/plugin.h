@@ -1,4 +1,6 @@
-/* Global interfaces */
+/* Global interfaces 
+$Header$
+*/
 
 #define PLUGINNUM 44
 #define PLUGINNAME "PowerMate"

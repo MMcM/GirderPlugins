@@ -1,3 +1,4 @@
+-- $Header$
 IconPlaying=[[0 0
 0b11000
 0b11100

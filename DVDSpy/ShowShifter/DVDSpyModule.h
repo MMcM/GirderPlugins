@@ -1,4 +1,5 @@
 // DVDSpyModule.h : Declaration of the CDVDSpyModule
+// $Header$
 
 #ifndef __DVDSPYMODULE_H_
 #define __DVDSPYMODULE_H_

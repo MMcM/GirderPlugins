@@ -1,4 +1,5 @@
 // DVDSpyMJCtrl.cpp : Implementation of CDVDSpyMJCtrl
+// $Header$
 
 #include "stdafx.h"
 #include "DVDSpyMJ.h"

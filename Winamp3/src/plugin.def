@@ -1,3 +1,4 @@
+; $Header$
 LIBRARY Winamp3
 EXPORTS 
         gir_version

@@ -1,4 +1,6 @@
-/* Girder entry functions. */
+/* Girder entry functions. 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

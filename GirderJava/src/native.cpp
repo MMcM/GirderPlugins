@@ -1,4 +1,6 @@
-/* Various conversions between Girder and Java handles and data. */
+/* Various conversions between Girder and Java handles and data. 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

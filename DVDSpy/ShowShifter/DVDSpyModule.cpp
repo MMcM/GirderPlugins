@@ -1,4 +1,5 @@
 // DVDSpyModule.cpp : Implementation of CDVDSpyModule
+// $Header$
 
 #include "stdafx.h"
 #include "ShowShifterSpy.h"

@@ -1,4 +1,6 @@
-/* Parallel port HD44780 device implementation */
+/* Parallel port HD44780 device implementation 
+$Header$
+*/
 
 // See http://www.mswanson.com/~nstuart/lcd/ or
 // http://www.geocities.com/ResearchTriangle/1495/ee_lcd.html for a

@@ -1,4 +1,5 @@
 // Get the weather.
+// $Header$
 
 // Arguments: accid...
 // ACCID is the location (ZIP code in the USA).

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Motherboard Monitor to OSD -->
+<!-- Motherboard Monitor to OSD 
+$Header$
+-->
 <Girder>
   <Group Name="MBM" Identifier="14" Enabled="TRUE">
     <MultiGroup Name="T1" Identifier="15" Enabled="TRUE">

@@ -1,6 +1,7 @@
 // stdafx.h : include file for standard system include files,
 //      or project specific include files that are used frequently,
 //      but are changed infrequently
+// $Header$
 
 #if !defined(AFX_STDAFX_H__21F57F59_2763_4C02_BC1D_BA24B3C0AA0D__INCLUDED_)
 #define AFX_STDAFX_H__21F57F59_2763_4C02_BC1D_BA24B3C0AA0D__INCLUDED_

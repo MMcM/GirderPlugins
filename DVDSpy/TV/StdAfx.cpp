@@ -1,6 +1,7 @@
 // stdafx.cpp : source file that includes just the standard includes
-//	tvspy.pch will be the pre-compiled header
-//	stdafx.obj will contain the pre-compiled type information
+// $Header$
+//  tvspy.pch will be the pre-compiled header
+//  stdafx.obj will contain the pre-compiled type information
 
 #include "stdafx.h"
 

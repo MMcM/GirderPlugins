@@ -1,4 +1,5 @@
 ' Get DVD title from windowsmedia.com.
+' $Header$
 ' This is a separate script both because LUA does not have easy XML
 ' access and because it can then run asynchronously.
 Option Explicit

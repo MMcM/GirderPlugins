@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- PowerMate test script -->
+<!-- PowerMate test script 
+$Header$
+-->
 <Girder>
   <Group Name="Menu" Identifier="15" Enabled="TRUE">
     <Command Name="Down" Identifier="22" Enabled="TRUE">

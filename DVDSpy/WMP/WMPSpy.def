@@ -1,7 +1,5 @@
-; WMPSpy.def : Declares the module parameters.
-
+; $Header$
 LIBRARY      "WMPSpy.DLL"
-
 EXPORTS
 	DllCanUnloadNow     @1 PRIVATE
 	DllGetClassObject   @2 PRIVATE

@@ -1,4 +1,5 @@
 /* -*-Mode:C++-*-
+$Header$
 
 This server registers itself in place of several DirectX objects.  It
 remembers the original server location and returns instances that wrap

@@ -1,7 +1,5 @@
-; int_DVDSpyMJ.def : Declares the module parameters.
-
+; $Header$
 LIBRARY "int_DVDSpy.DLL"
-
 EXPORTS
   DllCanUnloadNow     @1 PRIVATE
   DllGetClassObject   @2 PRIVATE

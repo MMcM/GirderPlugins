@@ -1,3 +1,4 @@
+; $Header$
 LIBRARY RegSetValue
 EXPORTS 
         gir_version

@@ -1,4 +1,6 @@
-/* Eugene's DVD interface */
+/* Eugene's DVD interface 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

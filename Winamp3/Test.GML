@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Test Winamp3 plug-in: events and actions. -->
+<!-- Test Winamp3 plug-in: events and actions. 
+$Header$
+-->
 <Girder>
   <Group Name="Display" Identifier="1" Enabled="TRUE">
     <Command Name="OSD" Identifier="2" Enabled="TRUE">

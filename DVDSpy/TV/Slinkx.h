@@ -1,4 +1,5 @@
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
+// $Header$
 /////////////////////////////////////////////////////////////////////////////
 // CSlinkx wrapper class
 

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- ID3 from Winamp test script -->
+<!-- ID3 from Winamp test script 
+$Header$
+-->
 <Girder>
   <Group Name="Winamp" Identifier="4" Enabled="TRUE">
     <MultiGroup Name="New" Identifier="6" Enabled="TRUE">

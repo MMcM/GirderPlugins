@@ -1,3 +1,4 @@
+@rem $Header$
 @echo off
 echo This will install and/or register all DLLs.
 pause

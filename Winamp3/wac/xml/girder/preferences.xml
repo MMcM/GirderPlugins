@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<!-- Layout of the Girder component Preferences group. -->
+<!-- Layout of the Girder component Preferences group. 
+$Header$
+-->
 
 <WinampAbstractionLayer version="0.7">
 

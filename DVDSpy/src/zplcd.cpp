@@ -1,4 +1,6 @@
-/* Zoom Player LCD interface */
+/* Zoom Player LCD interface 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

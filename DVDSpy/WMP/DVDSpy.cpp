@@ -1,4 +1,5 @@
 // DVDSpy.cpp : Interface to Girder via DVDSpy
+// $Header$
 #include "stdafx.h"
 #include "DVDSpy.h"
 

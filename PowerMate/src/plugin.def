@@ -1,3 +1,4 @@
+; $Header$
 LIBRARY PowerMate
 EXPORTS 
         gir_version

@@ -1,5 +1,5 @@
 // AutoProxy.cpp : implementation file
-//
+// $Header$
 
 #include "stdafx.h"
 #include "slinkx.h"

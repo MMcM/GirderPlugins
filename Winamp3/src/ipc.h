@@ -1,4 +1,6 @@
-/* Winamp <-> Girder IPC */
+/* Winamp <-> Girder IPC 
+$Header$
+*/
 
 typedef HWND IPC_HANDLE;
 

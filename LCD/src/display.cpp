@@ -1,4 +1,6 @@
-/* Display commands */
+/* Display commands 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "display.h"

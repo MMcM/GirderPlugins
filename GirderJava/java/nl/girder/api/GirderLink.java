@@ -1,3 +1,4 @@
+// $Header$
 
 package nl.girder.api;
 

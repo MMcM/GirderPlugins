@@ -1,4 +1,5 @@
 // DVDSpyMJEvent.h : Declaration of the CDVDSpyMJEvent
+// $Header$
 
 #ifndef __DVDSPYMJEVENT_H_
 #define __DVDSPYMJEVENT_H_

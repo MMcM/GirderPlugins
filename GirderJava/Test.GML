@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Java plugin test file -->
+<!-- Java plugin test file 
+$Header$
+-->
 <Girder>
   <Group Name="Test" Identifier="2" Enabled="TRUE">
     <Command Name="Action" Identifier="3" Enabled="TRUE">

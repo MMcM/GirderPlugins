@@ -1,4 +1,6 @@
-/** Plug-in for communicating from Winamp to Girder / DVDSpy **/
+/** Plug-in for communicating from Winamp to Girder / DVDSpy 
+$Header$
+**/
 
 #include <windows.h>
 #include <stdio.h>

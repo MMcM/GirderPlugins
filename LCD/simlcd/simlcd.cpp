@@ -1,4 +1,6 @@
-/* Simulated LCD device implementation */
+/* Simulated LCD device implementation 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "resource.h"

@@ -1,5 +1,5 @@
 // DVDSpyMJ.cpp : Implementation of DLL Exports.
-
+// $Header$
 
 // Note: Proxy/Stub Information
 //      To build a separate proxy/stub DLL, 

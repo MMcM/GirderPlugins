@@ -1,4 +1,5 @@
 // ShowShifterSpy.cpp : Implementation of DLL Exports.
+// $Header$
 
 #include "stdafx.h"
 #include "resource.h"

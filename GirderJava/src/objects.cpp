@@ -1,4 +1,6 @@
-/* Native method implementations. */
+/* Native method implementations. 
+$Header$
+*/
 
 #include "stdafx.h"
 #include "plugin.h"

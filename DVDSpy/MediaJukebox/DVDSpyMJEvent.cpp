@@ -1,4 +1,5 @@
 // DVDSpyMJEvent.cpp : Implementation of CDVDSpyMJEvent
+// $Header$
 
 #include "stdafx.h"
 #include "DVDSpyMJEvent.h"

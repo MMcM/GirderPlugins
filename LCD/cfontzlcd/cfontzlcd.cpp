@@ -1,4 +1,6 @@
-/* Crystalfontz device implementation */
+/* Crystalfontz device implementation 
+$Header$
+*/
 
 #include "stdafx.h"
 

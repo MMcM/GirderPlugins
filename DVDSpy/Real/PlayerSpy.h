@@ -1,4 +1,5 @@
 // PlayerSpy.h -- header for advice sink object.
+// $Header$
 
 const size_t NPROPNAMES = 2;
 

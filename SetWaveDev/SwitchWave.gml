@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- SetWaveDev sample -->
+<!-- SetWaveDev sample 
+$Header$
+-->
 <Girder>
   <Group Name="Keyboard" Identifier="143" Enabled="TRUE">
     <MultiGroup Name="Ctrl-Alt-F7" Identifier="144" Enabled="TRUE">
