@@ -1,0 +1,45 @@
+// DVDSpyMJ.idl : IDL source for DVDSpyMJ.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (DVDSpyMJ.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+#include "olectl.h"
+  
+
+  [
+    object,
+    uuid(5FFB900C-BB18-4DB8-9066-FA905AF9BF04),
+    dual,
+    helpstring("IDVDSpyMJCtrl Interface"),
+    pointer_default(unique)
+  ]
+  interface IDVDSpyMJCtrl : IDispatch
+  {
+    [id(1), helpstring("method Init")] HRESULT Init([in] LPDISPATCH pDisp);
+    [propget, id(2), helpstring("property RefreshInterval")] HRESULT RefreshInterval([out, retval] short *pVal);
+    [propput, id(2), helpstring("property RefreshInterval")] HRESULT RefreshInterval([in] short newVal);
+    [id(3), helpstring("method Reset")] HRESULT Reset();
+  };
+
+[
+  uuid(D69C1A22-36C7-4BA1-B591-A097AABEED24),
+  version(1.0),
+  helpstring("DVDSpyMJ 1.0 Type Library")
+]
+library DVDSPYMJLib
+{
+  importlib("stdole32.tlb");
+  importlib("stdole2.tlb");
+
+  [
+    uuid(983D279F-0C14-4E8E-A3C4-C5C128C5D536),
+    helpstring("DVDSpy MediaJukebox Control")
+  ]
+  coclass DVDSpyMJCtrl
+  {
+    [default] interface IDVDSpyMJCtrl;
+  };
+};

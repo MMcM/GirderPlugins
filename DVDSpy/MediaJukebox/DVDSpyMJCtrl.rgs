@@ -1,0 +1,34 @@
+HKCR
+{
+  DVDSpy.MediaJukebox.1 = s 'DVDSpy MediaJukebox Control'
+  {
+    CLSID = s '{983D279F-0C14-4E8E-A3C4-C5C128C5D536}'
+  }
+  DVDSpy.MediaJukebox = s 'DVDSpy MediaJukebox Control'
+  {
+    CLSID = s '{983D279F-0C14-4E8E-A3C4-C5C128C5D536}'
+    CurVer = s 'DVDSpy.MediaJukebox.1'
+  }
+  NoRemove CLSID
+  {
+    ForceRemove {983D279F-0C14-4E8E-A3C4-C5C128C5D536} = s 'DVDSpy MediaJukebox Control'
+    {
+      ProgID = s 'DVDSpy.MediaJukebox.1'
+      VersionIndependentProgID = s 'DVDSpy.MediaJukebox'
+      ForceRemove 'Programmable'
+      InprocServer32 = s '%MODULE%'
+      {
+        val ThreadingModel = s 'Apartment'
+      }
+      ForceRemove 'Control'
+      ForceRemove 'Insertable'
+      ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 102'
+      'MiscStatus' = s '0'
+      {
+          '1' = s '131473'
+      }
+      'TypeLib' = s '{D69C1A22-36C7-4BA1-B591-A097AABEED24}'
+      'Version' = s '1.0'
+    }
+  }
+}
