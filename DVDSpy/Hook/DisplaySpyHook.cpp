@@ -1,3 +1,4 @@
+/* Windows message hook running in player address space */
 
 #include "stdafx.h"
 #include "DisplaySpyHook.h"
@@ -54,8 +55,10 @@ const UINT MATCH_CLASS_PREFIX = 1008;
 const UINT MATCH_CONTROLID = 1009;
 const UINT MATCH_NOTIFY_CODE = 1010;
 const UINT MATCH_NOTIFY_FROM = 1011;
+const UINT MATCH_SECOND_TIMER = 1019;
 const UINT MATCH_PATCH = 1020;
 const UINT MATCH_MEDIA_SPY = 1030;
+const UINT MATCH_WINDVD_SETIMAGE = 1031;
 
 const UINT EXTRACT_CONSTANT = 2001;
 const UINT EXTRACT_GETTEXT = 2002;
@@ -69,9 +72,12 @@ const UINT EXTRACT_HWND = 2009;
 const UINT EXTRACT_SB_GETTEXT = 2010;
 const UINT EXTRACT_LPARAM_TIME_BCD = 2020;
 const UINT EXTRACT_MEDIA_SPY = 2030;
+const UINT EXTRACT_WINDVD_SETIMAGE = 2031;
 
 const HWND HWND_PATCH = (HWND)0xDEADFACE;
 const UINT PATCH_TEXTOUT = 0x80000001;
+const UINT PATCH_POWERDVD_STRETCHDIBITS = 0x80000002;
+const UINT PATCH_WINDVD_GETIMAGE = 0x80000003;
 
 const UINT MS_FILTER_GRAPH = 1;
 const UINT MS_DVD_NAVIGATOR = 2;
@@ -86,6 +92,11 @@ const UINT MS_DVD_CHAPTER = 10;
 const UINT MS_DVD_TOTAL = 11;
 const UINT MS_DVD_TIME = 12;
 
+const UINT SKINDVD_STATUS = 1;
+const UINT SKINDVD_TIME = 2;
+const UINT SKINDVD_TITLE = 3;
+const UINT SKINDVD_CHAPTER = 4;
+
 const DWORD MODULE_NO_WIN16_CWP = 1;
 
 /*** Patterns that drive the hook to extract display information. ***/
@@ -93,25 +104,33 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(WinDVD)
 
-  // This is version 3 and earlier, where the status is in a status
-  // bar beneath the main display.  That is gone in version 4, which
-  // has overlays and a skinnable remote window full of images.
-
-    // This is an update to the tracker bar in the status bar in the
-    // display window.  When it happens, the status bar fields have been
-    // changed as well (via MFC).
-    BEGIN_MATCH()
-      ENTRY_NUM(MATCH_MESSAGE, TBM_SETPOS)
-      ENTRY_NUM(MATCH_CONTROLID, 1)
-      ENTRY_STR(MATCH_CLASS, TRACKBAR_CLASS)
-      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, STATUSCLASSNAME)
-      ENTRY_STR(ENTRY_HWND_GRANDPARENT|MATCH_CLASS, "WinDVDClass")
+    BEGIN_NMATCH(Status)
+      ENTRY_NUM(MATCH_MESSAGE, STM_SETIMAGE)
+      ENTRY_NUM(MATCH_WPARAM, IMAGE_BITMAP)
+      ENTRY_NUM(MATCH_WINDVD_SETIMAGE, SKINDVD_STATUS)
      BEGIN_EXTRACT()
-      NENTRY(Chapter,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, "Chapter: ", 3)
-      NENTRY(Elapsed,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, "Time: ", 4)
-      NENTRY_NUM(Video,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 5)
-      NENTRY_NUM(Field6,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 6)
-      NENTRY_NUM(Audio,ENTRY_HWND_PARENT|EXTRACT_SB_GETTEXT, 7)
+      ENTRY_NUM(EXTRACT_WINDVD_SETIMAGE, SKINDVD_STATUS)
+    END_MATCH()
+
+    BEGIN_NMATCH(Elapsed)
+      ENTRY_NUM(MATCH_MESSAGE, STM_SETIMAGE)
+      ENTRY_NUM(MATCH_WPARAM, IMAGE_BITMAP)
+      ENTRY_NUM(MATCH_WINDVD_SETIMAGE, SKINDVD_TIME)
+     BEGIN_EXTRACT()
+      ENTRY_NUM(EXTRACT_WINDVD_SETIMAGE, SKINDVD_TIME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Chapter)
+      ENTRY_NUM(MATCH_MESSAGE, STM_SETIMAGE)
+      ENTRY_NUM(MATCH_WPARAM, IMAGE_BITMAP)
+      ENTRY_NUM(MATCH_WINDVD_SETIMAGE, SKINDVD_CHAPTER)
+     BEGIN_EXTRACT()
+      ENTRY_NUM(EXTRACT_WINDVD_SETIMAGE, SKINDVD_CHAPTER)
+    END_MATCH()
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_GETIMAGE)
+     BEGIN_EXTRACT()
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -121,24 +140,32 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_NMODULE(PowerDVD,POWERDVD)
+  BEGIN_MODULE(PowerDVD)
 
-    // This only has the time.  The title# and chapter# are displayed as
-    // graphics in the "remote" window.
-    BEGIN_NMATCH(Elapsed)
-      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
-      ENTRY_STR(MATCH_CLASS, "Static")
-      ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "#32770")
-      ENTRY_STR(ENTRY_HWND_GRANDPARENT|MATCH_CLASS, "CyberLink Video Window Class")
+    BEGIN_NMATCH(Status)
+      ENTRY_NUM(MATCH_PATCH, PATCH_POWERDVD_STRETCHDIBITS)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_STATUS)
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-    // This only happens when playing a .VOB file: the window title is
-    // changed to the file in question.  Better than nothing.
-    BEGIN_NMATCH(Title)
-      ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
-      ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
+    BEGIN_NMATCH(Elapsed)
+      ENTRY_NUM(MATCH_PATCH, PATCH_POWERDVD_STRETCHDIBITS)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_TIME)
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(TitleNo)
+      ENTRY_NUM(MATCH_PATCH, PATCH_POWERDVD_STRETCHDIBITS)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_TITLE)
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(Chapter)
+      ENTRY_NUM(MATCH_PATCH, PATCH_POWERDVD_STRETCHDIBITS)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_CHAPTER)
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
@@ -217,7 +244,7 @@ static MatchEntry g_matches[] = {
   BEGIN_NMODULE(ZoomPlayer,zplayer)
 
     BEGIN_NMATCH(DVD)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -230,7 +257,7 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 
     BEGIN_NMATCH(Media)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -265,7 +292,7 @@ static MatchEntry g_matches[] = {
   BEGIN_NMODULE_FLAGS(TheaterTek,TheaterTek DVD,MODULE_NO_WIN16_CWP)
 
     BEGIN_MATCH()
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -284,10 +311,32 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
+  BEGIN_MODULE(CinePlayer)
+
+    BEGIN_MATCH()
+      ENTRY0(MATCH_SECOND_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
+      NENTRY_NUM(VideoPosition, EXTRACT_MEDIA_SPY, MS_FG_VIDEO_POSITION)
+      NENTRY_NUM(Domain, EXTRACT_MEDIA_SPY, MS_DVD_DOMAIN)
+      NENTRY_NUM(TitleNo, EXTRACT_MEDIA_SPY, MS_DVD_TITLE)
+      NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "VideoRenderer")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
   BEGIN_NMODULE(ATI,ATIMMC)
 
     BEGIN_NMATCH(DVD)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -299,7 +348,7 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 
     BEGIN_NMATCH(MMC)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -320,7 +369,7 @@ static MatchEntry g_matches[] = {
   // with the program's SDK.
 
     BEGIN_NMATCH(DVD)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -332,7 +381,7 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 
     BEGIN_NMATCH(Media)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -356,7 +405,7 @@ static MatchEntry g_matches[] = {
   // that is then blted to the screen.
 
     BEGIN_MATCH()
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -377,7 +426,7 @@ static MatchEntry g_matches[] = {
   BEGIN_NMODULE(SASAMI2k,sasami2000)
 
     BEGIN_MATCH()
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -411,7 +460,7 @@ static MatchEntry g_matches[] = {
   BEGIN_NMODULE(PowerDivX,PowerDivX*)
 
     BEGIN_MATCH()
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -438,7 +487,7 @@ static MatchEntry g_matches[] = {
   // find it, though.
 
     BEGIN_MATCH()
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -504,7 +553,7 @@ static MatchEntry g_matches[] = {
 
     // DVDNavigator.
     BEGIN_NMATCH(DVD)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_DVD_NAVIGATOR)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -517,7 +566,7 @@ static MatchEntry g_matches[] = {
 
     // Filter graph.
     BEGIN_NMATCH(Media)
-      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY0(MATCH_SECOND_TIMER)
       ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
      BEGIN_EXTRACT()
       NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
@@ -600,6 +649,8 @@ BOOL g_bNoCallWndProc = FALSE;
 
 BOOL MatchMediaSpy(UINT nClass);
 void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize);
+BOOL MatchWinDVDSetImage(HWND hWnd, UINT nType, HBITMAP hBitmap);
+void ExtractWinDVDSetImage(UINT nType, LPSTR szBuf, size_t nSize);
 
 BOOL DoMatch2(const MatchEntry *pEntry, 
               HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -670,6 +721,20 @@ BOOL DoMatch2(const MatchEntry *pEntry,
       LPNMHDR pnmh = (LPNMHDR)lParam;
       return (pnmh->idFrom == pEntry->dwVal);
     }
+  case MATCH_SECOND_TIMER:
+    {
+      if (WM_TIMER != nMsg)
+        return FALSE;
+      ULONG ulNow = GetTickCount();
+      if ((ulNow - pEntry->dwVal) < 900)
+        return FALSE;           // Less than a second (more or less) since last time.
+      char szCName[256];
+      GetClassName(hWnd, szCName, sizeof(szCName));
+      if (!strcmp(szCName, "VideoRenderer"))
+        return FALSE;           // Try not to interfere with playback.
+      ((MatchEntry*)pEntry)->dwVal = ulNow;
+      return TRUE;
+    }
   case MATCH_PATCH:
     {
       if (HWND_PATCH != hWnd)
@@ -678,6 +743,8 @@ BOOL DoMatch2(const MatchEntry *pEntry,
     }
   case MATCH_MEDIA_SPY:
     return MatchMediaSpy((UINT)pEntry->dwVal);
+  case MATCH_WINDVD_SETIMAGE:
+    return MatchWinDVDSetImage(hWnd, (UINT)pEntry->dwVal, (HBITMAP)lParam);
   default:
     ASSERT(FALSE);
     return FALSE;
@@ -778,6 +845,9 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
   case EXTRACT_MEDIA_SPY:
     ExtractMediaSpy((UINT)pEntry->dwVal, szBuf, nSize);
     break;
+  case EXTRACT_WINDVD_SETIMAGE:
+    ExtractWinDVDSetImage((UINT)pEntry->dwVal, szBuf, nSize);
+    break;
   default:
     ASSERT(FALSE);
     szBuf[0] = '\0';
@@ -794,35 +864,38 @@ BOOL DoExtract(size_t nMatch, HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam
     // Get new value.
     DoExtract1(pEntry->pExtracts+dbuf.nIndex, dbuf.szValue, sizeof(dbuf.szValue),
                hWnd, nMsg, wParam, lParam);
-    // Search back in the queue for an entry for the same match and index.
-    size_t nOld = gs_nWrite;
-    BOOL bFound = FALSE, bPending = !gs_bEmpty;
-    do {
-      if (nOld == 0) nOld = MAX_BUFS;
-      nOld--;
-      if ((gs_pDisplayBufs[nOld].nMatch == dbuf.nMatch) && 
-          (gs_pDisplayBufs[nOld].nIndex == dbuf.nIndex)) {
-        bFound = TRUE;
-        break;
-      }
-      if (nOld == gs_nRead)
-        bPending = FALSE;       // Going into already read.
-    } while (nOld != gs_nWrite);
-    if (bFound) {
-      if (!strcmp(gs_pDisplayBufs[nOld].szValue, dbuf.szValue)) {
-        // Value has not changed since last entered (whether read or pending).
-        continue;
-      }
-      if (bPending) {
-        // Remove pending entry.
-        while (TRUE) {
-          size_t nNext = nOld + 1;
-          if (nNext == MAX_BUFS) nNext = 0;
-          if (nNext == gs_nWrite) break;
-          gs_pDisplayBufs[nOld] = gs_pDisplayBufs[nNext];
-          nOld = nNext;
+    {
+      // Search back in the queue for an entry for the same match and index.
+      size_t nOld = gs_nWrite;
+      BOOL bFound = FALSE, bPending = !gs_bEmpty;
+      do {
+        if (nOld == 0) nOld = MAX_BUFS;
+        nOld--;
+        if ((gs_pDisplayBufs[nOld].nMatch == dbuf.nMatch) && 
+            (gs_pDisplayBufs[nOld].nIndex == dbuf.nIndex)) {
+          bFound = TRUE;
+          break;
         }
-        gs_nWrite = nOld;
+        if (nOld == gs_nRead)
+          bPending = FALSE;       // Going into already read.
+      } while (nOld != gs_nWrite);
+      if (bFound) {
+        if (!strcmp(gs_pDisplayBufs[nOld].szValue, dbuf.szValue)) {
+          // Value has not changed since last entered (whether read or pending).
+          continue;
+        }
+        if (bPending) {
+          // Remove pending entry.
+          while (TRUE) {
+            size_t nNext = nOld + 1;
+            if (nNext == MAX_BUFS) nNext = 0;
+            if (nNext == gs_nWrite) break;
+            gs_pDisplayBufs[nOld] = gs_pDisplayBufs[nNext];
+            nOld = nNext;
+          }
+          gs_nWrite = nOld;
+          if (gs_nRead == gs_nWrite) gs_bEmpty = TRUE;
+        }
       }
     }
     BOOL full = (!gs_bEmpty && (gs_nRead == gs_nWrite));
@@ -955,6 +1028,12 @@ void DoMessage(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
   if (NULL == g_pMatches)
     return;
+  // Some of the COM stuff we do may allow events to run again; do not
+  // attempt more processing recursively.
+  static DWORD g_dwActive = 0;
+  DWORD dwCurrent = GetCurrentThreadId();
+  if (0 != InterlockedCompareExchange((PVOID*)&g_dwActive, (PVOID)dwCurrent, 0))
+    return;
   BOOL bNotify = FALSE;
   for (size_t i = 0; i < g_nMatches; i++) {
     if (DoMatch(g_pMatches+i, hWnd, nMsg, wParam, lParam)) {
@@ -969,6 +1048,7 @@ void DoMessage(HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
   }
   if (bNotify)
     PostThreadMessage(gs_dwThreadId, WM_NEWDISPLAY, 0, 0);
+  InterlockedCompareExchange((PVOID*)&g_dwActive, 0, (PVOID)dwCurrent);
 }
 
 // Windows message hook callback
@@ -1006,19 +1086,33 @@ BOOL WINAPI PatchTextOut(HDC hdc, int x, int y, LPSTR str, int nb)
   return rc;
 }
 
-void PatchFunction(LPCSTR szModule, LPCSTR szFunction, 
+PROC *StretchDIBitsIAT = NULL;
+int (WINAPI *OrigStretchDIBits)(HDC, int, int, int, int, int, int, int, int, 
+                                CONST VOID *, CONST BITMAPINFO *, UINT, DWORD) = NULL;
+int WINAPI PatchPowerDVDStretchDIBits(HDC, int, int, int, int, int, int, int, int, 
+                                      CONST VOID *, CONST BITMAPINFO *, UINT, DWORD);
+
+BOOL PatchFunction(LPCSTR szModule, LPCSTR szFunction, LPCSTR szCallModule,
                    PROC pnfunc, PROC **ppiat, PROC *porig)
 {
   HMODULE hfmod = GetModuleHandle(szModule);
-  if (NULL == hfmod) return;
+  if (NULL == hfmod) return FALSE;
   PROC pfunc = GetProcAddress(hfmod, szFunction);
-  if (NULL == pfunc) return;
+  if (NULL == pfunc) return FALSE;
 
-  HMODULE hmod = GetModuleHandle(NULL);
+  HMODULE hmod;
+  if (NULL == szCallModule)
+    hmod = GetModuleHandle(NULL);
+  else {
+    hmod = GetModuleHandle(szCallModule);
+    if (NULL == hmod)
+      hmod = LoadLibrary(szCallModule);
+    if (NULL == hmod) return FALSE;
+  }
   PIMAGE_DOS_HEADER pdos = (PIMAGE_DOS_HEADER)hmod;
-  if (pdos->e_magic != IMAGE_DOS_SIGNATURE) return;
+  if (pdos->e_magic != IMAGE_DOS_SIGNATURE) return FALSE;
   PIMAGE_NT_HEADERS pnt = (PIMAGE_NT_HEADERS)((DWORD)hmod + pdos->e_lfanew);
-  if (pnt->Signature != IMAGE_NT_SIGNATURE) return;
+  if (pnt->Signature != IMAGE_NT_SIGNATURE) return FALSE;
   PIMAGE_DATA_DIRECTORY pimp = pnt->OptionalHeader.DataDirectory 
     + IMAGE_DIRECTORY_ENTRY_IMPORT;
   PIMAGE_DATA_DIRECTORY piat= pnt->OptionalHeader.DataDirectory 
@@ -1027,7 +1121,7 @@ void PatchFunction(LPCSTR szModule, LPCSTR szFunction,
   PIMAGE_IMPORT_DESCRIPTOR pid = (PIMAGE_IMPORT_DESCRIPTOR)
     ((DWORD)hmod + pimp->VirtualAddress);
   while (TRUE) {
-    if (NULL == pid->Characteristics) return;
+    if (NULL == pid->Characteristics) return FALSE;
     LPCSTR pmod = (LPCSTR)((DWORD)hmod + pid->Name);
     if (!_stricmp(pmod, szModule)) break;
     pid++;
@@ -1035,7 +1129,7 @@ void PatchFunction(LPCSTR szModule, LPCSTR szFunction,
   PIMAGE_THUNK_DATA pdata = (PIMAGE_THUNK_DATA)((DWORD)hmod + pid->OriginalFirstThunk);
   PROC *paddr = (PROC *)((DWORD)hmod + pid->FirstThunk);
   while (TRUE) {
-    if (NULL == pdata->u1.Function) return;
+    if (NULL == pdata->u1.Function) return FALSE;
     if ((pdata->u1.Ordinal & IMAGE_ORDINAL_FLAG) == 0) {
       PIMAGE_IMPORT_BY_NAME pnam = (PIMAGE_IMPORT_BY_NAME)
         ((DWORD)hmod + (DWORD)pdata->u1.AddressOfData);
@@ -1044,7 +1138,7 @@ void PatchFunction(LPCSTR szModule, LPCSTR szFunction,
       paddr++;
     }
   }
-  if (pfunc != *paddr) return;
+  if (pfunc != *paddr) return FALSE;
   *ppiat = paddr;
   *porig = *paddr;
   DWORD dwOldProt;
@@ -1052,7 +1146,12 @@ void PatchFunction(LPCSTR szModule, LPCSTR szFunction,
     *paddr = pnfunc;
     VirtualProtect(paddr, sizeof(PROC), dwOldProt, &dwOldProt);
   }
+  return TRUE;
 }
+
+PROC *LoadImageIAT = NULL;
+HANDLE (WINAPI *OrigLoadImage)(HINSTANCE, LPCSTR, UINT, int, int, UINT) = NULL;
+HANDLE WINAPI PatchWinDVDLoadImage(HINSTANCE, LPCSTR, UINT, int, int, UINT);
 
 void InstallPatches ()
 {
@@ -1062,9 +1161,18 @@ void InstallPatches ()
     if (MATCH_PATCH == g_pMatches[i].pMatches[0].nCode) {
       switch (g_pMatches[i].pMatches[0].dwVal) {
       case PATCH_TEXTOUT:
-        PatchFunction("GDI32.DLL", "TextOutA", 
+        PatchFunction("GDI32.DLL", "TextOutA", NULL,
                       (PROC)PatchTextOut, &TextOutIAT, (PROC*)&OrigTextOut);
         break;
+      case PATCH_POWERDVD_STRETCHDIBITS:
+        PatchFunction("GDI32.DLL", "StretchDIBits", NULL,
+                      (PROC)PatchPowerDVDStretchDIBits, &StretchDIBitsIAT, (PROC*)&OrigStretchDIBits);
+        break;
+      case PATCH_WINDVD_GETIMAGE:
+        if (!PatchFunction("USER32.DLL", "LoadImageA", NULL,
+                           (PROC)PatchWinDVDLoadImage, &LoadImageIAT, (PROC*)&OrigLoadImage))
+          PatchFunction("USER32.DLL", "LoadImageA", "IVIPlayerX.ocx",
+                        (PROC)PatchWinDVDLoadImage, &LoadImageIAT, (PROC*)&OrigLoadImage);
       }
     }
   }
@@ -1080,6 +1188,13 @@ void RemovePatches()
       VirtualProtect(TextOutIAT, sizeof(PROC), dwOldProt, &dwOldProt);
     }
   }
+  if (NULL != StretchDIBitsIAT) {
+    DWORD dwOldProt;
+    if (VirtualProtect(StretchDIBitsIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *StretchDIBitsIAT = (PROC)*OrigStretchDIBits;
+      VirtualProtect(StretchDIBitsIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
 }
 
 /*** Wrapped COM object interface ***/
@@ -1089,15 +1204,18 @@ typedef HRESULT (STDAPICALLTYPE * LPFNGETOBJECT)(REFCLSID, UINT, REFIID, PVOID*)
 LPFNGETOBJECT MediaSpyGetCurrentObject = NULL;
 typedef HRESULT (STDAPICALLTYPE * LPFNCONVERTOLE)(LPOLESTR, LPSTR, size_t,BOOL);
 LPFNCONVERTOLE MediaSpyConvertOle = NULL;
-static REFTIME fgDuration, fgPosition;
-static char szfgFileName[MAX_PATH];
-static DVD_DOMAIN dvdDomain;
-static DVD_PLAYBACK_LOCATION dvdLocation;
-static ULONG ulTotalTime;
-static FILTER_STATE sourceFilterState;
-static long lVideoWindowLeft, lVideoWindowTop, lVideoWindowWidth, lVideoWindowHeight;
-static long lVideoDestinationLeft, lVideoDestinationTop, lVideoDestinationWidth, lVideoDestinationHeight;
-static long lVideoSourceLeft, lVideoSourceTop, lVideoSourceWidth, lVideoSourceHeight;
+static REFTIME g_fgDuration, g_fgPosition;
+static char g_szfgFileName[MAX_PATH];
+static DVD_DOMAIN g_dvdDomain;
+static DVD_PLAYBACK_LOCATION2 g_dvdLocation;
+static DVD_HMSF_TIMECODE g_dvdTotalTime;
+static FILTER_STATE g_sourceFilterState;
+static long g_lVideoWindowLeft, g_lVideoWindowTop, 
+  g_lVideoWindowWidth, g_lVideoWindowHeight;
+static long g_lVideoDestinationLeft, g_lVideoDestinationTop, 
+  g_lVideoDestinationWidth, g_lVideoDestinationHeight;
+static long g_lVideoSourceLeft, g_lVideoSourceTop, 
+  g_lVideoSourceWidth, g_lVideoSourceHeight;
 
 HRESULT GetVideoPosition(IFilterGraph *pFG)
 {
@@ -1105,29 +1223,29 @@ HRESULT GetVideoPosition(IFilterGraph *pFG)
   IVideoWindow *pVW = NULL;
   hr = pFG->QueryInterface(IID_IVideoWindow, (void**)&pVW);
   if (SUCCEEDED(hr)) {
-    hr = pVW->GetWindowPosition(&lVideoWindowLeft, &lVideoWindowTop,
-                                &lVideoWindowWidth, &lVideoWindowHeight);
+    hr = pVW->GetWindowPosition(&g_lVideoWindowLeft, &g_lVideoWindowTop,
+                                &g_lVideoWindowWidth, &g_lVideoWindowHeight);
     pVW->Release();
   }
   if (FAILED(hr)) {
-    lVideoWindowLeft = lVideoWindowTop = 
-      lVideoWindowWidth = lVideoWindowHeight = -1;
+    g_lVideoWindowLeft = g_lVideoWindowTop = 
+      g_lVideoWindowWidth = g_lVideoWindowHeight = -1;
   }
   IBasicVideo *pBV = NULL;
   hr = pFG->QueryInterface(IID_IBasicVideo, (void**)&pBV);
   if (SUCCEEDED(hr)) {
-    hr = pBV->GetDestinationPosition(&lVideoDestinationLeft, &lVideoDestinationTop,
-                                     &lVideoDestinationWidth, &lVideoDestinationHeight);
+    hr = pBV->GetDestinationPosition(&g_lVideoDestinationLeft, &g_lVideoDestinationTop,
+                                     &g_lVideoDestinationWidth, &g_lVideoDestinationHeight);
     if (SUCCEEDED(hr))
-      hr = pBV->GetSourcePosition(&lVideoSourceLeft, &lVideoSourceTop,
-                                  &lVideoSourceWidth, &lVideoSourceHeight);
+      hr = pBV->GetSourcePosition(&g_lVideoSourceLeft, &g_lVideoSourceTop,
+                                  &g_lVideoSourceWidth, &g_lVideoSourceHeight);
     pBV->Release();
   }  
   if (FAILED(hr)) {
-    lVideoDestinationLeft = lVideoDestinationTop = 
-      lVideoDestinationWidth = lVideoDestinationHeight = -1;
-    lVideoSourceLeft = lVideoSourceTop = 
-      lVideoSourceWidth = lVideoSourceHeight = -1;
+    g_lVideoDestinationLeft = g_lVideoDestinationTop = 
+      g_lVideoDestinationWidth = g_lVideoDestinationHeight = -1;
+    g_lVideoSourceLeft = g_lVideoSourceTop = 
+      g_lVideoSourceWidth = g_lVideoSourceHeight = -1;
   }
   return hr;
 }
@@ -1162,9 +1280,9 @@ BOOL MatchMediaSpy(UINT nClass)
         IMediaPosition *pMP = NULL;
         hr = pFG->QueryInterface(IID_IMediaPosition, (void**)&pMP);
         if (SUCCEEDED(hr)) {
-          hr = pMP->get_Duration(&fgDuration);
+          hr = pMP->get_Duration(&g_fgDuration);
           if (SUCCEEDED(hr))
-            hr = pMP->get_CurrentPosition(&fgPosition);
+            hr = pMP->get_CurrentPosition(&g_fgPosition);
           pMP->Release();
         }
         IEnumFilters *pEF = NULL;
@@ -1185,7 +1303,7 @@ BOOL MatchMediaSpy(UINT nClass)
               if (SUCCEEDED(hr)) {
                 if (NULL != wszFileName)
                   hr = MediaSpyConvertOle(wszFileName, 
-                                          szfgFileName, sizeof(szfgFileName),
+                                          g_szfgFileName, sizeof(g_szfgFileName),
                                           TRUE);
                 else {
                   // The filter may not support getting the filename,
@@ -1195,14 +1313,14 @@ BOOL MatchMediaSpy(UINT nClass)
                   hr = pBF->QueryFilterInfo(&finfo);
                   if (SUCCEEDED(hr)) {
                     hr = MediaSpyConvertOle(finfo.achName, 
-                                            szfgFileName, sizeof(szfgFileName),
+                                            g_szfgFileName, sizeof(g_szfgFileName),
                                             FALSE);
                     if (NULL != finfo.pGraph)
                       finfo.pGraph->Release();
                   }
                 }
                 bFound = TRUE;
-                hr = pBF->GetState(0, &sourceFilterState);
+                hr = pBF->GetState(0, &g_sourceFilterState);
               }
             }
             // Could look for a file sink as well to indicate that we are capturing.
@@ -1220,34 +1338,34 @@ BOOL MatchMediaSpy(UINT nClass)
     }
   case MS_DVD_NAVIGATOR:
     {
-      IDvdInfo *pDVD = NULL;
+      IDvdInfo2 *pDVD = NULL;
       HRESULT hr = MediaSpyGetCurrentObject(CLSID_DVDNavigator, 0,
-                                            IID_IDvdInfo, (void**)&pDVD);
+                                            IID_IDvdInfo2, (void**)&pDVD);
       if (S_OK != hr) return FALSE; // Including S_FALSE for none.
-      hr = pDVD->GetCurrentDomain(&dvdDomain);
+      hr = pDVD->GetCurrentDomain(&g_dvdDomain);
       if (SUCCEEDED(hr)) {
-        if (DVD_DOMAIN_Title == dvdDomain) {
-          hr = pDVD->GetCurrentLocation(&dvdLocation);
+        if (DVD_DOMAIN_Title == g_dvdDomain) {
+          hr = pDVD->GetCurrentLocation(&g_dvdLocation);
           if (SUCCEEDED(hr)) {
-            hr = pDVD->GetTotalTitleTime(&ulTotalTime);
+            hr = pDVD->GetTotalTitleTime(&g_dvdTotalTime, NULL);
             if (VFW_S_DVD_NON_ONE_SEQUENTIAL == hr) {
-              ulTotalTime = 0xFFFFFFFF;
+              (ULONG&)g_dvdTotalTime = 0xFFFFFFFF;
               hr = S_OK;
             }
           }
         }
         else {
-          dvdLocation.TitleNum = 0xFFFFFFFF;
-          dvdLocation.ChapterNum = 0xFFFFFFFF;
-          dvdLocation.TimeCode = 0xFFFFFFFF;
-          ulTotalTime = 0xFFFFFFFF;
+          g_dvdLocation.TitleNum = 0xFFFFFFFF;
+          g_dvdLocation.ChapterNum = 0xFFFFFFFF;
+          (ULONG&)g_dvdLocation.TimeCode = 0xFFFFFFFF;
+          (ULONG&)g_dvdTotalTime = 0xFFFFFFFF;
         }
       }
       IBaseFilter *pBF = NULL;
       hr = pDVD->QueryInterface(IID_IBaseFilter, (void**)&pBF);
       pDVD->Release();
       if (SUCCEEDED(hr)) {
-        hr = pBF->GetState(0, &sourceFilterState); // OK if in transition or no cueing.
+        hr = pBF->GetState(0, &g_sourceFilterState); // OK if in transition or no cueing.
         FILTER_INFO finfo;
         hr = pBF->QueryFilterInfo(&finfo);
         pBF->Release();
@@ -1279,34 +1397,25 @@ void FormatREFTIME(REFTIME time, LPSTR szBuf, size_t nSize)
   sprintf(szBuf, "%02d:%02d:%02d", nHours, nMinutes, nSeconds);
 }
 
-void FormatTIMECODE(const DVD_TIMECODE& tc, LPSTR szBuf, size_t nSize)
+void FormatTIMECODE(DVD_HMSF_TIMECODE tc, LPSTR szBuf, size_t nSize)
 {
-  // Easy enough this way since it's already BCD.
-  szBuf[0] = '0' + (char)tc.Hours10;
-  szBuf[1] = '0' + (char)tc.Hours1;
-  szBuf[2] = ':';
-  szBuf[3] = '0' + (char)tc.Minutes10;
-  szBuf[4] = '0' + (char)tc.Minutes1;
-  szBuf[5] = ':';
-  szBuf[6] = '0' + (char)tc.Seconds10;
-  szBuf[7] = '0' + (char)tc.Seconds1;
-  szBuf[8] = '\0';
+  sprintf(szBuf, "%02d:%02d:%02d", tc.bHours, tc.bMinutes, tc.bSeconds);
 }
 
 void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
 {
   switch (nField) {
   case MS_FG_DURATION:
-    FormatREFTIME(fgDuration, szBuf, nSize);
+    FormatREFTIME(g_fgDuration, szBuf, nSize);
     break;
   case MS_FG_POSITION:
-    FormatREFTIME(fgPosition, szBuf, nSize);
+    FormatREFTIME(g_fgPosition, szBuf, nSize);
     break;
   case MS_FG_FILENAME:
-    strncpy(szBuf, szfgFileName, nSize);
+    strncpy(szBuf, g_szfgFileName, nSize);
     break;
   case MS_FG_STATE:
-    switch (sourceFilterState) {
+    switch (g_sourceFilterState) {
     case State_Stopped:
       strncpy(szBuf, "Stopped", nSize);
       break;
@@ -1320,12 +1429,15 @@ void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
     break;
   case MS_FG_VIDEO_POSITION:
     sprintf(szBuf, "%d,%d,%d,%d;%d,%d,%d,%d;%d,%d,%d,%d",
-            lVideoWindowWidth, lVideoWindowHeight, lVideoWindowLeft, lVideoWindowTop,
-            lVideoDestinationWidth, lVideoDestinationHeight, lVideoDestinationLeft, lVideoDestinationTop,
-            lVideoSourceWidth, lVideoSourceHeight, lVideoSourceLeft, lVideoSourceTop);
+            g_lVideoWindowWidth, g_lVideoWindowHeight, 
+            g_lVideoWindowLeft, g_lVideoWindowTop,
+            g_lVideoDestinationWidth, g_lVideoDestinationHeight, 
+            g_lVideoDestinationLeft, g_lVideoDestinationTop,
+            g_lVideoSourceWidth, g_lVideoSourceHeight, 
+            g_lVideoSourceLeft, g_lVideoSourceTop);
     break;
   case MS_DVD_DOMAIN:
-    switch (dvdDomain) {
+    switch (g_dvdDomain) {
     case DVD_DOMAIN_FirstPlay:
       strncpy(szBuf, "PLAY", nSize);
       break;
@@ -1342,33 +1454,414 @@ void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
     }
     break;
   case MS_DVD_TITLE:
-    if (dvdLocation.TitleNum == 0xFFFFFFFF)
+    if (g_dvdLocation.TitleNum == 0xFFFFFFFF)
       szBuf[0] = '\0';
     else
-      sprintf(szBuf, "%02d", dvdLocation.TitleNum);
+      sprintf(szBuf, "%02d", g_dvdLocation.TitleNum);
     break;
   case MS_DVD_CHAPTER:
-    if (dvdLocation.ChapterNum == 0xFFFFFFFF)
+    if (g_dvdLocation.ChapterNum == 0xFFFFFFFF)
       szBuf[0] = '\0';
     else
-      sprintf(szBuf, "%02d", dvdLocation.ChapterNum);
+      sprintf(szBuf, "%02d", g_dvdLocation.ChapterNum);
     break;
   case MS_DVD_TOTAL:
-    if (ulTotalTime == 0xFFFFFFFF)
+    if ((ULONG&)g_dvdTotalTime == 0xFFFFFFFF)
       szBuf[0] = '\0';
     else
-      FormatTIMECODE(*(DVD_TIMECODE*)&ulTotalTime, szBuf, nSize);
+      FormatTIMECODE(g_dvdTotalTime, szBuf, nSize);
     break;
   case MS_DVD_TIME:
-    if (dvdLocation.TimeCode == 0xFFFFFFFF)
+    if ((ULONG&)g_dvdLocation.TimeCode == 0xFFFFFFFF)
       szBuf[0] = '\0';
     else
-      FormatTIMECODE(*(DVD_TIMECODE*)&dvdLocation.TimeCode, szBuf, nSize);
+      FormatTIMECODE(g_dvdLocation.TimeCode, szBuf, nSize);
+    break;
+  }
+}
+
+/*** Skin based decoding ***/
+
+inline int operator==(const POINT& pt1, const POINT& pt2)
+{
+  return ((pt1.x == pt2.x) && (pt1.y == pt2.y));
+}
+
+BOOL g_skinDVDRegistryLoaded = FALSE;
+POINT g_skinDVDStatus,
+  g_skinDVDHour10, g_skinDVDHour1,
+  g_skinDVDMinute10, g_skinDVDMinute1, 
+  g_skinDVDSecond10, g_skinDVDSecond1, 
+  g_skinDVDTitle100, g_skinDVDTitle10, g_skinDVDTitle1, 
+  g_skinDVDChapter100, g_skinDVDChapter10, g_skinDVDChapter1;
+
+char g_skinDVDTime[9] = {' ', ' ', ':', ' ', ' ', ':', ' ', ' ', '\0'};
+char g_skinDVDTitle[4] = {' ', ' ', ' ', '\0'};
+char g_skinDVDChapter[4] = {' ', ' ', ' ', '\0'};
+
+POINT SkinDVDRegistryPoint(HKEY hkey, LPCSTR szName)
+{
+  POINT ptResult = { -1, -1 };
+
+  char szBuf[32];
+  DWORD dwType, nLen;
+  nLen = sizeof(szBuf);
+  if ((ERROR_SUCCESS != RegQueryValueEx(hkey, szName, NULL, 
+                                        &dwType, (LPBYTE)szBuf, &nLen)) ||
+      (REG_SZ != dwType))
+    return ptResult;
+
+  LPSTR psz = strchr(szBuf, ',');
+  if (NULL == psz) return ptResult;
+  *psz++ = '\0';
+  ptResult.x = atol(szBuf);
+  ptResult.y = atol(psz);
+
+  return ptResult;
+}
+
+/*** PowerDVD ***/
+
+POINT g_PDVDStatusSize, g_PDVDTimeDigitSize, g_PDVDLocationDigitSize;
+
+const char *g_PDVDStatusNames[] = {
+  "", "Playing", "Paused", "Still", "Stopped", "Eject",
+  "FF1/8x", "FF1/4x", "FF1/2x", "FF1.5x", "FF2x", "FF2.5x", "FF4x", "FF8x", "FF", 
+  "REW1/8x", "REW1/4x", "REW1/2x", "REW1.5x", "REW2x", "REW2.5x", "REW4x", "REW8x", "REW"
+};
+const char *g_PDVDDigits = " 0123456789";
+
+void PDVDLoadRegistry()
+{
+  g_skinDVDRegistryLoaded = TRUE;
+  
+  // Hopefully it is okay to load ADVAPI32 into all these processes.
+  HKEY hkey;
+  if (ERROR_SUCCESS != RegOpenKey(HKEY_LOCAL_MACHINE, 
+                                  "Software\\Girder3\\HardPlugins\\DVDSpy\\PowerDVD", 
+                                  &hkey))
+    return;
+  
+  g_PDVDStatusSize = SkinDVDRegistryPoint(hkey, "Status_SIZE");
+  g_PDVDTimeDigitSize = SkinDVDRegistryPoint(hkey, "TimeDigit_SIZE");
+  g_PDVDLocationDigitSize = SkinDVDRegistryPoint(hkey, "LocationDigit_SIZE");
+  g_skinDVDStatus = SkinDVDRegistryPoint(hkey, "PlayStatus_POSITION");
+  g_skinDVDHour10 = SkinDVDRegistryPoint(hkey, "Hour_M_POSITION");
+  g_skinDVDHour1 = SkinDVDRegistryPoint(hkey, "Hour_L_POSITION");
+  g_skinDVDMinute10 = SkinDVDRegistryPoint(hkey, "Minute_M_POSITION");
+  g_skinDVDMinute1 = SkinDVDRegistryPoint(hkey, "Minute_L_POSITION");
+  g_skinDVDSecond10 = SkinDVDRegistryPoint(hkey, "Second_M_POSITION");
+  g_skinDVDSecond1 = SkinDVDRegistryPoint(hkey, "Second_L_POSITION");
+  g_skinDVDTitle100 = SkinDVDRegistryPoint(hkey, "Title_H_POSITION");
+  g_skinDVDTitle10 = SkinDVDRegistryPoint(hkey, "Title_M_POSITION");
+  g_skinDVDTitle1 = SkinDVDRegistryPoint(hkey, "Title_L_POSITION");
+  g_skinDVDChapter100 = SkinDVDRegistryPoint(hkey, "Chapter_H_POSITION");
+  g_skinDVDChapter10 = SkinDVDRegistryPoint(hkey, "Chapter_M_POSITION");
+  g_skinDVDChapter1 = SkinDVDRegistryPoint(hkey, "Chapter_L_POSITION");
+
+  RegCloseKey(hkey);
+}
+
+int WINAPI PatchPowerDVDStretchDIBits
+(HDC hdc, int XDest, int YDest, int nDestWidth, int nDestHeight, 
+ int XSrc, int YSrc, int nSrcWidth, int nSrcHeight, 
+ CONST VOID * lpbits, CONST BITMAPINFO *lpBitsInfo, UINT iUsage, DWORD dwRop)
+{
+  int nResult = (*OrigStretchDIBits)(hdc, XDest, YDest, nDestWidth, nDestHeight,
+                                     XSrc, YSrc, nSrcWidth, nSrcHeight,
+                                     lpbits, lpBitsInfo, iUsage, dwRop);
+  if (GDI_ERROR == nResult) return nResult;
+
+  if (!((nDestWidth == nSrcWidth) &&
+        (nDestHeight == nSrcHeight) &&
+        (YSrc == 0) &&
+        ((XSrc % nSrcWidth) == 0) &&
+        (lpBitsInfo->bmiHeader.biSize == sizeof(BITMAPINFOHEADER)) &&
+        ((lpBitsInfo->bmiHeader.biWidth % nSrcWidth) == 0) &&
+        (lpBitsInfo->bmiHeader.biHeight == nSrcHeight) &&
+        (iUsage == 0) &&
+        (dwRop == SRCCOPY)))
+    return nResult;
+
+  if (!g_skinDVDRegistryLoaded)
+    PDVDLoadRegistry();
+
+  POINT ptSize = { nDestWidth, nDestHeight }, ptPos = { XDest, YDest };
+  size_t nOff = (XSrc / nSrcWidth), nLen = (lpBitsInfo->bmiHeader.biWidth / nSrcWidth);
+
+#ifdef _DEBUG
+  {
+    char szBuf[1024];
+    sprintf(szBuf, "PowerDVD: %d/%d %dx%d %d,%d\n", 
+            nOff, nLen, ptSize.x, ptSize.y, ptPos.x, ptPos.y);
+    OutputDebugString(szBuf);
+  }
+#endif
+
+  if ((ptSize == g_PDVDStatusSize) &&
+      (nLen == countof(g_PDVDStatusNames)) &&
+      (ptPos == g_skinDVDStatus)) {
+    DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+              (WPARAM)SKINDVD_STATUS, (LPARAM)g_PDVDStatusNames[nOff]);
+  }
+  else if ((ptSize == g_PDVDTimeDigitSize) &&
+           (nLen == strlen(g_PDVDDigits))) {
+    char cDigit = g_PDVDDigits[nOff];
+    if (ptPos == g_skinDVDHour10) {
+      g_skinDVDTime[0] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+    }
+    else if (ptPos == g_skinDVDHour1) {
+      g_skinDVDTime[1] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+    }
+    else if (ptPos == g_skinDVDMinute10) {
+      g_skinDVDTime[3] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+    }
+    else if (ptPos == g_skinDVDMinute1) {
+      g_skinDVDTime[4] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+    }
+    else if (ptPos == g_skinDVDSecond10) {
+      g_skinDVDTime[6] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+    }
+    else if (ptPos == g_skinDVDSecond1) {
+      g_skinDVDTime[7] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+    }
+  }
+  else if ((ptSize == g_PDVDLocationDigitSize) &&
+           (nLen == strlen(g_PDVDDigits))) {
+    char cDigit = g_PDVDDigits[nOff];
+    if (ptPos == g_skinDVDTitle100) {
+      g_skinDVDTitle[0] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TITLE, (LPARAM)g_skinDVDTitle);
+    }
+    else if (ptPos == g_skinDVDTitle10) {
+      g_skinDVDTitle[1] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TITLE, (LPARAM)g_skinDVDTitle);
+    }
+    else if (ptPos == g_skinDVDTitle1) {
+      g_skinDVDTitle[2] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_TITLE, (LPARAM)g_skinDVDTitle);
+    }
+    else if (ptPos == g_skinDVDChapter100) {
+      g_skinDVDChapter[0] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_CHAPTER, (LPARAM)g_skinDVDChapter);
+    }
+    else if (ptPos == g_skinDVDChapter10) {
+      g_skinDVDChapter[1] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_CHAPTER, (LPARAM)g_skinDVDChapter);
+    }
+    else if (ptPos == g_skinDVDChapter1) {
+      g_skinDVDChapter[2] = cDigit;
+      DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
+                (WPARAM)SKINDVD_CHAPTER, (LPARAM)g_skinDVDChapter);
+    }
+  }
+
+  return nResult;
+}
+
+/*** WinDVD ***/
+
+struct WinDVDImage
+{
+  const char *szName;
+  const char *szValue;
+  HBITMAP hBitmap;
+} g_WinDVDImages[] = {
+  { "Number_0", "0" },
+  { "Number_1", "1" },
+  { "Number_2", "2" },
+  { "Number_3", "3" },
+  { "Number_4", "4" },
+  { "Number_5", "5" },
+  { "Number_6", "6" },
+  { "Number_7", "7" },
+  { "Number_8", "8" },
+  { "Number_9", "9" },
+  { "Playback_Status_Fast_Backward", "Rewind" },
+  { "Playback_Status_Fast_Forward", "FF" },
+  { "Playback_Status_Pause", "Paused" },
+  { "Playback_Status_Play", "Playing" },
+  { "Playback_Status_Stop", "Stopped" },
+};
+
+WinDVDImage *g_pWinDVDStatus = NULL;
+
+HANDLE WINAPI PatchWinDVDLoadImage(HINSTANCE hinst, LPCSTR lpszName, UINT uType,
+                                   int cxDesired, int cyDesired, UINT fuLoad)
+{
+  HANDLE hResult = (*OrigLoadImage)(hinst, lpszName, uType, 
+                                    cxDesired, cyDesired, fuLoad);
+  if (NULL == hResult) return hResult;
+                   
+  if (!((IMAGE_BITMAP == uType) &&
+        ((LR_CREATEDIBSECTION|LR_LOADFROMFILE) == 
+         (fuLoad & (LR_CREATEDIBSECTION|LR_LOADFROMFILE)))))
+    return hResult;
+
+  char szName[MAX_PATH];
+  LPSTR psz = strrchr(lpszName, '\\');
+  if (NULL != psz)
+    lpszName = psz+1;
+  strcpy(szName, lpszName);
+  psz = strrchr(szName, '.');
+  if (NULL != psz)
+    *psz = '\0';
+  
+  for (size_t i = 0; i < countof(g_WinDVDImages); i++) {
+    if (!_stricmp(g_WinDVDImages[i].szName, szName)) {
+      g_WinDVDImages[i].hBitmap = (HBITMAP)hResult;
+#ifdef _DEBUG
+      char szBuf[1024];
+      sprintf(szBuf, "WinDVD: %s %lX\n", szName, hResult);
+      OutputDebugString(szBuf);
+#endif
+      break;
+    }
+  }
+
+  return hResult;
+}
+
+void WDVDLoadRegistry()
+{
+  g_skinDVDRegistryLoaded = TRUE;
+  
+  HKEY hkey;
+  if (ERROR_SUCCESS != RegOpenKey(HKEY_LOCAL_MACHINE, 
+                                  "Software\\Girder3\\HardPlugins\\DVDSpy\\WinDVD", 
+                                  &hkey))
+    return;
+  
+  g_skinDVDStatus = SkinDVDRegistryPoint(hkey, "Playback_Status_Display_Location");
+  g_skinDVDHour10 = SkinDVDRegistryPoint(hkey, "Hour_10_Display_Location");
+  g_skinDVDHour1 = SkinDVDRegistryPoint(hkey, "Hour_0_Display_Location");
+  g_skinDVDMinute10 = SkinDVDRegistryPoint(hkey, "Minute_10_Display_Location");
+  g_skinDVDMinute1 = SkinDVDRegistryPoint(hkey, "Minute_0_Display_Location");
+  g_skinDVDSecond10 = SkinDVDRegistryPoint(hkey, "Second_10_Display_Location");
+  g_skinDVDSecond1 = SkinDVDRegistryPoint(hkey, "Second_0_Display_Location");
+  g_skinDVDChapter100 = SkinDVDRegistryPoint(hkey, "Chapter_100_Display_Location");
+  g_skinDVDChapter10 = SkinDVDRegistryPoint(hkey, "Chapter_10_Display_Location");
+  g_skinDVDChapter1 = SkinDVDRegistryPoint(hkey, "Chapter_0_Display_Location");
+
+  RegCloseKey(hkey);
+}
+
+BOOL MatchWinDVDSetImage(HWND hWnd, UINT nType, HBITMAP hBitmap)
+{
+  WinDVDImage *pImage = NULL;
+  for (size_t i = 0; i < countof(g_WinDVDImages); i++) {
+    if (g_WinDVDImages[i].hBitmap == hBitmap) {
+      pImage = g_WinDVDImages + i;
+      break;
+    }
+  }
+  if (NULL == pImage)
+    return FALSE;
+
+  if (!g_skinDVDRegistryLoaded)
+    WDVDLoadRegistry();
+
+  RECT rcWnd, rcParent;
+  GetWindowRect(hWnd, &rcWnd);
+  GetWindowRect(GetParent(hWnd), &rcParent);
+  POINT ptPos = { rcWnd.left - rcParent.left, rcWnd.top - rcParent.top };
+
+#ifdef _DEBUG
+  {
+    char szBuf[1024];
+    sprintf(szBuf, "WinDVD: %d,%d %s\n", ptPos.x, ptPos.y, pImage->szValue);
+    OutputDebugString(szBuf);
+  }
+#endif
+
+  switch (nType) {
+  case SKINDVD_STATUS:
+    if (ptPos == g_skinDVDStatus) {
+      g_pWinDVDStatus = pImage;
+      return TRUE;
+    }
+    break;
+  case SKINDVD_TIME:
+    if (ptPos == g_skinDVDHour10) {
+      g_skinDVDTime[0] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDHour1) {
+      g_skinDVDTime[1] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDMinute10) {
+      g_skinDVDTime[3] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDMinute1) {
+      g_skinDVDTime[4] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDSecond10) {
+      g_skinDVDTime[6] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDSecond1) {
+      g_skinDVDTime[7] = *pImage->szValue;
+      return TRUE;
+    }
+    break;
+  case SKINDVD_CHAPTER:
+    if (ptPos == g_skinDVDChapter100) {
+      g_skinDVDChapter[0] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDChapter10) {
+      g_skinDVDChapter[1] = *pImage->szValue;
+      return TRUE;
+    }
+    else if (ptPos == g_skinDVDChapter1) {
+      g_skinDVDChapter[2] = *pImage->szValue;
+      return TRUE;
+    }
+    break;
+  }
+  return FALSE;
+}
+
+void ExtractWinDVDSetImage(UINT nType, LPSTR szBuf, size_t nSize)
+{
+  switch (nType) {
+  case SKINDVD_STATUS:
+    if (NULL == g_pWinDVDStatus)
+      *szBuf = '\0';
+    else
+      strncpy(szBuf, g_pWinDVDStatus->szValue, nSize);
+    break;
+  case SKINDVD_TIME:
+    strncpy(szBuf, g_skinDVDTime, nSize);
+    break;
+  case SKINDVD_CHAPTER:
+    strncpy(szBuf, g_skinDVDChapter, nSize);
     break;
   }
 }
 
 /*** Functions called from the plug-in itself, rather than a hooked process. ***/
+
 // Enable windows message hook globally.
 void DISPLAYSPYHOOK_API DS_StartHook(DWORD dwThreadId)
 {
