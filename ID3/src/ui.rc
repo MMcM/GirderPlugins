@@ -64,7 +64,7 @@ PLUGINICON              ICON    DISCARDABLE     "plugin.ico"
 IDD_DIALOG DIALOG DISCARDABLE  0, 0, 300, 140
 STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
-CAPTION "ID3 1.0"
+CAPTION "ID3 1.1"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "File:",IDC_FILEL,15,18,30,8
@@ -89,7 +89,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,6
+ FILEVERSION 1,1,0,7
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -106,7 +106,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "ID3 Girder plug-in\0"
-            VALUE "FileVersion", "1.0 (6)\0"
+            VALUE "FileVersion", "1.1 (7)\0"
             VALUE "InternalName", "ID3\0"
             VALUE "OriginalFilename", "ID3.DLL\0"
         END
