@@ -98,7 +98,7 @@ BOOL OpenSharedMemory()
   strcat(iniPath, "\\Data\\MBM 5.ini");
 
   // Refresh time in ms.
-  int g_nInterval = GetPrivateProfileInt("General", "Interval Time", 1000, iniPath) * 10;
+  g_nInterval = GetPrivateProfileInt("General", "Interval Time", 1000, iniPath) * 10;
   
   int ntemp = 0, nvolt = 0, nfan = 0;
   for (int i = 0; i < NSENSORS; i++) {
