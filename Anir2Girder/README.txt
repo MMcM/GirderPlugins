@@ -9,7 +9,17 @@ The rest is plain and simple straight forward using the Girder 3.2 plugin API.
 Check out http://www.girder.nl
 
 
-More docs to come...(I hope)
+Event Strings
+=============
+The event string Girder receives has the following format:
+
+$name:$key:$repeat
+
+name	- The name of the device (changeable, default "Anir")
+key		- Key value
+repeat	- Holding buttun gives "1", otherwise "0"
+		  (This is always "0" if repeat events are disabled)
+
 
 
 Where to get it

@@ -45,6 +45,7 @@ CSettings::CSettings(CAnirRemote *rem)
 
 	//{{AFX_DATA_INIT(CSettings)
 	m_bSendUpEvent = TRUE;
+	m_bSendRepeat = TRUE;
 	//}}AFX_DATA_INIT
 
 	m_pRemote = rem;
@@ -71,6 +72,7 @@ void CSettings::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_NAME, m_sName);
 	DDX_Text(pDX, IDC_EDIT_PORT, m_iPort);
 	DDX_Check(pDX, IDC_CHECK_SENDUP, m_bSendUpEvent);
+	DDX_Check(pDX, IDC_CHECK_REPEAT, m_bSendRepeat);
 	//}}AFX_DATA_MAP
 }
 
@@ -82,6 +84,7 @@ BEGIN_MESSAGE_MAP(CSettings, CDialog)
 	ON_EN_CHANGE(IDC_EDIT_NAME, OnChangeSetting)
 	ON_EN_CHANGE(IDC_EDIT_PORT, OnChangeSetting)
 	ON_BN_CLICKED(IDC_CHECK_SENDUP, OnChangeSetting)
+	ON_BN_CLICKED(IDC_CHECK_REPEAT, OnChangeSetting)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -125,6 +128,7 @@ BOOL CSettings::OnInitDialog()
 	m_iPort = m_pRemote->getPort();
 	m_sName = m_pRemote->getName();
 	m_bSendUpEvent = m_pRemote->getEventOnUp();
+	m_bSendRepeat = m_pRemote->getEventRepeat();
 	
 	CDialog::OnInitDialog();
 
@@ -177,6 +181,9 @@ void CSettings::OnApply()
 
 	// Event on button up?
 	m_pRemote->setEventOnUp(m_bSendUpEvent);
+
+	// Repeat event enabled?
+	m_pRemote->setEventRepeat(m_bSendRepeat);
 
 	m_bChanged = FALSE;
 	updateUI();

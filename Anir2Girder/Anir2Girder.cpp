@@ -260,6 +260,9 @@ void CAnir2GirderApp::saveToRegistry()
 	if ( FAILED(hr = My_WriteBoolRegKey(regKey, REGUPEVENTS, m_pRemote->getEventOnUp())) )
 		bErr = TRUE;
 
+	if ( FAILED(hr = My_WriteBoolRegKey(regKey, REGREPEATEVENTS, m_pRemote->getEventRepeat())) )
+		bErr = TRUE;
+
 	if (bErr)
 		reportWarning("Could not save settings.");
 
@@ -303,6 +306,10 @@ void CAnir2GirderApp::loadFromRegistry()
 	if (FAILED(hr = My_ReadBoolRegKey(regKey, REGUPEVENTS, &bVal, TRUE)) )
 		bErr = TRUE;
 	m_pRemote->setEventOnUp(bVal);
+
+	if (FAILED(hr = My_ReadBoolRegKey(regKey, REGREPEATEVENTS, &bVal, TRUE)) )
+		bErr = TRUE;
+	m_pRemote->setEventRepeat(bVal);
 
 	if (bErr)
 		reportWarning("Could not load settings. Check the plugin settings");

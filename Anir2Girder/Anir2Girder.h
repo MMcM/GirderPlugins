@@ -43,6 +43,8 @@
 #define REGPORT				"Remote Port"
 #define REGNAME				"Remote Name"
 #define REGUPEVENTS			"Send Up Events"
+#define REGREPEATEVENTS		"Send Repeat Events"
+
 
 
 /////////////////////////////////////////////////////////////////////////////

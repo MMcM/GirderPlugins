@@ -58,6 +58,11 @@ public:
 	BOOL getEventOnUp()			{return m_bEventOnUp;}
 	//! Set event on button up
 	void setEventOnUp(BOOL b)	{m_bEventOnUp = b;}
+	//! Get repeat event status
+	BOOL getEventRepeat()		{return m_bEventRepeat;}
+	//! Set repeat event status
+	void setEventRepeat(BOOL b)	{m_bEventRepeat = b;}
+
 	int start(int port);
 	int restart();
 	int stop();
@@ -73,6 +78,8 @@ private:
 	bool m_bRunning;
 	//! Event on button up
 	BOOL m_bEventOnUp;
+	//! Repeat event
+	BOOL m_bEventRepeat;
 	//! Com port for plugin
 	int m_iPort;
 	//! Name for port

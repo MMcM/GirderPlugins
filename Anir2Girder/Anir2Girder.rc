@@ -49,8 +49,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,3,0,25
- PRODUCTVERSION 0,3,0,25
+ FILEVERSION 0,3,0,26
+ PRODUCTVERSION 0,3,0,26
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,14 +68,14 @@ BEGIN
             VALUE "Comments", "Anir Remote plugin for Girder 3.2\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "Anir2Girder DLL\0"
-            VALUE "FileVersion", "0, 3, 0, 25\0"
+            VALUE "FileVersion", "0, 3, 0, 26\0"
             VALUE "InternalName", "Anir2Girder\0"
             VALUE "LegalCopyright", "Copyright (C) 2002, by Tom Skoglund\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "Anir2Girder.DLL\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Anir2Girder Dynamic Link Library\0"
-            VALUE "ProductVersion", "0, 3, 0, 25\0"
+            VALUE "ProductVersion", "0, 3, 0, 26\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -124,9 +124,11 @@ BEGIN
     CTEXT           "Name",IDC_STATIC,19,57,60,10,SS_CENTERIMAGE
     EDITTEXT        IDC_EDIT_NAME,19,71,60,15,ES_CENTER | ES_AUTOHSCROLL
     CTEXT           "Status",IDC_STATIC,20,90,60,10,SS_CENTERIMAGE
-    ICON            IDI_ERR,IDC_STATIC_STATUS,40,100,21,20
+    ICON            IDI_ERR,IDC_STATIC_STATUS,40,100,20,20
     CONTROL         "Send events for button up",IDC_CHECK_SENDUP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,100,15,98,10
+    CONTROL         "Send repeat events",IDC_CHECK_REPEAT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,100,35,78,10
 END
 
 

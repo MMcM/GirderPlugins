@@ -59,6 +59,7 @@ public:
 	CString	m_sName;
 	int		m_iPort;
 	BOOL	m_bSendUpEvent;
+	BOOL	m_bSendRepeat;
 	//}}AFX_DATA
 
 

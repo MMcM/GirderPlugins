@@ -1,6 +1,11 @@
 NEWS
 ====
 
+--- CURRENT (CVS)
+* New setting: Send repeat events (hold button down)
+
+
+
 --- 0.3.0
 * First public release
 * The plugin now has an official device id. You need to to re-learn the

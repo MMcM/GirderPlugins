@@ -1,6 +1,10 @@
 Changelog
 =========
 
+CURRENT (in CVS)
+- Added option to select if repeat button events should be sent
+
+
 
 v.0.3.0 
 - First public release

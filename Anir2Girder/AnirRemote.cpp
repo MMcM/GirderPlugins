@@ -48,6 +48,7 @@ CAnirRemote::CAnirRemote(CGirder *girder)
 	m_pGirder = girder;
 	m_bRunning = FALSE;
 	m_bEventOnUp = TRUE;
+	m_bEventRepeat = TRUE;
 }
 
 
@@ -83,9 +84,13 @@ void CAnirRemote::ProcessReceivedData(BYTE nData, BOOL bRepeat)
 	{
 		MYTRACE("MOUSE EVENT\n");
 	}
+
 	else
 	// "Noramal" button
 	{
+		// Send repeat events???
+		if (!m_bEventRepeat && bRepeat)
+			return;
 		// Check if button up events should be sent
 		if (!m_bEventOnUp && (nData % 2 == 1))
 			return;
