@@ -96,23 +96,22 @@ BOOL IPCMessage::IsInit()
   return g_open;
 }
 
+const char *g_shmemName = "Girder Winamp3 Shared Memory";
+
 BOOL IPCMessage::Init(IPC_HANDLE handle, BOOL master)
 {
   if (g_open) 
     return TRUE;
   
   if (master)
-    g_shmemHandle = CreateFileMapping(NULL, NULL, PAGE_READWRITE, 
-                                      0, sizeof(IPCBase),
-                                      "Girder Winamp3 Shared Memory");
+    g_shmemHandle = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 
+                                      0, sizeof(IPCBase), g_shmemName);
   else
-    g_shmemHandle = OpenFileMapping(FILE_MAP_WRITE, FALSE,
-                                    "Girder Winamp3 Shared Memory");
+    g_shmemHandle = OpenFileMapping(FILE_MAP_WRITE, FALSE, g_shmemName);
   if (NULL == g_shmemHandle)
     return FALSE;
   
-  g_shmemBase = (IPCBase *)MapViewOfFile(g_shmemHandle, FILE_MAP_WRITE, 
-                                         0, 0, 0);
+  g_shmemBase = (IPCBase *)MapViewOfFile(g_shmemHandle, FILE_MAP_WRITE, 0, 0, 0);
   if (NULL == g_shmemBase) {
     Term();
     return FALSE;

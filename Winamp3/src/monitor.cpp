@@ -330,7 +330,11 @@ DWORD WINAPI MonitorThread(LPVOID param)
   g_hMonitorWindow = CreateWindow(WCNAME, WCNAME, 0, 0, 0, 0, 0, 0, 0,
                                   g_hInstance, NULL);
 
-  IPCMessage::Init(g_hMonitorWindow, TRUE);
+  if (!IPCMessage::Init(g_hMonitorWindow, TRUE)) {
+    DWORD dwErr = GetLastError();
+    MessageBox(0, "Cannot initialize IPC master.", "Error", MB_OK);
+    return dwErr;
+  }
 
   MSG msg;
   while (GetMessage(&msg, NULL, 0, 0)) {
