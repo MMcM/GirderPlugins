@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 123
 #define PLUGINNAME "SetWaveDev"
-#define PLUGINVERSION "1.4"
+#define PLUGINVERSION "1.5"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

@@ -1,4 +1,6 @@
 
+1.57    06/01/2003      MMcM    Add explicit license.
+
 1.56    03/09/2003      MMcM    Add initial Disc.Contents events.
 
 1.55    02/01/2003      MMcM    Update for Media Jukebox 9 (aka Media Center).

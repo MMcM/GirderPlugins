@@ -1,4 +1,6 @@
 
+1.6     06/01/2003      MMcM    Add explicit license.
+
 1.5     03/09/2003      MMcM    More commands.
 
 1.4     01/07/2003      MMcM    First SourceForge release.

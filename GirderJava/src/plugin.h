@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 43
 #define PLUGINNAME "Java"
-#define PLUGINVERSION "0.2"
+#define PLUGINVERSION "0.3"
 
 extern s_functions SF;
 extern p_command g_CurCommand;		

@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 117
 #define PLUGINNAME "RegSetValue"
-#define PLUGINVERSION "1.6"
+#define PLUGINVERSION "1.7"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

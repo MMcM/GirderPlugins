@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 45
 #define PLUGINNAME "ID3"
-#define PLUGINVERSION "1.1"
+#define PLUGINVERSION "1.2"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
