@@ -61,6 +61,8 @@ BOOL ParallelLCD::DeviceOpen()
     m_portAddr = 0x278;
   else if (!strcmp(m_port, "LPT3"))
     m_portAddr = 0x3BC;
+  else
+    m_portAddr = strtol(m_port, NULL, 16);
 
   m_ndevs = ((m_rows * m_cols) + 79) / 80; // 80 chars / device, round up.
 
