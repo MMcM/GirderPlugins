@@ -80,6 +80,9 @@ STDMETHODIMP CSpyCtrl::put_value(BSTR newVal)
     m_text->put_value(newVal);
 
   ATLTRACE2(atlTraceUser2, 3, _T("Event=%S; Value=%S\n"), (BSTR)m_event, newVal);
+
+  // TODO: Consider checking more often and doing an IsWindow on any
+  // previous handle.
   if (!g_checked) {
     EnumWindows(FindMonitorWindow, (LPARAM)&g_dvdspy);
     ATLTRACE2(atlTraceUser, 3, _T("DVDSpy window %X\n"), (DWORD)g_dvdspy);

@@ -105,6 +105,7 @@ STDMETHODIMP CDVDSpyMJCtrl::Reset()
   KillTimer(IDT_REFRESH);
 
   EnumWindows(FindMonitorWindow, (LPARAM)&g_hwndDVDSpy);
+  // TODO: Consider start the timer anyway and having it check for the spy.
   if (NULL != g_hwndDVDSpy)
     SetTimer(IDT_REFRESH, m_nRefreshInterval);
 
@@ -126,6 +127,7 @@ LRESULT CDVDSpyMJCtrl::OnClickedReset(WORD wNotifyCode, WORD wID, HWND hWndCtl, 
 
 LRESULT CDVDSpyMJCtrl::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+  // TODO: Consider an IsWindow check here.
   DVDSpyMJDoEvents(m_pMJ, g_hwndDVDSpy);
 
   return TRUE;

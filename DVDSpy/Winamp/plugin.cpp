@@ -87,6 +87,7 @@ void formatTime(LPSTR buf, int secs)
 
 void CALLBACK Timer(HWND, UINT, UINT, DWORD)
 {
+  // TODO: Consider IsWindow check on g_hwndDVDSpy.
   BOOL bFirst = (g_nTimerCount++ == 0);
   HWND hwndTarget = g_plugin.hwndParent; // No need for FindWindow.
   for (int i = 0; i < countof(g_extracts); i++) {
@@ -260,6 +261,7 @@ void Quit()
 int Init()
 {
   EnumWindows(FindMonitorWindow, (LPARAM)&g_hwndDVDSpy);
+  // TODO: Consider checking more often.
   if (NULL == g_hwndDVDSpy)
     return 0;
   ReadConfig();
