@@ -214,36 +214,7 @@ void DisplayCurrentTime(TCommand *command, PCHAR retbuf)
 
 /*  This is the function which identifies this
   plugin as an software plugin. It gets called
-  as soon as the plugin is loaded. BUT when init_dllex
-  is defined this function gets called with NULL as the argument
-  As init_dllex adds a better method of using the plugin. 
-
-  In:
-  TFunctions : The functions that girder exports for usage in the plugin
-  
-  Out:
-  None
-   
-  Return:
-  Int : the Plugin device number
-  
-
-*/
-
-extern "C" int WINAPI __export init_dll( void *gf )
-{
-  if ( gf!=NULL) {
-    MessageBox(0, "This Plugin requires Girder 3.0.22+", "Error", MB_ICONERROR);
-    return GIR_ERROR; 
-  }
-  else {
-    return PLUGINNUM;
-  }
-}
-
-
-/* If this function is defined init_dll will never be called BUT
-   init_dll has to be in here for the plugin to work!!!!! 
+  as soon as the plugin is loaded.
 
   In:
   Out:
@@ -254,7 +225,7 @@ extern "C" int WINAPI __export init_dll( void *gf )
 extern "C" int WINAPI __export init_dllex()
 {
 
-  return 5;  // We want version 4 structure
+  return 5;  // We want version 5 structure
 
 }
 
@@ -276,12 +247,12 @@ extern "C" int WINAPI __export setsupportex(void *s)
   p = (TFunctionsEx5 *) s;
 
   if ( p->dwSize != sizeof ( TFunctionsEx5 ) )
-    {
-	
-      return GIR_ERROR; // ERROR 
+  {
 
-    }
-	
+    return GIR_ERROR; // ERROR 
+
+  }
+
   memcpy( (void *)&SF, p, sizeof ( TFunctionsEx5));
 
   return PLUGINNUM;

@@ -1,6 +1,5 @@
 LIBRARY LCD
 EXPORTS 
-   init_dll
    close_dll
    command_execute
    command_changed

@@ -10,7 +10,7 @@
 /***************************************************************************************/
 
 #define PLUGINNUM 118
-#define PLUGINNAME "LCD 1.7"
+#define PLUGINNAME "LCD 1.8"
 #define GIR_ERROR -10;
 
 #define APIEX
