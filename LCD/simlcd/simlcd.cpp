@@ -105,8 +105,8 @@ SimulatedLCD::~SimulatedLCD()
 
 void SimulatedLCD::OnClose()
 {
-  m_hwnd = NULL;
-  Close();
+  m_hwnd = NULL;                // Prevent another DestroyWindow attempt.
+  Close();                      // But do close down display side state.
 }
 
 void SimulatedLCD::Resize(HWND hwnd)
@@ -469,10 +469,8 @@ BOOL SimulatedLCD::DeviceOpen()
 
 void SimulatedLCD::DeviceClose()
 {
-  if (NULL != m_hwnd) {
-    DestroyWindow(m_hwnd);
-    m_hwnd = NULL;
-  }
+  if (NULL != m_hwnd)
+    SendMessage(m_hwnd, WM_CLOSE, 0, 0);
 }
 
 void SimulatedLCD::DeviceClear()

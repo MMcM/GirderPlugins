@@ -3,8 +3,12 @@
 // Used by ui.rc
 //
 #define IDI_PLUGIN                      101
-#define IDD_CONFIG                      102
-#define IDD_ACTION                      103
+#define IDD_DISPLAY                     103
+#define IDD_COMMAND                     104
+#define IDS_BACKLIGHT                   105
+#define IDS_BRIGHTNESS                  106
+#define IDS_VARIABLE                    107
+#define IDS_VALUE                       108
 #define IDC_APPLY                       1000
 #define IDC_DISPLAYL                    1001
 #define IDC_DISPLAY                     1002
@@ -61,7 +65,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        104
+#define _APS_NEXT_RESOURCE_VALUE        107
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           101

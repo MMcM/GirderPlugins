@@ -103,10 +103,11 @@ static void ShowValueInputs(HWND hwnd, DisplayValueType valueType, BOOL reload)
 {
   ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
              (valNONE != valueType) ? SW_SHOW : SW_HIDE);
-  char trans[256];
-  SF.i18n_translate((valVAR == valueType) ? "Variable:" : "Value:",
-                    trans, sizeof(trans));
-  SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
+  char legend[256];
+  if (LoadString(g_hInstance,
+                 (valVAR == valueType) ? IDS_VARIABLE : IDS_VALUE,
+                 legend, sizeof(legend)))
+    SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), legend);
 
   ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
              ((valSTR == valueType) || (valVAR == valueType)) ? SW_SHOW : SW_HIDE);
@@ -372,8 +373,6 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
   switch (uMsg) {
   case WM_INITDIALOG:
     {
-      char trans[256];
-      	
       g_commandDialog = hwnd;
 
       SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
@@ -381,63 +380,33 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      SF.i18n_translate("Ok", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDOK), trans);
-
-      SF.i18n_translate("Cancel", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
-
-      SF.i18n_translate("Apply", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
-
-      SF.i18n_translate("Type:", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_TYPEL), trans);
-
-      SF.i18n_translate("Value:", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
-
-      SF.i18n_translate("Row:", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_ROWL), trans);
-
-      SF.i18n_translate("Marquee", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_USE_WRAP), trans);
-
-      SF.i18n_translate("Column:", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_USE_COL), trans);
-
-      SF.i18n_translate("Rest of line", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_USE_REST), trans);
-
-      SF.i18n_translate("Width:", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_USE_WIDTH), trans);
-
       HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
       // TODO: Fill display list.
 
       LoadCommandSettings(hwnd);
 
       EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      return 0;
+      return FALSE;
     }
 
   case WM_DESTROY: 
     PostQuitMessage(0); 
-    return 0;
+    return FALSE;
 
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
     case IDOK:
       if (SaveCommandSettings(hwnd))
         EndDialog(hwnd, TRUE);
-      return 1;
+      return TRUE;
 
     case IDC_APPLY:
       SaveCommandSettings(hwnd);
-      return 1;
+      return TRUE;
 
     case IDCANCEL:
       EndDialog(hwnd, FALSE);
-      return 1;
+      return TRUE;
 
     case IDC_DISPLAY:
       if (HIWORD(wParam) == CBN_SELENDOK) {
@@ -529,15 +498,16 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
 
   case WM_USER+100:
     LoadCommandSettings(hwnd);
-    return 1;
+    return TRUE;
   }
-  return 0;
+  return FALSE;
 }
 
 static DWORD WINAPI CommandThread(LPVOID lpParam)
 {
-  BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_ACTION), NULL, 
-                               CommandDialogProc, (LPARAM)lpParam);
+  BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_COMMAND), 
+                               DisplayWindowParent(), CommandDialogProc, 
+                               (LPARAM)lpParam);
   g_commandDialog = NULL;
   return 0;
 }
