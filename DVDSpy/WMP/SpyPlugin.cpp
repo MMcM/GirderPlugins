@@ -406,7 +406,7 @@ void CSpyPlugin::MediaChange(IDispatch * Item)
   CComPtr<IWMPControls> spControls;
   if (FAILED(m_spCore->get_controls(&spControls))) return;
   CComPtr<IWMPMedia> spCurrent;
-  if (FAILED(spControls->get_CurrentItem(&spCurrent))) return;
+  if (FAILED(spControls->get_currentItem(&spCurrent))) return;
   
   // Only concerned about updates to title and duration while playing.
   CComQIPtr<IWMPMedia> spMedia = Item;
