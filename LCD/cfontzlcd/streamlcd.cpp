@@ -83,6 +83,15 @@ BOOL CrystalfontzStreamLCD::DeviceOpen()
 
 void CrystalfontzStreamLCD::DeviceClose()
 {
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 12;               // Form Feed
+  if (m_backlight) {
+    buf[nb++] = 14;             // Backlight Control
+    buf[nb++] = 0;              // Off
+  }
+  WriteSerial(buf, nb);
+
   CloseSerial();
 }
 

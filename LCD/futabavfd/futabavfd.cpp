@@ -43,6 +43,7 @@ BOOL FutabaVFDDisplay::DeviceOpen()
   BYTE buf[128];
   int nb = 0;
   buf[nb++] = 0x1F;				// Reset and clear display
+  // TODO: Can we turn off the display?
   WriteSerial(buf, nb);
 
   return TRUE;

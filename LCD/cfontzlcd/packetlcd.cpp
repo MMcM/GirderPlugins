@@ -209,6 +209,12 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
 
 void CrystalfontzPacketLCD::DeviceClose()
 {
+  SendPacket *spkt = new SendPacket(6, 0); // Clear LCD Screen
+  SendOneWay(spkt); 
+  spkt = new SendPacket(14, 1); // Set LCD & Keypad Backlight
+  *spkt->GetData() = 0;         // Off
+  Send(spkt);                   // Wait for ACK before close
+
   DisableSerialInput();
   CloseHandle(m_sendEvent);
   while (NULL != m_sendHead) {
