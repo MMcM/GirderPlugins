@@ -2,10 +2,12 @@ Girder 3.0 DataFile
 [Clock]
    enabled=TRUE
    Identifier=1
+   Comments=
    <OnGirderOpen>
    irstr=GirderOpen
    Device=0
    Identifier=2
+   Comments=
    enabled=TRUE
    ActionType=122
    ActionSubType=1
@@ -21,6 +23,7 @@ Girder 3.0 DataFile
    irstr=
    Device=-1
    Identifier=3
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -33,10 +36,12 @@ Girder 3.0 DataFile
 [DVD Display]
    enabled=TRUE
    Identifier=4
+   Comments=
    <Vol Insert>
    irstr=Disc.Insert.I
    Device=15
    Identifier=5
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -52,6 +57,7 @@ Girder 3.0 DataFile
    irstr=
    Device=-1
    Identifier=6
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -68,6 +74,7 @@ Girder 3.0 DataFile
    irstr=
    Device=-1
    Identifier=7
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -83,6 +90,7 @@ Girder 3.0 DataFile
    irstr=
    Device=-1
    Identifier=8
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -99,6 +107,7 @@ Girder 3.0 DataFile
    irstr=
    Device=-1
    Identifier=9
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -115,6 +124,7 @@ Girder 3.0 DataFile
    irstr=
    Device=-1
    Identifier=10
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -130,6 +140,7 @@ Girder 3.0 DataFile
    irstr=
    Device=0
    Identifier=11
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -141,10 +152,12 @@ Girder 3.0 DataFile
 [WinDVD Display]
    enabled=TRUE
    Identifier=12
+   Comments=
    <Chapter>
    irstr=WinDVD.0
    Device=15
    Identifier=13
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -161,6 +174,7 @@ Girder 3.0 DataFile
    irstr=WinDVD.1
    Device=15
    Identifier=14
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -175,6 +189,7 @@ Girder 3.0 DataFile
    irstr=WinDVD.2
    Device=15
    Identifier=15
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -191,6 +206,7 @@ Girder 3.0 DataFile
    irstr=WinDVD.4
    Device=15
    Identifier=16
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -208,6 +224,7 @@ Girder 3.0 DataFile
    irstr=WinDVD.Close
    Device=15
    Identifier=17
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -220,10 +237,12 @@ Girder 3.0 DataFile
 [PowerDVD Display]
    enabled=TRUE
    Identifier=18
+   Comments=
    <Title>
    irstr=PowerDVD.Title
    Device=15
    Identifier=19
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=10
@@ -239,6 +258,7 @@ Girder 3.0 DataFile
    irstr=PowerDVD.Time
    Device=15
    Identifier=20
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -252,10 +272,12 @@ Girder 3.0 DataFile
 [ZoomPlayer Display]
    enabled=TRUE
    Identifier=21
+   Comments=
    <Domain>
    irstr=ZoomPlayer.DVD.0
    Device=15
    Identifier=22
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -268,6 +290,7 @@ Girder 3.0 DataFile
    irstr=ZoomPlayer.DVD.1
    Device=15
    Identifier=23
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -282,6 +305,7 @@ Girder 3.0 DataFile
    irstr=ZoomPlayer.DVD.2
    Device=15
    Identifier=24
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -296,6 +320,7 @@ Girder 3.0 DataFile
    irstr=ZoomPlayer.DVD.3
    Device=15
    Identifier=25
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -310,6 +335,7 @@ Girder 3.0 DataFile
    irstr=ZoomPlayer.DVD.4
    Device=15
    Identifier=26
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -324,6 +350,7 @@ Girder 3.0 DataFile
    irstr=ZoomPlayer.Media.0
    Device=15
    Identifier=27
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -338,6 +365,7 @@ Girder 3.0 DataFile
    irstr=ZoomPlayer.Media.1
    Device=15
    Identifier=28
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -348,10 +376,28 @@ Girder 3.0 DataFile
    Matchnum=1
    StateCount=1
    StateBegin=1
+   <OSD>
+   irstr=ZoomPlayer.OSD
+   Device=15
+   Identifier=29
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg1]
+   iValue1=1
+   iValue2=1
+   lValue1=1
+   lValue2=11
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
    <Close>
    irstr=ZoomPlayer.Close
    Device=15
-   Identifier=29
+   Identifier=30
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -363,11 +409,13 @@ Girder 3.0 DataFile
    StateBegin=1
 [TheaterTek Display]
    enabled=TRUE
-   Identifier=30
+   Identifier=31
+   Comments=
    <Domain>
    irstr=TheaterTek.0
    Device=15
-   Identifier=31
+   Identifier=32
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -379,7 +427,8 @@ Girder 3.0 DataFile
    <Title>
    irstr=TheaterTek.1
    Device=15
-   Identifier=32
+   Identifier=33
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -393,7 +442,8 @@ Girder 3.0 DataFile
    <Chapter>
    irstr=TheaterTek.2
    Device=15
-   Identifier=33
+   Identifier=34
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -407,7 +457,8 @@ Girder 3.0 DataFile
    <Total>
    irstr=TheaterTek.3
    Device=15
-   Identifier=34
+   Identifier=35
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -421,7 +472,8 @@ Girder 3.0 DataFile
    <Time>
    irstr=TheaterTek.4
    Device=15
-   Identifier=35
+   Identifier=36
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -435,7 +487,129 @@ Girder 3.0 DataFile
    <Close>
    irstr=TheaterTek.Close
    Device=15
-   Identifier=36
+   Identifier=37
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=4
+   lValue1=11
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+[ATI Display]
+   enabled=TRUE
+   Identifier=38
+   Comments=
+   <Domain>
+   irstr=ATI.DVD.0
+   Device=15
+   Identifier=39
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   lValue1=6
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Title>
+   irstr=ATI.DVD.1
+   Device=15
+   Identifier=40
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=7
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Chapter>
+   irstr=ATI.DVD.2
+   Device=15
+   Identifier=41
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=8
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Total>
+   irstr=ATI.DVD.3
+   Device=15
+   Identifier=42
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=10
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Time>
+   irstr=ATI.DVD.4
+   Device=15
+   Identifier=43
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=9
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Duration>
+   irstr=ATI.MMC.0
+   Device=15
+   Identifier=44
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=10
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Position>
+   irstr=ATI.MMC.1
+   Device=15
+   Identifier=45
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=9
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Close>
+   irstr=ATI.Close
+   Device=15
+   Identifier=46
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
@@ -447,14 +621,19 @@ Girder 3.0 DataFile
    StateBegin=1
 [TV Display]
    enabled=TRUE
-   Identifier=37
+   Identifier=47
+   Comments=
    (Chan)
    enabled=TRUE
    irstr=TV.Chan
    Device=15
-   Identifier=38
+   Identifier=48
+   Comments=
    {Prefix}
-   Identifier=39
+   irstr=
+   Device=-1
+   Identifier=49
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -466,7 +645,10 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    {Chan}
-   Identifier=40
+   irstr=
+   Device=-1
+   Identifier=50
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -479,7 +661,10 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    {Call}
-   Identifier=41
+   irstr=
+   Device=-1
+   Identifier=51
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -495,7 +680,8 @@ Girder 3.0 DataFile
    <Program>
    irstr=TV.Program
    Device=15
-   Identifier=42
+   Identifier=52
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -510,7 +696,8 @@ Girder 3.0 DataFile
    <Time>
    irstr=TV.Time
    Device=15
-   Identifier=43
+   Identifier=53
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -524,14 +711,19 @@ Girder 3.0 DataFile
    StateBegin=1
 [accessDTV Display]
    enabled=TRUE
-   Identifier=44
+   Identifier=54
+   Comments=
    (Channel)
    enabled=TRUE
    irstr=accessDTV.Channel
    Device=15
-   Identifier=45
+   Identifier=55
+   Comments=
    {Prefix}
-   Identifier=46
+   irstr=
+   Device=-1
+   Identifier=56
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -543,7 +735,10 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    {Chan}
-   Identifier=47
+   irstr=
+   Device=-1
+   Identifier=57
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -557,7 +752,10 @@ Girder 3.0 DataFile
    StateCount=1
    StateBegin=1
    {Clear Text}
-   Identifier=48
+   irstr=
+   Device=-1
+   Identifier=58
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -570,7 +768,8 @@ Girder 3.0 DataFile
    <ChanText>
    irstr=accessDTV.ChanText
    Device=15
-   Identifier=49
+   Identifier=59
+   Comments=
    enabled=TRUE
    ActionType=118
    ActionSubType=1
@@ -585,13 +784,14 @@ Girder 3.0 DataFile
    <ChanNoText>
    irstr=accessDTV.ChanNoText
    Device=15
-   Identifier=50
+   Identifier=60
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
    iValue1=1
    iValue2=1
-   lValue1=49
+   lValue1=59
    TopMost=TRUE
    Matchnum=1
    StateCount=1
@@ -599,7 +799,89 @@ Girder 3.0 DataFile
    <Close>
    irstr=accessDTV.Close
    Device=15
-   Identifier=51
+   Identifier=61
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=4
+   lValue1=11
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+[Media Player Display]
+   enabled=TRUE
+   Identifier=62
+   Comments=
+   <Status>
+   irstr=WMP.Status
+   Device=15
+   Identifier=63
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg1]
+   iValue1=1
+   iValue2=1
+   lValue1=1
+   lValue2=11
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Duration>
+   irstr=WMP.Duration
+   Device=15
+   Identifier=64
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=10
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Title>
+   irstr=WMP.Title
+   Device=15
+   Identifier=65
+   Comments=
+   enabled=TRUE
+   ActionType=118
+   ActionSubType=1
+   sValue1=[treg1]
+   iValue1=1
+   iValue2=1
+   lValue1=2
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Position>
+   irstr=WMP.Position
+   Device=15
+   Identifier=66
+   Comments=
+   enabled=TRUE
+   ActionType=4
+   ActionSubType=10
+   iValue1=1
+   iValue2=1
+   lValue1=9
+   TopMost=TRUE
+   Matchnum=1
+   StateCount=1
+   StateBegin=1
+   <Close>
+   irstr=WMP.Close
+   Device=15
+   Identifier=67
+   Comments=
    enabled=TRUE
    ActionType=4
    ActionSubType=10
