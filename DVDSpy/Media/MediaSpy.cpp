@@ -389,3 +389,11 @@ STDAPI MediaSpyGetCurrentObject(REFCLSID rclsid, REFIID riid, PVOID *ppv)
   if (NULL == pCurrent) return S_FALSE;
   return pCurrent->QueryInterface(riid, ppv);
 }
+
+// This is here so that the hook itself does not need to link with OLE.
+STDAPI MediaSpyConvertOle(LPOLESTR wszIn, LPSTR szOut, size_t nOut, BOOL bFree)
+{
+  WideCharToMultiByte(CP_ACP, 0, wszIn, -1, szOut, nOut, NULL, NULL);
+  if (bFree) CoTaskMemFree(wszIn);
+  return S_OK;
+}
