@@ -117,8 +117,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,50,0,2
- PRODUCTVERSION 1,50,0,0
+ FILEVERSION 1,52,0,4
+ PRODUCTVERSION 1,52,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -134,11 +134,11 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "DVDSpy TV Helper Application\0"
-            VALUE "FileVersion", "1.50 (2)\0"
+            VALUE "FileVersion", "1.52 (4)\0"
             VALUE "InternalName", "TVSpy\0"
             VALUE "OriginalFilename", "TVSPY.EXE\0"
             VALUE "ProductName", "DVD Spy\0"
-            VALUE "ProductVersion", "1.50\0"
+            VALUE "ProductVersion", "1.52\0"
         END
     END
     BLOCK "VarFileInfo"

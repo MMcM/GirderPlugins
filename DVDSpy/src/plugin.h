@@ -2,7 +2,7 @@
 
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.50"
+#define PLUGINVERSION "1.52"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
@@ -24,3 +24,5 @@ extern void GetDVDDiscID(LPCSTR disc, ULONGLONG *discid);
 
 extern void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow);
 extern void ZoomPlayerLCD(WPARAM wParam, LPARAM lParam);
+extern void EugenesInit(LPCSTR data, HWND hwndMonitor);
+extern void EugenesClose();

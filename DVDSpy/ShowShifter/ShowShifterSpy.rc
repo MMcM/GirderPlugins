@@ -54,8 +54,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,50,0,12
- PRODUCTVERSION 1,50,0,0
+ FILEVERSION 1,52,0,14
+ PRODUCTVERSION 1,52,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -71,11 +71,11 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "DVDSpy ShowShifter Module\0"
-            VALUE "FileVersion", "1.50 (12)\0"
+            VALUE "FileVersion", "1.52 (14)\0"
             VALUE "InternalName", "ShowShifterSpy\0"
             VALUE "OriginalFilename", "ShowShifterSpy.DLL\0"
             VALUE "ProductName", "DVD Spy\0"
-            VALUE "ProductVersion", "1.50\0"
+            VALUE "ProductVersion", "1.52\0"
             VALUE "OLESelfRegister", "\0"
         END
     END
