@@ -10,6 +10,7 @@ AppSupportURL=http://www.promixis.com/phpBB2/
 AppVersion=1.63
 DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
 DirExistsWarning=no 
+;LicenseFile=plugins\DVDSpy\license.txt
 OutputBaseFilename=DVDSpy
 OutputDir=.
 SetupIconFile=plugins\DVDSpy\src\dvdspy.ico
