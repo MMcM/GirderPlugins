@@ -128,7 +128,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>menuMode = 1;</sValue1>
+        <sValue1>menuMode = 1</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -192,7 +192,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>menuMode = 2;</sValue1>
+        <sValue1>menuMode = 2</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -256,7 +256,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>menuMode = 3;</sValue1>
+        <sValue1>menuMode = 3</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -316,9 +316,9 @@ $Header$
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
-      <sValue1>int bright;
-bright = bright + strtoint(pld1);
-bright &#60; 256;
+      <sValue1>if bright == nil then bright = 128 end
+bright = bright + tonumber(pld1)
+result = bright &#60; 256
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -340,9 +340,10 @@ bright &#60; 256;
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
-      <sValue1>int bright;
-bright = bright - strtoint(pld1);
-bright &#62; 0;</sValue1>
+      <sValue1>if bright == nil then bright = 128 end
+bright = bright - tonumber(pld1)
+result = bright &#62; 0
+</sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
@@ -384,8 +385,8 @@ bright &#62; 0;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
-      <sValue1>deltavol = strtoint(pld1) * 1000;
-1;
+      <sValue1>deltavol = tonumber(pld1) * 1000
+result = 1
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -407,8 +408,8 @@ bright &#62; 0;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
-      <sValue1>deltavol = strtoint(pld1) * -1000;
-1;
+      <sValue1>deltavol = tonumber(pld1) * -1000
+result = 1
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
