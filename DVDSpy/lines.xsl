@@ -3,6 +3,7 @@
 Select 4 line or 2 line version of LCD sample script.
 Commands / MultiGroups whose enabling should be changed are marked by Comments containing
 *4L* or *2L*.
+Also, those with *ON* or *OFF* are unconditionally set the specified way.
 -->
 <xsl:stylesheet version="1.0" 
 		xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -26,6 +27,8 @@ Commands / MultiGroups whose enabling should be changed are marked by Comments c
   <xsl:template match="@Enabled">
     <xsl:attribute name="Enabled">
       <xsl:choose>
+        <xsl:when test="../Comments/text()[contains(.,'*ON*')]">TRUE</xsl:when>
+        <xsl:when test="../Comments/text()[contains(.,'*OFF*')]">FALSE</xsl:when>
         <xsl:when test="../Comments/text()[contains(.,'*2L*')]">
           <xsl:value-of select="$enable2"/>
         </xsl:when>
