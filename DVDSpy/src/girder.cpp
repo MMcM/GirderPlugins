@@ -12,6 +12,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <dbt.h>
 
 #define GIRDER_CPP
@@ -34,10 +35,20 @@ bool Running=FALSE;
 
 void GirderEvent(PCHAR event, PCHAR sarg, long iarg)
 {
+  int nreg = 1;
+  if (NULL != sarg) {
+    LPCSTR ps = strrchr(event, '.');
+    if ((NULL != ps) &&
+        ('0' <= *++ps) &&
+        ('9' >= *ps))
+      nreg = atoi(ps);
+  }
+
 #ifdef _DEBUG
   {
     char dbuf[1024];
-    sprintf(dbuf, "Girder event: '%s'  sarg='%s'  iarg=%d.\n", event, sarg, iarg);
+    sprintf(dbuf, "Girder event: '%s' reg=%d sarg='%s' iarg=%d.\n", 
+            event, nreg, sarg, iarg);
     OutputDebugString(dbuf);
   }
 #endif
@@ -47,11 +58,11 @@ void GirderEvent(PCHAR event, PCHAR sarg, long iarg)
   cd.cbData=strlen(event)+1;
   SendMessage(hTargetWindow, WM_COPYDATA, PLUGINNUM, (LPARAM)&cd);
 #else
-  if (WaitForSingleObject(hSMSem, 250)==WAIT_OBJECT_0) {
+  if (WaitForSingleObject(hSMSem, 2500)==WAIT_OBJECT_0) {
     if (NULL != sarg) {
-      HFunctions.SetGirderStrReg(sarg, 1);
+      HFunctions.SetGirderStrReg(sarg, nreg);
       if (0 != iarg)
-        HFunctions.SetGirderReg(iarg, 1);
+        HFunctions.SetGirderReg(iarg, nreg);
     }
     strncpy(pMessageBuffer, event, 250);
     PostMessage(hTargetWindow, WM_USER+1030, PLUGINNUM, 0);
@@ -122,7 +133,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
       for (int i = 0; i < 26; i++) {
         if (lpdbv->dbcv_unitmask & (1<<i)) {
           char cd = 'A' + i;
-          char buf[256];
+          char buf[256], *pb;
           DWORD volser = 0;
           char volnam[MAX_PATH] = {'\0'};
           switch(wParam) {
@@ -133,15 +144,21 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPar
             buf[3] = '\0';
             GetDVDTitle(buf, volnam, sizeof(volnam), &volser);
             strcpy(buf, "Disc.Insert.");
+            pb = buf + strlen(buf);
+            *pb++ = cd;
+            *pb++ = '.';
+            *pb++ = '9';
+            *pb++ = '\0';
+            GirderEvent(buf, volnam, (long)volser);
             break;
           case DBT_DEVICEREMOVECOMPLETE:
             strcpy(buf, "Disc.Eject.");
+            pb = buf + strlen(buf);
+            *pb++ = cd;
+            *pb++ = '\0';
+            GirderEvent(buf, NULL);
             break;
           }
-          char *pb = buf + strlen(buf);
-          *pb++ = cd;
-          *pb++ = '\0';
-          GirderEvent(buf, (volnam[0] != '\0') ? volnam : NULL, (long)volser);
         }
       }
       return TRUE;
@@ -181,18 +198,23 @@ DWORD WINAPI HookThread(LPVOID param)
       size_t nMatch, nIndex;
       char szVal[128];
       while (DS_GetNext(&nMatch, &nIndex, szVal, sizeof(szVal))) {
+        PCHAR pszVal = szVal;
         char szName[128];
         DS_GetMatchName(nMatch, szName, sizeof(szName));
+        int nReg = DS_GetMatchRegister(nMatch);
         char szEvent[256];
         memset(szEvent, 0, sizeof(szEvent));
         strcpy(szEvent, szName);
         LPSTR ep = szEvent + strlen(szEvent);
-        if (DS_GetMatchIndexCount(nMatch) > 1) {
-          sprintf(ep, ".%d", nIndex);
+        if (nReg == 0) {
+          pszVal = NULL;
+        }
+        else {
+          sprintf(ep, ".%d", nReg + nIndex);
           ep = ep + strlen(ep);
         }
         *ep++ = '\0';
-        GirderEvent(szEvent, szVal);
+        GirderEvent(szEvent, pszVal);
       }
     }
     else
@@ -312,7 +334,7 @@ extern "C" void WINAPI support_device(PCHAR Buffer, BYTE Length)
 
 extern "C" void WINAPI version_device(PCHAR Buffer, BYTE Length)
 {
-  strncpy(Buffer, "1.10", Length);
+  strncpy(Buffer, "1.12", Length);
 }
 
 extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)
