@@ -11,7 +11,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.6. &nbsp;MMcM 11/01
+Version 1.8. &nbsp;MMcM 01/02
 
 <h3>Use</h3>
 
@@ -23,6 +23,10 @@ placed in Girder registers.<p>
 
 It also intercepts calls to Windows text drawing functions as used by
 accessDTV and exposes it similarly.<p>
+
+And finally, it wraps DirectX objects used by Zoom Player or
+TheaterTek and exposes the playing state.  This approach can probably
+be extended trivially to any other DirectShow DVD player.<p>
 
 <table border="yes">
 <tr><th>Code</th>
@@ -41,55 +45,162 @@ accessDTV and exposes it similarly.<p>
 <td>The DVD was ejected from drive <i>X:</i></td>
 </tr>
 
+<tr></tr>
+
 <tr><td>WinDVD.0</td>
-<td>Chapter changed</i></td>
+<td>Chapter changed</td>
 <td></td>
-<td>New chapter (two digits)</td>
+<td>New chapter (NN)</td>
 </tr>
 
 <tr><td>WinDVD.1</td>
-<td>Elapsed time changed</i></td>
+<td>Elapsed time changed</td>
 <td></td>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
 <tr><td>WinDVD.2</td>
-<td>Video mode changed</i></td>
+<td>Video mode changed</td>
 <td></td>
 <td>New mode (e.g. MPEG)</td>
 </tr>
 
 <tr><td>WinDVD.4</td>
-<td>Audio mode changed</i></td>
+<td>Audio mode changed</td>
 <td></td>
 <td>New mode (e.g. BOTH)</td>
 </tr>
 
+<tr><td>WinDVD.Close</td>
+<td>WinDVD application closed</td>
+</tr>
+
+<tr></tr>
+
 <tr><td>PowerDVD.Title</td>
-<td>Title of video window changed</i></td>
+<td>Title of video window changed</td>
 <td></td>
 <td>New title (file name if playing file instead of disc)</td>
 </tr>
 
 <tr><td>PowerDVD.Time</td>
-<td>Elapsed time changed</i></td>
+<td>Elapsed time changed</td>
 <td></td>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
+<tr></tr>
+
 <tr><td>accessDTV.Channel</td>
-<td>The big channel digits changed</i></td>
+<td>The big channel digits changed</td>
 <td></td>
 <td>New digits (NN.n)</td>
 </tr>
 
 <tr><td>accessDTV.ChanText</td>
-<td>The channel description changed</i></td>
+<td>The channel description changed</td>
 <td></td>
 <td>New description (NNN.n XXXX_XX)</td>
 </tr>
 
+<tr><td>accessDTV.ChanNoText</td>
+<td>The channel description was not present</td>
+</tr>
+
+<tr><td>accessDTV.Close</td>
+<td>ADTV application closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td>ZoomPlayer.DVD.0</td>
+<td>Domain changed</td>
+<td></td>
+<td>New domain (PLAY,MENU,DVD,STOP)</td>
+</tr>
+
+<tr><td>ZoomPlayer.DVD.1</td>
+<td>Title changed</td>
+<td></td>
+<td>New title (NN)</td>
+</tr>
+
+<tr><td>ZoomPlayer.DVD.2</td>
+<td>Chapter changed</td>
+<td></td>
+<td>New chapter (NN)</td>
+</tr>
+
+<tr><td>ZoomPlayer.DVD.3</td>
+<td>Total changed</td>
+<td></td>
+<td>New total time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ZoomPlayer.DVD.4</td>
+<td>Location changed</td>
+<td></td>
+<td>New elapsed time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ZoomPlayer.Media.0</td>
+<td>Duration changed</td>
+<td></td>
+<td>New total duration (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ZoomPlayer.Media.1</td>
+<td>Position changed</td>
+<td></td>
+<td>New current position (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ZoomPlayer.Close</td>
+<td>ZP application closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td>TheaterTek.0</td>
+<td>Domain changed</td>
+<td></td>
+<td>New domain (PLAY,MENU,DVD,STOP)</td>
+</tr>
+
+<tr><td>TheaterTek.1</td>
+<td>Title changed</td>
+<td></td>
+<td>New title (NN)</td>
+</tr>
+
+<tr><td>TheaterTek.2</td>
+<td>Chapter changed</td>
+<td></td>
+<td>New chapter (NN)</td>
+</tr>
+
+<tr><td>TheaterTek.3</td>
+<td>Total changed</td>
+<td></td>
+<td>New total time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>TheaterTek.4</td>
+<td>Location changed</td>
+<td></td>
+<td>New elapsed time (HH:MM:SS)</td>
+</tr>
+
+<tr><td>TheaterTek.Close</td>
+<td>TT application closed</td>
+</tr>
+
 </table><p>
+
+In order for the DirectX wrappers to work, the MEDIASPY.DLL library
+must be registering using <kbd>regsvr32</kbd>.  This may impact
+programs even when Girder is not running.  Unregistering it should
+return things to normal.<p>
 
 The registry key
 <kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy</kbd> can
