@@ -22,42 +22,110 @@ HWND hDialog;
 HANDLE ConfigThreadHandle;
 
 DisplayAction DisplayActions[] = {
-  { "String", valSTR, DisplayString },
-  { "String Register", valINT, DisplayStringRegister },
-  { "Current Date/Time", valSTR, DisplayCurrentTime },
-  { "Clear Display", valNONE, DisplayClear },
-  { "Close Display", valNONE, DisplayClose },
-  { "Payload", valINT, DisplayPayload },
-  { "Filename Payload", valINT, DisplayFilenamePayload },
+  { "s", "String", valSTR, DisplayString },
+  { "v", "Variable", valVAR, DisplayVariable },
+  { "t", "Current Date/Time", valSTR, DisplayCurrentTime },
+  { "f", "Filename Variable", valVAR, DisplayFilename },
+  { "x", "Close Display", valNONE, DisplayClose },
+  { "c", "Clear Display", valNONE, DisplayClear },
 };
 
 #define countof(x) (sizeof(x)/sizeof(x[0]))
 
-static
-BOOL SaveUISettings(HWND hwnd)
+DisplayAction *FindDisplayAction(p_command command)
+{
+  PCHAR key = command->svalue2;
+  if ((NULL == key) || ('\0' == *key)) {
+    // An older GML file.  Convert the command to the new format.
+    PCHAR val = NULL;
+    char buf[128];
+
+    switch (command->ivalue1) {
+    case 0:                       // String
+      key = "s";
+      break;
+    case 1:                       // String Register
+      key = "v";
+      sprintf(buf, "treg%d", command->ivalue2);
+      val = buf;
+      break;
+    case 2:                       // Current Date/Time
+      key = "t";
+      break;
+    case 3:                       // Clear Display
+      key = "c";
+      break;
+    case 4:                       // Close Display
+      key = "x";
+      break;
+    case 5:                       // Payload
+      key = "v";
+      sprintf(buf, "pld%d", command->ivalue2);
+      val = buf;
+      break;
+    case 6:                       // Filename Payload
+      key = "f";
+      sprintf(buf, "pld%d", command->ivalue2);
+      val = buf;
+      break;
+    default:
+      return NULL;
+    }
+    // Position information.
+    command->ivalue1 = command->lvalue1; // Row
+    command->ivalue2 = command->lvalue2; // Column
+    command->ivalue3 = command->lvalue3; // Width
+    if (command->ivalue3 <= 0)
+      command->ivalue3 = -1;    // Standardize rest value.
+    command->lvalue1 = 0;       // No links.
+    command->lvalue2 = 0;
+    command->lvalue3 = 0;
+    if (NULL != val)
+      SF.realloc_pchar(&(command->svalue1), val);
+    SF.realloc_pchar(&(command->svalue2), key);
+  }
+
+  for (size_t i = 0; i < countof(DisplayActions); i++) {
+    if (!strcmp(DisplayActions[i].key, key))
+      return DisplayActions + i;
+  }
+  return NULL;
+}
+
+static BOOL SaveUISettings(HWND hwnd)
 {
   char buf[256];
 
-  if ( CurCommand == NULL ) 
+  if (CurCommand == NULL)
      return FALSE;
 
   EnterCriticalSection(&CurCommand->critical_section);
 
-  CurCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
+  int idx = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
+  DisplayAction *action = (DisplayAction *)
+    SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETITEMDATA, idx, 0);
+  if (NULL != action)
+    SF.realloc_pchar(&(CurCommand->svalue2), (PCHAR)action->key);
+  else
+    SF.realloc_pchar(&(CurCommand->svalue2), "?");
 
-  GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
+  if ((NULL != action) && (valINT == action->valueType))
+    GetWindowText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
+  else
+    GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
   SF.realloc_pchar(&(CurCommand->svalue1), buf);
 
-  CurCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_GETPOS, 0, 0);
-
-  CurCommand->lvalue1 = SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_GETPOS, 0, 0);
-  CurCommand->lvalue2 = SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_GETPOS, 0, 0);
-  if (SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_GETCHECK, 0, 0))
-    CurCommand->lvalue3 = 0;
+  CurCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_GETPOS, 0, 0);
+  if (SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_GETCHECK, 0, 0))
+    CurCommand->ivalue2 = -1;
   else
-    CurCommand->lvalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
+    CurCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_GETPOS, 0, 0);
+  if (SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_GETCHECK, 0, 0))
+    CurCommand->ivalue3 = -1;
+  else
+    CurCommand->ivalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
   
-  CurCommand->actiontype=PLUGINNUM;
+  CurCommand->actiontype = PLUGINNUM;
   SF.set_command(CurCommand);
 
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
@@ -67,8 +135,7 @@ BOOL SaveUISettings(HWND hwnd)
   return TRUE;
 }
      
-static
-void EmptyUI(HWND hwnd)
+static void EmptyUI(HWND hwnd)
 {
   SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_SETCURSEL, 0, 0);
   SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), "");
@@ -79,6 +146,8 @@ void EmptyUI(HWND hwnd)
   ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), SW_HIDE);
   SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, 0);
   SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, 0);
+  SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, FALSE, 0);
+  SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, TRUE, 0);
   SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, TRUE, 0);
   SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, FALSE, 0);
   SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, 0);
@@ -86,31 +155,63 @@ void EmptyUI(HWND hwnd)
   EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
 }
 
-static
-void LoadUISettings(HWND hwnd)
+static void LoadUISettings(HWND hwnd)
 {
-  
+  if (CurCommand == NULL)
+     return;
+
   EnterCriticalSection(&CurCommand->critical_section);
 
-  SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_SETCURSEL, CurCommand->ivalue1, 0);
-  SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), CurCommand->svalue1);
-  SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_SETPOS, 0, CurCommand->ivalue2);
-  DisplayAction& action = DisplayActions[CurCommand->ivalue1];
+  DisplayAction *action = FindDisplayAction(CurCommand);
+  if (NULL == action)
+    action = DisplayActions;    // String
+
+  for (int idx = 0; idx < countof(DisplayActions); idx++) {
+    DisplayAction *itemAction = (DisplayAction *)
+      SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETITEMDATA, idx, 0);
+    if (itemAction == action) {
+      SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_SETCURSEL, idx, 0);      
+      break;
+    }
+  }
+  
+  if (valINT == action->valueType)
+    SetWindowText(GetDlgItem(hwnd, IDC_VALINT), CurCommand->svalue1);
+  else
+    SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), CurCommand->svalue1);
+
+  char trans[256];
+  SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
+                    trans, sizeof(trans));
+  SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
+
   ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
-             (valNONE != action.valueType) ? SW_SHOW : SW_HIDE);
+             (valNONE != action->valueType) ? SW_SHOW : SW_HIDE);
   ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
-             (valSTR == action.valueType) ? SW_SHOW : SW_HIDE);
+             ((valSTR == action->valueType) || (valVAR == action->valueType)) ?
+              SW_SHOW : SW_HIDE);
   ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
-             (valINT == action.valueType) ? SW_SHOW : SW_HIDE);
+             (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
   ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
-             (valINT == action.valueType) ? SW_SHOW : SW_HIDE);
-  SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, CurCommand->lvalue1);
-  SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, CurCommand->lvalue2);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, !CurCommand->lvalue3, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, !!CurCommand->lvalue3, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, CurCommand->lvalue3);
-  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !!CurCommand->lvalue3);
-  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !!CurCommand->lvalue3);
+             (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+
+  SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, CurCommand->ivalue1);
+
+  BOOL wrap = (CurCommand->ivalue2 < 0);
+  SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, wrap, 0);
+  SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, !wrap, 0);
+  SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, CurCommand->ivalue2);
+  EnableWindow(GetDlgItem(hwnd, IDC_COL), !wrap);
+  EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), !wrap);
+
+  BOOL rest = (wrap || (CurCommand->ivalue3 <= 0));
+  EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), !wrap);
+  EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), !wrap);
+  SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, rest, 0);
+  SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, !rest, 0);
+  SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, CurCommand->ivalue3);
+  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !rest);
+  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !rest);
 
   LeaveCriticalSection(&CurCommand->critical_section);
 }
@@ -148,8 +249,11 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
       SF.i18n_translate("Row:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_ROWL), trans);
 
+      SF.i18n_translate("Marquee", trans, sizeof(trans));
+      SetWindowText(GetDlgItem(hwnd, IDC_USE_WRAP), trans);
+
       SF.i18n_translate("Column:", trans, sizeof(trans));
-      SetWindowText(GetDlgItem(hwnd, IDC_COLL), trans);
+      SetWindowText(GetDlgItem(hwnd, IDC_USE_COL), trans);
 
       SF.i18n_translate("Rest of line", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_USE_REST), trans);
@@ -159,7 +263,8 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       HWND combo = GetDlgItem(hwnd, IDC_TYPE);
       for (size_t i = 0; i < countof(DisplayActions); i++) {
-        SendMessage(combo, CB_ADDSTRING, 0, (LPARAM)DisplayActions[i].name);
+        int idx = SendMessage(combo, CB_ADDSTRING, 0, (LPARAM)DisplayActions[i].name);
+        SendMessage(combo, CB_SETITEMDATA, idx, (LPARAM)(DisplayActions+i));
       }
 
       SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETRANGE, 0, 
@@ -195,17 +300,24 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
       return 1;
 
     case IDC_TYPE:
-      if ( HIWORD(wParam)==CBN_SELENDOK) {
-        int pos = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
-        DisplayAction& action = DisplayActions[pos];
+      if (HIWORD(wParam) == CBN_SELENDOK) {
+        int idx = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
+        DisplayAction *action = (DisplayAction *)
+          SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETITEMDATA, idx, 0);
+        if (NULL == action) break;
+        char trans[256];
+        SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
+                          trans, sizeof(trans));
+        SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
         ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
-                   (valNONE != action.valueType) ? SW_SHOW : SW_HIDE);
+                   (valNONE != action->valueType) ? SW_SHOW : SW_HIDE);
         ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
-                   (valSTR == action.valueType) ? SW_SHOW : SW_HIDE);
+                   ((valSTR == action->valueType) || (valVAR == action->valueType)) ?
+                   SW_SHOW : SW_HIDE);
         ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
-                   (valINT == action.valueType) ? SW_SHOW : SW_HIDE);
+                   (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
         ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
-                   (valINT == action.valueType) ? SW_SHOW : SW_HIDE);
+                   (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
       break;
@@ -214,14 +326,29 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
     case IDC_ROW:
     case IDC_COL:
     case IDC_WIDTH:
-      if ( HIWORD(wParam)==EN_CHANGE) {
+      if (HIWORD(wParam) == EN_CHANGE) {
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
       break;
 
+    case IDC_USE_WRAP:
+      EnableWindow(GetDlgItem(hwnd, IDC_COL), FALSE);
+      EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), FALSE);
+      SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, TRUE, 0);
+      SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, FALSE, 0);
+      EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), FALSE);
+      EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), FALSE);
+      /* falls through */
     case IDC_USE_REST:
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), FALSE);
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
+      break;
+
+    case IDC_USE_COL:
+      EnableWindow(GetDlgItem(hwnd, IDC_COL), TRUE);
+      EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), TRUE);
+      EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), TRUE);
+      EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), TRUE);
       break;
 
     case IDC_USE_WIDTH:
@@ -279,59 +406,40 @@ static DWORD WINAPI ConfigThread( LPVOID lpParameter )
 
 void Update_Config()
 {
-
   SendMessage(hDialog, WM_USER+100, 0,0);
-
 }
 
 void Empty_Config()
 {
-
   SendMessage(hDialog, WM_USER+101, 0,0);
-
 }
 
 void Enable_Config(BOOL bValue)
 {
   if (bValue)
-    SendMessage(hDialog, WM_USER+102, 1,0);
+    SendMessage(hDialog, WM_USER+102, 1, 0);
   else
-    SendMessage(hDialog, WM_USER+102, 0,0);
-
+    SendMessage(hDialog, WM_USER+102, 0, 0);
 }
 
 void Show_Config()
 {
-   DWORD dwThreadId;
-   // this was an error left over from a API example, causes a nice crash on exit if the
-   // plugin dialog is still open.
-   // HANDLE ConfigThreadHandle; 
-   
-   if (hDialog != 0)   
-   {
-      SetForegroundWindow(hDialog);
-   }
-   else
-   {
-      ConfigThreadHandle=CreateThread(NULL,0,&ConfigThread,NULL,0,&dwThreadId);
-      if (ConfigThreadHandle==0)
-         MessageBox(0, "Cannot create dialogthread.", "Error", MB_OK);
-    
-   }
-
-
-   return ;
+  if (hDialog != NULL) {
+    SetForegroundWindow(hDialog);
+  }
+  else {
+    DWORD dwThreadId;
+    ConfigThreadHandle = CreateThread(NULL,0,&ConfigThread,NULL,0,&dwThreadId);
+    if (ConfigThreadHandle == NULL)
+      MessageBox(0, "Cannot create dialogthread.", "Error", MB_OK);
+  }
 }
 
 void Close_Config()
 {
-  
-  if ( hDialog!=NULL) {
-
+  if (hDialog != NULL) {
     SendMessage(hDialog, WM_DESTROY,0,0);
     WaitForSingleObject(ConfigThreadHandle,4000);
     CloseHandle(ConfigThreadHandle);
-
   }
-  
 }
