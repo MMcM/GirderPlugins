@@ -33,7 +33,10 @@ struct LCDMessage {
   { 1600, "DVD.Audio", TYPE_ATOM },
   { 1700, "DVD.Sub", TYPE_ATOM },
   { 1800, "File", TYPE_ATOM },
-  { 1900, "Position", TYPE_ATOM }
+  { 1900, "Position", TYPE_ATOM },
+  { 2000, "Resolution", TYPE_ATOM },
+  { 2100, "FrameRate", TYPE_ATOM },
+  { 2200, "AspectRatio", TYPE_ATOM },
 };
 
 #define countof(x) sizeof(x)/sizeof(x[0])
