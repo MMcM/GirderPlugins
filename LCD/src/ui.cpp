@@ -1,25 +1,8 @@
-/***************************************************************************************/
-/*                                                                                     */
-/*  Girder 3.2 Plugin                                                                  */
-/*  User interface                                                                     */
-/*                                                                                     */
-/*  Copyright 2000 (c) Ron Bessems                                                     */
-/*  GNU General Public License                                                         */
-/*                                                                                     */
-/*                                                                                     */
-/***************************************************************************************/
+/* User interface. */
 
-#include <windows.h>
-#include <commctrl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "resource.h"
+#include "stdafx.h"
 #include "plugin.h"
-#include <lcdriver.h>
-
-/* Local variables */
-HWND hDialog;
-HANDLE ConfigThreadHandle;
+#include "resource.h"
 
 DisplayAction DisplayActions[] = {
   { "s", "String", valSTR, DisplayString },
@@ -30,7 +13,7 @@ DisplayAction DisplayActions[] = {
   { "c", "Clear Display", valNONE, DisplayClear },
 };
 
-#define countof(x) (sizeof(x)/sizeof(x[0]))
+#define countof(x) sizeof(x)/sizeof(x[0])
 
 DisplayAction *FindDisplayAction(p_command command)
 {
@@ -81,8 +64,8 @@ DisplayAction *FindDisplayAction(p_command command)
     command->lvalue2 = 0;
     command->lvalue3 = 0;
     if (NULL != val)
-      SF.realloc_pchar(&(command->svalue1), val);
-    SF.realloc_pchar(&(command->svalue2), key);
+      SF.realloc_pchar(&command->svalue1, val);
+    SF.realloc_pchar(&command->svalue2, key);
   }
 
   for (size_t i = 0; i < countof(DisplayActions); i++) {
@@ -92,77 +75,37 @@ DisplayAction *FindDisplayAction(p_command command)
   return NULL;
 }
 
-static BOOL SaveUISettings(HWND hwnd)
-{
-  char buf[256];
-
-  if (CurCommand == NULL)
-     return FALSE;
-
-  EnterCriticalSection(&CurCommand->critical_section);
-
-  int idx = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
-  DisplayAction *action = (DisplayAction *)
-    SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETITEMDATA, idx, 0);
-  if (NULL != action)
-    SF.realloc_pchar(&(CurCommand->svalue2), (PCHAR)action->key);
-  else
-    SF.realloc_pchar(&(CurCommand->svalue2), "?");
-
-  if ((NULL != action) && (valINT == action->valueType))
-    GetWindowText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
-  else
-    GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
-  SF.realloc_pchar(&(CurCommand->svalue1), buf);
-
-  CurCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_GETPOS, 0, 0);
-  if (SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_GETCHECK, 0, 0))
-    CurCommand->ivalue2 = -1;
-  else
-    CurCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_GETPOS, 0, 0);
-  if (SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_GETCHECK, 0, 0))
-    CurCommand->ivalue3 = -1;
-  else
-    CurCommand->ivalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
-  
-  CurCommand->actiontype = PLUGINNUM;
-  SF.set_command(CurCommand);
-
-  EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-
-  LeaveCriticalSection(&CurCommand->critical_section);
-
-  return TRUE;
-}
-     
-static void EmptyUI(HWND hwnd)
-{
-  SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_SETCURSEL, 0, 0);
-  SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), "");
-  SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_SETPOS, 0, 1);
-  ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), SW_SHOW);
-  ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), SW_SHOW);
-  ShowWindow(GetDlgItem(hwnd, IDC_VALINT), SW_HIDE);
-  ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), SW_HIDE);
-  SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, FALSE, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, TRUE, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, TRUE, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, FALSE, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, 0);
-  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), FALSE);
-  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
-}
+/* Local variables */
+p_command g_pCommand = NULL;
+HWND g_hCommandDialog = NULL;
+HANDLE g_hCommandThread = NULL;
 
 static void LoadUISettings(HWND hwnd)
 {
-  if (CurCommand == NULL)
-     return;
+  if (NULL == g_pCommand) {
+    SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_SETCURSEL, 0, 0);
+    SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), "");
+    SendMessage(GetDlgItem(hwnd, IDC_VAL_SPIN), UDM_SETPOS, 0, 1);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALINT), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), SW_HIDE);
+    SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, FALSE, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, TRUE, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, TRUE, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, FALSE, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, 0);
+    EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), FALSE);
+    EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
+    EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
+    return;
+  }
 
-  EnterCriticalSection(&CurCommand->critical_section);
+  EnterCriticalSection(&g_pCommand->critical_section);
 
-  DisplayAction *action = FindDisplayAction(CurCommand);
+  DisplayAction *action = FindDisplayAction(g_pCommand);
   if (NULL == action)
     action = DisplayActions;    // String
 
@@ -176,9 +119,9 @@ static void LoadUISettings(HWND hwnd)
   }
   
   if (valINT == action->valueType)
-    SetWindowText(GetDlgItem(hwnd, IDC_VALINT), CurCommand->svalue1);
+    SetWindowText(GetDlgItem(hwnd, IDC_VALINT), g_pCommand->svalue1);
   else
-    SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), CurCommand->svalue1);
+    SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), g_pCommand->svalue1);
 
   char trans[256];
   SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
@@ -195,39 +138,83 @@ static void LoadUISettings(HWND hwnd)
   ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
              (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
 
-  SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, CurCommand->ivalue1);
+  SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue1);
 
-  BOOL wrap = (CurCommand->ivalue2 < 0);
+  BOOL wrap = (g_pCommand->ivalue2 < 0);
   SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, wrap, 0);
   SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, !wrap, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, CurCommand->ivalue2);
+  SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue2);
   EnableWindow(GetDlgItem(hwnd, IDC_COL), !wrap);
   EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), !wrap);
 
-  BOOL rest = (wrap || (CurCommand->ivalue3 <= 0));
+  BOOL rest = (wrap || (g_pCommand->ivalue3 <= 0));
   EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), !wrap);
   EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), !wrap);
   SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, rest, 0);
   SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, !rest, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, CurCommand->ivalue3);
+  SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue3);
   EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !rest);
   EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !rest);
-
-  LeaveCriticalSection(&CurCommand->critical_section);
+  EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
+  
+  LeaveCriticalSection(&g_pCommand->critical_section);
 }
 
-static
-BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
+static BOOL SaveUISettings(HWND hwnd)
+{
+  char buf[256];
+
+  if (g_pCommand == NULL)
+     return FALSE;
+
+  EnterCriticalSection(&g_pCommand->critical_section);
+
+  int idx = SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETCURSEL, 0, 0);
+  DisplayAction *action = (DisplayAction *)
+    SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETITEMDATA, idx, 0);
+  if (NULL != action)
+    SF.realloc_pchar(&g_pCommand->svalue2, (PCHAR)action->key);
+  else
+    SF.realloc_pchar(&g_pCommand->svalue2, "?");
+
+  if ((NULL != action) && (valINT == action->valueType))
+    GetWindowText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
+  else
+    GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
+  SF.realloc_pchar(&g_pCommand->svalue1, buf);
+
+  g_pCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_GETPOS, 0, 0);
+  if (SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_GETCHECK, 0, 0))
+    g_pCommand->ivalue2 = -1;
+  else
+    g_pCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_GETPOS, 0, 0);
+  if (SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_GETCHECK, 0, 0))
+    g_pCommand->ivalue3 = -1;
+  else
+    g_pCommand->ivalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
+  
+  g_pCommand->actiontype = PLUGINNUM;
+  SF.set_command(g_pCommand);
+
+  EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
+
+  LeaveCriticalSection(&g_pCommand->critical_section);
+
+  return TRUE;
+}
+     
+static BOOL CALLBACK CommandDialogProc(HWND hwnd,  UINT uMsg, 
+                                       WPARAM wParam, LPARAM lParam)
 {
   switch (uMsg) {
   case WM_INITDIALOG:
     {
       char trans[256];
       	
-      hDialog = hwnd;
+      g_hCommandDialog = hwnd;
 
       SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
-                  (LPARAM)LoadIcon(hInstance, MAKEINTRESOURCE(PLUGINICON)));
+                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(PLUGINICON)));
 
       SetWindowText(hwnd, PLUGINNAME);
 			
@@ -371,75 +358,44 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
   case WM_USER+100:
     LoadUISettings(hwnd);
-    EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
     return 1;
-
-  case WM_USER+101:
-    EmptyUI(hwnd);
-    return 1;
-
-  case WM_USER+102:
-    if (wParam==1) {
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDOK), TRUE);
-    }
-    else {
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDOK), FALSE);
-    }
-    return 1;			
   }
   return 0;
 }
 
-static DWORD WINAPI ConfigThread( LPVOID lpParameter )
+static DWORD WINAPI CommandThread(LPVOID lpParam)
 {
-  BOOL fResult;
-
-  fResult = DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_DIALOG), NULL, 
-                           DialogProc, (LPARAM)lpParameter);
-
-  hDialog=0;
-  
+  BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_DIALOG), NULL, 
+                               CommandDialogProc, (LPARAM)lpParam);
+  g_hCommandDialog = NULL;
   return 0;
 }
 
-void Update_Config()
+void OpenCommandUI()
 {
-  SendMessage(hDialog, WM_USER+100, 0,0);
+   DWORD dwThreadId;
+   if (NULL != g_hCommandDialog) {
+     SetForegroundWindow(g_hCommandDialog);
+   }
+   else {
+     g_hCommandThread = CreateThread(NULL, 0, &CommandThread, NULL, 0, &dwThreadId);
+     if (NULL == g_hCommandThread)
+       MessageBox(NULL, "Cannot create dialog thread.", "Error", MB_OK);
+   }
 }
 
-void Empty_Config()
+void UpdateCommandUI(p_command command)
 {
-  SendMessage(hDialog, WM_USER+101, 0,0);
+  g_pCommand = command;
+  if (NULL != g_hCommandDialog)
+    SendMessage(g_hCommandDialog, WM_USER+100, 0, 0);
 }
 
-void Enable_Config(BOOL bValue)
+void CloseCommandUI()
 {
-  if (bValue)
-    SendMessage(hDialog, WM_USER+102, 1, 0);
-  else
-    SendMessage(hDialog, WM_USER+102, 0, 0);
-}
-
-void Show_Config()
-{
-  if (hDialog != NULL) {
-    SetForegroundWindow(hDialog);
-  }
-  else {
-    DWORD dwThreadId;
-    ConfigThreadHandle = CreateThread(NULL,0,&ConfigThread,NULL,0,&dwThreadId);
-    if (ConfigThreadHandle == NULL)
-      MessageBox(0, "Cannot create dialogthread.", "Error", MB_OK);
-  }
-}
-
-void Close_Config()
-{
-  if (hDialog != NULL) {
-    SendMessage(hDialog, WM_DESTROY,0,0);
-    WaitForSingleObject(ConfigThreadHandle,4000);
-    CloseHandle(ConfigThreadHandle);
+  if (NULL != g_hCommandDialog) {
+    SendMessage(g_hCommandDialog, WM_DESTROY, 0, 0);
+    WaitForSingleObject(g_hCommandThread, 4000);
+    CloseHandle(g_hCommandThread);
   }
 }
