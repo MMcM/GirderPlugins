@@ -147,6 +147,23 @@ void DisplayStringRegister(TCommand *command, PCHAR retbuf)
   DisplayCommon(GetGirderStrReg(command->ivalue2), command, retbuf);
 }
 
+void DisplayFilenameRegister(TCommand *command, PCHAR retbuf)
+{
+  char buf[MAX_PATH];
+  strncpy(buf, GetGirderStrReg(command->ivalue2), sizeof(buf));
+  char *sp = strrchr(buf, '\\');
+  if (NULL != sp)
+    sp++;
+  else if (NULL != strstr(buf, "://")) // A URL
+    sp = strrchr(buf, '/') + 1;
+  else
+    sp = buf;
+  char *ep = strrchr(sp, '.');
+  if (NULL != ep)
+    *ep = '\0';
+  DisplayCommon(sp, command, retbuf);
+}
+
 void DisplayCurrentTime(TCommand *command, PCHAR retbuf)
 {
   const char *fmt = command->svalue1;
