@@ -1,0 +1,44 @@
+
+1.30    07/14/2002      MMcM    More DirectShow extraction; add support for RadLight.
+
+1.29    07/13/2002      MMcM    Configuration entry for Winamp event prefix.
+
+1.28    07/10/2002      MMcM    Add an event for Zoom Player window resize.
+
+1.27    06/18/2002      MMcM    Add workaround for TheaterTek on WinMe.
+
+1.26    05/26/2002      MMcM    Add support for Media Jukebox.
+
+1.25    05/25/2002      MMcM    Add support for Zoom Players's LCD interface.
+
+1.24    05/18/2002      MMcM    Clean up 3.2 conversion.
+
+1.22    04/30/2002      MMcM    Add support for more DirectShow-based players.
+
+1.21    04/21/2002      MMcM    Cookbook for how to add application support.
+
+1.20    04/10/2002      MMcM    Another problem with length with no payload strings.
+
+1.19    04/09/2002      MMcM    Misunderstanding of payload string lengths.
+
+1.18    03/30/2002      MMcM    New Girder Windows messages.
+
+1.17    03/17/2002      MMcM    Display accessDTV beta elapsed time.
+
+1.16    03/15/2002      MMcM    Internal cleanups.
+
+1.15    03/14/2002      MMcM    Use payload strings rather than text registers.
+
+1.13    03/02/2002      MMcM    Expose current media source file name.
+
+1.12    02/26/2002      MMcM    Change how registers work to avoid conflicts.
+
+1.11    02/25/2002      MMcM    Add support for Winamp.
+
+1.10    01/18/2002      MMcM    Add support for Windows Media Player.
+
+1.9     01/17/2002      MMcM    Add support for ATI Player.
+
+1.8     01/06/2002      MMcM    Add support for Zoom Player and TheaterTek.
+
+1.6     11/18/2001      MMcM    Add support for accessDTV.

@@ -42,6 +42,7 @@
       <EventString Name="BSPlayer.File" Identifier="10149" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
       <EventString Name="PowerDivX.File" Identifier="10150" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
       <EventString Name="MediaJukebox.File.Name" Identifier="10155" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Name"/>
+      <EventString Name="RadLight.File" Identifier="10161" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.File"/>
       <Command Name="Set Register" Identifier="70" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -339,6 +340,7 @@
       <EventString Name="BSPlayer.Elapsed" Identifier="10151" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
       <EventString Name="PowerDivX.Elapsed" Identifier="10152" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
       <EventString Name="MediaJukebox.Playback.Elapsed" Identifier="10158" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Elapsed"/>
+      <EventString Name="RadLight.Elapsed" Identifier="10162" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Elapsed"/>
       <Command Name="Set Register" Identifier="10123" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -395,6 +397,7 @@
       <EventString Name="BSPlayer.Duration" Identifier="10153" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
       <EventString Name="PowerDivX.Duration" Identifier="10154" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
       <EventString Name="MediaJukebox.Playback.Duration" Identifier="10159" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Duration"/>
+      <EventString Name="RadLight.Duration" Identifier="10163" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Duration"/>
       <Command Name="Set Register" Identifier="10133" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -441,12 +444,20 @@
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
       <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10135" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Domain"/>
+      <EventString Name="ZoomPlayer.DVD.State" Identifier="10164" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.State"/>
+      <EventString Name="ZoomPlayer.Media.State" Identifier="10165" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.State"/>
       <EventString Name="TheaterTek.Domain" Identifier="10136" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Domain"/>
+      <EventString Name="TheaterTek.State" Identifier="10166" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="TheaterTek.State"/>
       <EventString Name="ATI.DVD.Domain" Identifier="10137" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Domain"/>
+      <EventString Name="ATI.DVD.State" Identifier="10167" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ATI.DVD.State"/>
+      <EventString Name="ATI.MMC.State" Identifier="10168" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.State"/>
       <EventString Name="ZoomPlayer.OSD" Identifier="10138" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
       <EventString Name="WMP.Status" Identifier="10139" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
       <EventString Name="Winamp.Status" Identifier="10140" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
+      <EventString Name="BSPlayer.State" Identifier="10169" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.State"/>
+      <EventString Name="PowerDivX.Duration" Identifier="10170" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.State"/>
       <EventString Name="MediaJukebox.Playback.State" Identifier="10160" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
+      <EventString Name="RadLight.State" Identifier="10171" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.State"/>
       <Command Name="Set Register" Identifier="10141" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
