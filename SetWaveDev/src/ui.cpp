@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "resource.h"
-#include "girder.h"
+#include "plugin.h"
 
 /* Local variables */
 HWND hDialog;
@@ -24,16 +24,20 @@ BOOL SaveUISettings(HWND hwnd)
 {
   char buf[1024];
 
+   EnterCriticalSection(&CurCommand->critical_section);
+
   if (SendMessage(GetDlgItem(hwnd, IDC_RECORD), BM_GETCHECK, 0, 0))
     CurCommand->ivalue1 = 1;
   else
     CurCommand->ivalue1 = 0;
   
   GetWindowText(GetDlgItem(hwnd, IDC_DEVICE), buf, sizeof(buf));
-  SF.ReallocPchar(&(CurCommand->svalue1), buf);
+  SF.realloc_pchar(&(CurCommand->svalue1), buf);
 
   CurCommand->actiontype=PLUGINNUM;
-  SF.SetCommand(CurCommand);
+  SF.set_command(CurCommand);
+  
+  LeaveCriticalSection(&CurCommand->critical_section);
   
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
   return TRUE;
@@ -64,10 +68,14 @@ void EmptyUI(HWND hwnd)
 static
 void LoadUISettings(HWND hwnd)
 {
+  EnterCriticalSection(&CurCommand->critical_section);
+
   SendMessage(GetDlgItem(hwnd, IDC_PLAYBACK), BM_SETCHECK, (CurCommand->ivalue1 == 0), 0);
   SendMessage(GetDlgItem(hwnd, IDC_RECORD), BM_SETCHECK, (CurCommand->ivalue1 == 1), 0);
   LoadCombo(hwnd);
   SetWindowText(GetDlgItem(hwnd, IDC_DEVICE), CurCommand->svalue1);
+
+  LeaveCriticalSection(&CurCommand->critical_section);
 }
 
 static
@@ -84,22 +92,22 @@ BOOL CALLBACK DialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lParam)
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      SF.I18NTranslateEx("Ok", trans, sizeof(trans));
+      SF.i18n_translate("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      SF.I18NTranslateEx("Cancel", trans, sizeof(trans));
+      SF.i18n_translate("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
 
-      SF.I18NTranslateEx("Apply", trans, sizeof(trans));
+      SF.i18n_translate("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      SF.I18NTranslateEx("Playback", trans, sizeof(trans));
+      SF.i18n_translate("Playback", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_PLAYBACK), trans);
 
-      SF.I18NTranslateEx("Record", trans, sizeof(trans));
+      SF.i18n_translate("Record", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_RECORD), trans);
 
-      SF.I18NTranslateEx("Device:", trans, sizeof(trans));
+      SF.i18n_translate("Device:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_DEVICEL), trans);
 
       LoadUISettings(hwnd);
@@ -202,7 +210,7 @@ void Enable_Config(BOOL bValue)
 void Show_Config()
 {
    DWORD dwThreadId;
-   HANDLE ConfigThreadHandle;
+   // HANDLE ConfigThreadHandle;
    
    if (hDialog != 0)   
    {
