@@ -101,6 +101,10 @@ SOURCE=.\DisplaySpyHook.def
 # End Source File
 # Begin Source File
 
+SOURCE=.\DisplaySpyHook.rc
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -111,6 +115,10 @@ SOURCE=.\StdAfx.cpp
 # Begin Source File
 
 SOURCE=.\DisplaySpyHook.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 

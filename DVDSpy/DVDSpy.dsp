@@ -106,6 +106,10 @@ SOURCE=.\src\lib.def
 
 SOURCE=.\src\ui.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\src\ui.rc
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -129,10 +133,6 @@ SOURCE=.\src\ui.h
 # Begin Source File
 
 SOURCE=.\src\plugin.ico
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\ui.rc
 # End Source File
 # End Group
 # End Target
