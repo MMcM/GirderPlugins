@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+#include "winres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -34,13 +34,13 @@ END
 
 2 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "#include ""afxres.h""\r\n"
+    "#include ""winres.h""\r\n"
     "\0"
 END
 
 3 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "\r\n"
+    "1 TYPELIB ""ShowShifterSpy.tlb""\r\n"
     "\0"
 END
 
@@ -54,7 +54,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,37,0,94
+ FILEVERSION 1,37,0,2
  PRODUCTVERSION 1,37,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -68,14 +68,16 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "DVDSpy Windows hook\0"
-            VALUE "FileVersion", "1.37 (94)\0"
-            VALUE "InternalName", "DisplaySpyHook\0"
-            VALUE "OriginalFilename", "DisplaySpyHook.DLL\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "DVDSpy ShowShifter Module\0"
+            VALUE "FileVersion", "1.37 (2)\0"
+            VALUE "InternalName", "ShowShifterSpy\0"
+            VALUE "OriginalFilename", "ShowShifterSpy.DLL\0"
             VALUE "ProductName", "DVD Spy\0"
             VALUE "ProductVersion", "1.37\0"
+            VALUE "OLESelfRegister", "\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -85,6 +87,24 @@ BEGIN
 END
 
 #endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_DVDSPYMODULE        REGISTRY DISCARDABLE    "DVDSpyModule.rgs"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_PROJNAME            "ShowShifterSpy"
+END
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -96,7 +116,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
+1 TYPELIB "ShowShifterSpy.tlb"
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
