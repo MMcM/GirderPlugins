@@ -125,8 +125,11 @@ static void OnApply(HWND hwnd, LPARAM lParam)
       g_editDevices.SetDefault(g_editDevice);
     g_editOrigDevice = g_editDevice;
     g_editDevice = NULL;
-    if (NULL == g_displaysDialog)
+    if (NULL == g_displaysDialog) {
+      DisplayBeginConfigUpdate();
       g_editDevices.SaveToRegistry();
+      DisplayEndConfigUpdate();
+    }
     LPPSHNOTIFY pshn = (LPPSHNOTIFY)lParam;
     if (!pshn->lParam) {        // For Apply, need a new copy for further editing.
       if (NULL != g_editOrigDevice)
@@ -140,10 +143,9 @@ static void OnTest(HWND hwnd)
   // Save to device but no further.
   PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
 
-  DisplayEnterCS();
-  DisplayClose();
+  DisplayBeginConfigUpdate();
   if (!g_editDevice->Open()) {
-    DisplayLeaveCS();
+    DisplayEndConfigUpdate();
     MessageBox(hwnd, "Cannot open device", "Test", MB_OK | MB_ICONERROR);
     return;
   }
@@ -151,7 +153,7 @@ static void OnTest(HWND hwnd)
   MessageBox(hwnd, "Test screen should be displayed", "Test", MB_OK);
   g_editDevice->Clear();
   g_editDevice->Close();
-  DisplayLeaveCS();
+  DisplayEndConfigUpdate();
 }
 
 static void SaveGeneralSettings(HWND hwnd)
@@ -1063,10 +1065,10 @@ static BOOL CALLBACK FansPageDialogProc(HWND hwnd, UINT uMsg,
     case IDC_REFRESH:
       {
         PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
-        DisplayEnterCS();
+        DisplayBeginConfigUpdate();
         DisplayClose();
         if (!g_editDevice->Open()) {
-          DisplayLeaveCS();
+          DisplayEndConfigUpdate();
           MessageBox(hwnd, "Cannot open device", "Refresh", MB_OK | MB_ICONERROR);
           return TRUE;
         }
@@ -1074,7 +1076,7 @@ static BOOL CALLBACK FansPageDialogProc(HWND hwnd, UINT uMsg,
         g_editDevice->CheckFans();
         SetCursor(ocurs);
         g_editDevice->Close();
-        DisplayLeaveCS();
+        DisplayEndConfigUpdate();
         LoadFansSettings(hwnd);
         SetPageModified(hwnd);
       }
@@ -1328,10 +1330,10 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
     case IDC_REFRESH:
       {
         PropSheet_QuerySiblings(GetParent(hwnd), PSQS_SAVE_FOR_TEST, 0L);
-        DisplayEnterCS();
+        DisplayBeginConfigUpdate();
         DisplayClose();
         if (!g_editDevice->Open()) {
-          DisplayLeaveCS();
+          DisplayEndConfigUpdate();
           MessageBox(hwnd, "Cannot open device", "Detect", MB_OK | MB_ICONERROR);
           return TRUE;
         }
@@ -1342,7 +1344,7 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
         g_editDevice->DetectSensors(prefix);
         SetCursor(ocurs);
         g_editDevice->Close();
-        DisplayLeaveCS();
+        DisplayEndConfigUpdate();
         LoadSensorsSettings(hwnd);
         SetPageModified(hwnd);
       }
@@ -1632,11 +1634,10 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
       EndDialog(hwnd, TRUE);
       /* falls through */
     case IDC_APPLY:
-      DisplayEnterCS();
-      DisplayClose();
+      DisplayBeginConfigUpdate();
       g_editDevices.SaveToRegistry();
+      DisplayEndConfigUpdate();
       Button_Enable(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      DisplayLeaveCS();
       return TRUE;
 
     case IDCANCEL:

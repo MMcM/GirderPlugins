@@ -1053,16 +1053,12 @@ BOOL DisplayDevice::WriteSerial(LPBYTE data, DWORD len)
   if (NULL == m_outputEvent)
     return WriteFile(m_portHandle, data, len, &nb, NULL);
 
-  BOOL result;
   OVERLAPPED overlapped;
   memset(&overlapped, 0, sizeof(overlapped));
   EnterCriticalSection(&m_outputCS);
   overlapped.hEvent = m_outputEvent;
-  if (WriteFile(m_portHandle, data, len, &nb, &overlapped))
-    result = TRUE;
-  else if (ERROR_IO_PENDING != GetLastError())
-    result = FALSE;
-  else
+  BOOL result = WriteFile(m_portHandle, data, len, &nb, &overlapped);
+  if (!result && (ERROR_IO_PENDING == GetLastError()))
     result = GetOverlappedResult(m_portHandle, &overlapped, &nb, TRUE);
   LeaveCriticalSection(&m_outputCS);
   return result;

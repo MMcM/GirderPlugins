@@ -17,8 +17,9 @@ extern void UpdateCommandUI(p_command command);
 
 extern void DisplayInitCS();
 extern void DisplayDeleteCS();
-extern void DisplayEnterCS();
-extern void DisplayLeaveCS();
+
+extern void DisplayBeginConfigUpdate();
+extern void DisplayEndConfigUpdate();
 
 extern void DisplayClose();
 extern void DisplayUnload();

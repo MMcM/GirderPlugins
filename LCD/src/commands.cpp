@@ -59,12 +59,13 @@ void DisplayDeleteCS()
   DisplayDeviceFactory::DeleteCS();
 }
 
-void DisplayEnterCS()
+void DisplayBeginConfigUpdate()
 {
   EnterCriticalSection(&g_CS);
+  DisplayClose();
 }
 
-void DisplayLeaveCS()
+void DisplayEndConfigUpdate()
 {
   LeaveCriticalSection(&g_CS);
 }
@@ -196,14 +197,14 @@ public:
     : m_command(command),
       m_status(status), m_statuslen(statuslen) 
   {
-    DisplayEnterCS();
+    EnterCriticalSection(&g_CS);
     EnterCriticalSection(&m_command->critical_section);    
   }
 
   ~DisplayCommandState() 
   {
     LeaveCriticalSection(&m_command->critical_section);
-    DisplayLeaveCS();
+    LeaveCriticalSection(&g_CS);
   }
   
   void SetStatus(LPCSTR status)

@@ -135,6 +135,8 @@ gir_info(int message, int wparam, int lparam)
         /* falls through */
       case PBT_APMSUSPEND:
         DisplayClose();
+        // TODO: This causes trouble if the config UI is active.
+        // Perhaps just skip everything if it's open.
         DisplayUnload();
         break;
       case PBT_APMQUERYSUSPENDFAILED:
