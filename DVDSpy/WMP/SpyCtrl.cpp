@@ -2,26 +2,7 @@
 #include "stdafx.h"
 #include "WMPSpy.h"
 #include "SpyCtrl.h"
-
-HWND g_dvdspy = NULL;
-BOOL g_checked = FALSE;
-
-BOOL CALLBACK FindMonitorWindow(HWND hwnd, LPARAM lparam)
-{
-  char cname[256];
-  GetClassName(hwnd, cname, sizeof(cname));
-  if (!strcmp(cname, "Girder DVDSpy Monitor Window")) {
-    *(HWND*)lparam = hwnd;
-    return FALSE;
-  }
-  return TRUE;                  // Keep trying.
-}
-
-size_t copyBSTR(LPSTR into, BSTR bstr, size_t size)
-{
-  return WideCharToMultiByte(CP_ACP, 0, bstr, SysStringLen(bstr), into, size, 
-                             NULL, NULL);
-}
+#include "DVDSpy.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CSpyCtrl
@@ -79,32 +60,7 @@ STDMETHODIMP CSpyCtrl::put_value(BSTR newVal)
   if (!!m_text)
     m_text->put_value(newVal);
 
-  ATLTRACE2(atlTraceUser2, 3, _T("Event=%S; Value=%S\n"), (BSTR)m_event, newVal);
-
-  // TODO: Consider checking more often and doing an IsWindow on any
-  // previous handle.
-  if (!g_checked) {
-    EnumWindows(FindMonitorWindow, (LPARAM)&g_dvdspy);
-    ATLTRACE2(atlTraceUser, 3, _T("DVDSpy window %X\n"), (DWORD)g_dvdspy);
-    g_checked = TRUE;
-  }
-  if (NULL == g_dvdspy)
-    return S_OK;
-
-  char buf[1024];
-  LPSTR pbuf = buf;
-
-  pbuf += copyBSTR(pbuf, m_event, sizeof(buf) - (pbuf - buf));
-  *pbuf++ = '\0';
-  *pbuf++ = 1;
-  pbuf += copyBSTR(pbuf, newVal, sizeof(buf) - (pbuf - buf));
-  *pbuf++ = '\0';
-
-  COPYDATASTRUCT cd;
-  cd.dwData = 0;
-  cd.lpData = buf;
-  cd.cbData = pbuf - buf;
-  SendMessage(g_dvdspy, WM_COPYDATA, 0, (LPARAM)&cd);
+  GirderEvent(m_event, newVal);
 
   return S_OK;
 }
