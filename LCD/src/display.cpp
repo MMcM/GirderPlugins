@@ -544,9 +544,10 @@ int DisplayDevice::DefineCustomCharacter(const CustomCharacter& cust)
 {
   // Check for identical character already defined.
   for (int i = 0; i < NCUSTCHARS; i++) {
-    if (m_customCharacters[i] == cust) {
+    if (m_customLastUse[i] == 0)
+      continue;                 // Never used; device state unknown.
+    if (m_customCharacters[i] == cust)
       return i;
-    }
   }
 
   // Reuse character not current in use or least recently used.
@@ -606,10 +607,10 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
 
   if (asynch)
     m_outputEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-
+  
   m_portHandle = CreateFile(m_port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
                             OPEN_EXISTING, (asynch) ? FILE_FLAG_OVERLAPPED : 0, NULL);
-  if (NULL == m_portHandle) {
+  if (INVALID_HANDLE_VALUE == m_portHandle) {
     DisplayWin32Error(NULL, GetLastError());
     return FALSE;
   }

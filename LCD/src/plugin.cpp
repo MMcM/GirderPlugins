@@ -45,6 +45,7 @@ gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
     return GIR_FALSE;
   }
   memcpy(&SF, p, p->size);
+  DisplayInitCS();
   return GIR_TRUE;
 }
 
@@ -54,6 +55,7 @@ gir_close()
   CloseConfigUI();
   CloseCommandUI();
   DisplayClose();
+  DisplayDeleteCS();
   return GIR_TRUE;
 }
 

@@ -15,6 +15,11 @@ extern void OpenCommandUI();
 extern void CloseCommandUI();
 extern void UpdateCommandUI(p_command command);
 
+extern void DisplayInitCS();
+extern void DisplayDeleteCS();
+extern void DisplayEnterCS();
+extern void DisplayLeaveCS();
+
 class DisplayDevice;
 
 extern int DisplayWidth();

@@ -431,8 +431,10 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
   case WM_COMMAND:
     switch (LOWORD(wParam)) {
     case IDOK:
+      DisplayEnterCS();
       SaveConfigSettings(hwnd, TRUE);
       DisplayReopen(g_editDevice);
+      DisplayLeaveCS();
       g_editDevice = NULL;
       EndDialog(hwnd, TRUE);
       return TRUE;
@@ -442,20 +444,25 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
       return TRUE;
 
     case IDC_APPLY:
+      DisplayEnterCS();
       SaveConfigSettings(hwnd, TRUE);
       DisplayClose();
+      DisplayLeaveCS();
       return TRUE;
 
     case IDC_TEST:
+      DisplayEnterCS();
       SaveConfigSettings(hwnd, FALSE);
       DisplayClose();
       if (!g_editDevice->Open()) {
+        DisplayLeaveCS();
         MessageBox(hwnd, "Cannot open device", "Test", MB_OK | MB_ICONERROR);
         return TRUE;
       }
       g_editDevice->Test();
       MessageBox(hwnd, "Test screen should be displayed", "Test", MB_OK);
       g_editDevice->Close();
+      DisplayLeaveCS();
       return TRUE;
 
     case IDC_DEVICE:

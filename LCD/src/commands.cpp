@@ -18,12 +18,14 @@ public:
     : m_command(command),
       m_status(status), m_statuslen(statuslen) 
   {
+    DisplayEnterCS();
     EnterCriticalSection(&m_command->critical_section);    
   }
 
   ~DisplayCommandState() 
   {
     LeaveCriticalSection(&m_command->critical_section);
+    DisplayLeaveCS();
   }
   
   void SetStatus(LPCSTR status)
@@ -32,7 +34,28 @@ public:
   }
 };
 
+CRITICAL_SECTION g_CS;          // Ensure events see consistent device Settings.
 DisplayDevice *g_device = NULL;
+
+void DisplayInitCS()
+{
+  InitializeCriticalSection(&g_CS);
+}
+
+void DisplayDeleteCS()
+{
+  DeleteCriticalSection(&g_CS);
+}
+
+void DisplayEnterCS()
+{
+  EnterCriticalSection(&g_CS);
+}
+
+void DisplayLeaveCS()
+{
+  LeaveCriticalSection(&g_CS);
+}
 
 BOOL DisplayOpen(DisplayCommandState& state)
 {
