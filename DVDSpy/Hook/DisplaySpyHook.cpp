@@ -76,11 +76,13 @@ const UINT MS_DVD_NAVIGATOR = 2;
 const UINT MS_FG_DURATION = 3;
 const UINT MS_FG_POSITION = 4;
 const UINT MS_FG_FILENAME = 5;
-const UINT MS_DVD_DOMAIN = 6;
-const UINT MS_DVD_TITLE = 7;
-const UINT MS_DVD_CHAPTER = 8;
-const UINT MS_DVD_TOTAL = 9;
-const UINT MS_DVD_TIME = 10;
+const UINT MS_FG_STATE = 6;
+const UINT MS_FG_VIDEO_POSITION = 7;
+const UINT MS_DVD_DOMAIN = 8;
+const UINT MS_DVD_TITLE = 9;
+const UINT MS_DVD_CHAPTER = 10;
+const UINT MS_DVD_TOTAL = 11;
+const UINT MS_DVD_TIME = 12;
 
 const DWORD MODULE_NO_WIN16_CWP = 1;
 
@@ -217,6 +219,8 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
+      NENTRY_NUM(VideoPosition, EXTRACT_MEDIA_SPY, MS_FG_VIDEO_POSITION)
     END_MATCH()
 
     BEGIN_NMATCH(Media)
@@ -226,6 +230,8 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
+      NENTRY_NUM(VideoPosition, EXTRACT_MEDIA_SPY, MS_FG_VIDEO_POSITION)
     END_MATCH()
 
     BEGIN_NMATCH(OSD)
@@ -234,13 +240,6 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TOSDForm")
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_GETTEXT)
-    END_MATCH()
-
-    BEGIN_NMATCH(Size)
-      ENTRY_NUM(MATCH_MESSAGE, WM_SIZE)
-      ENTRY_STR(MATCH_CLASS, "VideoRenderer")
-     BEGIN_EXTRACT()
-      ENTRY0(EXTRACT_LPARAM_POINT)
     END_MATCH()
 
     BEGIN_NMATCH(Init)
@@ -268,6 +267,8 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
+      NENTRY_NUM(VideoPosition, EXTRACT_MEDIA_SPY, MS_FG_VIDEO_POSITION)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -288,6 +289,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     BEGIN_NMATCH(MMC)
@@ -297,6 +299,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -317,6 +320,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -340,6 +344,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -360,6 +365,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -393,6 +399,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -403,6 +410,28 @@ static MatchEntry g_matches[] = {
 #else
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
 #endif
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
+    END_MATCH()
+
+  BEGIN_MODULE(RadLight)
+  // There is mention of a RadLight OpenAPI SDK, which allows writing
+  // "modules", which might be able to get more information.  I cannot
+  // find it, though.
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_MESSAGE, WM_TIMER)
+      ENTRY_NUM(MATCH_MEDIA_SPY, MS_FILTER_GRAPH)
+     BEGIN_EXTRACT()
+      NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
+      NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
+      NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "TApplication")
      BEGIN_EXTRACT()
       ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
@@ -421,6 +450,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Chapter, EXTRACT_MEDIA_SPY, MS_DVD_CHAPTER)
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_DVD_TOTAL)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_DVD_TIME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     // Filter graph.
@@ -431,6 +461,7 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+      NENTRY_NUM(State, EXTRACT_MEDIA_SPY, MS_FG_STATE)
     END_MATCH()
 
     // Set window text.
@@ -989,6 +1020,43 @@ static char szfgFileName[MAX_PATH];
 static DVD_DOMAIN dvdDomain;
 static DVD_PLAYBACK_LOCATION dvdLocation;
 static ULONG ulTotalTime;
+static FILTER_STATE sourceFilterState;
+static long lVideoWindowLeft, lVideoWindowTop, lVideoWindowWidth, lVideoWindowHeight;
+static long lVideoDestinationLeft, lVideoDestinationTop, lVideoDestinationWidth, lVideoDestinationHeight;
+static long lVideoSourceLeft, lVideoSourceTop, lVideoSourceWidth, lVideoSourceHeight;
+
+HRESULT GetVideoPosition(IFilterGraph *pFG)
+{
+  HRESULT hr;
+  IVideoWindow *pVW = NULL;
+  hr = pFG->QueryInterface(IID_IVideoWindow, (void**)&pVW);
+  if (SUCCEEDED(hr)) {
+    hr = pVW->GetWindowPosition(&lVideoWindowLeft, &lVideoWindowTop,
+                                &lVideoWindowWidth, &lVideoWindowHeight);
+    pVW->Release();
+  }
+  if (FAILED(hr)) {
+    lVideoWindowLeft = lVideoWindowTop = 
+      lVideoWindowWidth = lVideoWindowHeight = -1;
+  }
+  IBasicVideo *pBV = NULL;
+  hr = pFG->QueryInterface(IID_IBasicVideo, (void**)&pBV);
+  if (SUCCEEDED(hr)) {
+    hr = pBV->GetDestinationPosition(&lVideoDestinationLeft, &lVideoDestinationTop,
+                                     &lVideoDestinationWidth, &lVideoDestinationHeight);
+    if (SUCCEEDED(hr))
+      hr = pBV->GetSourcePosition(&lVideoSourceLeft, &lVideoSourceTop,
+                                  &lVideoSourceWidth, &lVideoSourceHeight);
+    pBV->Release();
+  }  
+  if (FAILED(hr)) {
+    lVideoDestinationLeft = lVideoDestinationTop = 
+      lVideoDestinationWidth = lVideoDestinationHeight = -1;
+    lVideoSourceLeft = lVideoSourceTop = 
+      lVideoSourceWidth = lVideoSourceHeight = -1;
+  }
+  return hr;
+}
 
 BOOL MatchMediaSpy(UINT nClass)
 {
@@ -1060,6 +1128,9 @@ BOOL MatchMediaSpy(UINT nClass)
                   }
                 }
                 bFound = TRUE;
+                hr = pBF->GetState(0, &sourceFilterState);
+                if (S_OK != hr)         // Various intermediate conditions
+                  sourceFilterState = (FILTER_STATE)-1;
               }
             }
             // Could look for a file sink as well to indicate that we are capturing.
@@ -1067,6 +1138,8 @@ BOOL MatchMediaSpy(UINT nClass)
           }
           pEF->Release();
         }
+        if (bFound)
+          hr = GetVideoPosition(pFG);
         pFG->Release();
         if (bFound) return TRUE;
         n++;
@@ -1098,7 +1171,21 @@ BOOL MatchMediaSpy(UINT nClass)
           ulTotalTime = 0xFFFFFFFF;
         }
       }
+      IBaseFilter *pBF = NULL;
+      hr = pDVD->QueryInterface(IID_IBaseFilter, (void**)&pBF);
       pDVD->Release();
+      if (SUCCEEDED(hr)) {
+        hr = pBF->GetState(0, &sourceFilterState);
+        if (S_OK != hr)         // Various intermediate conditions
+          sourceFilterState = (FILTER_STATE)-1;
+        FILTER_INFO finfo;
+        hr = pBF->QueryFilterInfo(&finfo);
+        pBF->Release();
+        if (SUCCEEDED(hr) && (NULL != finfo.pGraph)) {
+          hr = GetVideoPosition(finfo.pGraph);
+          finfo.pGraph->Release();
+        }
+      }
       return SUCCEEDED(hr);
     }
 
@@ -1147,6 +1234,27 @@ void ExtractMediaSpy(UINT nField, LPSTR szBuf, size_t nSize)
     break;
   case MS_FG_FILENAME:
     strncpy(szBuf, szfgFileName, nSize);
+    break;
+  case MS_FG_STATE:
+    switch (sourceFilterState) {
+    case State_Stopped:
+      strncpy(szBuf, "Stopped", nSize);
+      break;
+    case State_Paused:
+      strncpy(szBuf, "Paused", nSize);
+      break;
+    case State_Running:
+      strncpy(szBuf, "Playing", nSize);
+      break;
+    default:
+      szBuf[0] = '\0';
+    }
+    break;
+  case MS_FG_VIDEO_POSITION:
+    sprintf(szBuf, "%d,%d,%d,%d;%d,%d,%d,%d;%d,%d,%d,%d",
+            lVideoWindowWidth, lVideoWindowHeight, lVideoWindowLeft, lVideoWindowTop,
+            lVideoDestinationWidth, lVideoDestinationHeight, lVideoDestinationLeft, lVideoDestinationTop,
+            lVideoSourceWidth, lVideoSourceHeight, lVideoSourceLeft, lVideoSourceTop);
     break;
   case MS_DVD_DOMAIN:
     switch (dvdDomain) {
