@@ -1,0 +1,79 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="en-us">
+<title>Java plug-in</title>
+</head>
+
+<body>
+
+<h1>Girder plug-in for calling Java</h1>
+Version 1.0. &nbsp;MMcM 08/02
+
+<h3>Files</h3>
+These are the files contained in this archive and what purpose they serve.
+<ul>
+
+<li><kbd>readme.htm</kbd><br/>
+This file.<p>
+</li>
+
+<li><kbd>GirderJava.dll</kbd><br/>
+The Girder plug-in proper.<p>
+
+This file must be placed in the <kbd>Plugins</kbd> folder
+beneath where Girder is installed.<p>
+</li>
+
+<li><kbd>GirderJava.jar</kbd><br/>
+The Java archive for the plugin support itself.<p>
+
+This file must be placed in the same folder where Girder is installed.<p>
+</li>
+
+<li><kbd>Test.GML</kbd><br/>
+A sample file showing what it can do presently.
+</li>
+
+</ul>
+
+<h3>Background</h3>
+
+This plug-in is designed to call Java code.  It wraps the Girder 
+<a href="http://www.girder.nl/devel32/api32.php">API</a>.<p>
+
+The Java documentation is <a href="javadocs/index.html">here</a>.
+
+<h3>Notes</h3>
+
+</ul>
+
+<li>You may need to adjust Girder's path in ... if Java is not
+normally in the path.  You will need both <kbd>jre\bin</kbd> and
+<kbd>jre\bin\hotspot</kbd>.
+</li>
+
+<li>The JVM currently listens for a remote debugger unconditionally on
+port 1999.
+</li>
+
+<li>Nothing has been done about wrapping the OSD functions.  This
+does not seem necessary, since they are available in separate plugins.
+If it were done, there would be a <code>GirderOSD</code> class to wrap
+both the settings and the display.  It would have to take care of
+drawing on the DC given a string and so on.
+</li>
+
+</ul>
+
+<h3>Disclaimer</h3>
+You use this plug-in at your own risk.
+
+<h3>Contact</h3>
+To report problems or make suggestions, post a message to the Girder
+forum, rather than sending email directly.
+
+</body>
+
+</html>
