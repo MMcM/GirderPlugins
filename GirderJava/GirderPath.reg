@@ -1,6 +1,6 @@
 REGEDIT4
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Girder.exe]
-@="C:\\Program Files\\Girder32\\Girder.exe"
-"Path"="C:\\Program Files\\Girder32;D:\\JDK1.3.1\\jre\\bin;D:\\JDK1.3.1\\jre\\bin\\hotspot"
+@="C:\\Program Files\\Girder\\Girder.exe"
+"Path"="C:\\Program Files\\Girder;C:\\j2sdk1.4.2_04\\jre\\bin;C:\\j2sdk1.4.2_04\\jre\\bin\\client"
 

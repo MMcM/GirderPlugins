@@ -27,7 +27,7 @@ extern CComModule _Module;
 #include <atlhost.h>
 #include <atlctl.h>
 
-#import "..\..\..\..\J River\Media Jukebox\Media Jukebox.tlb" no_namespace, named_guids
+#import "..\..\..\..\J River\Media Center\Media Jukebox.tlb" no_namespace, named_guids
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

@@ -18,7 +18,7 @@ $Header$
       <MatchNum>1</MatchNum>
       <ActionType>128</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>C:\Program Files\girder32\plugins\PowerMate\TestMenu.ini</sValue1>
+      <sValue1>C:\Program Files\girder\plugins\PowerMate\TestMenu.ini</sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>

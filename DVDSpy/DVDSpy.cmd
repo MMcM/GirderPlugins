@@ -9,7 +9,7 @@ regsvr32 MediaSpy.dll
 
 rem Get PATH right and avoid the wrong CONSOLE.DLL.
 pushd "..\Home Media Networks Limited\ShowShifter"
-regsvr32 ..\..\girder32\ShowShifterSpy.dll
+regsvr32 ..\..\girder\ShowShifterSpy.dll
 popd
 
 regsvr32 WMPSpy.dll

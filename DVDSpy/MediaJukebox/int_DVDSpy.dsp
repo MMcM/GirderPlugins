@@ -54,8 +54,8 @@ LINK32=link.exe
 # ADD LINK32 /nologo /subsystem:windows /dll /machine:I386 /out:"../../../int_DVDSpy.dll"
 # Begin Custom Build - Performing registration
 OutDir=.\../Release
-TargetPath=\Program Files\girder32\int_DVDSpy.dll
-InputPath=\Program Files\girder32\int_DVDSpy.dll
+TargetPath=\Program Files\girder\int_DVDSpy.dll
+InputPath=\Program Files\girder\int_DVDSpy.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -90,8 +90,8 @@ LINK32=link.exe
 # ADD LINK32 /nologo /subsystem:windows /dll /debug /machine:I386 /out:"../../../int_DVDSpy.dll" /pdbtype:sept
 # Begin Custom Build - Performing registration
 OutDir=.\../Debug
-TargetPath=\Program Files\girder32\int_DVDSpy.dll
-InputPath=\Program Files\girder32\int_DVDSpy.dll
+TargetPath=\Program Files\girder\int_DVDSpy.dll
+InputPath=\Program Files\girder\int_DVDSpy.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
