@@ -443,7 +443,7 @@
     </Command>
   </Group>
   <Group Name="ZoomPlayer Display" Identifier="10031" Enabled="TRUE">
-    <Command Name="Domain" Identifier="10032" Enabled="TRUE">
+    <Command Name="Domain" Identifier="10032" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -463,7 +463,7 @@
       <lValue1>10006</lValue1>
       <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10033" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Domain"/>
     </Command>
-    <Command Name="TitleNo" Identifier="10034" Enabled="TRUE">
+    <Command Name="TitleNo" Identifier="10034" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -485,7 +485,7 @@
       <lValue1>10007</lValue1>
       <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="10035" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.TitleNo"/>
     </Command>
-    <Command Name="Chapter" Identifier="10036" Enabled="TRUE">
+    <Command Name="Chapter" Identifier="10036" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -507,7 +507,7 @@
       <lValue1>10008</lValue1>
       <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10037" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Chapter"/>
     </Command>
-    <Command Name="Duration" Identifier="10038" Enabled="TRUE">
+    <Command Name="Duration" Identifier="10038" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -529,7 +529,7 @@
       <lValue1>10009</lValue1>
       <EventString Name="ZoomPlayer.DVD.Duration" Identifier="10039" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Duration"/>
     </Command>
-    <Command Name="Elapsed" Identifier="10040" Enabled="TRUE">
+    <Command Name="Elapsed" Identifier="10040" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -551,7 +551,7 @@
       <lValue1>10010</lValue1>
       <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10041" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Elapsed"/>
     </Command>
-    <Command Name="Duration" Identifier="10042" Enabled="TRUE">
+    <Command Name="Duration" Identifier="10042" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -573,7 +573,7 @@
       <lValue1>10009</lValue1>
       <EventString Name="ZoomPlayer.Media.Duration" Identifier="10043" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Duration"/>
     </Command>
-    <Command Name="Elapsed" Identifier="10044" Enabled="TRUE">
+    <Command Name="Elapsed" Identifier="10044" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -615,9 +615,10 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="ZoomPlayer.Media.File" Identifier="10047" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
+      <EventString Name="ZoomPlayer.Media.File" Identifier="10047" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
+      <EventString Name="ZoomPlayer.LCD.File" Identifier="20885" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.LCD.File"/>
     </Command>
-    <Command Name="OSD" Identifier="10048" Enabled="TRUE">
+    <Command Name="OSD" Identifier="10048" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -640,6 +641,148 @@
       <lValue1>1</lValue1>
       <lValue2>10</lValue2>
       <EventString Name="ZoomPlayer.OSD" Identifier="10049" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
+    </Command>
+    <Command Name="State" Identifier="20887" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>34</ActionSubType>
+      <sValue1>string zpstate;
+zpstate = pld1;
+string zposd;
+strlen(zposd);</sValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20892</lValue1>
+      <lValue2>20896</lValue2>
+    <EventString Name="ZoomPlayer.LCD.State" Identifier="20888" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.LCD.State"/>
+    </Command>
+    <MultiGroup Name="OSD On" Identifier="20889" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="ZoomPlayer.LCD.OSD" Identifier="20890" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.LCD.OSD"/>
+      <Command Name="Set Vars" Identifier="20891" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>34</ActionSubType>
+        <sValue1>string zposd;
+zposd = pld1;</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Display OSD" Identifier="20892" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <sValue1>[zposd]</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>1</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="OSD Off" Identifier="20893" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="ZoomPlayer.LCD.OSD.Off" Identifier="20894" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.LCD.OSD.Off"/>
+      <Command Name="Set Vars" Identifier="20895" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>34</ActionSubType>
+        <sValue1>string zposd;
+zposd = &#34;&#34;;</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Display State" Identifier="20896" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <sValue1>[zpstate]</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>1</lValue1>
+      </Command>
+    </MultiGroup>
+    <Command Name="Time" Identifier="20897" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>118</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>[pld1]</sValue1>
+      <iValue1>5</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>3</lValue1>
+      <EventString Name="ZoomPlayer.LCD.Time" Identifier="20898" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.LCD.Time"/>
     </Command>
     <Command Name="Close" Identifier="10050" Enabled="TRUE">
       <StateCount>1</StateCount>
