@@ -7,6 +7,7 @@ $Header$
 
 HINSTANCE g_hInstance;
 ATOM g_wndClass = NULL;
+LPCSTR g_szWndClass = "SIMLCD";
 
 class SimulatedLCD : public DisplayDevice
 {
@@ -46,7 +47,7 @@ protected:
     m_inputMap.Put(buf, value);
   }
 
-  HWND m_parent, m_hwnd;
+  HWND m_hwnd;
   int m_fontSize;
   char m_fontName[LF_FACESIZE], m_fontStyle[LF_FACESIZE];
   COLORREF m_textColor, m_backColor;
@@ -72,7 +73,6 @@ SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
   PutInputMap(VK_RIGHT, "Right");
   PutInputMap(VK_DOWN, "Down");
 
-  m_parent = DisplayWindowParent();
   m_hwnd = NULL;
   m_fontSize = 10;
   strncpy(m_fontName, "Courier New", sizeof(m_fontName));
@@ -91,7 +91,6 @@ SimulatedLCD::SimulatedLCD(const SimulatedLCD& other)
 {
   m_cols = other.m_cols;
   m_rows = other.m_rows;
-  m_parent = DisplayWindowParent();
   m_hwnd = NULL;
   m_fontSize = other.m_fontSize;
   strncpy(m_fontName, other.m_fontName, sizeof(m_fontName));
@@ -122,7 +121,7 @@ SimulatedLCD::~SimulatedLCD()
 void SimulatedLCD::OnClose()
 {
   m_hwnd = NULL;                // Prevent another DestroyWindow attempt.
-  Close();                      // But do close down display side state.
+  Close();                      // But do close down any display side state.
 }
 
 void SimulatedLCD::Resize(HWND hwnd)
@@ -472,10 +471,12 @@ BOOL SimulatedLCD::DeviceOpen()
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = NULL;
     wc.lpszMenuName = NULL;
-    wc.lpszClassName = "SIMLCD";
+    wc.lpszClassName = g_szWndClass;
     g_wndClass = RegisterClass(&wc);
-    if (NULL == g_wndClass)
+    if (NULL == g_wndClass) {
+      DisplayWin32Error(GetLastError());
       return FALSE;
+    }
   }
 
   DWORD exStyle = WS_EX_OVERLAPPEDWINDOW | WS_EX_TOOLWINDOW;
@@ -483,9 +484,9 @@ BOOL SimulatedLCD::DeviceOpen()
     exStyle |= WS_EX_TOPMOST;
   LPCSTR title = m_name;
   if (NULL == title) title = "Simulated LCD";
-  m_hwnd = CreateWindowEx(exStyle, "SIMLCD", title, WS_OVERLAPPED | WS_SYSMENU,
+  m_hwnd = CreateWindowEx(exStyle, g_szWndClass, title, WS_OVERLAPPED | WS_SYSMENU,
                           CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-                          m_parent, NULL, g_hInstance, this);
+                          DisplayWindowParent(), NULL, g_hInstance, this);
   if (NULL == m_hwnd)
     return FALSE;
 
@@ -594,6 +595,8 @@ BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)
   case DLL_THREAD_DETACH:
     break;
   case DLL_PROCESS_DETACH:
+    if (NULL != g_wndClass)
+      UnregisterClass(g_szWndClass, g_hInstance);
     break;
   }
   return TRUE;
