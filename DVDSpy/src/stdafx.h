@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dbt.h>
+#include <dshow.h>
 
 #define VTSTT_VOBS_ATTRIB_OFFSET        0x200
 

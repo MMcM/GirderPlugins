@@ -6,7 +6,7 @@
 HANDLE g_hHookThread = NULL;
 DWORD g_dwHookThreadId = 0;
 HWND g_hMonitorWindow = NULL;
-BOOL g_bRunning = FALSE;
+BOOL g_bRunning = FALSE, g_bOleInited = FALSE;
 
 void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 {
@@ -79,6 +79,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
           char cd = 'A' + i;
           char event[16], payload[1024], *pb;
           DWORD volser = 0;
+          ULONGLONG discid = 0;
           char volnam[MAX_PATH] = {'\0'};
           const char *aspect, *display, *standard;
           char regions[9];
@@ -91,12 +92,17 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
             event[3] = '\0';
             GetDVDTitle(event, volnam, sizeof(volnam), &volser);
             attribs = GetDVDAttribs(event, aspect, display, standard, regions);
+            if (attribs) {
+              if (!g_bOleInited)
+                CoInitialize(NULL);
+              GetDVDDiscID(event, &discid);
+            }
             strcpy(event, "Disc.Insert.");
             pb = event + strlen(event);
             *pb++ = cd;
             *pb++ = '\0';
             pb = payload;
-            *pb++ = ((attribs) ? 6 : 2);
+            *pb++ = ((attribs) ? 7 : 2);
             strcpy(pb, volnam);
             pb += strlen(pb) + 1;
             sprintf(pb, "%08X", volser);
@@ -109,6 +115,8 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
               strcpy(pb, standard);
               pb += strlen(pb) + 1;
               strcpy(pb, regions);
+              pb += strlen(pb) + 1;
+              sprintf(pb, "%016I64X", discid);
               pb += strlen(pb) + 1;
             }
             GirderEvent(event, payload, pb - payload);
@@ -156,6 +164,8 @@ BOOL SpecialEvent(LPCSTR szEvent, LPCSTR szVal)
 
 DWORD WINAPI HookThread(LPVOID param)
 {
+  g_bOleInited = FALSE;
+
 #define WCNAME "Girder DVDSpy Monitor Window"
 
   WNDCLASS wclass;
@@ -184,6 +194,10 @@ DWORD WINAPI HookThread(LPVOID param)
     else
       DispatchMessage(&msg);
   }
+
+  if (g_bOleInited)
+    CoUninitialize();
+
   return 0;
 }
 
