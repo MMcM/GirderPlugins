@@ -24,6 +24,7 @@ static winampGeneralPurposePlugin g_plugin = {
 
 static HWND g_hwndDVDSpy = NULL;
 static int g_nRefreshInterval = 1000;   // One second.
+static char g_szEventPrefix[128] = "Winamp";
 static UINT g_idTimer = 0;
 static int g_nTimerCount = 0;
 static int g_nPosition = 0;
@@ -111,8 +112,9 @@ void CALLBACK Timer(HWND, UINT, UINT, DWORD)
       g_extracts[i].lOld = lResult;
       
       char buf[1024], *pbuf;
-      strcpy(buf, "Winamp.");
+      strcpy(buf, g_szEventPrefix);
       pbuf = buf + strlen(buf);
+      *pbuf++ = '.';
       strcpy(pbuf, g_extracts[i].szName);
       pbuf += strlen(pbuf) + 1;
       *pbuf++ = 1;
@@ -187,7 +189,11 @@ void ReadConfig()
   char buf[MAX_PATH];
   GetIniFile(buf);
   g_nRefreshInterval = GetPrivateProfileInt("gen_DVDSpy", "RefreshInterval", 
-                                            g_nRefreshInterval, buf);
+                                            g_nRefreshInterval, 
+                                            buf);
+  GetPrivateProfileString("gen_DVDSpy", "EventPrefix",
+                          g_szEventPrefix, g_szEventPrefix, sizeof(g_szEventPrefix), 
+                          buf);
 }
 
 void WriteConfig()
@@ -196,6 +202,7 @@ void WriteConfig()
   GetIniFile(buf1);
   sprintf(buf2, "%d", g_nRefreshInterval);
   WritePrivateProfileString("gen_DVDSpy", "RefreshInterval", buf2, buf1);
+  WritePrivateProfileString("gen_DVDSpy", "EventPrefix", g_szEventPrefix, buf1);
 }
 
 BOOL CALLBACK ConfigProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -237,11 +244,15 @@ void Quit()
 {
   StopTimer();
   if (NULL != g_hwndDVDSpy) {
-    char cCloseEvent[] = "Winamp.Close\0";
+    char cCloseEvent[1024];
+    strcpy(cCloseEvent, g_szEventPrefix);
+    strcat(cCloseEvent, ".Close");
+    char *ebuf = cCloseEvent + strlen(cCloseEvent) + 1;
+    *ebuf++ = '\0';             // Two nuls.
     COPYDATASTRUCT cd;
     cd.dwData = 0;
     cd.lpData = cCloseEvent;
-    cd.cbData = sizeof(cCloseEvent); // Including both nuls.
+    cd.cbData = ebuf - cCloseEvent;
     SendMessage(g_hwndDVDSpy, WM_COPYDATA, 0, (LPARAM)&cd);
   }
 }
