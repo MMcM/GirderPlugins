@@ -1605,13 +1605,13 @@ int WINAPI PatchPowerDVDStretchDIBits
                                      lpbits, lpBitsInfo, iUsage, dwRop);
   if (GDI_ERROR == nResult) return nResult;
 
-  if (!((nDestWidth == nSrcWidth) &&
+  if (!((nSrcWidth > 0) &&
+        (nDestWidth == nSrcWidth) &&
         (nDestHeight == nSrcHeight) &&
-        (YSrc == 0) &&
-        ((XSrc % nSrcWidth) == 0) &&
         (lpBitsInfo->bmiHeader.biSize == sizeof(BITMAPINFOHEADER)) &&
         ((lpBitsInfo->bmiHeader.biWidth % nSrcWidth) == 0) &&
-        (lpBitsInfo->bmiHeader.biHeight == nSrcHeight) &&
+        ((XSrc % nSrcWidth) == 0) &&
+        (YSrc == (lpBitsInfo->bmiHeader.biHeight - nSrcHeight)) &&
         (iUsage == 0) &&
         (dwRop == SRCCOPY)))
     return nResult;
@@ -1632,13 +1632,13 @@ int WINAPI PatchPowerDVDStretchDIBits
 #endif
 
   if ((ptSize == g_PDVDStatusSize) &&
-      (nLen == countof(g_PDVDStatusNames)) &&
+      (nLen >= countof(g_PDVDStatusNames)) &&
       (ptPos == g_skinDVDStatus)) {
     DoMessage(HWND_PATCH, PATCH_POWERDVD_STRETCHDIBITS, 
               (WPARAM)SKINDVD_STATUS, (LPARAM)g_PDVDStatusNames[nOff]);
   }
   else if ((ptSize == g_PDVDTimeDigitSize) &&
-           (nLen == strlen(g_PDVDDigits))) {
+           (nLen >= strlen(g_PDVDDigits))) {
     char cDigit = g_PDVDDigits[nOff];
     if (ptPos == g_skinDVDHour10) {
       g_skinDVDTime[0] = cDigit;
@@ -1672,7 +1672,7 @@ int WINAPI PatchPowerDVDStretchDIBits
     }
   }
   else if ((ptSize == g_PDVDLocationDigitSize) &&
-           (nLen == strlen(g_PDVDDigits))) {
+           (nLen >= strlen(g_PDVDDigits))) {
     char cDigit = g_PDVDDigits[nOff];
     if (ptPos == g_skinDVDTitle100) {
       g_skinDVDTitle[0] = cDigit;

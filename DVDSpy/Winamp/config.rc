@@ -91,8 +91,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,47,0,26
- PRODUCTVERSION 1,47,0,0
+ FILEVERSION 1,48,0,27
+ PRODUCTVERSION 1,48,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -108,11 +108,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "DVDSpy Winamp plugin\0"
-            VALUE "FileVersion", "1.47 (26)\0"
+            VALUE "FileVersion", "1.48 (27)\0"
             VALUE "InternalName", "gen_DVDSpy\0"
             VALUE "OriginalFilename", "gen_DVDSpy.dll\0"
             VALUE "ProductName", "DVD Spy\0"
-            VALUE "ProductVersion", "1.47\0"
+            VALUE "ProductVersion", "1.48\0"
         END
     END
     BLOCK "VarFileInfo"
