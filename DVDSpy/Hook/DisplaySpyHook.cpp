@@ -61,9 +61,10 @@ const UINT EXTRACT_GETTEXT = 2002;
 const UINT EXTRACT_LPARAM_STR = 2003;
 const UINT EXTRACT_LPARAM = 2004;
 const UINT EXTRACT_WPARAM = 2005;
-const UINT EXTRACT_WPARAM_POINT = 2006;
-const UINT EXTRACT_CLASS = 2007;
-const UINT EXTRACT_HWND = 2008;
+const UINT EXTRACT_LPARAM_POINT = 2006;
+const UINT EXTRACT_WPARAM_POINT = 2007;
+const UINT EXTRACT_CLASS = 2008;
+const UINT EXTRACT_HWND = 2009;
 const UINT EXTRACT_SB_GETTEXT = 2010;
 const UINT EXTRACT_MEDIA_SPY = 2030;
 
@@ -233,6 +234,13 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TOSDForm")
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_GETTEXT)
+    END_MATCH()
+
+    BEGIN_NMATCH(Size)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SIZE)
+      ENTRY_STR(MATCH_CLASS, "VideoRenderer")
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_POINT)
     END_MATCH()
 
     BEGIN_NMATCH(Init)
@@ -637,6 +645,9 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
     break;
   case EXTRACT_WPARAM:
     sprintf(szBuf, "%d", wParam);
+    break;
+  case EXTRACT_LPARAM_POINT:
+    sprintf(szBuf, "%d,%d", LOWORD(lParam), HIWORD(lParam));
     break;
   case EXTRACT_WPARAM_POINT:
     sprintf(szBuf, "%d,%d", LOWORD(wParam), HIWORD(wParam));
