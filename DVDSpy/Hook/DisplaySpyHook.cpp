@@ -1569,10 +1569,23 @@ void InstallPatches()
         break;
       case PATCH_WINDVD_GETIMAGE:
         if (NULL == LoadImageIAT) {
-          if (!PatchFunction("USER32.DLL", "LoadImageA", szDefMod,
-                             (PROC)PatchWinDVDLoadImage, &LoadImageIAT, (PROC*)&OrigLoadImage))
-            PatchFunction("USER32.DLL", "LoadImageA", "IVIPlayerX.ocx",
-                          (PROC)PatchWinDVDLoadImage, &LoadImageIAT, (PROC*)&OrigLoadImage);
+          for (int i = 1; i <= 3; i++) {
+            LPCSTR szMod;
+            switch (i) {
+            case 1:
+              szMod = szDefMod; // Version 3 (WinDVDi)
+              break;
+            case 2:
+              szMod = "IVIPlayerX.ocx"; // Version 4 (WinDVD4)
+              break;
+            case 3:
+              szMod = "pbPlyr.ocx"; // Platinum (WinDVD4PR)
+              break;
+            }
+            if (PatchFunction("USER32.DLL", "LoadImageA", szMod,
+                              (PROC)PatchWinDVDLoadImage, &LoadImageIAT, (PROC*)&OrigLoadImage))
+              break;
+          }
         }
       }
     }
@@ -2163,6 +2176,7 @@ struct WinDVDImage
   const char *szValue;
   HBITMAP hBitmap;
 } g_WinDVDImages[] = {
+  { NULL, " ", },
   { "Number_0", "0" },
   { "Number_1", "1" },
   { "Number_2", "2" },
@@ -2211,7 +2225,7 @@ HANDLE WINAPI PatchWinDVDLoadImage(HINSTANCE hinst, LPCSTR lpszName, UINT uType,
   }
 #endif
 
-  for (size_t i = 0; i < countof(g_WinDVDImages); i++) {
+  for (size_t i = 1; i < countof(g_WinDVDImages); i++) {
     if (!_stricmp(g_WinDVDImages[i].szName, szName)) {
       g_WinDVDImages[i].hBitmap = (HBITMAP)hResult;
       break;
@@ -2265,7 +2279,7 @@ BOOL MatchWinDVDSetImage(HWND hWnd, UINT nType, HBITMAP hBitmap)
     char szBuf[1024];
     sprintf(szBuf, "WinDVD: SetImage %X(%d,%d) %X(%s)\n", 
             hWnd, ptPos.x, ptPos.y, hBitmap, 
-            (NULL != pImage) ? pImage->szValue : "?");
+            (NULL != pImage) ? pImage->szName : "???");
     OutputDebugString(szBuf);
   }
 #endif
