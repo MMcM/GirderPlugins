@@ -19,6 +19,16 @@
 #include <malloc.h>
 #include <time.h>
 
+#include <windowsx.h>
+#define TrackBar_GetPos(hwndCtl)          ((LONG)(DWORD)SNDMSG((hwndCtl), TBM_GETPOS, 0L, 0L))
+#define TrackBar_SetPos(hwndCtl, bRedraw, lPos)    ((void)(DWORD)SNDMSG((hwndCtl), TBM_SETPOS, (WPARAM)(BOOL)(bRedraw), (LPARAM)(LONG)(lPos)))
+#define TrackBar_GetRange(hwndCtl)                      ((DWORD)SNDMSG((hwndCtl), TBM_GETRANGE, 0L, 0L))
+#define TrackBar_SetRange(hwndCtl, nMinimum, nMaximum)  ((void)SNDMSG((hwndCtl), TBM_SETRANGE, 0L, (LPARAM)MAKELONG((nMinimum), (nMaximum))))
+#define UpDown_GetPos(hwndCtl)          ((short)(DWORD)SNDMSG((hwndCtl), UDM_GETPOS, 0L, 0L))
+#define UpDown_SetPos(hwndCtl, nPos)    ((short)(DWORD)SNDMSG((hwndCtl), UDM_SETPOS, 0L, (LPARAM)MAKELONG((short)nPos, 0)))
+#define UpDown_GetRange(hwndCtl)                        ((DWORD)SNDMSG((hwndCtl), UDM_GETRANGE, 0L, 0L))
+#define UpDown_SetRange(hwndCtl, nUpper, nLower)        ((void)SNDMSG((hwndCtl), UDM_SETRANGE, 0L, (LPARAM)MAKELONG((nUpper), (nLower))))
+
 #include <girder.h>
 
 extern "C" {

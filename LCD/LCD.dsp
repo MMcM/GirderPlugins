@@ -93,7 +93,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\src\cmdui.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\src\commands.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\src\configui.cpp
 # End Source File
 # Begin Source File
 
@@ -115,10 +123,6 @@ SOURCE=.\src\plugin.def
 
 SOURCE=.\src\stdafx.cpp
 # ADD CPP /Yc"stdafx.h"
-# End Source File
-# Begin Source File
-
-SOURCE=.\src\ui.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
