@@ -2,7 +2,7 @@
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "1.13"
+#define PLUGINVERSION "1.14"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;
@@ -17,7 +17,7 @@ extern LPSTR pDisplayBuf;
 class DisplayCommandState;
 
 enum DisplayValueType {
-  valNONE, valSTR, valINT, valVAR
+  valNONE, valSTR, valINT, valVAR, valSCREEN
 };
 
 struct DisplayAction
@@ -36,6 +36,8 @@ extern void DisplayCurrentTime(DisplayCommandState& state);
 extern void DisplayFilename(DisplayCommandState& state);
 extern void DisplayClose(DisplayCommandState& state);
 extern void DisplayClear(DisplayCommandState& state);
+extern void DisplayScreen(DisplayCommandState& state);
 
 extern void DisplayCommand(p_command command,
                            PCHAR status, int statuslen);
+extern void DisplayClose();
