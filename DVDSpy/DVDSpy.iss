@@ -3,11 +3,11 @@
 
 [Setup] 
 AppName=DVDSpy
-AppVerName=DVDSpy 1.63
+AppVerName=DVDSpy 1.64
 AppID=DVDSpy
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=1.63
+AppVersion=1.64
 DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
 DirExistsWarning=no 
 ;LicenseFile=plugins\DVDSpy\license.txt

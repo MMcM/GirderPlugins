@@ -357,7 +357,7 @@ static MatchEntry g_matches[] = {
 
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
-      ENTRY_STR(MATCH_GETTEXT, "Overlay")
+      ENTRY_STR(MATCH_GETTEXT, "TTWndClass")
      BEGIN_EXTRACT()
       ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()

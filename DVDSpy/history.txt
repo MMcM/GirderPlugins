@@ -1,3 +1,5 @@
+1.64    11/25/2004      MMcM    Update for TheaterTek 2.0.
+
 1.63    10/17/2004      erikt   Add support for foobar2000.
 
 1.62    10/06/2004      MMcM    Add an Inno Setup installer.
