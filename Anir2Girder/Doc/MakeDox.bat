@@ -5,7 +5,7 @@ rd /S /Q html
 
 @echo ***Copying some files ***
 
-SET VERSION=0.2.1
+SET VERSION=0.3.0
 
 md ..\bin\html
 copy ..\ReadMe.txt ..\bin\html
