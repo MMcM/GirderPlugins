@@ -7137,8 +7137,8 @@ PlayerTitleNo = flds[3]
       <EventString Name="Foobar.Close" Identifier="554" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Close"/>
     </Command>
   </Group>
-  <Group Name="MyHD Display" Identifier="555" Enabled="FALSE">
-    <Comments>MyHD channel state</Comments>
+  <Group Name="MyHD Display" Identifier="555" Enabled="TRUE">
+    <Comments>MyHD channel state *ON*</Comments>
     <MultiGroup Name="Raw channel" Identifier="556" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
