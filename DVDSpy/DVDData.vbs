@@ -47,7 +47,7 @@ End If
 If Not loaded Then
  ' This just redirects to the one below, but is presumably more stable.
  'url = "http://windowsmedia.com/redir/querydvdid.asp?WMPFriendly=true&locale=409&version=8.0.0.4487&DVDID=" & Left(discId, 8) & "|" & Right(discId, 8)
-  url = "http://services.windowsmedia.com/amgvideo_a/template/QueryDVDTOC_v3.xml?TOC=" & discId
+  url = "http://metaservices.windowsmedia.com/amgvideo_a/template/QueryDVDTOC_v3.xml?TOC=" & discId
   loaded = data.load(url)
   If loaded And Not IsEmpty(file) Then
     data.save(file)

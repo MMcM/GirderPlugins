@@ -323,7 +323,7 @@ static MatchEntry g_matches[] = {
     BEGIN_NMATCH(Init)
       ENTRY_NUM(MATCH_MESSAGE, WM_SHOWWINDOW)
       ENTRY_NUM(MATCH_WPARAM, TRUE)
-      ENTRY_STR(MATCH_CLASS, "TMainForm")
+      ENTRY_STR(MATCH_CLASS, "TMainForm.UnicodeClass")
       ENTRY0(MATCH_ONCE)
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_HWND)
@@ -331,7 +331,7 @@ static MatchEntry g_matches[] = {
 
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
-      ENTRY_STR(MATCH_CLASS, "TMainForm")
+      ENTRY_STR(MATCH_CLASS, "TMainForm.UnicodeClass")
      BEGIN_EXTRACT()
       ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
@@ -465,12 +465,9 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
-  BEGIN_NMODULE(BSPlayer,bplay)
-  // There are also some text controls, which display things like
-  // Pause, that might be worth getting.  Their position comes from
-  // the skin.ini file in the skin directory / archive.  They appear
-  // to be drawn with DrawText to a zero-origin DC, such as a bitmap
-  // that is then blted to the screen.
+  BEGIN_NMODULE(BSPlayer,bsplay)
+  // It is also possible to get (and control) position and status information by
+  // sending WM_USER+2.  This could be done under the timer instead.
 
     BEGIN_MATCH()
       ENTRY0(MATCH_SECOND_TIMER)

@@ -4317,7 +4317,7 @@ result = (pld1 ~= PlayerTitle)
         <sValue1>pld1</sValue1>
         <sValue2>v</sValue2>
         <iValue2>3</iValue2>
-        <iValue3>5</iValue3>
+        <iValue3>6</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -4338,7 +4338,7 @@ result = (pld1 ~= PlayerTitle)
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
         <sValue2>s</sValue2>
-        <iValue2>8</iValue2>
+        <iValue2>9</iValue2>
         <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -4389,7 +4389,7 @@ result = (pld1 ~= PlayerTitle)
         <ActionSubType>1</ActionSubType>
         <sValue1>pld1</sValue1>
         <sValue2>v</sValue2>
-        <iValue2>8</iValue2>
+        <iValue2>9</iValue2>
         <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>

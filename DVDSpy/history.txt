@@ -1,4 +1,6 @@
 
+1.58    02/06/2004      MMcM    Minor application interface updates.
+
 1.57    06/01/2003      MMcM    Add explicit license.
 
 1.56    03/09/2003      MMcM    Add initial Disc.Contents events.
