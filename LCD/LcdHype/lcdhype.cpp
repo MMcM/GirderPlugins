@@ -239,7 +239,14 @@ BOOL LCDHypeDisplay::DeviceOpen()
 
   grbuff = new unsigned char[MAX_RESPIXELS];
 
-  m_dll->LCD_SetIOPropertys(port,1,1,width/m_dll->DLLInfo.FontPitch,height/m_dll->DLLInfo.CCharHeight,width,height,true,127,false,false);
+  m_cols=0;
+  m_rows=0;
+  if (m_dll->DLLInfo.SupportTxtLCD) {
+    m_cols=width/m_dll->DLLInfo.FontPitch;
+    m_rows=height/m_dll->DLLInfo.CCharHeight;
+  }
+
+  m_dll->LCD_SetIOPropertys(port,1,1,m_cols,m_rows,width,height,true,127,false,false);
   m_dll->LCD_Init();
 
   LCD_Font();
