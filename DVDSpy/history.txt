@@ -1,4 +1,14 @@
 
+1.45    10/26/2002      MMcM    Try to avoid DVD Navigator problems with XP SP1.
+
+1.44    10/25/2002      MMcM    Add skin based support for PowerDVD and WinDVD.
+
+1.43    10/20/2002      MMcM    Add DVD disc id to Disc.Insert event.
+
+1.42    10/18/2002      MMcM    Add support for Sonic CinePlayer.
+
+1.41    10/15/2002      MMcM    Switch to using IDvdInfo2.
+
 1.40    10/12/2002      Flo     Add support for Digital CD Player.
 
 1.39    10/11/2002      MMcM    Fill out ShowShifter in DVD2LCD scripts.
