@@ -1,4 +1,6 @@
 
+2.4     11/29/2002      MMcM    Fix 4x40 parallel addressing.
+
 2.3     10/01/2002      MMcM    Add debounce time for Matrix Orbital keypads.
 
 2.2     09/28/2002      MMcM    Enhanced sample.
