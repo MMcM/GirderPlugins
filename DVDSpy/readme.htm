@@ -11,7 +11,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.12. &nbsp;MMcM 02/02
+Version 1.13. &nbsp;MMcM 03/02
 
 <h3>Use</h3>
 
@@ -97,7 +97,7 @@ It includes a Winamp general plugin that exposes state changes.<p>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>PowerDVD.Title.6</td>
+<tr><td>PowerDVD.Title.7</td>
 <td>Title of video window changed</td>
 <td align="right">6</td>
 <td></td>
@@ -179,9 +179,16 @@ It includes a Winamp general plugin that exposes state changes.<p>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.OSD.6</td>
-<td>OSD caption changed</td>
+<tr><td>ZoomPlayer.Media.6</td>
+<td>Source changed</td>
 <td align="right">6</td>
+<td></td>
+<td>New source file name</td>
+</tr>
+
+<tr><td>ZoomPlayer.OSD.7</td>
+<td>OSD caption changed</td>
+<td align="right">7</td>
 <td></td>
 <td>New OSD message (Play, Pause, ...)</td>
 </tr>
@@ -282,6 +289,13 @@ It includes a Winamp general plugin that exposes state changes.<p>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
+<tr><td>ATI.MMC.6</td>
+<td>Source changed</td>
+<td align="right">6</td>
+<td></td>
+<td>New source file name</td>
+</tr>
+
 <tr><td>ATI.Close</td>
 <td>ATI application closed</td>
 </tr>
@@ -309,9 +323,16 @@ It includes a Winamp general plugin that exposes state changes.<p>
 <td>New elapsed time (MM:SS)</td>
 </tr>
 
-<tr><td>WMP.Title.6</td>
-<td>Media name changed</td>
+<tr><td>WMP.URL.6</td>
+<td>Media source changed</td>
 <td align="right">6</td>
+<td></td>
+<td>New current media URL</td>
+</tr>
+
+<tr><td>WMP.Title.7</td>
+<td>Media name changed</td>
+<td align="right">7</td>
 <td></td>
 <td>New current media name</td>
 </tr>
@@ -357,15 +378,45 @@ It includes a Winamp general plugin that exposes state changes.<p>
 <td>New elapsed time (MM:SS)</td>
 </tr>
 
-<tr><td>Winamp.Title.6</td>
-<td>Track title changed</td>
+<tr><td>Winamp.File.6</td>
+<td>Track file changed</td>
 <td align="right">6</td>
+<td></td>
+<td>New current filename</td>
+</tr>
+
+<tr><td>Winamp.Title.7</td>
+<td>Track title changed</td>
+<td align="right">7</td>
 <td></td>
 <td>New current title</td>
 </tr>
 
 <tr><td>Winamp.Close</td>
 <td>Program closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td>ShowShifter.4</td>
+<td>Duration changed</td>
+<td align="right">4</td>
+<td></td>
+<td>New total duration (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ShowShifter.5</td>
+<td>Position changed</td>
+<td align="right">5</td>
+<td></td>
+<td>New current position (HH:MM:SS)</td>
+</tr>
+
+<tr><td>ShowShifter.6</td>
+<td>Source changed</td>
+<td align="right">6</td>
+<td></td>
+<td>New source file name</td>
 </tr>
 
 </table><p>
@@ -392,11 +443,12 @@ Girder is presumably used to control it directly and to display its
 status someplace else.  More information on WMP skins is available in
 the Windows Media Player SDK.<p>
 
-In order for the Winamp plugin to be accessible, it needs to be copied
-into the <kbd>Plugins</kbd> subdirectory of the Winamp installation
-directory, which is usually <kbd>C:\Program Files\Winamp</kbd>.  Once
-installed, the plugin can be configured from inside Winamp to set the
-interval (in milliseconds) at which it checks for state changes.<p>
+In order for the Winamp plugin to be accessible, the file
+<kbd>gen_DVDSpy.dll</kbd> needs to be copied into the
+<kbd>Plugins</kbd> subdirectory of the Winamp installation directory,
+which is usually <kbd>C:\Program Files\Winamp</kbd>.  Once installed,
+the plugin can be configured from inside Winamp to set the interval
+(in milliseconds) at which it checks for state changes.<p>
 
 The registry key
 <kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy\Events</kbd>
