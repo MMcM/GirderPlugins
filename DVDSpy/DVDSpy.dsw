@@ -42,7 +42,31 @@ Package=<4>
 
 ###############################################################################
 
+Project: "RealSpy"=".\Real\RealSpy.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "ShowShifterSpy"=".\ShowShifter\ShowShifterSpy.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "TVSpy"=".\TV\TVSpy.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
