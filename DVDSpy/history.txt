@@ -1,4 +1,6 @@
 
+1.33    08/11/2002      MMcM    Clean up code.
+
 1.32    07/29/2002  sshumate    Add DVD main title info to disc insert event.
 
 1.31    07/20/2002      MMcM    TheaterTek / ATI DVD Paused state display.
