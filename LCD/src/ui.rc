@@ -64,24 +64,27 @@ PLUGINICON              ICON    DISCARDABLE     "plugin.ico"
 IDD_DIALOG DIALOG DISCARDABLE  0, 0, 255, 175
 STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
-CAPTION "LCD 1.13"
+CAPTION "LCD 1.14"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "Type:",IDC_TYPEL,15,20,30,8
-    COMBOBOX        IDC_TYPE,50,18,190,100,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | 
-                    WS_TABSTOP
+    COMBOBOX        IDC_TYPE,50,18,190,100,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
     LTEXT           "Value:",IDC_VALUEL,15,45,30,8
     EDITTEXT        IDC_VALSTR,50,42,190,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_VALINT,50,42,30,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_VALINT,50,42,30,14,ES_AUTOHSCROLL | ES_NUMBER | NOT 
+                    WS_VISIBLE
     CONTROL         "ValSpin",IDC_VAL_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | NOT WS_VISIBLE,80,42,10,14
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | NOT WS_VISIBLE,80,42,10,
+                    14
     LTEXT           "Row:",IDC_ROWL,15,70,30,8
     EDITTEXT        IDC_ROW,50,67,30,14,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "RowSpin",IDC_ROW_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS,80,67,10,14
     CONTROL         "Marquee",IDC_USE_WRAP,"Button",BS_AUTORADIOBUTTON | 
                     WS_GROUP | WS_TABSTOP,15,95,51,10
-    CONTROL         "Column:",IDC_USE_COL,"Button",BS_AUTORADIOBUTTON,110,95,40,8
+    CONTROL         "Column:",IDC_USE_COL,"Button",BS_AUTORADIOBUTTON,110,95,
+                    40,8
     EDITTEXT        IDC_COL,155,92,30,14,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "ColSpin",IDC_COL_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS,185,92,11,14
@@ -90,8 +93,29 @@ BEGIN
     CONTROL         "Width:",IDC_USE_WIDTH,"Button",BS_AUTORADIOBUTTON,110,
                     120,40,10
     EDITTEXT        IDC_WIDTH,155,118,30,14,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "WidthSpin",IDC_WIDTH_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS,185,118,11,14
+    CONTROL         "WidthSpin",IDC_WIDTH_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,185,118,
+                    11,14
+    LTEXT           "Enabled                                           Value                                         Marquee",
+                    IDC_SCREENL,7,45,241,8,NOT WS_VISIBLE
+    CONTROL         "",IDC_ENABLE_LINE1,"Button",BS_AUTOCHECKBOX | NOT 
+                    WS_VISIBLE | WS_GROUP,10,63,8,8
+    CONTROL         "",IDC_ENABLE_LINE2,"Button",BS_AUTOCHECKBOX | NOT 
+                    WS_VISIBLE,10,78,8,8
+    CONTROL         "",IDC_ENABLE_LINE3,"Button",BS_AUTOCHECKBOX | NOT 
+                    WS_VISIBLE,10,93,8,8
+    CONTROL         "",IDC_ENABLE_LINE4,"Button",BS_AUTOCHECKBOX | NOT 
+                    WS_VISIBLE,10,108,8,8
+    EDITTEXT        IDC_LINE1,29,60,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE | 
+                    WS_GROUP
+    EDITTEXT        IDC_LINE2,29,75,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    EDITTEXT        IDC_LINE3,29,90,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    EDITTEXT        IDC_LINE4,29,105,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    RADIOBUTTON     "",IDC_MARQUEE_LINE1,235,62,10,10,NOT WS_VISIBLE | 
+                    WS_GROUP
+    RADIOBUTTON     "",IDC_MARQUEE_LINE2,235,77,10,10,NOT WS_VISIBLE
+    RADIOBUTTON     "",IDC_MARQUEE_LINE3,235,92,10,10,NOT WS_VISIBLE
+    RADIOBUTTON     "",IDC_MARQUEE_LINE4,235,107,10,10,NOT WS_VISIBLE
     DEFPUSHBUTTON   "OK",IDOK,36,155,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,102,155,50,14
     PUSHBUTTON      "Apply",IDC_APPLY,168,155,50,14
@@ -105,7 +129,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,13,0,20
+ FILEVERSION 1,14,0,22
+ PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -121,7 +146,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "LCD Girder plug-in\0"
-            VALUE "FileVersion", "1.13 (20)\0"
+            VALUE "FileVersion", "1.14 (22)\0"
             VALUE "InternalName", "LCD\0"
             VALUE "OriginalFilename", "LCD.DLL\0"
         END
