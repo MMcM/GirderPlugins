@@ -68,7 +68,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>2</lValue1>
-      <EventString Name="Disc.Insert.I" Identifier="9" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Disc.Insert.I"/>
+      <EventString Name="Disc.Insert.I" Identifier="9" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Disc.Insert.I"/>
     </Command>
     <Command Name="Domain" Identifier="10006" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -278,7 +278,7 @@
       <lValue1>1</lValue1>
       <lValue2>5</lValue2>
       <lValue3>5</lValue3>
-      <EventString Name="WinDVD.Chapter" Identifier="10017" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Chapter"/>
+      <EventString Name="WinDVD.Chapter" Identifier="10017" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Chapter"/>
     </Command>
     <Command Name="Elapsed" Identifier="10018" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -302,7 +302,7 @@
       <bValue3>FALSE</bValue3>
       <lValue1>3</lValue1>
       <lValue3>8</lValue3>
-      <EventString Name="WinDVD.Elapsed" Identifier="10019" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Elapsed"/>
+      <EventString Name="WinDVD.Elapsed" Identifier="10019" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Elapsed"/>
     </Command>
     <Command Name="Video" Identifier="10020" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -326,7 +326,7 @@
       <bValue3>FALSE</bValue3>
       <lValue1>1</lValue1>
       <lValue3>4</lValue3>
-      <EventString Name="WinDVD.Video" Identifier="10021" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Video"/>
+      <EventString Name="WinDVD.Video" Identifier="10021" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Video"/>
     </Command>
     <Command Name="Audio" Identifier="10022" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -351,7 +351,7 @@
       <lValue1>1</lValue1>
       <lValue2>11</lValue2>
       <lValue3>4</lValue3>
-      <EventString Name="WinDVD.Audio" Identifier="10023" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Audio"/>
+      <EventString Name="WinDVD.Audio" Identifier="10023" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Audio"/>
     </Command>
     <Command Name="Close" Identifier="10024" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -372,7 +372,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="WinDVD.Close" Identifier="10025" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WinDVD.Close"/>
+      <EventString Name="WinDVD.Close" Identifier="10025" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Close"/>
     </Command>
   </Group>
   <Group Name="PowerDVD Display" Identifier="10026" Enabled="TRUE">
@@ -396,7 +396,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="PowerDVD.Elapsed" Identifier="10028" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Elapsed"/>
+      <EventString Name="PowerDVD.Elapsed" Identifier="10028" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Elapsed"/>
     </Command>
     <Command Name="Title" Identifier="10029" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -418,7 +418,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10012</lValue1>
-      <EventString Name="PowerDVD.Title" Identifier="10030" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Title"/>
+      <EventString Name="PowerDVD.Title" Identifier="10030" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Title"/>
     </Command>
     <Command Name="Close" Identifier="20874" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -439,7 +439,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="PowerDVD.Close" Identifier="20875" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="PowerDVD.Close"/>
+      <EventString Name="PowerDVD.Close" Identifier="20875" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Close"/>
     </Command>
   </Group>
   <Group Name="ZoomPlayer Display" Identifier="10031" Enabled="TRUE">
@@ -461,7 +461,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10006</lValue1>
-      <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10033" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Domain"/>
+      <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10033" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Domain"/>
     </Command>
     <Command Name="TitleNo" Identifier="10034" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -483,7 +483,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10007</lValue1>
-      <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="10035" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.TitleNo"/>
+      <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="10035" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.TitleNo"/>
     </Command>
     <Command Name="Chapter" Identifier="10036" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -505,7 +505,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10008</lValue1>
-      <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10037" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Chapter"/>
+      <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10037" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Chapter"/>
     </Command>
     <Command Name="Duration" Identifier="10038" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -527,7 +527,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="ZoomPlayer.DVD.Duration" Identifier="10039" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Duration"/>
+      <EventString Name="ZoomPlayer.DVD.Duration" Identifier="10039" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10040" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -549,7 +549,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10041" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.DVD.Elapsed"/>
+      <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10041" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Elapsed"/>
     </Command>
     <Command Name="Duration" Identifier="10042" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -571,7 +571,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="ZoomPlayer.Media.Duration" Identifier="10043" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Media.Duration"/>
+      <EventString Name="ZoomPlayer.Media.Duration" Identifier="10043" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10044" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -593,7 +593,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="10045" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Media.Elapsed"/>
+      <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="10045" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Elapsed"/>
     </Command>
     <Command Name="File" Identifier="10046" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -615,7 +615,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="ZoomPlayer.Media.File" Identifier="10047" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Media.File"/>
+      <EventString Name="ZoomPlayer.Media.File" Identifier="10047" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
     </Command>
     <Command Name="OSD" Identifier="10048" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -639,7 +639,7 @@
       <bValue3>FALSE</bValue3>
       <lValue1>1</lValue1>
       <lValue2>10</lValue2>
-      <EventString Name="ZoomPlayer.OSD" Identifier="10049" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.OSD"/>
+      <EventString Name="ZoomPlayer.OSD" Identifier="10049" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
     </Command>
     <Command Name="Close" Identifier="10050" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -660,7 +660,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="ZoomPlayer.Close" Identifier="10051" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ZoomPlayer.Close"/>
+      <EventString Name="ZoomPlayer.Close" Identifier="10051" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Close"/>
     </Command>
   </Group>
   <Group Name="TheaterTek Display" Identifier="10052" Enabled="TRUE">
@@ -682,7 +682,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10006</lValue1>
-      <EventString Name="TheaterTek.Domain" Identifier="10054" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Domain"/>
+      <EventString Name="TheaterTek.Domain" Identifier="10054" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Domain"/>
     </Command>
     <Command Name="TitleNo" Identifier="10055" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -704,7 +704,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10007</lValue1>
-      <EventString Name="TheaterTek.TitleNo" Identifier="10056" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.TitleNo"/>
+      <EventString Name="TheaterTek.TitleNo" Identifier="10056" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.TitleNo"/>
     </Command>
     <Command Name="Chapter" Identifier="10057" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -726,7 +726,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10008</lValue1>
-      <EventString Name="TheaterTek.Chapter" Identifier="10058" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Chapter"/>
+      <EventString Name="TheaterTek.Chapter" Identifier="10058" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Chapter"/>
     </Command>
     <Command Name="Duration" Identifier="10059" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -748,7 +748,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="TheaterTek.Duration" Identifier="10060" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Duration"/>
+      <EventString Name="TheaterTek.Duration" Identifier="10060" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10061" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -770,7 +770,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="TheaterTek.Elapsed" Identifier="10062" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Elapsed"/>
+      <EventString Name="TheaterTek.Elapsed" Identifier="10062" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Elapsed"/>
     </Command>
     <Command Name="Close" Identifier="10063" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -791,7 +791,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="TheaterTek.Close" Identifier="10064" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TheaterTek.Close"/>
+      <EventString Name="TheaterTek.Close" Identifier="10064" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Close"/>
     </Command>
   </Group>
   <Group Name="ATI Display" Identifier="10065" Enabled="TRUE">
@@ -813,7 +813,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10006</lValue1>
-      <EventString Name="ATI.DVD.Domain" Identifier="10067" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Domain"/>
+      <EventString Name="ATI.DVD.Domain" Identifier="10067" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Domain"/>
     </Command>
     <Command Name="TitleNo" Identifier="10068" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -835,7 +835,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10007</lValue1>
-      <EventString Name="ATI.DVD.TitleNo" Identifier="10069" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.TitleNo"/>
+      <EventString Name="ATI.DVD.TitleNo" Identifier="10069" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.TitleNo"/>
     </Command>
     <Command Name="Chapter" Identifier="10070" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -857,7 +857,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10008</lValue1>
-      <EventString Name="ATI.DVD.Chapter" Identifier="10071" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Chapter"/>
+      <EventString Name="ATI.DVD.Chapter" Identifier="10071" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Chapter"/>
     </Command>
     <Command Name="Duration" Identifier="10072" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -879,7 +879,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="ATI.DVD.Duration" Identifier="10073" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Duration"/>
+      <EventString Name="ATI.DVD.Duration" Identifier="10073" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10074" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -901,7 +901,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="ATI.DVD.Elapsed" Identifier="10075" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.DVD.Elapsed"/>
+      <EventString Name="ATI.DVD.Elapsed" Identifier="10075" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Elapsed"/>
     </Command>
     <Command Name="Duration" Identifier="10076" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -923,7 +923,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="ATI.MMC.Duration" Identifier="10077" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.MMC.Duration"/>
+      <EventString Name="ATI.MMC.Duration" Identifier="10077" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10078" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -945,7 +945,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="ATI.MMC.Elapsed" Identifier="10079" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.MMC.Elapsed"/>
+      <EventString Name="ATI.MMC.Elapsed" Identifier="10079" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Elapsed"/>
     </Command>
     <Command Name="File" Identifier="10080" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -967,7 +967,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="ATI.MMC.File" Identifier="10081" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.MMC.File"/>
+      <EventString Name="ATI.MMC.File" Identifier="10081" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.File"/>
     </Command>
     <Command Name="Close" Identifier="10082" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -988,7 +988,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="ATI.Close" Identifier="10083" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ATI.Close"/>
+      <EventString Name="ATI.Close" Identifier="10083" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.Close"/>
     </Command>
   </Group>
   <Group Name="ShowShifter Display" Identifier="10084" Enabled="TRUE">
@@ -1012,7 +1012,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="ShowShifter.Duration" Identifier="10086" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.Duration"/>
+      <EventString Name="ShowShifter.Duration" Identifier="10086" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10087" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1034,7 +1034,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="ShowShifter.Elapsed" Identifier="10088" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.Elapsed"/>
+      <EventString Name="ShowShifter.Elapsed" Identifier="10088" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Elapsed"/>
     </Command>
     <Command Name="File" Identifier="10089" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1056,7 +1056,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="ShowShifter.File" Identifier="10090" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.File"/>
+      <EventString Name="ShowShifter.File" Identifier="10090" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.File"/>
     </Command>
     <Command Name="Close" Identifier="10091" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1077,7 +1077,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="ShowShifter.Close" Identifier="10092" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="ShowShifter.Close"/>
+      <EventString Name="ShowShifter.Close" Identifier="10092" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Close"/>
     </Command>
   </Group>
   <Group Name="TV Display" Identifier="10093" Enabled="TRUE">
@@ -1086,7 +1086,7 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="TV.Chan" Identifier="10095" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TV.Chan"/>
+      <EventString Name="TV.Chan" Identifier="10095" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TV.Chan"/>
       <Command Name="Prefix" Identifier="10096" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -1161,7 +1161,7 @@
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="TV.Program" Identifier="10100" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="TV.Program"/>
+      <EventString Name="TV.Program" Identifier="10100" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TV.Program"/>
       <Command Name="Title" Identifier="10101" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -1230,15 +1230,15 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>2</lValue1>
-      <EventString Name="accessDTV.ChanText" Identifier="10105" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.ChanText"/>
-      <EventString Name="accessDTV.ChanNoText" Identifier="10106" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.ChanNoText"/>
+      <EventString Name="accessDTV.ChanText" Identifier="10105" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChanText"/>
+      <EventString Name="accessDTV.ChanNoText" Identifier="10106" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChanNoText"/>
     </Command>
     <MultiGroup Name="Channel" Identifier="10107" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="accessDTV.Channel" Identifier="10108" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.Channel"/>
+      <EventString Name="accessDTV.Channel" Identifier="10108" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
       <Command Name="Prefix" Identifier="10109" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -1323,7 +1323,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="accessDTV.Duration" Identifier="20859" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.Duration"/>
+      <EventString Name="accessDTV.Duration" Identifier="20859" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="20860" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1345,7 +1345,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="accessDTV.Elapsed" Identifier="20861" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.Elapsed"/>
+      <EventString Name="accessDTV.Elapsed" Identifier="20861" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Elapsed"/>
     </Command>
     <Command Name="Close" Identifier="10112" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1366,7 +1366,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="accessDTV.Close" Identifier="10113" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="accessDTV.Close"/>
+      <EventString Name="accessDTV.Close" Identifier="10113" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Close"/>
     </Command>
   </Group>
   <Group Name="Media Player Display" Identifier="10114" Enabled="TRUE">
@@ -1391,7 +1391,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>1</lValue1>
-      <EventString Name="WMP.Status" Identifier="10116" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Status"/>
+      <EventString Name="WMP.Status" Identifier="10116" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
     </Command>
     <Command Name="Duration" Identifier="10117" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1413,7 +1413,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="WMP.Duration" Identifier="10118" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Duration"/>
+      <EventString Name="WMP.Duration" Identifier="10118" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10119" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1435,7 +1435,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="WMP.Elapsed" Identifier="10120" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Elapsed"/>
+      <EventString Name="WMP.Elapsed" Identifier="10120" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
     </Command>
     <Command Name="URL" Identifier="10121" Enabled="FALSE">
       <StateCount>1</StateCount>
@@ -1457,7 +1457,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="WMP.URL" Identifier="10122" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.URL"/>
+      <EventString Name="WMP.URL" Identifier="10122" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
     </Command>
     <Command Name="Title" Identifier="10123" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1479,7 +1479,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10012</lValue1>
-      <EventString Name="WMP.Title" Identifier="10124" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Title"/>
+      <EventString Name="WMP.Title" Identifier="10124" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
     </Command>
     <Command Name="Close" Identifier="10125" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1500,7 +1500,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="WMP.Close" Identifier="10126" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="WMP.Close"/>
+      <EventString Name="WMP.Close" Identifier="10126" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Close"/>
     </Command>
   </Group>
   <Group Name="Winamp Display" Identifier="10127" Enabled="TRUE">
@@ -1526,7 +1526,7 @@
       <bValue3>FALSE</bValue3>
       <lValue1>1</lValue1>
       <lValue3>6</lValue3>
-      <EventString Name="Winamp.Status" Identifier="10129" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Status"/>
+      <EventString Name="Winamp.Status" Identifier="10129" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
     </Command>
     <Command Name="Length" Identifier="10130" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1550,7 +1550,7 @@
       <lValue1>1</lValue1>
       <lValue2>10</lValue2>
       <lValue3>3</lValue3>
-      <EventString Name="Winamp.Length" Identifier="10131" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Length"/>
+      <EventString Name="Winamp.Length" Identifier="10131" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
     </Command>
     <Command Name="Position" Identifier="10132" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1575,7 +1575,7 @@
       <lValue1>1</lValue1>
       <lValue2>8</lValue2>
       <lValue3>2</lValue3>
-      <EventString Name="Winamp.Position" Identifier="10133" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Position"/>
+      <EventString Name="Winamp.Position" Identifier="10133" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
     </Command>
     <Command Name="Duration" Identifier="10134" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1597,7 +1597,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="Winamp.Duration" Identifier="10135" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Duration"/>
+      <EventString Name="Winamp.Duration" Identifier="10135" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="10136" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1619,7 +1619,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="Winamp.Elapsed" Identifier="10137" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Elapsed"/>
+      <EventString Name="Winamp.Elapsed" Identifier="10137" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
     </Command>
     <Command Name="File" Identifier="10138" Enabled="FALSE">
       <StateCount>1</StateCount>
@@ -1641,7 +1641,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="Winamp.File" Identifier="10139" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.File"/>
+      <EventString Name="Winamp.File" Identifier="10139" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
     </Command>
     <Command Name="Title" Identifier="10140" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1663,7 +1663,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10012</lValue1>
-      <EventString Name="Winamp.Title" Identifier="10141" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Title"/>
+      <EventString Name="Winamp.Title" Identifier="10141" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
     </Command>
     <Command Name="Close" Identifier="10142" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1684,7 +1684,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="Winamp.Close" Identifier="10143" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="Winamp.Close"/>
+      <EventString Name="Winamp.Close" Identifier="10143" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Close"/>
     </Command>
   </Group>
   <Group Name="BSPlayer Display" Identifier="20876" Enabled="TRUE">
@@ -1708,7 +1708,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10009</lValue1>
-      <EventString Name="BSPlayer.Duration" Identifier="20878" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Duration"/>
+      <EventString Name="BSPlayer.Duration" Identifier="20878" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
     </Command>
     <Command Name="Elapsed" Identifier="20879" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1730,7 +1730,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
-      <EventString Name="BSPlayer.Elapsed" Identifier="20880" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Elapsed"/>
+      <EventString Name="BSPlayer.Elapsed" Identifier="20880" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
     </Command>
     <Command Name="File" Identifier="20881" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1752,7 +1752,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10011</lValue1>
-      <EventString Name="BSPlayer.File" Identifier="20882" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.File"/>
+      <EventString Name="BSPlayer.File" Identifier="20882" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
     </Command>
     <Command Name="Close" Identifier="20883" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1773,7 +1773,7 @@
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
-      <EventString Name="BSPlayer.Close" Identifier="20884" Enabled="TRUE" Invert="FALSE" Device="15" IrStr="BSPlayer.Close"/>
+      <EventString Name="BSPlayer.Close" Identifier="20884" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Close"/>
     </Command>
   </Group>
 </Girder>
