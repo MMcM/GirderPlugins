@@ -116,6 +116,8 @@ SOURCE=.\src\stdafx.cpp
 
 !ELSEIF  "$(CFG)" == "DVDSpy - Win32 Debug"
 
+# ADD CPP /Yc"stdafx.h"
+
 !ENDIF 
 
 # End Source File
