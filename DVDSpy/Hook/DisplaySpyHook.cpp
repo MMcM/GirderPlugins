@@ -41,6 +41,7 @@ const UINT ENTRY_HWND_PARENT =      0x00010000;
 const UINT ENTRY_HWND_GRANDPARENT = 0x00020000;
 const UINT ENTRY_HWND_NOTIFY =      0x00100000;
 const UINT ENTRY_NOT =              0x10000000;
+const UINT ENTRY_EVENT =            0x20000000;
 
 #define BASE_CODE(n) (n&0xFFFF)
 
@@ -55,6 +56,7 @@ const UINT MATCH_CLASS_PREFIX = 1008;
 const UINT MATCH_CONTROLID = 1009;
 const UINT MATCH_NOTIFY_CODE = 1010;
 const UINT MATCH_NOTIFY_FROM = 1011;
+const UINT MATCH_ONCE = 1018;
 const UINT MATCH_SECOND_TIMER = 1019;
 const UINT MATCH_PATCH = 1020;
 const UINT MATCH_MEDIA_SPY = 1030;
@@ -137,7 +139,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "WinDVDClass")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_MODULE(PowerDVD)
@@ -174,7 +176,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_MODULE(accessDTV)
@@ -238,7 +240,7 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
       ENTRY_STR(MATCH_CLASS_PREFIX, "Afx:")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_NMODULE(ZoomPlayer,zplayer)
@@ -276,8 +278,10 @@ static MatchEntry g_matches[] = {
     END_MATCH()
 
     BEGIN_NMATCH(Init)
-      ENTRY_NUM(MATCH_MESSAGE, WM_CREATE)
+      ENTRY_NUM(MATCH_MESSAGE, WM_SHOWWINDOW)
+      ENTRY_NUM(MATCH_WPARAM, TRUE)
       ENTRY_STR(MATCH_CLASS, "TMainForm")
+      ENTRY0(MATCH_ONCE)
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_HWND)
     END_MATCH()
@@ -286,7 +290,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "TMainForm")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_NMODULE_FLAGS(TheaterTek,TheaterTek DVD,MODULE_NO_WIN16_CWP)
@@ -308,7 +312,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "Overlay")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_MODULE(CinePlayer)
@@ -330,7 +334,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_NMODULE(ATI,ATIMMC)
@@ -361,7 +365,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_MODULE(ShowShifter)
@@ -394,7 +398,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "ShowShifterWndClass")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_NMODULE(BSPlayer,bplay)
@@ -418,7 +422,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "BSPlayer")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
 #if 0
@@ -439,7 +443,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "TMainForm")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 #endif
 
@@ -453,7 +457,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "QWidget")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 #endif
 
@@ -478,7 +482,7 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(MATCH_CLASS, "VideoRenderer")
 #endif
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_MODULE(RadLight)
@@ -500,7 +504,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_CLASS, "TApplication")
      BEGIN_EXTRACT()
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
 
   // Digital CD Player 
@@ -544,7 +548,7 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY) 
       ENTRY_STR(MATCH_CLASS, "TMyanDigitalCDPlayerForm") 
     BEGIN_EXTRACT() 
-      ENTRY_STR(EXTRACT_CONSTANT, "")
+      ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH() 
 
 #if 0
@@ -721,6 +725,8 @@ BOOL DoMatch2(const MatchEntry *pEntry,
       LPNMHDR pnmh = (LPNMHDR)lParam;
       return (pnmh->idFrom == pEntry->dwVal);
     }
+  case MATCH_ONCE:
+    return (((MatchEntry*)pEntry)->dwVal++ == 0);
   case MATCH_SECOND_TIMER:
     {
       if (WM_TIMER != nMsg)
@@ -864,8 +870,8 @@ BOOL DoExtract(size_t nMatch, HWND hWnd, UINT nMsg, WPARAM wParam, LPARAM lParam
     // Get new value.
     DoExtract1(pEntry->pExtracts+dbuf.nIndex, dbuf.szValue, sizeof(dbuf.szValue),
                hWnd, nMsg, wParam, lParam);
-    {
-      // Search back in the queue for an entry for the same match and index.
+    if (!(pEntry->pExtracts[dbuf.nIndex].nCode & ENTRY_EVENT)) {
+      // Search back in the queue for an entry with the same match and index.
       size_t nOld = gs_nWrite;
       BOOL bFound = FALSE, bPending = !gs_bEmpty;
       do {
@@ -1020,6 +1026,33 @@ void IndexMatches(BOOL bAll)
       // Just matching causes some kind of damage which makes Windows unable to reboot.
       // I think it may have something to do with the stack depth and thunking.
       g_bNoCallWndProc = TRUE;
+  }
+
+  if (nMatches > 0) {
+    // Clear any buffers from a previous run of this same program.
+    size_t nLimit = nOffset + nMatches;
+    if (GetMutex(100)) {
+      if (gs_bEmpty) {
+        for (size_t i = 0; i < MAX_BUFS; i++) {
+          if ((gs_pDisplayBufs[i].nMatch >= nOffset) &&
+              (gs_pDisplayBufs[i].nMatch < nLimit)) {
+            gs_pDisplayBufs[i].nIndex = 0xDEADDEAD;
+          }
+        }
+      }
+      else {
+        size_t i = gs_nWrite;
+        while (i != gs_nRead) {
+          if ((gs_pDisplayBufs[i].nMatch >= nOffset) &&
+              (gs_pDisplayBufs[i].nMatch < nLimit)) {
+            gs_pDisplayBufs[i].nIndex = 0xDEADDEAD;
+          }
+          i++;
+          if (i == MAX_BUFS) i = 0;
+        }
+      }
+      ReleaseMutex(g_hMutex);
+    }
   }
 }
 
