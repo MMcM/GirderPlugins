@@ -2701,6 +2701,7 @@ result = 1
         <sValue1>[WMIServerSessions] users</sValue1>
         <sValue2>s</sValue2>
         <iValue1>1</iValue1>
+        <iValue2>5</iValue2>
         <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
