@@ -20,20 +20,20 @@ extern void DisplayDeleteCS();
 extern void DisplayEnterCS();
 extern void DisplayLeaveCS();
 
-class DisplayDevice;
-
-extern int DisplayWidth();
-extern int DisplayHeight();
-extern int DisplayGPOs();
-extern BOOL DisplayOpen();
 extern void DisplayClose();
-extern void DisplayReopen(DisplayDevice*& device, HMODULE& devlib);
+extern void DisplayUnload();
+
 extern PVOID DisplaySave();
 extern void DisplayRestore(PVOID state);
+
 extern BOOL DisplayEnableInput();
 extern void DisplayDisableInput();
-extern void DisplayString(int row, int col, int width, LPCSTR str);
-extern void DisplayCustomCharacter(int row, int col, LPCSTR bits);
+
+extern void DisplayClose(LPCSTR devname);
+extern int DisplayWidth(LPCSTR devname = NULL);
+extern int DisplayHeight(LPCSTR devname = NULL);
+extern void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devname = NULL);
+extern void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname = NULL);
 
 class DisplayCommandState;
 
@@ -49,7 +49,12 @@ struct DisplayAction
   void (*function)(DisplayCommandState& state);
 };
 
-extern DisplayAction *FindDisplayAction(p_command command);
+class DisplayDeviceList;
+class DisplayDevice;
+extern BOOL FindDisplayAction(DisplayDeviceList& devices,
+                              p_command command,
+                              DisplayDevice*& device,
+                              DisplayAction*& action);
 
 extern void DisplayString(DisplayCommandState& state);
 extern void DisplayVariable(DisplayCommandState& state);
@@ -62,8 +67,7 @@ extern void DisplayCharacter(DisplayCommandState& state);
 extern void DisplayCustomCharacter(DisplayCommandState& state);
 extern void DisplayGPO(DisplayCommandState& state);
 
-extern void DisplayCommand(p_command command,
-                           PCHAR status, int statuslen);
+extern void DisplayCommand(p_command command, PCHAR status, int statuslen);
 
 extern void FunctionsOpen();
 extern void FunctionsClose();

@@ -5,6 +5,8 @@ $Header$
 #include "stdafx.h"
 #include "plugin.h"
 
+// TODO: Optional device name to all.
+
 int luaSize(lua_State *L)
 {
   if (0 != lua_gettop(L)) {

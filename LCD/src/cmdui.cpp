@@ -22,7 +22,10 @@ DisplayAction DisplayActions[] = {
   { "o", "General Purpose Output", valBOOL, DisplayGPO },
 };
 
-DisplayAction *FindDisplayAction(p_command command)
+BOOL FindDisplayAction(DisplayDeviceList& devices,
+                       p_command command,
+                       DisplayDevice*& device,
+                       DisplayAction*& action)
 {
   PCHAR key = command->svalue2;
 #if 0
@@ -76,17 +79,23 @@ DisplayAction *FindDisplayAction(p_command command)
     SF.realloc_pchar(&command->svalue2, key);
   }
 #endif
+  device = devices.GetDefault();
   for (size_t i = 0; i < countof(DisplayActions); i++) {
-    if (!strcmp(DisplayActions[i].key, key))
-      return DisplayActions + i;
+    if (!strcmp(DisplayActions[i].key, key)) {
+      action = DisplayActions + i;
+      return TRUE;
+    }
   }
-  return NULL;
+  action = NULL;
+  return FALSE;
 }
 
 /* Local variables */
-p_command g_editCommand = NULL;
-HWND g_commandDialog = NULL;
-HANDLE g_commandThread = NULL;
+static DisplayDeviceList g_devices;
+static DisplayDevice *g_commandDevice = NULL;
+static p_command g_editCommand = NULL;
+static HWND g_commandDialog = NULL;
+static HANDLE g_commandThread = NULL;
 
 // Show input controls appropriate for this value type and optionally
 // load from edited command.
@@ -252,21 +261,27 @@ static void LoadCommandSettings(HWND hwnd)
   }
 
   EnterCriticalSection(&g_editCommand->critical_section);
+  
+  DisplayAction *selact;
+  if (!FindDisplayAction(g_devices, g_editCommand, g_commandDevice, selact))
+    selact = DisplayActions;    // String
 
-  DisplayAction *action = FindDisplayAction(g_editCommand);
-  if (NULL == action)
-    action = DisplayActions;    // String
+  // TODO: Set selection in IDC_DISPLAY.
 
-  for (int idx = 0; idx < countof(DisplayActions); idx++) {
-    DisplayAction *itemAction = (DisplayAction *)
-      ComboBox_GetItemData(GetDlgItem(hwnd, IDC_TYPE), idx);
-    if (itemAction == action) {
-      ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_TYPE), idx);      
-      break;
+  HWND combo = GetDlgItem(hwnd, IDC_TYPE);
+  ComboBox_ResetContent(combo);
+  for (size_t i = 0; i < countof(DisplayActions); i++) {
+    DisplayAction *action = DisplayActions + i;
+    if (DisplayGPO == action->function) {
+      if (g_commandDevice->GetGPOs() <= 0) continue;
     }
+    int idx = ComboBox_AddString(combo, action->name);
+    ComboBox_SetItemData(combo, idx, action);
+    if (action == selact)
+      ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_TYPE), idx);
   }
   
-  ShowCommandInputs(hwnd, action, TRUE);
+  ShowCommandInputs(hwnd, selact, TRUE);
 
   LeaveCriticalSection(&g_editCommand->critical_section);
 }
@@ -396,25 +411,8 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
       SF.i18n_translate("Width:", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_USE_WIDTH), trans);
 
-      int ngpos = DisplayGPOs();
-
-      HWND combo = GetDlgItem(hwnd, IDC_TYPE);
-      for (size_t i = 0; i < countof(DisplayActions); i++) {
-        DisplayAction *action = DisplayActions + i;
-        if (DisplayGPO == action->function) {
-          if (ngpos <= 0) continue;
-        }
-        int idx = ComboBox_AddString(combo, action->name);
-        ComboBox_SetItemData(combo, idx, action);
-      }
-
-      int nrows = DisplayHeight();
-      int ncols = DisplayWidth();
-
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), nrows-1, 0);
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), ncols-1, 0);
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_WIDTH_SPIN), ncols, 1);
-      UpDown_SetRange(GetDlgItem(hwnd, IDC_GPO_SPIN), ngpos, 1);
+      HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
+      // TODO: Fill display list.
 
       LoadCommandSettings(hwnd);
 
@@ -440,6 +438,15 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
     case IDCANCEL:
       EndDialog(hwnd, FALSE);
       return 1;
+
+    case IDC_DISPLAY:
+      if (HIWORD(wParam) == CBN_SELENDOK) {
+        int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_DISPLAY));
+        g_commandDevice = (DisplayDevice *)
+          ComboBox_GetItemData(GetDlgItem(hwnd, IDC_DISPLAY), idx);
+        // TODO: Handle device change.
+      }
+      break;
 
     case IDC_TYPE:
       if (HIWORD(wParam) == CBN_SELENDOK) {
@@ -538,11 +545,14 @@ static DWORD WINAPI CommandThread(LPVOID lpParam)
 // Plugin request for Settings dialog.
 void OpenCommandUI()
 {
-   DWORD dwThreadId;
+  // TODO: Close timing window.
    if (NULL != g_commandDialog) {
      SetForegroundWindow(g_commandDialog);
    }
    else {
+     if (NULL != g_commandThread)
+       CloseHandle(g_commandThread);
+     DWORD dwThreadId;
      g_commandThread = CreateThread(NULL, 0, &CommandThread, NULL, 0, &dwThreadId);
      if (NULL == g_commandThread)
        MessageBox(NULL, "Cannot create dialog thread.", "Error", MB_OK);
@@ -553,6 +563,7 @@ void OpenCommandUI()
 void UpdateCommandUI(p_command command)
 {
   g_editCommand = command;
+  // TODO: Close timing window.
   if (NULL != g_commandDialog)
     SendMessage(g_commandDialog, WM_USER+100, 0, 0);
 }

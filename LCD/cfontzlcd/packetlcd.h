@@ -8,9 +8,12 @@ class SendPacket;
 class CrystalfontzPacketLCD : public DisplayDevice
 {
 public:
-  CrystalfontzPacketLCD(LPCSTR devname, int cols, int rows, BOOL newCommands);
+  CrystalfontzPacketLCD(DisplayDeviceFactory *factory, LPCSTR devtype,
+                        int cols, int rows, BOOL newCommands);
+  CrystalfontzPacketLCD(const CrystalfontzPacketLCD& other);
   ~CrystalfontzPacketLCD();
   
+  DisplayDevice *Duplicate() const;
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();

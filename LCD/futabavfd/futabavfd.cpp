@@ -11,9 +11,11 @@ HINSTANCE g_hInstance;
 class FutabaVFDDisplay : public DisplayDevice
 {
 public:
-  FutabaVFDDisplay(HWND parent, LPCSTR devname);
+  FutabaVFDDisplay(DisplayDeviceFactory *factory, LPCSTR devtype);
+  FutabaVFDDisplay(const FutabaVFDDisplay& other);
   ~FutabaVFDDisplay();
   
+  DisplayDevice *Duplicate() const;
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
@@ -21,10 +23,11 @@ public:
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
 };
 
-FutabaVFDDisplay::FutabaVFDDisplay(HWND parent, LPCSTR devname)
+FutabaVFDDisplay::FutabaVFDDisplay(DisplayDeviceFactory *factory, LPCSTR devtype)
+  : DisplayDevice(factory, devtype)
 {
   // TODO: There are models with sizes other than just these two.
-  if ((NULL != devname) && !strcmp(devname, "M402")) {
+  if ((NULL != devtype) && !strcmp(devtype, "M402")) {
     m_cols = 40;
     m_rows = 2;
   }
@@ -37,10 +40,20 @@ FutabaVFDDisplay::FutabaVFDDisplay(HWND parent, LPCSTR devname)
   m_portSpeed = CBR_9600;
 }
 
+FutabaVFDDisplay::FutabaVFDDisplay(const FutabaVFDDisplay& other)
+  : DisplayDevice(other)
+{
+}
+
 FutabaVFDDisplay::~FutabaVFDDisplay()
 {
 }
 
+
+DisplayDevice *FutabaVFDDisplay::Duplicate() const
+{
+  return new FutabaVFDDisplay(*this);
+}
 
 BOOL FutabaVFDDisplay::DeviceOpen()
 {
@@ -106,9 +119,9 @@ void FutabaVFDDisplay::DeviceDefineCustomCharacter(int index,
 // 100% - 0xFF, 60% - 0x60, 40% - 0x40, 20% - 0x20.
 
 extern "C" __declspec(dllexport)
-DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
+DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
-  return new FutabaVFDDisplay(parent, name);
+  return new FutabaVFDDisplay(factory, devtype);
 }
 
 /* Called by windows */

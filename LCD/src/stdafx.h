@@ -18,6 +18,7 @@
 #include <math.h>
 #include <malloc.h>
 #include <time.h>
+#include <shlwapi.h>
 
 #include <windowsx.h>
 #define TrackBar_GetPos(hwndCtl)          ((LONG)(DWORD)SNDMSG((hwndCtl), TBM_GETPOS, 0L, 0L))

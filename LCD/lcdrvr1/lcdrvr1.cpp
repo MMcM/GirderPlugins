@@ -9,9 +9,11 @@ HINSTANCE g_hInstance;
 class LCDriver1Display : public DisplayDevice
 {
 public:
-  LCDriver1Display();
+  LCDriver1Display(DisplayDeviceFactory *factory, LPCSTR devtype);
+  LCDriver1Display(const LCDriver1Display& other);
   ~LCDriver1Display();
   
+  DisplayDevice *Duplicate() const;
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
@@ -26,7 +28,8 @@ protected:
   BOOL m_marqueeSimulated;
 };
 
-LCDriver1Display::LCDriver1Display()
+LCDriver1Display::LCDriver1Display(DisplayDeviceFactory *factory, LPCSTR devtype)
+  : DisplayDevice(factory, devtype)
 {
   m_cols = lcdGetWidth();
   m_rows = lcdGetHeight();
@@ -34,8 +37,19 @@ LCDriver1Display::LCDriver1Display()
   m_marqueeSimulated = FALSE;
 }
 
+LCDriver1Display::LCDriver1Display(const LCDriver1Display& other)
+  : DisplayDevice(other)
+{
+  m_marqueeSimulated = other.m_marqueeSimulated;
+}
+
 LCDriver1Display::~LCDriver1Display()
 {
+}
+
+DisplayDevice* LCDriver1Display::Duplicate() const
+{
+  return new LCDriver1Display(*this);
 }
 
 BOOL LCDriver1Display::DeviceOpen()
@@ -104,9 +118,9 @@ void LCDriver1Display::DeviceSaveSettings(HKEY hkey)
 }
 
 extern "C" __declspec(dllexport)
-DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
+DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
-  return new LCDriver1Display();
+  return new LCDriver1Display(factory, devtype);
 }
 
 /* Called by windows */

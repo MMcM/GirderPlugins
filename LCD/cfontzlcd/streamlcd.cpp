@@ -6,8 +6,10 @@ $Header$
 
 #include "streamlcd.h"
 
-CrystalfontzStreamLCD::CrystalfontzStreamLCD(LPCSTR devname, 
-                                             int cols, int rows, BOOL backlight)
+CrystalfontzStreamLCD::CrystalfontzStreamLCD
+(DisplayDeviceFactory *factory, LPCSTR devtype,
+ int cols, int rows, BOOL backlight)
+  : DisplayDevice(factory, devtype)
 {
   m_cols = cols;
   m_rows = rows;
@@ -52,8 +54,20 @@ CrystalfontzStreamLCD::CrystalfontzStreamLCD(LPCSTR devname,
   }
 }
 
+CrystalfontzStreamLCD::CrystalfontzStreamLCD(const CrystalfontzStreamLCD& other)
+  : DisplayDevice(other)
+{
+  m_backlight = other.m_backlight;
+  m_bootDelay = other.m_bootDelay;
+}
+
 CrystalfontzStreamLCD::~CrystalfontzStreamLCD()
 {
+}
+
+DisplayDevice *CrystalfontzStreamLCD::Duplicate() const
+{
+  return new CrystalfontzStreamLCD(*this);
 }
 
 BOOL CrystalfontzStreamLCD::DeviceOpen()

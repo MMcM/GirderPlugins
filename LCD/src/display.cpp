@@ -9,17 +9,6 @@ $Header$
 #define _TRACE
 #endif
 
-HKEY DisplayDevice::GetSettingsKey()
-{
-  HKEY hkey;
-  if (ERROR_SUCCESS == RegCreateKey(HKEY_LOCAL_MACHINE,
-                                    "Software\\Girder3\\SoftPlugins\\LCD", 
-                                    &hkey))
-    return hkey;
-  else
-    return NULL;
-}
-
 BOOL DisplayDevice::GetSettingString(HKEY hkey, LPCSTR valkey,
                                      LPSTR value, size_t vallen)
 {
@@ -154,69 +143,15 @@ void Delay::SaveSetting(HKEY hkey, LPCSTR valkey) const
   RegSetValueEx(hkey, valkey, NULL, REG_SZ, (LPBYTE)buf, strlen(buf));
 }
 
-BOOL DisplayDevice::Create(DisplayDevice*& device, HMODULE& devlib,
-                           HWND parent, LPCSTR lib, LPCSTR dev)
+DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
-  HKEY hkey = GetSettingsKey();
-  
-  LPCSTR libname = "SIMLCD";
-  LPCSTR devname = NULL;
+  m_factory = factory;
+  m_devtype = (NULL == devtype) ? NULL : _strdup(devtype);
+  m_next = NULL;
+  m_name = NULL;
+  m_default = FALSE;
+  m_enabled = TRUE;
 
-  char libbuf[MAX_PATH], devbuf[256];
-  if (NULL != lib)
-    libname = lib;
-  else if (GetSettingString(hkey, "Library", libbuf, sizeof(libbuf)))
-    libname = libbuf;
-  if (NULL != dev)
-    devname = dev;
-  else if (GetSettingString(hkey, "Device", devbuf, sizeof(devbuf)))
-    devname = devbuf;
-  
-  devlib = LoadLibrary(libname);
-  if (NULL == devlib) {
-    DisplayWin32Error(parent, GetLastError());
-    return FALSE;
-  }
-
-  CreateFun_t func = (CreateFun_t)GetProcAddress(devlib, "CreateDisplayDevice");
-  if (NULL == func) {
-    DisplayWin32Error(parent, GetLastError());
-    FreeLibrary(devlib);
-    devlib = NULL;
-    return FALSE;
-  }
-  
-  device = (*func)(parent, devname);
-  if (NULL == device) {
-    FreeLibrary(devlib);
-    devlib = NULL;
-    return FALSE;
-  }
-
-  device->LoadSettings(hkey);
-  RegCloseKey(hkey);
-  return TRUE;
-}
-
-void DisplayDevice::Destroy(DisplayDevice*& device, HMODULE& devlib)
-{
-  delete device;
-  device = NULL;
-  FreeLibrary(devlib);
-  devlib = NULL;
-}
-
-void DisplayDevice::Take(DisplayDevice*& fromDevice, HMODULE& fromDevlib,
-                         DisplayDevice*& toDevice, HMODULE& toDevlib)
-{
-  toDevice = fromDevice;
-  toDevlib = fromDevlib;
-  fromDevice = NULL;
-  fromDevlib = NULL;
-}
-
-DisplayDevice::DisplayDevice()
-{
   for (int i = 0; i < sizeof(m_characterMap); i++)
     m_characterMap[i] = i;
 
@@ -230,7 +165,7 @@ DisplayDevice::DisplayDevice()
   m_marqueeTimer = 0;
 
   m_portType = portNONE;
-  memset(&m_port, 0, sizeof(m_port));
+  memset(m_port, 0, sizeof(m_port));
   m_portSpeed = 0;
   m_portRTS = m_portDTR = TRUE;
   m_portHandle = NULL;
@@ -241,8 +176,50 @@ DisplayDevice::DisplayDevice()
   m_inputThread = m_inputStopEvent = m_outputEvent = NULL;
 }
 
+DisplayDevice::DisplayDevice(const DisplayDevice& other)
+{
+  m_name = (NULL == other.m_name) ? NULL : _strdup(other.m_name);
+  m_factory = other.m_factory;
+  m_devtype = (NULL == other.m_devtype) ? NULL : _strdup(other.m_devtype);
+  m_default = other.m_default;
+  m_enabled = other.m_enabled;
+
+  memcpy(m_characterMap, other.m_characterMap, sizeof(m_characterMap));
+
+  m_cols = other.m_cols;
+  m_rows = other.m_rows;
+  m_buffer = NULL;
+  m_open = FALSE;
+
+  m_marquee = NULL;
+  m_marqueePixelWidth = other.m_marqueePixelWidth;
+  m_marqueeSpeed = other.m_marqueeSpeed;
+  m_marqueeTimer = 0;
+
+  m_portType = other.m_portType;
+  memcpy(m_port, other.m_port, sizeof(m_port));
+  m_portSpeed = other.m_portSpeed;
+  m_portRTS = other.m_portRTS;
+  m_portDTR = other.m_portDTR;
+  m_portHandle = NULL;
+
+  m_contrast = other.m_contrast;
+  m_brightness = other.m_brightness;
+
+  m_enableInput = other.m_enableInput;
+  m_inputThread = m_inputStopEvent = m_outputEvent = NULL;
+}
+
 DisplayDevice::~DisplayDevice()
 {
+  free(m_name);
+  free(m_devtype);
+}
+
+void DisplayDevice::SetName(LPCSTR name)
+{
+  free(m_name);
+  m_name = (NULL == name) ? NULL : _strdup(name);
 }
 
 DisplayBuffer::DisplayBuffer(int rows, int cols, BYTE space)
@@ -323,6 +300,17 @@ int DisplayBuffer::AllocateCustomCharacter(const CustomCharacter& cust,
 void DisplayBuffer::UseCustomCharacter(int index)
 {
   m_customLastUse[index] = GetTickCount();
+}
+
+HKEY DisplayDevice::GetSettingsKey()
+{
+  HKEY root = DisplayDeviceList::GetSettingsKey();
+  if (NULL == m_name)
+    return root;
+  HKEY subkey = NULL;
+  RegOpenKey(root, m_name, &subkey);
+  RegCloseKey(root);
+  return subkey;
 }
 
 void DisplayDevice::LoadSettings(HKEY hkey)
@@ -896,13 +884,13 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
   m_portHandle = CreateFile(m_port, GENERIC_READ | GENERIC_WRITE, 0, NULL,
                             OPEN_EXISTING, (asynch) ? FILE_FLAG_OVERLAPPED : 0, NULL);
   if (INVALID_HANDLE_VALUE == m_portHandle) {
-    DisplayWin32Error(NULL, GetLastError());
+    DisplayWin32Error(GetLastError());
     return FALSE;
   }
 
   DCB dcb;
   if (!GetCommState(m_portHandle, &dcb)) {
-    DisplayWin32Error(NULL, GetLastError());
+    DisplayWin32Error(GetLastError());
     return FALSE;
   }
   dcb.BaudRate = m_portSpeed;
@@ -912,7 +900,7 @@ BOOL DisplayDevice::OpenSerial(BOOL asynch)
   dcb.fRtsControl = (m_portRTS) ? RTS_CONTROL_ENABLE : RTS_CONTROL_DISABLE;
   dcb.fDtrControl = (m_portDTR) ? DTR_CONTROL_ENABLE : DTR_CONTROL_DISABLE;
   if (!SetCommState(m_portHandle, &dcb)) {
-    DisplayWin32Error(NULL, GetLastError());
+    DisplayWin32Error(GetLastError());
     return FALSE;
   }
 
@@ -1002,7 +990,7 @@ BOOL DisplayDevice::EnableSerialInput()
   DWORD dwThreadId;
   m_inputThread = CreateThread(NULL, 0, SerialInputThread, this, 0, &dwThreadId);
   if (NULL == m_inputThread) {
-    DisplayWin32Error(NULL, GetLastError());
+    DisplayWin32Error(GetLastError());
     return FALSE;
   }
   return TRUE;
@@ -1104,20 +1092,294 @@ void DisplayDevice::DeviceSaveSettings(HKEY hkey)
 {
 }
 
-LCD_API void LCD_DECL DisplayWin32Error(HWND parent, DWORD dwErr)
+CRITICAL_SECTION DisplayDeviceFactory::g_CS;
+DisplayDeviceFactory *DisplayDeviceFactory::g_extent = NULL;
+
+DisplayDeviceFactory::DisplayDeviceFactory(LPCSTR name, HMODULE lib, CreateFun_t entry)
+  : m_lib(lib), m_entry(entry)
 {
-  HLOCAL pMsgBuf = NULL;
-  char buf[128];
-  LPSTR pMsg;
-  if (FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		    NULL, dwErr, 0, (LPTSTR)&pMsgBuf, 0, NULL)) {
-    pMsg = (LPSTR)pMsgBuf;
+  m_name = _strdup(name);
+  m_next = g_extent;
+  g_extent = this;
+}
+
+DisplayDeviceFactory::~DisplayDeviceFactory()
+{
+  FreeLibrary(m_lib);
+  free(m_name);
+}
+
+DisplayDeviceFactory *DisplayDeviceFactory::GetFactory(LPCSTR name)
+{
+  for (DisplayDeviceFactory *fact = g_extent; NULL != fact; fact = fact->m_next) {
+    if (!_stricmp(name, fact->m_name)) {
+      return fact;
+    }
+  }
+
+  EnterCriticalSection(&g_CS);
+
+  HMODULE lib = LoadLibrary(name);
+  if (NULL == lib) {
+    DisplayWin32Error(GetLastError());
+    LeaveCriticalSection(&g_CS);
+    return NULL;
+  }
+
+  CreateFun_t entry = (CreateFun_t)GetProcAddress(lib, "CreateDisplayDevice");
+  if (NULL == entry) {
+    DisplayWin32Error(GetLastError());
+    FreeLibrary(lib);
+    LeaveCriticalSection(&g_CS);
+    return NULL;
+  }
+
+  fact = new DisplayDeviceFactory(name, lib, entry);
+  LeaveCriticalSection(&g_CS);
+  return fact;
+}
+
+void DisplayDeviceFactory::CloseAll()
+{
+  while (TRUE) {
+    DisplayDeviceFactory *fact = g_extent;
+    if (NULL == fact) break;
+    g_extent = fact->m_next;
+    delete fact;
+  }
+}
+
+DisplayDevice *DisplayDeviceList::GetDefault()
+{
+  LoadFromRegistry();
+  return m_head;
+}
+
+DisplayDevice *DisplayDeviceList::Get(LPCSTR name)
+{
+  LoadFromRegistry();
+  for (DisplayDevice *dev = m_head; NULL != dev; dev = dev->m_next) {
+    if (!strcmp(name, dev->GetName())) {
+      return dev;
+    }
+  }
+  return NULL;
+}
+  
+void DisplayDeviceList::Clear()
+{
+  while (TRUE) {
+    DisplayDevice *dev = m_head;
+    if (NULL == dev) break;
+    m_head = dev->m_next;
+    delete dev;
+  }
+  m_tail = NULL;
+  m_loaded = FALSE;
+}
+
+void DisplayDeviceList::Replace(DisplayDevice *odev, DisplayDevice *ndev)
+{
+  if (NULL == odev) {
+    if (NULL == ndev) return;
+    if (NULL == m_tail) {
+      m_tail = m_head = ndev;
+    }
+    else {
+      ndev->m_next = m_tail;
+      m_tail = ndev;
+    }
+    return;
+  }
+  DisplayDevice *prev = NULL;
+  while (TRUE) {
+    DisplayDevice *next = (NULL == prev) ? m_head : prev->m_next;
+    if (NULL == next) {
+      // odev not found.
+      Replace(NULL, ndev);
+      break;
+    }
+    if (odev == next) {
+      if (NULL == ndev) {
+        if (NULL == prev) {
+          m_head = m_head->m_next;
+          if (NULL == m_head)
+            m_tail = NULL;
+        }
+        else {
+          prev->m_next = odev->m_next;
+          if (odev == m_tail)
+            m_tail = odev->m_next;
+        }
+      }
+      else {
+        if (NULL == prev) {
+          m_head = ndev;
+        }
+        else {
+          prev->m_next = ndev;
+        }
+        ndev->m_next = odev->m_next;
+        if (odev == m_tail)
+          m_tail = ndev;
+      }
+      break;
+    }
+    prev = next;
+  }
+  delete odev;
+}
+
+void DisplayDeviceList::SetDefault(DisplayDevice *dev)
+{
+  dev->SetDefault(TRUE);
+  if (dev == m_head)
+    return;                     // Already at head.
+
+  if (NULL == m_head) {
+    m_head = m_tail = dev;
   }
   else {
-    sprintf(buf, "Err: %lX", dwErr);
-    pMsg = buf;
+    // Remove dev if already present.
+    DisplayDevice *prev = m_head;
+    while (TRUE) {
+      DisplayDevice *next = prev->m_next;
+      if (NULL == next)
+        break;
+      if (dev == next) {
+        prev->m_next = dev->m_next;
+        break;
+      }
+      prev = next;
+    }
+
+    m_head->SetDefault(FALSE);
+    dev->m_next = m_head;
+    m_head = dev;
   }
-  MessageBox(parent, pMsg, "Error", MB_OK | MB_ICONERROR);
-  if (NULL != pMsgBuf)
-    LocalFree(pMsgBuf);
+}
+
+void DisplayDeviceList::LoadFromRegistry(BOOL all)
+{
+  if (m_loaded) return;
+
+  HKEY hkey = GetSettingsKey();
+  char defname[128];
+  if (!DisplayDevice::GetSettingString(hkey, NULL, defname, sizeof(defname))) {
+    m_head = m_tail = LoadFromRegistry(hkey);
+    m_head->SetDefault(TRUE);
+  }
+  else {
+    DWORD index = 0;
+    char subname[128];
+    while (ERROR_SUCCESS == RegEnumKey(hkey, index++, subname, sizeof(subname))) {
+      HKEY subkey;
+      if (ERROR_SUCCESS != RegOpenKey(hkey, subname, &subkey))
+        continue;
+      BOOL defdev = !strcmp(defname, subname);
+      BOOL enabled = TRUE;
+      DisplayDevice::GetSettingBool(subkey, "Enabled", enabled);
+      if (enabled || defdev || all) {
+        DisplayDevice *dev = LoadFromRegistry(subkey);
+        if (NULL == m_head) {
+          m_head = m_tail = dev;
+        }
+        else if (defdev) {
+          dev->m_next = m_head;
+          m_head = dev;
+        }
+        else {
+          m_tail->m_next = dev;
+          m_tail = dev;
+        }
+        dev->SetName(subname);
+        dev->SetDefault(defdev);
+        dev->SetEnabled(enabled);
+      }
+      RegCloseKey(subkey);
+    }
+  }
+  RegCloseKey(hkey);
+  m_loaded = TRUE;
+}
+
+DisplayDevice *DisplayDeviceList::LoadFromRegistry(HKEY hkey)
+{
+  char libbuf[MAX_PATH], devbuf[256];
+  LPCSTR libname = "SIMLCD";    // The default display type.
+  LPCSTR devtype = NULL;
+
+  if (DisplayDevice::GetSettingString(hkey, "Library", libbuf, sizeof(libbuf)))
+    libname = libbuf;
+  if (DisplayDevice::GetSettingString(hkey, "Device", devbuf, sizeof(devbuf)))
+    devtype = devbuf;
+
+  DisplayDeviceFactory *fact = DisplayDeviceFactory::GetFactory(libname);
+  if (NULL == fact) return NULL;
+  DisplayDevice *dev = fact->CreateDisplayDevice(devtype);
+  dev->LoadSettings(hkey);
+  return dev;
+}
+
+void DisplayDeviceList::SaveToRegistry()
+{
+  // Clear out all previous settings.
+  SHDeleteKey(HKEY_LOCAL_MACHINE, "Software\\Girder3\\SoftPlugins\\LCD");
+
+  HKEY hkey = GetSettingsKey();
+
+  for (DisplayDevice *dev = m_head; NULL != dev; dev = dev->m_next) {
+    LPCSTR name = dev->GetName();
+    if (NULL == name) {
+      SaveToRegistry(hkey, dev);
+    }
+    else {
+      HKEY subkey;
+      if (ERROR_SUCCESS == RegCreateKey(hkey, name, &subkey)) {
+        if (dev->IsDefault())
+          DisplayDevice::SetSettingString(hkey, NULL, name);
+        DisplayDevice::SetSettingBool(subkey, "Enabled", dev->IsEnabled());
+        SaveToRegistry(hkey, dev);
+        RegCloseKey(subkey);
+      }
+    }
+  }
+  
+  RegCloseKey(hkey);
+}
+
+void DisplayDeviceList::SaveToRegistry(HKEY hkey, DisplayDevice *dev)
+{
+  DisplayDevice::SetSettingString(hkey, "Library", dev->GetFactory()->GetName());
+  DisplayDevice::SetSettingString(hkey, "Device", dev->GetDeviceType());
+  dev->SaveSettings(hkey);
+}
+
+HKEY DisplayDeviceList::GetSettingsKey()
+{
+  HKEY hkey;
+  if (ERROR_SUCCESS == RegCreateKey(HKEY_LOCAL_MACHINE,
+                                    "Software\\Girder3\\SoftPlugins\\LCD", 
+                                    &hkey))
+    return hkey;
+  else
+    return NULL;
+}
+
+PVOID DisplayDeviceList::Save()
+{
+  // TODO: Handle all devices.
+  if (NULL == m_head)
+    return NULL;
+  else
+    return m_head->Save();
+}
+
+void DisplayDeviceList::Restore(PVOID state)
+{
+  LoadFromRegistry();
+  // TODO: Handle all devices.
+  if (NULL != m_head)
+    m_head->Restore(state);
+  // Memory is lost if original no longer present.
 }

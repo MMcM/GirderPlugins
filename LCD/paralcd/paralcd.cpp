@@ -17,9 +17,11 @@ HINSTANCE g_hInstance;
 class ParallelLCD : public DisplayDevice
 {
 public:
-  ParallelLCD(HWND parent, LPCSTR devname);
+  ParallelLCD(DisplayDeviceFactory *factory, LPCSTR devtype);
+  ParallelLCD(const ParallelLCD& other);
   ~ParallelLCD();
 
+  DisplayDevice *Duplicate() const;
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
@@ -38,7 +40,8 @@ protected:
   int m_ndevs;
 };
 
-ParallelLCD::ParallelLCD(HWND parent, LPCSTR devname)
+ParallelLCD::ParallelLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
+  : DisplayDevice(factory, devtype)
 {
   m_cols = 20;
   m_rows = 4;
@@ -50,8 +53,18 @@ ParallelLCD::ParallelLCD(HWND parent, LPCSTR devname)
   m_ndevs = 1;
 }
 
+ParallelLCD::ParallelLCD(const ParallelLCD& other)
+  : DisplayDevice(other)
+{
+}
+
 ParallelLCD::~ParallelLCD()
 {
+}
+
+DisplayDevice *ParallelLCD::Duplicate() const
+{
+  return new ParallelLCD(*this);
 }
 
 BOOL ParallelLCD::DeviceOpen()
@@ -196,9 +209,9 @@ void ParallelLCD::WriteDR(BYTE b, int dev)
 }
 
 extern "C" __declspec(dllexport)
-DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
+DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
-  return new ParallelLCD(parent, name);
+  return new ParallelLCD(factory, devtype);
 }
 
 /* Called by windows */

@@ -122,10 +122,11 @@ protected:
   int m_row, m_len, m_pos;
 };
 
+class DisplayDeviceFactory;
+
 class LCD_API DisplayDevice
 {
 public:
-  static HKEY LCD_DECL GetSettingsKey();
   static BOOL LCD_DECL GetSettingString(HKEY hkey, LPCSTR valkey,
                                         LPSTR value, size_t vallen);
   static BOOL LCD_DECL GetSettingInt(HKEY hkey, LPCSTR valkey, int& value);
@@ -138,14 +139,35 @@ public:
   static void LCD_DECL SetSettingBinary(HKEY hkey, LPCSTR valkey,
                                         LPCBYTE value, size_t vallen);
 
-  // Create device based on registry settings.
-  static BOOL LCD_DECL Create(DisplayDevice*& device, HMODULE& devlib,
-                              HWND parent = NULL, 
-                              LPCSTR lib = NULL, LPCSTR dev = NULL);
-  static void LCD_DECL Destroy(DisplayDevice*& device, HMODULE& devlib);
-  static void LCD_DECL Take(DisplayDevice*& fromDevice, HMODULE& fromDevlib,
-                            DisplayDevice*& toDevice, HMODULE& toDevlib);
+  virtual DisplayDevice *Duplicate() const = 0;
   virtual ~DisplayDevice();
+
+  LPCSTR GetName() const {
+    return m_name;
+  }
+  void SetName(LPCSTR name);
+  const DisplayDeviceFactory *GetFactory() const {
+    return m_factory;
+  }
+  LPCSTR GetDeviceType() const {
+    return m_devtype;
+  }
+  DisplayDevice *GetNext() const {
+    return m_next;
+  }
+
+  BOOL IsDefault() const {
+    return m_default;
+  }
+  void SetDefault(BOOL defval) {
+    m_default = defval;
+  }
+  BOOL IsEnabled() const {
+    return m_enabled;
+  }
+  void SetEnabled(BOOL enabled) {
+    m_enabled = enabled;
+  }
 
   BOOL IsOpen() const {
     return m_open;
@@ -227,6 +249,7 @@ public:
     DeviceSetGPO(gpo, on);
   }
 
+  HKEY GetSettingsKey();
   void LoadSettings(HKEY hkey);
   void SaveSettings(HKEY hkey);
 
@@ -240,8 +263,8 @@ public:
   void Test();
 
 protected:
-  typedef DisplayDevice *(LCD_DECL *CreateFun_t)(HWND parent, LPCSTR devname);
-  DisplayDevice();
+  DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype);
+  DisplayDevice(const DisplayDevice& other);
 
   // Override these for each device.
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length) = 0;
@@ -283,6 +306,15 @@ protected:
   void CloseSerial();
   friend DWORD WINAPI SerialInputThread(LPVOID lpParam);
 
+  friend class DisplayDeviceList;
+
+  // Source.
+  DisplayDeviceFactory *m_factory;
+  LPSTR m_devtype;
+  DisplayDevice *m_next;
+  LPSTR m_name;
+  BOOL m_default, m_enabled;
+
   // State.
   BYTE m_characterMap[256];
 
@@ -304,6 +336,77 @@ protected:
 
   BOOL m_enableInput;
   HANDLE m_inputThread, m_inputStopEvent, m_outputEvent;
+};
+
+class LCD_API DisplayDeviceFactory
+{
+public:
+  LPCSTR GetName() const {
+    return m_name;
+  }
+
+  DisplayDevice *CreateDisplayDevice(LPCSTR devtype) {
+    return (*m_entry)(this, devtype);
+  }
+
+  static DisplayDeviceFactory *GetFactory(LPCSTR name);
+  static void CloseAll();
+  static void InitCS() {
+    InitializeCriticalSection(&g_CS);
+  }
+  static void DeleteCS() {
+    DeleteCriticalSection(&g_CS);
+  }
+
+protected:
+  typedef DisplayDevice *(LCD_DECL *CreateFun_t)(DisplayDeviceFactory *factory, 
+                                                 LPCSTR devtype);
+  DisplayDeviceFactory(LPCSTR name, HMODULE lib, CreateFun_t entry);
+  ~DisplayDeviceFactory();
+
+  static CRITICAL_SECTION g_CS;
+  static DisplayDeviceFactory *g_extent;
+  DisplayDeviceFactory *m_next;
+  LPSTR m_name;
+  HMODULE m_lib;
+  CreateFun_t m_entry;
+};
+
+class LCD_API DisplayDeviceList
+{
+public:
+  DisplayDeviceList() {
+    m_head = m_tail = NULL;
+    m_loaded = FALSE;
+  }
+  ~DisplayDeviceList() {
+    Clear();
+  }
+  
+  DisplayDevice *GetFirst() {
+    return m_head;
+  }
+  DisplayDevice *GetDefault();
+  DisplayDevice *Get(LPCSTR name);
+  
+  void Clear();
+
+  void Replace(DisplayDevice *odev, DisplayDevice *ndev);
+  void SetDefault(DisplayDevice *dev);
+
+  static HKEY LCD_DECL GetSettingsKey();
+  void LoadFromRegistry(BOOL all = FALSE);
+  void SaveToRegistry();
+
+  PVOID Save();
+  void Restore(PVOID state);
+
+protected:
+  DisplayDevice *LoadFromRegistry(HKEY hkey);
+  void SaveToRegistry(HKEY hkey, DisplayDevice *dev);
+
+  DisplayDevice *m_head, *m_tail;
+  BOOL m_loaded;
 };
 
 class LCD_API Delay
@@ -354,6 +457,7 @@ protected:
 };
 
 extern "C" {
-LCD_API void LCD_DECL DisplayWin32Error(HWND parent, DWORD dwErr);
+LCD_API HWND LCD_DECL DisplayWindowParent();
+LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, HWND parent = DisplayWindowParent());
 LCD_API void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload = NULL);
 }

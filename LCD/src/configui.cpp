@@ -45,24 +45,35 @@ struct DisplayDeviceEntry {
   { "HD44780 (parallel)", "PARALCD", NULL }
 };
 
-/* Local variables */
-DisplayDevice *g_editDevice = NULL;
-HMODULE g_editDevlib = NULL;
-
-HANDLE g_configThread = NULL;
-HWND g_configDialog = NULL;
-
-// Copy settings from registry (via new device) into controls.
-static void LoadConfigSettings(HWND hwnd)
+static DisplayDeviceEntry *FindDeviceEntry(DisplayDevice *dev)
 {
-  int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_DEVICE));
-  DisplayDeviceEntry *entry = (DisplayDeviceEntry *)
-    ComboBox_GetItemData(GetDlgItem(hwnd, IDC_DEVICE), idx);
-  if (NULL == entry) return;
-  if (NULL != g_editDevice)
-    DisplayDevice::Destroy(g_editDevice, g_editDevlib);
-  if (!DisplayDevice::Create(g_editDevice, g_editDevlib,
-                             GetParent(hwnd), entry->lib, entry->dev)) {
+  if (NULL == dev)
+    return NULL;
+
+  LPCSTR devlib = dev->GetFactory()->GetName();
+  LPCSTR devtype = dev->GetDeviceType();
+  for (size_t i = 0; i < countof(DisplayDevices); i++) {
+    DisplayDeviceEntry *entry = DisplayDevices+i;
+    if (!strcmp(devlib, entry->lib) &&
+        ((NULL == devtype) || (NULL == entry->dev) || !strcmp(devtype, entry->dev))) {
+      return entry;
+    }
+  }
+  return NULL;
+}
+
+/* Local variables */
+static DisplayDeviceList g_editDevices;
+static DisplayDevice *g_editOrigDevice = NULL;
+static DisplayDevice *g_editDevice = NULL;
+
+static HANDLE g_configThread = NULL;
+static HWND g_configDialog = NULL;
+
+// Copy settings from edited device into controls.
+static void LoadDeviceSettings(HWND hwnd)
+{
+  if (NULL == g_editDevice) {
     UpDown_SetPos(GetDlgItem(hwnd, IDC_ROW_SPIN), 0);
     UpDown_SetPos(GetDlgItem(hwnd, IDC_COL_SPIN), 0);
     ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), SW_HIDE);
@@ -204,59 +215,83 @@ static void LoadConfigSettings(HWND hwnd)
 }
 
 // Copy settings controls into device.
-static void SaveConfigSettings(HWND hwnd, BOOL persist)
+static void SaveDeviceSettings(HWND hwnd, BOOL updateDevices, BOOL continueEdit)
 {
-  if (NULL == g_editDevice) return;
+  if (NULL != g_editDevice) {
+
+    if (g_editDevice->HasSetSize()) {
+      int rows = UpDown_GetPos(GetDlgItem(hwnd, IDC_ROW_SPIN));
+      int cols = UpDown_GetPos(GetDlgItem(hwnd, IDC_COL_SPIN));
+      g_editDevice->SetSize(cols, rows);
+    }
+
+    switch (g_editDevice->GetPortType()) {
+    case DisplayDevice::portSERIAL:
+      {
+        HWND combo = GetDlgItem(hwnd, IDC_SPEED);
+        int idx = ComboBox_GetCurSel(combo);
+        int speed = ComboBox_GetItemData(combo, idx);
+        g_editDevice->SetPortSpeed(speed);
+      }
+      /* falls through */
+    case DisplayDevice::portPARALLEL:
+      {
+        HWND combo = GetDlgItem(hwnd, IDC_PORT);
+        int idx = ComboBox_GetCurSel(combo);
+        char port[8];
+        ComboBox_GetLBText(combo, idx, port);
+        g_editDevice->SetPort(port);
+      }
+      break;
+    }
+
+    if (g_editDevice->HasContrast()) {
+      g_editDevice->SetContrast(TrackBar_GetPos(GetDlgItem(hwnd, IDC_CONTRAST)));
+    }
+    if (g_editDevice->HasBrightness()) {
+      g_editDevice->SetBrightness(TrackBar_GetPos(GetDlgItem(hwnd, IDC_BRIGHTNESS)));
+    }
+
+    if (g_editDevice->HasKeypad()) {
+      g_editDevice->SetEnableInput(Button_GetCheck(GetDlgItem(hwnd, IDC_INPUT)));
+    }
+
+  }
   
-  if (g_editDevice->HasSetSize()) {
-    int rows = UpDown_GetPos(GetDlgItem(hwnd, IDC_ROW_SPIN));
-    int cols = UpDown_GetPos(GetDlgItem(hwnd, IDC_COL_SPIN));
-    g_editDevice->SetSize(cols, rows);
+  if (updateDevices) {
+    g_editDevices.Replace(g_editOrigDevice, g_editDevice);
+    g_editOrigDevice = g_editDevice;
+    g_editDevice = NULL;
+    if (TRUE)
+      g_editDevices.SaveToRegistry();
+  }
+  if (continueEdit) {
+    if (NULL != g_editOrigDevice)
+      g_editDevice = g_editOrigDevice->Duplicate();
+  }
+}
+
+// Create new edit device and set fresh state from it.
+static void CreateEditDevice(HWND hwnd)
+{
+  if (NULL != g_editDevice) {
+    delete g_editDevice;
+    g_editDevice = NULL;
   }
 
-  switch (g_editDevice->GetPortType()) {
-  case DisplayDevice::portSERIAL:
-    {
-      HWND combo = GetDlgItem(hwnd, IDC_SPEED);
-      int idx = ComboBox_GetCurSel(combo);
-      int speed = ComboBox_GetItemData(combo, idx);
-      g_editDevice->SetPortSpeed(speed);
+  int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_DEVICE));
+  DisplayDeviceEntry *entry = (DisplayDeviceEntry *)
+    ComboBox_GetItemData(GetDlgItem(hwnd, IDC_DEVICE), idx);
+  if (NULL != entry) {
+    DisplayDeviceFactory *fact = DisplayDeviceFactory::GetFactory(entry->lib);
+    if (NULL != fact) {
+      LPCSTR name = NULL;
+      g_editDevice = fact->CreateDisplayDevice(entry->dev);
+      // TODO: Set name from name control.
     }
-  /* falls through */
-  case DisplayDevice::portPARALLEL:
-    {
-      HWND combo = GetDlgItem(hwnd, IDC_PORT);
-      int idx = ComboBox_GetCurSel(combo);
-      char port[8];
-      ComboBox_GetLBText(combo, idx, port);
-      g_editDevice->SetPort(port);
-    }
-    break;
   }
 
-  if (g_editDevice->HasContrast()) {
-    g_editDevice->SetContrast(TrackBar_GetPos(GetDlgItem(hwnd, IDC_CONTRAST)));
-  }
-  if (g_editDevice->HasBrightness()) {
-    g_editDevice->SetBrightness(TrackBar_GetPos(GetDlgItem(hwnd, IDC_BRIGHTNESS)));
-  }
-
-  if (g_editDevice->HasKeypad()) {
-    g_editDevice->SetEnableInput(Button_GetCheck(GetDlgItem(hwnd, IDC_INPUT)));
-  }
-  
-  if (persist) {
-    HKEY hkey = DisplayDevice::GetSettingsKey();
-    int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_DEVICE));
-    DisplayDeviceEntry *entry = (DisplayDeviceEntry *)
-      ComboBox_GetItemData(GetDlgItem(hwnd, IDC_DEVICE), idx);
-    if (NULL != entry) {
-      DisplayDevice::SetSettingString(hkey, "Library", entry->lib);
-      DisplayDevice::SetSettingString(hkey, "Device", entry->dev);
-    }
-    g_editDevice->SaveSettings(hkey);
-    RegCloseKey(hkey);
-  }
+  LoadDeviceSettings(hwnd);
 }
 
 static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg, 
@@ -304,32 +339,20 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
       SF.i18n_translate("Apply", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_APPLY), trans);
 
-      HKEY hkey = DisplayDevice::GetSettingsKey();
-  
-      LPCSTR libname = NULL;
-      LPCSTR devname = NULL;
-
-      char libbuf[MAX_PATH], devbuf[256];
-      if (DisplayDevice::GetSettingString(hkey, "Library", libbuf, sizeof(libbuf)))
-        libname = libbuf;
-      if (DisplayDevice::GetSettingString(hkey, "Device", devbuf, sizeof(devbuf)))
-        devname = devbuf;
-  
-      RegCloseKey(hkey);
-
+      DisplayDeviceEntry *selent = NULL;
+      if (NULL != g_editDevice)
+        selent = FindDeviceEntry(g_editDevice);
+      
       HWND combo = GetDlgItem(hwnd, IDC_DEVICE);
       int selidx = 0;
       for (size_t i = 0; i < countof(DisplayDevices); i++) {
         DisplayDeviceEntry *entry = DisplayDevices+i;
         int idx = ComboBox_AddString(combo, entry->desc);
         ComboBox_SetItemData(combo, idx, entry);
-        if (((NULL != libname) && !_stricmp(libname, entry->lib)) &&
-            ((NULL == devname) || (NULL == entry->dev) ||
-             !strcmp(devname, entry->dev)))
+        if (entry == selent)
           selidx = idx;
       }
       ComboBox_SetCurSel(combo, selidx);
-      LoadConfigSettings(hwnd);
       
       UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), 4, 0);
       UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), 40, 0);
@@ -337,12 +360,15 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
       TrackBar_SetRange(GetDlgItem(hwnd, IDC_CONTRAST), 0, 100);
       TrackBar_SetRange(GetDlgItem(hwnd, IDC_BRIGHTNESS), 0, 100);
 
+      LoadDeviceSettings(hwnd);
+
       return FALSE;
     }
 
   case WM_DESTROY: 
     if (NULL != g_editDevice) {
-      DisplayDevice::Destroy(g_editDevice, g_editDevlib);
+      delete g_editDevice;
+      g_editDevice = NULL;
     }
     PostQuitMessage(0); 
     return FALSE;
@@ -355,8 +381,8 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
     switch (LOWORD(wParam)) {
     case IDOK:
       DisplayEnterCS();
-      SaveConfigSettings(hwnd, TRUE);
-      DisplayReopen(g_editDevice, g_editDevlib);
+      DisplayClose();
+      SaveDeviceSettings(hwnd, TRUE, FALSE);
       DisplayLeaveCS();
       EndDialog(hwnd, TRUE);
       return TRUE;
@@ -367,15 +393,15 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
 
     case IDC_APPLY:
       DisplayEnterCS();
-      SaveConfigSettings(hwnd, TRUE);
       DisplayClose();
+      SaveDeviceSettings(hwnd, TRUE, TRUE);
       DisplayLeaveCS();
       return TRUE;
 
     case IDC_TEST:
       DisplayEnterCS();
-      SaveConfigSettings(hwnd, FALSE);
       DisplayClose();
+      SaveDeviceSettings(hwnd, FALSE, FALSE);
       if (!g_editDevice->Open()) {
         DisplayLeaveCS();
         MessageBox(hwnd, "Cannot open device", "Test", MB_OK | MB_ICONERROR);
@@ -390,7 +416,7 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
 
     case IDC_DEVICE:
       if (HIWORD(wParam) == CBN_SELENDOK) {
-        LoadConfigSettings(hwnd);
+        CreateEditDevice(hwnd);
       }
       break;
 
@@ -419,20 +445,27 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
 
 static DWORD WINAPI ConfigThread(LPVOID lpParam)
 {
+  g_editDevices.LoadFromRegistry();
+  g_editOrigDevice = g_editDevices.GetDefault();
+  g_editDevice = (NULL == g_editOrigDevice) ? NULL : g_editOrigDevice->Duplicate();
   BOOL result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_CONFIG), NULL,
                                ConfigDialogProc, (LPARAM)lpParam);
   g_configDialog = NULL;
+  g_editDevices.Clear();
   return 0;
 }
 
 // Plugin request for Settings dialog.
 void OpenConfigUI()
 {
-  DWORD dwThreadId;
+  // TODO: Close timing window.
   if (NULL != g_configDialog) {
     SetForegroundWindow(g_configDialog);
   }
   else {
+    if (NULL != g_configThread)
+      CloseHandle(g_configThread);
+    DWORD dwThreadId;
     g_configThread = CreateThread(NULL, 0, ConfigThread, NULL, 0, &dwThreadId);
     if (NULL == g_configThread)
       MessageBox(0, "Cannot create dialog thread.", "Error", MB_OK);
@@ -442,9 +475,11 @@ void OpenConfigUI()
 // Plugin request to close any Settings dialog.
 void CloseConfigUI()
 {
-  if (NULL != g_configDialog) {
+  if (NULL != g_configDialog)
     SendMessage(g_configDialog, WM_DESTROY, 0, 0);
+  if (NULL != g_configThread) {
     WaitForSingleObject(g_configThread, 5000);
     CloseHandle(g_configThread);
+    g_configThread = NULL;
   }
 }

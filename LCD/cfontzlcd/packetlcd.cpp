@@ -122,8 +122,10 @@ protected:
   SendPacket *m_next;
 };
 
-CrystalfontzPacketLCD::CrystalfontzPacketLCD(LPCSTR devname, 
-                                             int cols, int rows, BOOL newCommands)
+CrystalfontzPacketLCD::CrystalfontzPacketLCD
+(DisplayDeviceFactory *factory, LPCSTR devtype,
+ int cols, int rows, BOOL newCommands)
+  : DisplayDevice(factory, devtype)
 {
   m_hasSendData = newCommands;
 
@@ -140,9 +142,25 @@ CrystalfontzPacketLCD::CrystalfontzPacketLCD(LPCSTR devname,
   InitializeCriticalSection(&m_inputCS);
 }
 
+CrystalfontzPacketLCD::CrystalfontzPacketLCD(const CrystalfontzPacketLCD& other)
+  : DisplayDevice(other)
+{
+  m_hasSendData = other.m_hasSendData;
+
+  m_inputEnabled = FALSE;
+
+  m_sendHead = m_sendTail = NULL;
+  InitializeCriticalSection(&m_inputCS);
+}
+
 CrystalfontzPacketLCD::~CrystalfontzPacketLCD()
 {
   DeleteCriticalSection(&m_inputCS);
+}
+
+DisplayDevice *CrystalfontzPacketLCD::Duplicate() const
+{
+  return new CrystalfontzPacketLCD(*this);
 }
 
 BOOL CrystalfontzPacketLCD::DeviceOpen()
@@ -356,7 +374,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
           spkt->SetState(SendPacket::TRANSMITTING);
         else {
           // Is stopping this thread on device error too drastic?
-          DisplayWin32Error(NULL, GetLastError());
+          DisplayWin32Error(GetLastError());
           break;
         }
       }
@@ -377,7 +395,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
       }
       else {
         // Is stopping this thread on device error too drastic?
-        DisplayWin32Error(NULL, GetLastError());
+        DisplayWin32Error(GetLastError());
         break;
       }
     }
@@ -456,7 +474,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
       }
       else {
         // Is stopping this thread on device error too drastic?
-        DisplayWin32Error(NULL, GetLastError());
+        DisplayWin32Error(GetLastError());
         break;
       }
     }
@@ -468,7 +486,7 @@ void CrystalfontzPacketLCD::DeviceSerialInputThread()
         }
         else {
           // Is stopping this thread on device error too drastic?
-          DisplayWin32Error(NULL, GetLastError());
+          DisplayWin32Error(GetLastError());
           break;
         }
       }

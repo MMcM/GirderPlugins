@@ -5,6 +5,7 @@ $Header$
 #include "stdafx.h"
 #include "plugin.h"
 
+/* Global variables */
 HINSTANCE g_hInstance;
 s_functions_2 SF;
 
@@ -57,6 +58,7 @@ gir_close()
   CloseCommandUI();
   FunctionsClose();
   DisplayClose();
+  DisplayUnload();
   DisplayDeleteCS();
   return GIR_TRUE;
 }
@@ -133,6 +135,7 @@ gir_info(int message, int wparam, int lparam)
         /* falls through */
       case PBT_APMSUSPEND:
         DisplayClose();
+        DisplayUnload();
         break;
       case PBT_APMQUERYSUSPENDFAILED:
         if (NULL == state)

@@ -14,7 +14,7 @@ HINSTANCE g_hInstance;
 // the f isn't capitalized on that site.)
 
 struct DeviceEntry {
-  const char *devname;
+  const char *devtype;
   BOOL packet;
   int cols;
   int rows;
@@ -29,17 +29,17 @@ struct DeviceEntry {
 };
 
 extern "C" __declspec(dllexport)
-DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
+DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
   for (int i = 0; i < countof(DeviceEntries); i++) {
     DeviceEntry *entry = DeviceEntries + i;
-    if (!strcmp(name, entry->devname)) {
+    if (!strcmp(devtype, entry->devtype)) {
       if (entry->packet)
-        return new CrystalfontzPacketLCD(name, entry->cols, entry->rows, 
-                                         entry->flag);
+        return new CrystalfontzPacketLCD(factory, devtype,
+                                         entry->cols, entry->rows, entry->flag);
       else
-        return new CrystalfontzStreamLCD(name, entry->cols, entry->rows, 
-                                         entry->flag);
+        return new CrystalfontzStreamLCD(factory, devtype,
+                                         entry->cols, entry->rows, entry->flag);
     }
   }
   return NULL;

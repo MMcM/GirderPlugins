@@ -49,7 +49,7 @@ static BYTE BrightnessSteppedDown(int percent)
 }
 
 struct DeviceEntry {
-  const char *devname;
+  const char *devtype;
   int cols;
   int rows;
   BOOL vfd;
@@ -83,9 +83,11 @@ struct DeviceEntry {
 class MatrixOrbitalDisplay : public DisplayDevice
 {
 public:
-  MatrixOrbitalDisplay(HWND parent, LPCSTR devname);
+  MatrixOrbitalDisplay(DisplayDeviceFactory *factory, LPCSTR devtype);
+  MatrixOrbitalDisplay(const MatrixOrbitalDisplay& other);
   ~MatrixOrbitalDisplay();
   
+  DisplayDevice *Duplicate() const;
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
@@ -109,11 +111,12 @@ protected:
   int m_debounceTime;
 };
 
-MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
+MatrixOrbitalDisplay::MatrixOrbitalDisplay(DisplayDeviceFactory *factory, LPCSTR devtype)
+  : DisplayDevice(factory, devtype)
 {
   for (int i = 0; i < countof(DeviceEntries); i++) {
     DeviceEntry *entry = DeviceEntries + i;
-    if (!strcmp(devname, entry->devname)) {
+    if (!strcmp(devtype, entry->devtype)) {
       m_cols = entry->cols;
       m_rows = entry->rows;
       m_vfd = entry->vfd;
@@ -143,8 +146,24 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
   m_debounceTime = 52;
 }
 
+MatrixOrbitalDisplay::MatrixOrbitalDisplay(const MatrixOrbitalDisplay& other)
+  : DisplayDevice(other)
+{
+  m_vfd = other.m_vfd;
+  m_keypad = other.m_keypad;
+  m_dow_pwm = other.m_dow_pwm;
+  m_brightnessFunc = other.m_brightnessFunc;
+  m_gpos = other.m_gpos;
+  m_debounceTime = other.m_debounceTime;
+}
+
 MatrixOrbitalDisplay::~MatrixOrbitalDisplay()
 {
+}
+
+DisplayDevice *MatrixOrbitalDisplay::Duplicate() const
+{
+  return new MatrixOrbitalDisplay(*this);
 }
 
 BOOL MatrixOrbitalDisplay::DeviceOpen()
@@ -312,9 +331,9 @@ void MatrixOrbitalDisplay::DeviceSaveSettings(HKEY hkey)
 }
 
 extern "C" __declspec(dllexport)
-DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
+DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
-  return new MatrixOrbitalDisplay(parent, name);
+  return new MatrixOrbitalDisplay(factory, devtype);
 }
 
 /* Called by windows */

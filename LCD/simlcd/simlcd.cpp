@@ -11,9 +11,11 @@ ATOM g_wndClass = NULL;
 class SimulatedLCD : public DisplayDevice
 {
 public:
-  SimulatedLCD(HWND parent, LPCSTR title);
+  SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype);
+  SimulatedLCD(const SimulatedLCD& other);
   ~SimulatedLCD();
   
+  DisplayDevice *Duplicate() const;
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length);
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceOpen();
@@ -37,7 +39,6 @@ public:
 
 protected:
   HWND m_parent, m_hwnd;
-  char m_title[32];
   int m_fontSize;
   char m_fontName[LF_FACESIZE], m_fontStyle[LF_FACESIZE];
   COLORREF m_textColor, m_backColor;
@@ -50,15 +51,13 @@ protected:
   HBITMAP m_customBitmap;
 };
 
-SimulatedLCD::SimulatedLCD(HWND parent, LPCSTR title)
+SimulatedLCD::SimulatedLCD(DisplayDeviceFactory *factory, LPCSTR devtype)
+  : DisplayDevice(factory, devtype)
 {
   m_cols = 20;
   m_rows = 4;
-  m_parent = parent;
+  m_parent = DisplayWindowParent();
   m_hwnd = NULL;
-  if (NULL == title)
-    title = "Simulated LCD";
-  strncpy(m_title, title, sizeof(m_title));
   m_fontSize = 10;
   strncpy(m_fontName, "Courier New", sizeof(m_fontName));
   strncpy(m_fontStyle, "Bold", sizeof(m_fontStyle));
@@ -69,6 +68,31 @@ SimulatedLCD::SimulatedLCD(HWND parent, LPCSTR title)
   m_onTop = TRUE;
   m_bgBrush = NULL;
   m_customBitmap = NULL;
+}
+
+SimulatedLCD::SimulatedLCD(const SimulatedLCD& other)
+  : DisplayDevice(other)
+{
+  m_cols = other.m_cols;
+  m_rows = other.m_rows;
+  m_parent = DisplayWindowParent();
+  m_hwnd = NULL;
+  m_fontSize = other.m_fontSize;
+  strncpy(m_fontName, other.m_fontName, sizeof(m_fontName));
+  strncpy(m_fontStyle, other.m_fontStyle, sizeof(m_fontStyle));
+  m_textColor = other.m_textColor;
+  m_backColor = other.m_backColor;
+  memset(&m_logFont, 0, sizeof(m_logFont));
+  m_xPos = other.m_xPos;
+  m_yPos = other.m_yPos;
+  m_onTop = other.m_onTop;
+  m_bgBrush = NULL;
+  m_customBitmap = NULL;
+}
+
+DisplayDevice *SimulatedLCD::Duplicate() const
+{
+  return new SimulatedLCD(*this);
 }
 
 SimulatedLCD::~SimulatedLCD()
@@ -429,7 +453,9 @@ BOOL SimulatedLCD::DeviceOpen()
   DWORD exStyle = WS_EX_OVERLAPPEDWINDOW | WS_EX_TOOLWINDOW;
   if (m_onTop)
     exStyle |= WS_EX_TOPMOST;
-  m_hwnd = CreateWindowEx(exStyle, "SIMLCD", m_title, WS_OVERLAPPED | WS_SYSMENU,
+  LPCSTR title = m_name;
+  if (NULL == title) title = "Simulated LCD";
+  m_hwnd = CreateWindowEx(exStyle, "SIMLCD", title, WS_OVERLAPPED | WS_SYSMENU,
                           CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
                           m_parent, NULL, g_hInstance, this);
   if (NULL == m_hwnd)
@@ -520,9 +546,9 @@ void SimulatedLCD::DeviceSaveSettings(HKEY hkey)
 }
 
 extern "C" __declspec(dllexport)
-DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)
+DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
 {
-  return new SimulatedLCD(parent, name);
+  return new SimulatedLCD(factory, devtype);
 }
 
 /* Called by windows */
