@@ -140,7 +140,8 @@ void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
   while (length > 0) {
     int nch = 0;
     while (nch < length) {
-      if ((unsigned char)str[nch] < NCUSTCHARS)
+      // Custom chars from 0-7 replicated to 8-15 like most hardware devices do.
+      if ((unsigned char)str[nch] < (NCUSTCHARS * 2))
         break;
       nch++;
     }
@@ -162,7 +163,7 @@ void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
         if (NULL == m_customBitmap) {
           BYTE bits[NCUSTCHARS * NCUSTROWS];
           for (int i = 0; i < NCUSTCHARS; i++) {
-            const BYTE *cbits = m_customCharacters[i].GetBits();
+            const BYTE *cbits = m_buffer->GetCustomCharacter(i).GetBits();
             for (int j = 0; j < NCUSTROWS; j++) {
               bits[j * NCUSTCHARS + i] = ~cbits[j]; // zero is foreground color
             }
@@ -173,8 +174,9 @@ void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
         oldBitmap = (HBITMAP)SelectObject(custDC, m_customBitmap);
       }
       SetStretchBltMode(hDC, BLACKONWHITE);
+      int idx = *str % NCUSTCHARS;
       StretchBlt(hDC, col * m_charWidth, row * m_lineHeight, m_charWidth, m_lineHeight,
-                 custDC, *str * 8 + (8 - NCUSTCOLS), 0, NCUSTCOLS + 1, NCUSTROWS, SRCCOPY);
+                 custDC, idx * 8 + (8 - NCUSTCOLS), 0, NCUSTCOLS + 1, NCUSTROWS, SRCCOPY);
       col++;
       str++;
       length--;
@@ -196,9 +198,12 @@ void SimulatedLCD::OnPaint()
   HFONT hFont = CreateFontIndirect(&m_logFont);
   HFONT hOld = (HFONT)SelectObject(hDC, hFont);
 
-  if (m_fixedPitch) {
+  if (NULL == m_buffer) {
+    // No current buffer, must be in transition.
+  }
+  else if (m_fixedPitch) {
     // Fixed pitch; do each line segment.
-    PCHAR pb = (PCHAR)m_buffer;
+    PCHAR pb = (PCHAR)m_buffer->GetBuffer(0, 0);
     for (int i = 0; i < m_rows; i++) {
       PaintFixed(hDC, i, 0, pb, m_cols);
       pb += m_cols;
@@ -209,7 +214,7 @@ void SimulatedLCD::OnPaint()
     RECT rect;
     GetClientRect(m_hwnd, &rect);
   
-    PCHAR pb = (PCHAR)m_buffer;
+    PCHAR pb = (PCHAR)m_buffer->GetBuffer(0, 0);
     for (int i = 0; i < m_rows; i++) {
       rect.top += DrawText(hDC, pb, m_cols, &rect, 
                            DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);

@@ -175,8 +175,8 @@ void CrystalfontzLCD::DeviceDefineCustomCharacter(int index, const CustomCharact
 void CrystalfontzLCD::DeviceSetMarquee()
 {
   // Initialize with start of string, but do not remember that.
-  DeviceDisplay(m_marqueeRow, 0, m_marquee, m_cols);
-  memset(m_buffer + (m_marqueeRow * m_cols), 0xFE, m_cols);
+  DeviceDisplay(m_marquee->GetRow(), 0, m_marquee->GetBytes(), m_cols);
+  memset(m_buffer->GetBuffer(m_marquee->GetRow(), 0), 0xFE, m_cols);
 
   BYTE buf[128];
   int nb = 0;
@@ -184,15 +184,15 @@ void CrystalfontzLCD::DeviceSetMarquee()
     buf[nb++] = 21;             // Set Scrolling Marquee Characters
     buf[nb++] = i;
     char ch;
-    if (i + m_cols < m_marqueeLen)
-      ch = m_marquee[i + m_cols];
+    if (i + m_cols < m_marquee->GetLength())
+      ch = m_marquee->GetBytes()[i + m_cols];
     else
       ch = ' ';
     // TODO: Translate character set?
     buf[nb++] = ch;
   }
   buf[nb++] = 22;               // Enable Scrolling Marquee
-  buf[nb++] = m_marqueeRow;
+  buf[nb++] = m_marquee->GetRow();
   buf[nb++] = (BYTE)m_marqueePixelWidth;
   buf[nb++] = (BYTE)((m_marqueeSpeed * 96) / 1000);
   WriteSerial(buf, nb);

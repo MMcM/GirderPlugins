@@ -13,6 +13,7 @@ void LCD_DECL DisplaySendEvent(LPCSTR event)
 
 CRITICAL_SECTION g_CS;          // Ensure events see consistent device Settings.
 DisplayDevice *g_device = NULL;
+HMODULE g_devlib = NULL;
 
 /*** Display oriented routines ***/
 
@@ -39,8 +40,7 @@ void DisplayLeaveCS()
 BOOL DisplayOpen()
 {
   if (NULL == g_device) {
-    g_device = DisplayDevice::Create(SF.parent_hwnd);
-    if (NULL == g_device)
+    if (!DisplayDevice::Create(g_device, g_devlib, SF.parent_hwnd))
       return FALSE;
   }
   return g_device->Open();
@@ -49,8 +49,7 @@ BOOL DisplayOpen()
 int DisplayWidth()
 {
   if (NULL == g_device) {
-    g_device = DisplayDevice::Create(SF.parent_hwnd);
-    if (NULL == g_device)
+    if (!DisplayDevice::Create(g_device, g_devlib, SF.parent_hwnd))
       return 20;
   }
   return g_device->GetWidth();
@@ -59,8 +58,7 @@ int DisplayWidth()
 int DisplayHeight()
 {
   if (NULL == g_device) {
-    g_device = DisplayDevice::Create(SF.parent_hwnd);
-    if (NULL == g_device)
+    if (!DisplayDevice::Create(g_device, g_devlib, SF.parent_hwnd))
       return 4;
   }
   return g_device->GetHeight();
@@ -69,8 +67,7 @@ int DisplayHeight()
 int DisplayGPOs()
 {
   if (NULL == g_device) {
-    g_device = DisplayDevice::Create(SF.parent_hwnd);
-    if (NULL == g_device)
+    if (!DisplayDevice::Create(g_device, g_devlib, SF.parent_hwnd))
       return 0;
   }
   return g_device->GetGPOs();
@@ -80,25 +77,44 @@ void DisplayClose()
 {
   if (NULL != g_device) {
     g_device->Close();
-    delete g_device;
-    g_device = NULL;
+    DisplayDevice::Destroy(g_device, g_devlib);
   }
 }
 
-void DisplayReopen(DisplayDevice *device)
+void DisplayReopen(DisplayDevice*& device, HMODULE& devlib)
 {
   if (NULL != g_device) {
     g_device->Close();
-    delete g_device;
+    DisplayDevice::Destroy(g_device, g_devlib);
   }
-  g_device = device;
+  DisplayDevice::Take(device, devlib, g_device, g_devlib);
+}
+
+PVOID DisplaySave()
+{
+  if (NULL == g_device)
+    return NULL;
+
+  return g_device->Save();
+}
+
+void DisplayRestore(PVOID state)
+{
+  if (NULL == state)
+    return;
+
+  if (NULL == g_device) {
+    if (!DisplayDevice::Create(g_device, g_devlib, SF.parent_hwnd))
+      return;
+  }
+
+  g_device->Restore(state);
 }
 
 BOOL DisplayEnableInput()
 {
   if (NULL == g_device) {
-    g_device = DisplayDevice::Create(SF.parent_hwnd);
-    if (NULL == g_device)
+    if (!DisplayDevice::Create(g_device, g_devlib, SF.parent_hwnd))
       return FALSE;
   }
 

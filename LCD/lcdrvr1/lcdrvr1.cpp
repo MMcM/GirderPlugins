@@ -77,8 +77,8 @@ void LCDriver1Display::DeviceSetMarquee()
     SetSimulatedMarquee();
   else {
     // Don't know what's on the screen once it starts.
-    memset(m_buffer + (m_marqueeRow * m_cols), 0xFE, m_cols);
-    lcdEnableMarquee((const char *)m_marquee, m_marqueeLen, m_marqueeRow,
+    memset(m_buffer->GetBuffer(m_marquee->GetRow(), 0), 0xFE, m_cols);
+    lcdEnableMarquee((const char *)m_marquee->GetBytes(), m_marquee->GetLength(), m_marquee->GetRow(),
                      // Time units for CrystalFontz (the only
                      // supported hardware for this) are 1/96 sec.
                      m_marqueePixelWidth, (m_marqueeSpeed * 96) / 1000);

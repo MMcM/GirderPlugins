@@ -124,6 +124,29 @@ gir_info(int message, int wparam, int lparam)
   case GIRINFO_SCRIPT_STATE:
     FunctionsOpen();
     break;
+  case GIRINFO_POWERBROADCAST:
+    {
+      static PVOID state = NULL;
+      switch (wparam) {
+      case PBT_APMQUERYSUSPEND:
+        state = DisplaySave();
+        /* falls through */
+      case PBT_APMSUSPEND:
+        DisplayClose();
+        break;
+      case PBT_APMQUERYSUSPENDFAILED:
+        if (NULL == state)
+          break;
+        /* else falls through */
+      case PBT_APMRESUMESUSPEND:
+      case PBT_APMRESUMEAUTOMATIC:
+      case PBT_APMRESUMECRITICAL:
+        DisplayRestore(state);
+        state = NULL;
+        break;
+      }
+    }
+    break;
   }
   return GIR_TRUE;
 }

@@ -50,6 +50,78 @@ protected:
   BYTE m_bits[NCUSTROWS];
 };
 
+class LCD_API DisplayBuffer
+{
+public:
+  DisplayBuffer(int rows, int cols, BYTE space);
+  DisplayBuffer(const DisplayBuffer& other); 
+  ~DisplayBuffer();
+
+  void Clear() {
+    memset(m_bytes, m_space, m_rows * m_cols);
+  }
+
+  LPBYTE GetBuffer(int row, int col) {
+    return m_bytes + (row * m_cols) + col;
+  }
+
+  const CustomCharacter& GetCustomCharacter(int index) const {
+    return m_customCharacters[index];
+  }
+  BOOL IsCustomCharacterUsed(int index) {
+    return (0 != m_customLastUse[index]);
+  }
+  
+  int FindCustomCharacter(const CustomCharacter& cust);
+  int AllocateCustomCharacter(const CustomCharacter& cust, LPCBYTE characterMap);
+  void ClearUnusedCustomCharacters(LPCBYTE characterMap);
+  void UseCustomCharacter(int index);
+
+protected:
+  LPBYTE m_bytes;
+  int m_rows, m_cols;
+  BYTE m_space;
+
+#define NCUSTCHARS 8
+  CustomCharacter m_customCharacters[NCUSTCHARS];
+  DWORD m_customLastUse[NCUSTCHARS];
+};
+
+class LCD_API Marquee
+{
+public:
+  Marquee(int row, LPCSTR str, int length, LPCBYTE characterMap);
+  Marquee(const Marquee& other);
+  ~Marquee();
+
+  int operator==(const Marquee& other) const;
+
+  int GetRow() const {
+    return m_row;
+  }
+
+  int GetLength() const {
+    return m_len;
+  }
+
+  LPCBYTE GetBytes() const {
+    return m_bytes;
+  }
+  
+  int GetPosition() const {
+    return m_pos;
+  }
+  void SetPosition(int pos) {
+    m_pos = pos;
+  }
+
+  int NextPosition();
+
+protected:
+  LPBYTE m_bytes;
+  int m_row, m_len, m_pos;
+};
+
 class LCD_API DisplayDevice
 {
 public:
@@ -67,20 +139,24 @@ public:
                                         LPCBYTE value, size_t vallen);
 
   // Create device based on registry settings.
-  static DisplayDevice * LCD_DECL Create(HWND parent = NULL, 
-                                         LPCSTR lib = NULL, LPCSTR dev = NULL);
+  static BOOL LCD_DECL Create(DisplayDevice*& device, HMODULE& devlib,
+                              HWND parent = NULL, 
+                              LPCSTR lib = NULL, LPCSTR dev = NULL);
+  static void LCD_DECL Destroy(DisplayDevice*& device, HMODULE& devlib);
+  static void LCD_DECL Take(DisplayDevice*& fromDevice, HMODULE& fromDevlib,
+                            DisplayDevice*& toDevice, HMODULE& toDevlib);
   virtual ~DisplayDevice();
 
-  BOOL IsOpen() {
+  BOOL IsOpen() const {
     return m_open;
   }
   BOOL Open();
   void Close();
 
-  int GetWidth() {
+  int GetWidth() const {
     return m_cols;
   }
-  int GetHeight() {
+  int GetHeight() const {
     return m_rows;
   }
   BOOL HasSetSize() {
@@ -89,16 +165,16 @@ public:
   void SetSize(int width, int height);
 
   enum PortType_t { portNONE, portSERIAL, portPARALLEL };
-  PortType_t GetPortType() {
+  PortType_t GetPortType() const {
     return m_portType;
   }
-  LPCSTR GetPort() {
+  LPCSTR GetPort() const {
     return m_port;
   }
   void SetPort(LPCSTR port) {
     strncpy(m_port, port, sizeof(m_port));
   }
-  int GetPortSpeed() {
+  int GetPortSpeed() const {
     return m_portSpeed;
   }
   void SetPortSpeed(int speed) {
@@ -108,7 +184,7 @@ public:
   BOOL HasContrast() {
     return DeviceHasContrast();
   }
-  int GetContrast() {
+  int GetContrast() const {
     return m_contrast;
   }
   void SetContrast(int percent) {
@@ -121,7 +197,7 @@ public:
   BOOL HasBacklight() {
     return DeviceHasBacklight();
   }
-  int GetBrightness() {
+  int GetBrightness() const {
     return m_brightness;
   }
   void SetBrightness(int percent) {
@@ -131,7 +207,7 @@ public:
   BOOL HasKeypad() {
     return DeviceHasKeypad();
   }
-  BOOL GetEnableInput() {
+  BOOL GetEnableInput() const {
     return m_enableInput;
   }
   void SetEnableInput(BOOL enable) {
@@ -159,6 +235,8 @@ public:
   void DisplayCharacter(int row, int col, char ch);
   void DisplayCustomCharacter(int row, int col, const CustomCharacter& cust);
   void Clear();
+  PVOID Save();
+  void Restore(PVOID state);
   void Test();
 
 protected:
@@ -189,9 +267,12 @@ protected:
   // These can be used by device implementations.
   void DisplayInternal(int row, int col, LPCBYTE str, int length);
   int DefineCustomCharacter(const CustomCharacter& cust);
+  void DefineCustomCharacterInternal(int index, const CustomCharacter& cust);
   void SetSimulatedMarquee();
   void ClearSimulatedMarquee();
   void StepSimulatedMarquee();
+  void SetMarqueeInternal(Marquee *marquee);
+  void CheckMarqueeOverlap(int row);
   friend void WINAPI MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 
   BOOL OpenSerial(BOOL asynch = FALSE);
@@ -204,16 +285,11 @@ protected:
   // State.
   BYTE m_characterMap[256];
 
+  DisplayBuffer *m_buffer;
   BOOL m_open;
   int m_cols, m_rows;
-  LPBYTE m_buffer;
 
-#define NCUSTCHARS 8
-  CustomCharacter m_customCharacters[NCUSTCHARS];
-  DWORD m_customLastUse[NCUSTCHARS];
-
-  LPBYTE m_marquee;
-  int m_marqueeRow, m_marqueeLen, m_marqueePos;
+  Marquee *m_marquee;
   int m_marqueePixelWidth, m_marqueeSpeed;
   UINT m_marqueeTimer;
 

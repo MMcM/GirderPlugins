@@ -113,6 +113,8 @@ DisplayAction *FindDisplayAction(p_command command)
 
 /* Local variables */
 DisplayDevice *g_editDevice = NULL;
+HMODULE g_editDevlib = NULL;
+
 HANDLE g_configThread = NULL;
 HWND g_configDialog = NULL;
 
@@ -128,9 +130,9 @@ static void LoadConfigSettings(HWND hwnd)
     SendMessage(GetDlgItem(hwnd, IDC_DEVICE), CB_GETITEMDATA, idx, 0);
   if (NULL == entry) return;
   if (NULL != g_editDevice)
-    delete g_editDevice;
-  g_editDevice = DisplayDevice::Create(GetParent(hwnd), entry->lib, entry->dev);
-  if (NULL == g_editDevice) {
+    DisplayDevice::Destroy(g_editDevice, g_editDevlib);
+  if (!DisplayDevice::Create(g_editDevice, g_editDevlib,
+                             GetParent(hwnd), entry->lib, entry->dev)) {
     SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, 0);
     SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, 0);
     ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), SW_HIDE);
@@ -418,8 +420,7 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
 
   case WM_DESTROY: 
     if (NULL != g_editDevice) {
-      delete g_editDevice;
-      g_editDevice = NULL;
+      DisplayDevice::Destroy(g_editDevice, g_editDevlib);
     }
     PostQuitMessage(0); 
     return FALSE;
@@ -433,9 +434,8 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
     case IDOK:
       DisplayEnterCS();
       SaveConfigSettings(hwnd, TRUE);
-      DisplayReopen(g_editDevice);
+      DisplayReopen(g_editDevice, g_editDevlib);
       DisplayLeaveCS();
-      g_editDevice = NULL;
       EndDialog(hwnd, TRUE);
       return TRUE;
 
@@ -461,6 +461,7 @@ static BOOL CALLBACK ConfigDialogProc(HWND hwnd, UINT uMsg,
       }
       g_editDevice->Test();
       MessageBox(hwnd, "Test screen should be displayed", "Test", MB_OK);
+      g_editDevice->Clear();
       g_editDevice->Close();
       DisplayLeaveCS();
       return TRUE;

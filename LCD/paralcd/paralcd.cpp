@@ -163,6 +163,7 @@ inline static BYTE eBit(int dev)
 {
   switch (dev) {
   case 0:
+  default:
     return STROBE;
   case 1:
     return SELE;

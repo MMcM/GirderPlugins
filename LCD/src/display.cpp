@@ -5,6 +5,10 @@ $Header$
 #include "stdafx.h"
 #include "display.h"
 
+#ifdef _DEBUG
+#define _TRACE
+#endif
+
 HKEY DisplayDevice::GetSettingsKey()
 {
   HKEY hkey;
@@ -113,7 +117,8 @@ void DisplayDevice::SetSettingBinary(HKEY hkey, LPCSTR valkey,
     RegSetValueEx(hkey, valkey, NULL, REG_BINARY, value, vallen);
 }
 
-DisplayDevice *DisplayDevice::Create(HWND parent, LPCSTR lib, LPCSTR dev)
+BOOL DisplayDevice::Create(DisplayDevice*& device, HMODULE& devlib,
+                           HWND parent, LPCSTR lib, LPCSTR dev)
 {
   HKEY hkey = GetSettingsKey();
   
@@ -130,25 +135,47 @@ DisplayDevice *DisplayDevice::Create(HWND parent, LPCSTR lib, LPCSTR dev)
   else if (GetSettingString(hkey, "Device", devbuf, sizeof(devbuf)))
     devname = devbuf;
   
-  HMODULE hlib = LoadLibrary(libname);
-  if (NULL == hlib) {
+  devlib = LoadLibrary(libname);
+  if (NULL == devlib) {
     DisplayWin32Error(parent, GetLastError());
-    return NULL;
+    return FALSE;
   }
 
-  CreateFun_t func = (CreateFun_t)GetProcAddress(hlib, "CreateDisplayDevice");
-  if (NULL == hlib) {
+  CreateFun_t func = (CreateFun_t)GetProcAddress(devlib, "CreateDisplayDevice");
+  if (NULL == func) {
     DisplayWin32Error(parent, GetLastError());
-    return NULL;
+    FreeLibrary(devlib);
+    devlib = NULL;
+    return FALSE;
   }
   
-  DisplayDevice *device = (*func)(parent, devname);
-  if (NULL == hlib)
-    return NULL;
+  device = (*func)(parent, devname);
+  if (NULL == device) {
+    FreeLibrary(devlib);
+    devlib = NULL;
+    return FALSE;
+  }
 
   device->LoadSettings(hkey);
   RegCloseKey(hkey);
-  return device;
+  return TRUE;
+}
+
+void DisplayDevice::Destroy(DisplayDevice*& device, HMODULE& devlib)
+{
+  delete device;
+  device = NULL;
+  FreeLibrary(devlib);
+  devlib = NULL;
+}
+
+void DisplayDevice::Take(DisplayDevice*& fromDevice, HMODULE& fromDevlib,
+                         DisplayDevice*& toDevice, HMODULE& toDevlib)
+{
+  toDevice = fromDevice;
+  toDevlib = fromDevlib;
+  fromDevice = NULL;
+  fromDevlib = NULL;
 }
 
 DisplayDevice::DisplayDevice()
@@ -156,16 +183,14 @@ DisplayDevice::DisplayDevice()
   for (int i = 0; i < sizeof(m_characterMap); i++)
     m_characterMap[i] = i;
 
-  m_open = FALSE;
   m_cols = m_rows = 0;
   m_buffer = NULL;
-  memset(m_customLastUse, 0, sizeof(m_customLastUse));
+  m_open = FALSE;
 
   m_marquee = NULL;
-  m_marqueeRow = m_marqueeLen = m_marqueePos = 0;
-  m_marqueeTimer = 0;
   m_marqueePixelWidth = 6;
   m_marqueeSpeed = 1000;
+  m_marqueeTimer = 0;
 
   m_portType = portNONE;
   memset(&m_port, 0, sizeof(m_port));
@@ -181,6 +206,86 @@ DisplayDevice::DisplayDevice()
 
 DisplayDevice::~DisplayDevice()
 {
+}
+
+DisplayBuffer::DisplayBuffer(int rows, int cols, BYTE space)
+  : m_rows(rows), m_cols(cols), m_space(space)
+{
+  m_bytes = (LPBYTE)malloc(rows * cols);
+  memset(m_bytes, space, rows * cols);
+  memset(m_customLastUse, 0, sizeof(m_customLastUse));
+}
+
+DisplayBuffer::DisplayBuffer(const DisplayBuffer& other)
+  : m_rows(other.m_rows), m_cols(other.m_cols), m_space(other.m_space)
+{
+  m_bytes = (LPBYTE)malloc(m_rows * m_cols);
+  memcpy(m_bytes, other.m_bytes, m_rows * m_cols);
+  memcpy(m_customLastUse, other.m_customLastUse, sizeof(m_customLastUse));
+  for (int i = 0; i < NCUSTCHARS; i++) {
+    if (m_customLastUse[i] == 0)
+      continue;                 // Never used.
+    m_customCharacters[i] = other.m_customCharacters[i];
+  }
+}
+
+DisplayBuffer::~DisplayBuffer()
+{
+  free(m_bytes);
+}
+
+int DisplayBuffer::FindCustomCharacter(const CustomCharacter& cust)
+{
+  // Check for identical character already defined.
+  for (int i = 0; i < NCUSTCHARS; i++) {
+    if (m_customLastUse[i] == 0)
+      continue;                 // Never used; device state unknown.
+    if (m_customCharacters[i] == cust)
+      return i;
+  }
+  return -1;
+}
+
+int DisplayBuffer::AllocateCustomCharacter(const CustomCharacter& cust,
+                                           LPCBYTE characterMap)
+{
+  // Reuse character not current in use or least recently used.
+
+  int mapcust[256];
+  memset(mapcust, -1, sizeof(mapcust));
+  for (int i = 0; i < NCUSTCHARS; i++) {
+    BYTE b = characterMap[i];
+    mapcust[b] = i;
+  }
+
+  int usage[NCUSTCHARS];           // Count current usage from display buffer.
+  memset(usage, 0, sizeof(usage));
+  int bufsiz = m_rows * m_cols;
+  for (i = 0; i < bufsiz; i++) {
+    int cust = mapcust[m_bytes[i]];
+    if ((cust >= 0) && (cust < NCUSTCHARS))
+      usage[cust]++;
+  }
+
+  int best = -1;
+  for (i = 0; i < NCUSTCHARS; i++) {
+    if (usage[i] == 0) {
+      best = i;
+      break;
+    }
+    if ((best < 0) ||
+        (usage[i] < usage[best]) ||
+        ((usage[i] == usage[best]) &&
+         (m_customLastUse[i] < m_customLastUse[best])))
+      best = i;
+  }
+  m_customCharacters[best] = cust;
+  return best;
+}
+
+void DisplayBuffer::UseCustomCharacter(int index)
+{
+  m_customLastUse[index] = GetTickCount();
 }
 
 void DisplayDevice::LoadSettings(HKEY hkey)
@@ -262,9 +367,8 @@ BOOL DisplayDevice::Open()
   if (IsOpen())
     return TRUE;
 
-  m_buffer = (LPBYTE)malloc(m_cols * m_rows);
-  memset(m_buffer, m_characterMap[' '], m_cols * m_rows);
-  
+  m_buffer = new DisplayBuffer(m_rows, m_cols, m_characterMap[' ']);
+
   switch (m_portType) {
   case portSERIAL:
     break;
@@ -286,7 +390,7 @@ void DisplayDevice::Close()
 
   if (NULL != m_marquee) {
     DeviceClearMarquee();
-    free(m_marquee);
+    delete m_marquee;
     m_marquee = NULL;
   }
 
@@ -298,7 +402,7 @@ void DisplayDevice::Close()
   }
 
   if (NULL != m_buffer) {
-    free(m_buffer);
+    delete m_buffer;
     m_buffer = NULL;
   }
 }
@@ -307,11 +411,11 @@ void DisplayDevice::Clear()
 {
   if (NULL != m_marquee) {
     DeviceClearMarquee();
-    free(m_marquee);
+    delete m_marquee;
     m_marquee = NULL;
   }
   DeviceClear();
-  memset(m_buffer, m_characterMap[' '], m_cols * m_rows);
+  m_buffer->Clear();
 }
 
 void DisplayDevice::Display(int row, int col, int width, LPCSTR str)
@@ -333,48 +437,24 @@ void DisplayDevice::Display(int row, int col, int width, LPCSTR str)
     }
     if (length > m_cols) {
       // Marquee mode and text wide enough to need it.
+      Marquee *marquee = new Marquee(row, str, length, m_characterMap);
       if (NULL != m_marquee) {
-        if ((row == m_marqueeRow) &&
-            (length == m_marqueeLen)) {
-          BOOL match = TRUE;
-          for (int i = 0; i < length; i++) {
-            if (m_marquee[i] != m_characterMap[(unsigned char)str[i]]) {
-              match = FALSE;
-              break;
-            }
-          }
-          if (match)
-            return;             // Same as presently active.
+        if (*marquee == *m_marquee) {
+          delete marquee;
+          return;               // Same as presently active.
         }
         DeviceClearMarquee();
-        if (row != m_marqueeRow) {
+        if (row != m_marquee->GetRow()) {
           // Only one row allowed to do a marquee at a time; display
           // what fits of the old row in ordinary mode.
-          memcpy(m_buffer + (m_marqueeRow * m_cols), m_marquee, m_cols);
-          DisplayInternal(m_marqueeRow, 0, m_marquee, m_cols);
+          memcpy(m_buffer->GetBuffer(m_marquee->GetRow(), 0),
+                 m_marquee->GetBytes(), m_cols);
+          DisplayInternal(m_marquee->GetRow(), 0, m_marquee->GetBytes(), m_cols);
         }
-        free(m_marquee);
+        delete m_marquee;
         m_marquee = NULL;
       }
-      m_marquee = (LPBYTE)malloc(length);
-      for (int i = 0; i < length; i++)
-        m_marquee[i] = m_characterMap[(unsigned char)str[i]];
-      m_marqueeLen = length;
-      m_marqueeRow = row;
-      DeviceSetMarquee();
-#ifdef _DEBUG
-      {
-        char dbuf[1024];
-        sprintf(dbuf, "LCD: @%d<<<: '", row);
-        char *ep = dbuf + strlen(dbuf);
-        size_t nb = length;
-        if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
-          nb = sizeof(dbuf) - (ep - dbuf) - 3;
-        memcpy(ep, m_marquee, nb);
-        strcpy(ep + nb, "'\n");
-        OutputDebugString(dbuf);
-      }
-#endif
+      SetMarqueeInternal(marquee);
       return;
     }
     // Fits as normal rest of line.
@@ -383,21 +463,13 @@ void DisplayDevice::Display(int row, int col, int width, LPCSTR str)
   else if (col >= m_cols)
     return;
 
-  if ((NULL != m_marquee) && (row == m_marqueeRow)) {
-    // Displaying over a previous marquee row.
-    DeviceClearMarquee();
-    // Display what fits of scrolling in ordinary mode.
-    memcpy(m_buffer + (row * m_cols), m_marquee, m_cols);
-    DisplayInternal(row, 0, m_marquee, m_cols);
-    free(m_marquee);
-    m_marquee = NULL;
-  }
+  CheckMarqueeOverlap(row);
 
   int ncols = m_cols - col;
   if ((width <= 0) || (width > ncols))
     width = ncols;
   LPBYTE start = NULL, end;
-  LPBYTE bp = m_buffer + (row * m_cols) + col;
+  LPBYTE bp = m_buffer->GetBuffer(row, col);
   while (width-- > 0) {
     unsigned char ch = *str;
     if (('\0' == ch) || ('\n' == ch) || ('\r' == ch))
@@ -428,19 +500,11 @@ void DisplayDevice::DisplayCharacter(int row, int col, char ch)
       (col < 0) || (col >= m_cols))
     return;
 
-  if ((NULL != m_marquee) && (row == m_marqueeRow)) {
-    // Displaying over a previous marquee row.
-    DeviceClearMarquee();
-    // Display what fits of scrolling in ordinary mode.
-    memcpy(m_buffer + (row * m_cols), m_marquee, m_cols);
-    DisplayInternal(row, 0, m_marquee, m_cols);
-    free(m_marquee);
-    m_marquee = NULL;
-  }
+  CheckMarqueeOverlap(row);
 
   BYTE b = m_characterMap[(unsigned char)ch];
 
-  LPBYTE bp = m_buffer + (row * m_cols) + col;
+  LPBYTE bp = m_buffer->GetBuffer(row, col);
   if (b == *bp) 
     return;
   *bp = b;
@@ -452,19 +516,80 @@ void DisplayDevice::DisplayInternal(int row, int col, LPCBYTE str, int length)
 {
   DeviceDisplay(row, col, str, length);
 
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char dbuf[1024];
-    sprintf(dbuf, "LCD: @%d,%d: '", row, col);
+    sprintf(dbuf, "LCD: @%d,%d: ", row, col);
     char *ep = dbuf + strlen(dbuf);
-    size_t nb = length;
+    if ((1 == length) && (*str < NCUSTCHARS)) {
+      *ep++ = '0' + *str;
+    }
+    else {
+      *ep++ = '\'';
+      size_t nb = length;
+      if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
+        nb = sizeof(dbuf) - (ep - dbuf) - 3;
+      memcpy(ep, str, nb);
+      ep += nb;
+      *ep++ = '\'';
+    }
+    strcpy(ep, "\n");
+    OutputDebugString(dbuf);
+  }
+#endif
+}
+
+void DisplayDevice::DefineCustomCharacterInternal(int index, const CustomCharacter& cust)
+{
+  DeviceDefineCustomCharacter(index, cust);
+
+#ifdef _TRACE
+  {
+    char dbuf[1024];
+    sprintf(dbuf, "LCD: [%d] =>", index);
+    char *ep = dbuf + strlen(dbuf);
+    for (int i = 0; i < NCUSTROWS; i++) {
+      BYTE b = cust.GetBits()[i];
+      _itoa(b + (1 << NCUSTCOLS), ep+2, 2);  // Forcing leading zero.
+      memcpy(ep, " 0b", 3);
+      ep += (3 + NCUSTCOLS);
+    }
+    strcpy(ep, "\n");
+    OutputDebugString(dbuf);
+  }
+#endif
+}
+
+void DisplayDevice::SetMarqueeInternal(Marquee *marquee)
+{
+  m_marquee = marquee;
+  DeviceSetMarquee();
+#ifdef _TRACE
+  {
+    char dbuf[1024];
+    sprintf(dbuf, "LCD: @%d<<<: '", marquee->GetRow());
+    char *ep = dbuf + strlen(dbuf);
+    size_t nb = marquee->GetLength();
     if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
       nb = sizeof(dbuf) - (ep - dbuf) - 3;
-    memcpy(ep, str, nb);
+    memcpy(ep, m_marquee->GetBytes(), nb);
     strcpy(ep + nb, "'\n");
     OutputDebugString(dbuf);
   }
 #endif
+}
+
+void DisplayDevice::CheckMarqueeOverlap(int row)
+{
+  if ((NULL != m_marquee) && (row == m_marquee->GetRow())) {
+    // Displaying over a previous marquee row.
+    DeviceClearMarquee();
+    // Display what fits of scrolling in ordinary mode.
+    memcpy(m_buffer->GetBuffer(row, 0), m_marquee->GetBytes(), m_cols);
+    DisplayInternal(row, 0, m_marquee->GetBytes(), m_cols);
+    delete m_marquee;
+    m_marquee = NULL;
+  }
 }
 
 void DisplayDevice::SetSize(int width, int height)
@@ -472,6 +597,43 @@ void DisplayDevice::SetSize(int width, int height)
   Close();
   m_cols = width;
   m_rows = height;
+}
+
+Marquee::Marquee(int row, LPCSTR str, int length, LPCBYTE characterMap)
+  : m_row(row), m_len(length), m_pos(0)
+{
+  m_bytes = (LPBYTE)malloc(length);
+  for (int i = 0; i < length; i++)
+    m_bytes[i] = characterMap[(unsigned char)str[i]];
+}
+
+Marquee::Marquee(const Marquee& other)
+  : m_row(other.m_row), m_len(other.m_len), m_pos(0)
+{
+  m_bytes = (LPBYTE)malloc(m_len);
+  memcpy(m_bytes, other.m_bytes, m_len);
+}
+
+int Marquee::operator==(const Marquee& other) const
+{
+  if (m_row != other.m_row)
+    return FALSE;
+  if (m_len != other.m_len)
+    return FALSE;
+  return !memcmp(m_bytes, other.m_bytes, m_len);
+}
+
+Marquee::~Marquee()
+{
+  free(m_bytes);
+}
+
+int Marquee::NextPosition()
+{
+  int result = m_pos++;
+  if (m_pos >= m_len)
+    m_pos = 0;
+  return result;
 }
 
 static DisplayDevice *g_marqueeDevice;
@@ -483,9 +645,9 @@ static void WINAPI MarqueeTimer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime
 
 void DisplayDevice::SetSimulatedMarquee()
 {
-  memcpy(m_buffer + (m_marqueeRow * m_cols), m_marquee, m_cols);
-  DisplayInternal(m_marqueeRow, 0, m_marquee, m_cols);
-  m_marqueePos = m_cols;
+  memcpy(m_buffer->GetBuffer(m_marquee->GetRow(), 0), m_marquee->GetBytes(), m_cols);
+  DisplayInternal(m_marquee->GetRow(), 0, m_marquee->GetBytes(), m_cols);
+  m_marquee->SetPosition(m_cols);
   g_marqueeDevice = this;
   m_marqueeTimer = SetTimer(NULL, 0, 
                             // From msec / pixel to ms / char assuming 6 pixels per char.
@@ -502,12 +664,10 @@ void DisplayDevice::ClearSimulatedMarquee()
 
 void DisplayDevice::StepSimulatedMarquee()
 {
-  LPBYTE bp = m_buffer + (m_marqueeRow * m_cols);
+  LPBYTE bp = m_buffer->GetBuffer(m_marquee->GetRow(), 0);
   memmove(bp, bp+1, m_cols-1);
-  bp[m_cols-1] = m_marquee[m_marqueePos++];
-  DisplayInternal(m_marqueeRow, 0, bp, m_cols);
-  if (m_marqueePos >= m_marqueeLen)
-    m_marqueePos = 0;
+  bp[m_cols-1] = m_marquee->GetBytes()[m_marquee->NextPosition()];
+  DisplayInternal(m_marquee->GetRow(), 0, bp, m_cols);
 }
 
 void CustomCharacter::LoadFromString(LPCSTR defn)
@@ -532,57 +692,103 @@ void CustomCharacter::LoadFromString(LPCSTR defn)
 void DisplayDevice::DisplayCustomCharacter(int row, int col, 
                                            const CustomCharacter& cust)
 {
-  int index = DefineCustomCharacter(cust);
-  m_customLastUse[index] = GetTickCount();
+  CheckMarqueeOverlap(row);
 
+  int index = DefineCustomCharacter(cust);
   BYTE b = m_characterMap[index];
-  m_buffer[row * m_cols + col] = b;
+  *m_buffer->GetBuffer(row, col) = b;
   DisplayInternal(row, col, &b, 1);
 }
 
 int DisplayDevice::DefineCustomCharacter(const CustomCharacter& cust)
 {
-  // Check for identical character already defined.
-  for (int i = 0; i < NCUSTCHARS; i++) {
-    if (m_customLastUse[i] == 0)
-      continue;                 // Never used; device state unknown.
-    if (m_customCharacters[i] == cust)
-      return i;
+  int index = m_buffer->FindCustomCharacter(cust);
+  if (index < 0) {
+    index = m_buffer->AllocateCustomCharacter(cust, m_characterMap);
+    DefineCustomCharacterInternal(index, cust);
+  }
+  m_buffer->UseCustomCharacter(index);
+  return index;
+}
+
+struct SaveState {
+  DisplayBuffer *m_buffer;
+  Marquee *m_marquee;
+};
+
+PVOID DisplayDevice::Save()
+{
+  if (!IsOpen())
+    return NULL;
+
+  SaveState *result = new SaveState;
+  result->m_buffer = new DisplayBuffer(*m_buffer);
+  result->m_marquee = (NULL == m_marquee) ? NULL : new Marquee(*m_marquee);
+  return result;
+}
+
+void DisplayDevice::Restore(PVOID state)
+{
+  if (NULL == state) {
+    Close();
+    return;
   }
 
-  // Reuse character not current in use or least recently used.
-
-  int mapcust[256];
-  memset(mapcust, -1, sizeof(mapcust));
-  for (i = 0; i < NCUSTCHARS; i++) {
-    BYTE b = m_characterMap[i];
-    mapcust[b] = i;
+  if (NULL != m_marquee) {
+    DeviceClearMarquee();
+    delete m_marquee;
+    m_marquee = NULL;
   }
 
-  int usage[NCUSTCHARS];           // Count current usage from display buffer.
-  memset(usage, 0, sizeof(usage));
-  int bufsiz = m_rows * m_cols;
-  for (i = 0; i < bufsiz; i++) {
-    int cust = mapcust[m_buffer[i]];
-    if ((cust >= 0) && (cust < NCUSTCHARS))
-      usage[cust]++;
+  if (NULL != m_buffer) {
+    delete m_buffer;
+    m_buffer = NULL;
   }
 
-  int best = -1;
-  for (i = 0; i < NCUSTCHARS; i++) {
-    if (usage[i] == 0) {
-      best = i;
-      break;
+  SaveState *sstate = (SaveState *)state;
+  DisplayBuffer *buffer = sstate->m_buffer;
+  Marquee *marquee = sstate->m_marquee;
+  delete sstate;
+  
+  if (!m_open) {
+    if (!DeviceOpen())
+      return;
+    m_open = TRUE;
+  }
+
+  m_buffer = buffer;
+  DeviceClear();
+
+  for (int index = 0; index < NCUSTCHARS; index++) {
+    if (m_buffer->IsCustomCharacterUsed(index)) {
+      DefineCustomCharacterInternal(index, m_buffer->GetCustomCharacter(index));
+      m_buffer->UseCustomCharacter(index);
     }
-    if ((best < 0) ||
-        (usage[i] < usage[best]) ||
-        ((usage[i] == usage[best]) &&
-         (m_customLastUse[i] < m_customLastUse[best])))
-      best = i;
   }
-  DeviceDefineCustomCharacter(best, cust);
-  m_customCharacters[best] = cust;
-  return best;
+
+  BYTE space = m_characterMap[' '];
+  for (int row = 0; row < m_rows; row++) {
+    if ((NULL != marquee) &&
+        (row == marquee->GetRow()))
+      SetMarqueeInternal(marquee);
+    else {
+      int col = 0;
+      LPCBYTE buf = m_buffer->GetBuffer(row, col);
+      int width = m_cols;
+      while ((width > 0) &&
+             (space == *buf)) {
+        buf++;
+        col++;
+        width--;
+      }
+      while ((width > 0) &&
+             (space == buf[width-1])) {
+        width--;
+      }
+      if (width > 0)
+        DisplayInternal(row, col, buf, width);
+    }
+  }
 }
 
 void DisplayDevice::Test()
