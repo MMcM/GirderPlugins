@@ -58,6 +58,8 @@ const UINT MATCH_MEDIA_SPY = 1030;
 const UINT EXTRACT_CONSTANT = 2001;
 const UINT EXTRACT_GETTEXT = 2002;
 const UINT EXTRACT_LPARAM_STR = 2003;
+const UINT EXTRACT_LPARAM = 2004;
+const UINT EXTRACT_WPARAM = 2005;
 const UINT EXTRACT_SB_GETTEXT = 2010;
 const UINT EXTRACT_MEDIA_SPY = 2030;
 
@@ -116,6 +118,7 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
+
     // This only happens when playing a .VOB file: the window title is
     // changed to the file in question.  Better than nothing.
     BEGIN_NMATCH(Title)
@@ -123,6 +126,13 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "CyberLink Video Window Class")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
   BEGIN_MODULE(accessDTV)
@@ -150,7 +160,9 @@ static MatchEntry g_matches[] = {
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
 
-    // This works in the beta version.  Who knows what the final version will be like.
+#if 0
+    // This worked in the first beta version.  It has understandably
+    // since been replaced by something more graphical.
     BEGIN_NMATCH(Elapsed)
       ENTRY_NUM(MATCH_MESSAGE, WM_SETTEXT)
       ENTRY_NUM(MATCH_CONTROLID, 1114)
@@ -170,7 +182,25 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
+#endif
   
+    BEGIN_NMATCH(Elapsed)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
+      ENTRY_NUM(MATCH_WPARAM, MAKELONG(25,359))
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+#if 0
+    // Enable and use this to discover new strings as they get added.
+    BEGIN_NMATCH(UnknownText)
+      ENTRY_NUM(MATCH_PATCH, PATCH_TEXTOUT)
+     BEGIN_EXTRACT()
+      NENTRY0(String,EXTRACT_LPARAM_STR)
+      NENTRY0(Point,EXTRACT_WPARAM)
+    END_MATCH()
+#endif
+
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
       ENTRY_STR(MATCH_GETTEXT, "accessDTV")
@@ -276,6 +306,13 @@ static MatchEntry g_matches[] = {
       NENTRY_NUM(Duration, EXTRACT_MEDIA_SPY, MS_FG_DURATION)
       NENTRY_NUM(Elapsed, EXTRACT_MEDIA_SPY, MS_FG_POSITION)
       NENTRY_NUM(File, EXTRACT_MEDIA_SPY, MS_FG_FILENAME)
+    END_MATCH()
+
+    BEGIN_NMATCH(Close)
+      ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
+      ENTRY_STR(MATCH_CLASS, "ShowShifterWndClass")
+     BEGIN_EXTRACT()
+      ENTRY_STR(EXTRACT_CONSTANT, "")
     END_MATCH()
 
 };
@@ -455,6 +492,12 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
     break;
   case EXTRACT_LPARAM_STR:
     strncpy(szBuf, (LPCSTR)lParam, nSize);
+    break;
+  case EXTRACT_LPARAM:
+    sprintf(szBuf, "%d", lParam);
+    break;
+  case EXTRACT_WPARAM:
+    sprintf(szBuf, "%d", wParam);
     break;
   case EXTRACT_SB_GETTEXT:
     SendMessage(hWnd, SB_GETTEXT, pEntry->dwVal, (LPARAM)szBuf);
