@@ -110,6 +110,10 @@ SOURCE=.\src\ui.cpp
 
 SOURCE=.\src\ui.rc
 # End Source File
+# Begin Source File
+
+SOURCE=.\src\zplcd.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
