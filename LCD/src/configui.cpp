@@ -45,6 +45,7 @@ struct DisplayDeviceEntry {
   { "Futaba VFD (20x4)", "FutabaVFD", "M204" },
   { "Futaba VFD (40x2)", "FutabaVFD", "M402" },
   { "Noritake CU20045SCPB (20x4, vfd)", "NoritakeVFD", "CU20045SCPB" },
+  { "VLSystem L.I.S. (20x2, vfd)", "VLSysLIS", "LIS2" },
   { "LCDHype LC7981 240x128", "LCDHYPE", "LC798124128" },
   { "LCDHype LC7981 240x64", "LCDHYPE", "LC798124064" },
   { "LCDHype LC7981 256x64", "LCDHYPE", "LC798125664" },
