@@ -122,13 +122,20 @@ static BOOL CALLBACK LearnDialogProc(HWND hwnd, UINT uMsg,
             char cd = *pb;
             if ((cd >= 'a') && (cd <= 'z'))
               cd -= 'a' - 'A';  // Happens sometimes, maybe on XP?
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 3; i++) {
               char ebuf[256];
               strcpy(ebuf, "Disc.");
-              if (0 == i)
+              switch (i) {
+              case 0:
+                strcat(ebuf, "Contents");
+                break;
+              case 1:
                 strcat(ebuf, "Insert");
-              else
+                break;
+              case 2:
                 strcat(ebuf, "Eject");
+                break;
+              }
               LPSTR pe = ebuf + strlen(ebuf);
               *pe++ = '.';
               *pe++ = cd;
