@@ -312,13 +312,6 @@ void DisplayScreen(DisplayCommandState& state)
   state.SetStatus("LCD screen");
 }
 
-void DisplayGPO(DisplayCommandState& state)
-{
-  if (!DisplayOpen(state)) return; 
-  state.m_device->SetGPO(state.m_command->ivalue1, state.m_command->bvalue1);
-  state.SetStatus("GPO set");
-}
-
 void DisplayCharacter(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
@@ -340,6 +333,22 @@ void DisplayCustomCharacter(DisplayCommandState& state)
   state.m_device->DisplayCustomCharacter(state.m_command->ivalue1, state.m_command->ivalue2,
                                          cust);
   state.SetStatus("Custom character displayed");
+}
+
+void DisplayKeypadLegend(DisplayCommandState& state)
+{
+  if (!DisplayOpen(state)) return; 
+  char buf1[512], buf2[512];
+  SF.parse_reg_string(state.m_command->svalue1, buf1, sizeof(buf1));
+  SF.parse_reg_string(state.m_command->svalue3, buf2, sizeof(buf2));
+  state.m_device->SetKeypadLegend(buf1, buf2);
+}
+
+void DisplayGPO(DisplayCommandState& state)
+{
+  if (!DisplayOpen(state)) return; 
+  state.m_device->SetGPO(state.m_command->ivalue1, state.m_command->bvalue1);
+  state.SetStatus("GPO set");
 }
 
 void DisplayCommand(p_command command, PCHAR status, int statuslen)

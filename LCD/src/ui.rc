@@ -144,6 +144,7 @@ BEGIN
     PUSHBUTTON      "&Add...",IDC_ADD,190,45,50,14
     PUSHBUTTON      "&Edit...",IDC_EDIT,190,65,50,14
     PUSHBUTTON      "&Remove",IDC_REMOVE,190,85,50,14
+    PUSHBUTTON      "&Re&set",IDC_RESET,190,105,50,14
     CONTROL         "Send &unknown input directly",IDC_PASSTHRU,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,140,150,10
 END
@@ -175,6 +176,8 @@ BEGIN
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Value:",IDC_VALUEL,15,65,30,8
     EDITTEXT        IDC_VALSTR,50,62,190,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_VALLIST,50,62,190,100,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | 
+                    NOT WS_VISIBLE
     EDITTEXT        IDC_VALINT,50,62,30,14,ES_AUTOHSCROLL | ES_NUMBER | NOT 
                     WS_VISIBLE
     CONTROL         "ValSpin",IDC_VAL_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
@@ -221,6 +224,10 @@ BEGIN
     RADIOBUTTON     "",IDC_MARQUEE_LINE2,235,97,10,10,NOT WS_VISIBLE
     RADIOBUTTON     "",IDC_MARQUEE_LINE3,235,112,10,10,NOT WS_VISIBLE
     RADIOBUTTON     "",IDC_MARQUEE_LINE4,235,127,10,10,NOT WS_VISIBLE
+    LTEXT           "Value 2:",IDC_VALUE2L,15,90,30,8, NOT WS_VISIBLE
+    EDITTEXT        IDC_VALSTR2,50,87,190,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    COMBOBOX        IDC_VALLIST2,50,87,190,100,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | 
+                    NOT WS_VISIBLE
     LTEXT           "GPO:",IDC_GPOL,15,90,30,8,NOT WS_VISIBLE
     EDITTEXT        IDC_GPO,50,87,30,14,ES_AUTOHSCROLL | ES_NUMBER | NOT 
                     WS_VISIBLE
@@ -290,6 +297,8 @@ BEGIN
     IDS_EVENT               "Event"
     IDS_VARIABLE            "Variable:"
     IDS_VALUE               "Value:"
+    IDS_BUTTON              "Button:"
+    IDS_LEGEND              "Legend:"
 END
 
 #endif    // English (U.S.) resources

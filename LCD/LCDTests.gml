@@ -84,9 +84,6 @@ $Header$
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
         <StateInvert>FALSE</StateInvert>
-        <Binary Encoding="Base64">G0x1YUABBAQEIAYJCBLmW6GwubJBCAAAAD0obm9uZSkAAAAAAAAAAAAAAgAAAAAAAAAAAAAABAAA&#xD;
-AAkAAABGaWxlTmFtZQANAAAAR2V0RGlyZWN0b3J5AAoAAABHSVJERVJESVIADAAAAFxnaXJkZXIu&#xD;
-ZXhlAAAAAAAAAAAABwAAAEwAAACHAAAAQgAAAMcAAACdAAAAEwAAAAAAAAA=</Binary>
         <OSD>FALSE</OSD>
         <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
@@ -2422,13 +2419,13 @@ pqrstuvwxyz{|}~</sValue1>
     </Command>
   </Group>
   <Group Name="Keypad" Identifier="112" Enabled="TRUE">
-    <MultiGroup Name="LCD Event" Identifier="114" Enabled="TRUE">
+    <MultiGroup Name="LCD Event" Identifier="113" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="I" Identifier="115" Enabled="TRUE" Invert="FALSE" Device="-2" IrStr="On LCD Event"/>
-      <Command Name="Display" Identifier="116" Enabled="TRUE">
+      <EventString Name="I" Identifier="114" Enabled="TRUE" Invert="FALSE" Device="-2" IrStr="On LCD Event"/>
+      <Command Name="Display" Identifier="115" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2449,7 +2446,7 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="OSD" Identifier="117" Enabled="TRUE">
+      <Command Name="OSD" Identifier="116" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -2469,10 +2466,104 @@ pqrstuvwxyz{|}~</sValue1>
         <bValue3>FALSE</bValue3>
       </Command>
     </MultiGroup>
+    <MultiGroup Name="Set Legends" Identifier="117" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <Command Name="UL" Identifier="118" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>UL</sValue1>
+        <sValue2>k</sValue2>
+        <sValue3>Up</sValue3>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="UR" Identifier="119" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>UR</sValue1>
+        <sValue2>k</sValue2>
+        <sValue3>Enter</sValue3>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="LL" Identifier="120" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>LL</sValue1>
+        <sValue2>k</sValue2>
+        <sValue3>Down</sValue3>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="LR" Identifier="121" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>LR</sValue1>
+        <sValue2>k</sValue2>
+        <sValue3>Cancel</sValue3>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+    </MultiGroup>
   </Group>
-  <Group Name="Functions" Identifier="183" Enabled="TRUE">
+  <Group Name="Functions" Identifier="122" Enabled="TRUE">
     <Comments>Test LCD LUA extension functions</Comments>
-    <Command Name="Script" Identifier="184" Enabled="TRUE">
+    <Command Name="Script" Identifier="123" Enabled="TRUE">
       <Comments>Open in script editor</Comments>
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>

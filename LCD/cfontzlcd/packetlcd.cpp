@@ -128,32 +128,57 @@ const char *KEYPAD_6 =
   "3	Left\n"
   "4	Right\n"
   "5	Enter\n"
-  "6	Exit\n"
+  "6	Cancel\n"
   ;
 // 7-12 are release of the above.
-const char *KEYPAD_4 =
-  "13   UL\n"
-  "14   UR\n"
-  "15   LL\n"
-  "16   LR\n"
-  ;
+
+static LPCSTR KeypadDefaultEvents[] = {
+  "UL",                         // 13
+  "UR",                         // 14
+  "LL",                         // 15
+  "LR",                         // 16
+  NULL
+};
 // 17-20 are release of the above.
+
+// These are the ones in the CFA-631 firmware.
+static LPCSTR KeypadLegendEvents[] = {
+  "",                           // KEY_LEGEND_BLANK
+  "Cancel",                     // KEY_LEGEND_CANCEL
+  "Enter",                      // KEY_LEGEND_CHECK
+  "Up",                         // KEY_LEGEND_UP
+  "Down",                       // KEY_LEGEND_DOWN
+  "Right",                      // KEY_LEGEND_RIGHT
+  "Left",                       // KEY_LEGEND_LEFT
+  "Plus",                       // KEY_LEGEND_PLUS
+  "Minus",                      // KEY_LEGEND_MINUS
+  NULL                          // KEY_LEGEND_NONE
+};
 
 CrystalfontzPacketLCD::CrystalfontzPacketLCD
 (DisplayDeviceFactory *factory, LPCSTR devtype,
- int cols, int rows, BOOL newCommands)
+ int cols, int rows, int devmode)
   : DisplayDevice(factory, devtype)
 {
-  m_hasSendData = newCommands;
+  m_hasSendData = (devmode != OLD_CMDS);
+  m_hasKeypadLegends = (devmode == LEGENDS);
 
   m_cols = cols;
   m_rows = rows;
 
-  m_inputMap.LoadFromString((newCommands) ? KEYPAD_4 : KEYPAD_6);
+  if (devmode == OLD_CMDS)
+    m_inputMap.LoadFromString(KEYPAD_6);
+  else {
+    for (int i = 0; i < 4; i++) {
+      char buf[8];
+      sprintf(buf, "%d", i+13);
+      m_inputMap.Put(buf, KeypadDefaultEvents[i]);
+    }
+  }
 
   m_portType = portSERIAL;
   strcpy(m_port, "COM1");
-  m_portSpeed = (newCommands) ? CBR_115200 : CBR_19200;
+  m_portSpeed = (devmode == OLD_CMDS) ? CBR_19200 : CBR_115200;
 
   m_inputEnabled = FALSE;
 
@@ -241,6 +266,8 @@ BOOL CrystalfontzPacketLCD::DeviceOpen()
   *spkt->GetData() = m_brightness;
   SendOneWay(spkt);
 
+  UpdateKeypadLegends();
+
   return TRUE;
 }
 
@@ -296,6 +323,14 @@ void CrystalfontzPacketLCD::DeviceDisplay(int row, int col, LPCBYTE str, int len
   SendOneWay(spkt);
 }
 
+int CrystalfontzPacketLCD::DeviceNCustomCharacters()
+{
+  if (m_hasKeypadLegends)
+    return 2;                   // Takes six positions, so needs that many chars.
+  else
+    return DisplayDevice::DeviceNCustomCharacters();
+}
+
 void CrystalfontzPacketLCD::DeviceDefineCustomCharacter(int index, 
                                                         const CustomCharacter& cust)
 {
@@ -324,6 +359,64 @@ BOOL CrystalfontzPacketLCD::DeviceHasBacklight()
 BOOL CrystalfontzPacketLCD::DeviceHasKeypad()
 {
   return TRUE;
+}
+
+BOOL CrystalfontzPacketLCD::DeviceHasKeypadLegends()
+{
+  return m_hasKeypadLegends;
+}
+
+LPCSTR *CrystalfontzPacketLCD::DeviceGetKeypadButtonChoices()
+{
+  return KeypadDefaultEvents;
+}
+
+LPCSTR *CrystalfontzPacketLCD::DeviceGetKeypadLegendChoices()
+{
+  return KeypadLegendEvents;
+}
+
+void CrystalfontzPacketLCD::DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend)
+{
+  char buf[8];
+  if ('1' != button[0]) {
+    // A button can be specified by its default event: that's what's in the combo.
+    for (int i = 0; i < 4; i++) {
+      if (!strcmp(button, KeypadDefaultEvents[i])) {
+        sprintf(buf, "%d", i+13);
+        button = buf;
+        break;
+      }
+    }
+  }
+  DisplayDevice::DeviceSetKeypadLegend(button, legend);
+  UpdateKeypadLegends();
+}
+
+void CrystalfontzPacketLCD::UpdateKeypadLegends()
+{
+  SendPacket *spkt = new SendPacket(32, m_hasKeypadLegends ? 5 : 1); // Key Legends
+  LPBYTE pb = spkt->GetData();
+  *pb = m_hasKeypadLegends;
+  if (m_hasKeypadLegends) {
+    for (int i = 0; i < 4; i++) {
+      char buf[8];
+      sprintf(buf, "%d", i+13);
+      LPCSTR event = m_inputMap.Get(buf);
+      if (NULL == event) {
+        pb[i+1] = 9;
+        continue;
+      }
+      pb[i+1] = 0;
+      for (int j = 1; j < countof(KeypadLegendEvents)-1; j++) {
+        if (!strcmp(event, KeypadLegendEvents[j])) {
+          pb[i+1] = j;
+          break;
+        }
+      }
+    }
+  }
+  SendOneWay(spkt);
 }
 
 BOOL CrystalfontzPacketLCD::DeviceEnableInput()

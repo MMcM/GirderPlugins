@@ -186,7 +186,7 @@ void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
     int nch = 0;
     while (nch < length) {
       // Custom chars from 0-7 replicated to 8-15 like most hardware devices do.
-      if ((unsigned char)str[nch] < (NCUSTCHARS * 2))
+      if ((unsigned char)str[nch] < (MAXCUSTCHARS * 2))
         break;
       nch++;
     }
@@ -206,20 +206,20 @@ void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
       // A custom character.
       if (NULL == custDC) {
         if (NULL == m_customBitmap) {
-          BYTE bits[NCUSTCHARS * NCUSTROWS];
-          for (int i = 0; i < NCUSTCHARS; i++) {
+          BYTE bits[MAXCUSTCHARS * NCUSTROWS];
+          for (int i = 0; i < MAXCUSTCHARS; i++) {
             const BYTE *cbits = m_buffer->GetCustomCharacter(i).GetBits();
             for (int j = 0; j < NCUSTROWS; j++) {
-              bits[j * NCUSTCHARS + i] = ~cbits[j]; // zero is foreground color
+              bits[j * MAXCUSTCHARS + i] = ~cbits[j]; // zero is foreground color
             }
           }
-          m_customBitmap = CreateBitmap(NCUSTCHARS * 8, NCUSTROWS, 1, 1, bits);
+          m_customBitmap = CreateBitmap(MAXCUSTCHARS * 8, NCUSTROWS, 1, 1, bits);
         }
         custDC = CreateCompatibleDC(NULL);
         oldBitmap = (HBITMAP)SelectObject(custDC, m_customBitmap);
       }
       SetStretchBltMode(hDC, BLACKONWHITE);
-      int idx = *str % NCUSTCHARS;
+      int idx = *str % MAXCUSTCHARS;
       StretchBlt(hDC, col * m_charWidth, row * m_lineHeight, m_charWidth, m_lineHeight,
                  custDC, idx * 8 + (8 - NCUSTCOLS), 0, NCUSTCOLS + 1, NCUSTROWS, SRCCOPY);
       col++;

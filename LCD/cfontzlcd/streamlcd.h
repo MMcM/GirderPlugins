@@ -5,8 +5,9 @@ $Header$
 class CrystalfontzStreamLCD : public DisplayDevice
 {
 public:
+  enum { NOBACKLIGHT, BACKLIGHT };
   CrystalfontzStreamLCD(DisplayDeviceFactory *factory, LPCSTR devtype,
-                       int cols, int rows, BOOL backlight);
+                       int cols, int rows, int backlight);
   CrystalfontzStreamLCD(const CrystalfontzStreamLCD& other);
   ~CrystalfontzStreamLCD();
   
@@ -28,6 +29,6 @@ public:
 #endif
 
 protected:
-  BOOL m_backlight;
+  int m_backlight;
   Delay m_bootDelay;
 };

@@ -37,15 +37,11 @@ extern void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname
 
 class DisplayCommandState;
 
-enum DisplayValueType {
-  valNONE, valSTR, valINT, valBOOL, valVAR
-};
-
 struct DisplayAction
 {
   const char *key;
   const char *name;
-  DisplayValueType valueType;
+  int valueType;
   void (*function)(DisplayCommandState& state);
 };
 
@@ -68,6 +64,7 @@ extern void DisplayClear(DisplayCommandState& state);
 extern void DisplayScreen(DisplayCommandState& state);
 extern void DisplayCharacter(DisplayCommandState& state);
 extern void DisplayCustomCharacter(DisplayCommandState& state);
+extern void DisplayKeypadLegend(DisplayCommandState& state);
 extern void DisplayGPO(DisplayCommandState& state);
 
 extern void DisplayCommand(p_command command, PCHAR status, int statuslen);

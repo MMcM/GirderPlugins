@@ -22,6 +22,7 @@ struct DisplayDeviceEntry {
   { "Crystalfontz 634SG (20x4, backlight)", "CFONTZLCD", "634SG" },
   { "Crystalfontz 633 (16x2, backlight, keypad)", "CFONTZLCD", "633" },
   { "Crystalfontz 631 (20x2, backlight, keypad)", "CFONTZLCD", "631" },
+  { "Crystalfontz 631 (17x2, backlight, keypad w/ legends)", "CFONTZLCD", "631@L" },
   { "Matrix Orbital LCD2021 (20x2)", "MOLCD", "LCD2021" }, // discontinued 7/20/00
   { "Matrix Orbital LCD4021 (40x2)", "MOLCD", "LCD4021" },
   { "Matrix Orbital LCD2041 (20x4)", "MOLCD", "LCD2041" },
@@ -773,6 +774,13 @@ static BOOL CALLBACK KeypadPageDialogProc(HWND hwnd, UINT uMsg,
           ListView_DeleteItem(list, nSelItem);
           nSelItem--;
         }
+      }
+      return TRUE;
+
+    case IDC_RESET:
+      if (NULL != g_editDevice) {
+        g_editDevice->ResetInputMap();
+        LoadKeypadSettings(hwnd);
       }
       return TRUE;
 

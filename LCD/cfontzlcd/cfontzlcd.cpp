@@ -18,14 +18,15 @@ struct DeviceEntry {
   BOOL packet;
   int cols;
   int rows;
-  BOOL flag;                    // backlight or new commands
+  int devmode;
 } DeviceEntries[] = {
-  { "632SS", FALSE, 16, 2, FALSE },
-  { "632SG", FALSE, 16, 2, TRUE },
-  { "634SS", FALSE, 20, 4, FALSE },
-  { "634SG", FALSE, 20, 4, TRUE },
-  { "633", TRUE, 16, 2, FALSE },
-  { "631", TRUE, 20, 2, TRUE },
+  { "632SS", FALSE, 16, 2, CrystalfontzStreamLCD::NOBACKLIGHT },
+  { "632SG", FALSE, 16, 2, CrystalfontzStreamLCD::BACKLIGHT },
+  { "634SS", FALSE, 20, 4, CrystalfontzStreamLCD::NOBACKLIGHT },
+  { "634SG", FALSE, 20, 4, CrystalfontzStreamLCD::BACKLIGHT },
+  { "633", TRUE, 16, 2, CrystalfontzPacketLCD::OLD_CMDS },
+  { "631", TRUE, 20, 2, CrystalfontzPacketLCD::NEW_CMDS },
+  { "631@L", TRUE, 17, 2, CrystalfontzPacketLCD::LEGENDS },
 };
 
 extern "C" __declspec(dllexport)
@@ -36,10 +37,12 @@ DisplayDevice *CreateDisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype
     if (!strcmp(devtype, entry->devtype)) {
       if (entry->packet)
         return new CrystalfontzPacketLCD(factory, devtype,
-                                         entry->cols, entry->rows, entry->flag);
+                                         entry->cols, entry->rows,
+                                         entry->devmode);
       else
         return new CrystalfontzStreamLCD(factory, devtype,
-                                         entry->cols, entry->rows, entry->flag);
+                                         entry->cols, entry->rows,
+                                         entry->devmode);
     }
   }
   return NULL;

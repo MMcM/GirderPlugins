@@ -238,7 +238,7 @@ DisplayBuffer::DisplayBuffer(const DisplayBuffer& other)
   m_bytes = (LPBYTE)malloc(m_rows * m_cols);
   memcpy(m_bytes, other.m_bytes, m_rows * m_cols);
   memcpy(m_customLastUse, other.m_customLastUse, sizeof(m_customLastUse));
-  for (int i = 0; i < NCUSTCHARS; i++) {
+  for (int i = 0; i < MAXCUSTCHARS; i++) {
     if (m_customLastUse[i] == 0)
       continue;                 // Never used.
     m_customCharacters[i] = other.m_customCharacters[i];
@@ -250,10 +250,10 @@ DisplayBuffer::~DisplayBuffer()
   free(m_bytes);
 }
 
-int DisplayBuffer::FindCustomCharacter(const CustomCharacter& cust)
+int DisplayBuffer::FindCustomCharacter(const CustomCharacter& cust, int ncust)
 {
   // Check for identical character already defined.
-  for (int i = 0; i < NCUSTCHARS; i++) {
+  for (int i = 0; i < ncust; i++) {
     if (m_customLastUse[i] == 0)
       continue;                 // Never used; device state unknown.
     if (m_customCharacters[i] == cust)
@@ -263,28 +263,29 @@ int DisplayBuffer::FindCustomCharacter(const CustomCharacter& cust)
 }
 
 int DisplayBuffer::AllocateCustomCharacter(const CustomCharacter& cust,
+                                           int ncust,
                                            LPCBYTE characterMap)
 {
   // Reuse character not current in use or least recently used.
 
   int mapcust[256];
   memset(mapcust, -1, sizeof(mapcust));
-  for (int i = 0; i < NCUSTCHARS; i++) {
+  for (int i = 0; i < ncust; i++) {
     BYTE b = characterMap[i];
     mapcust[b] = i;
   }
 
-  int usage[NCUSTCHARS];           // Count current usage from display buffer.
+  int usage[MAXCUSTCHARS];      // Count current usage from display buffer.
   memset(usage, 0, sizeof(usage));
   int bufsiz = m_rows * m_cols;
   for (i = 0; i < bufsiz; i++) {
     int cust = mapcust[m_bytes[i]];
-    if ((cust >= 0) && (cust < NCUSTCHARS))
+    if ((cust >= 0) && (cust < ncust))
       usage[cust]++;
   }
 
   int best = -1;
-  for (i = 0; i < NCUSTCHARS; i++) {
+  for (i = 0; i < ncust; i++) {
     if (usage[i] == 0) {
       best = i;
       break;
@@ -550,7 +551,7 @@ void DisplayDevice::DisplayInternal(int row, int col, LPCBYTE str, int length)
     char dbuf[1024];
     sprintf(dbuf, "LCD: @%d,%d: ", row, col);
     char *ep = dbuf + strlen(dbuf);
-    if ((1 == length) && (*str < NCUSTCHARS)) {
+    if ((1 == length) && (*str < MAXCUSTCHARS)) {
       *ep++ = '0' + *str;
     }
     else {
@@ -702,7 +703,7 @@ void DisplayDevice::StepSimulatedMarquee()
 void CustomCharacter::LoadFromString(LPCSTR defn)
 {
   size_t index = 0;
-  while (index < NCUSTCHARS) {
+  while (index < NCUSTROWS) {
     // strtoul does not allow newlines, which are convenient for this.
     while (('\0' != *defn) && (NULL != strchr(" \t\r\n", *defn)))
       defn++;
@@ -731,9 +732,10 @@ void DisplayDevice::DisplayCustomCharacter(int row, int col,
 
 int DisplayDevice::DefineCustomCharacter(const CustomCharacter& cust)
 {
-  int index = m_buffer->FindCustomCharacter(cust);
+  int ncust = DeviceNCustomCharacters();
+  int index = m_buffer->FindCustomCharacter(cust, ncust);
   if (index < 0) {
-    index = m_buffer->AllocateCustomCharacter(cust, m_characterMap);
+    index = m_buffer->AllocateCustomCharacter(cust, ncust, m_characterMap);
     DefineCustomCharacterInternal(index, cust);
   }
   m_buffer->UseCustomCharacter(index);
@@ -788,7 +790,8 @@ void DisplayDevice::Restore(PVOID state)
   m_buffer = buffer;
   DeviceClear();
 
-  for (int index = 0; index < NCUSTCHARS; index++) {
+  int ncust = DeviceNCustomCharacters();
+  for (int index = 0; index < ncust; index++) {
     if (m_buffer->IsCustomCharacterUsed(index)) {
       DefineCustomCharacterInternal(index, m_buffer->GetCustomCharacter(index));
       m_buffer->UseCustomCharacter(index);
@@ -867,6 +870,14 @@ void DisplayDevice::MapInput(LPCSTR input)
   input = m_inputMap.Get(input);
   if (NULL != input)
     DisplaySendEvent(input);
+}
+
+void DisplayDevice::ResetInputMap()
+{
+  // Defaults come from the device specific constructor.
+  DisplayDevice *fresh = m_factory->CreateDisplayDevice(m_devtype);
+  m_inputMap = fresh->m_inputMap;
+  delete fresh;
 }
 
 void DisplayDevice::Test()
@@ -1022,6 +1033,11 @@ void DisplayDevice::DisableSerialInput()
   m_inputThread = NULL;
 }
 
+int DisplayDevice::DeviceNCustomCharacters()
+{
+  return MAXCUSTCHARS;
+}
+
 BOOL DisplayDevice::DeviceOpen()
 {
   return TRUE;
@@ -1084,6 +1100,26 @@ void DisplayDevice::DeviceInput(BYTE b)
   char buf[8];
   sprintf(buf, "%02X", b);
   MapInput(buf);
+}
+
+BOOL DisplayDevice::DeviceHasKeypadLegends()
+{
+  return FALSE;
+}
+
+LPCSTR *DisplayDevice::DeviceGetKeypadButtonChoices()
+{
+  return NULL;
+}
+
+LPCSTR *DisplayDevice::DeviceGetKeypadLegendChoices()
+{
+  return NULL;
+}
+
+void DisplayDevice::DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend)
+{
+  m_inputMap.Put(button, legend);
 }
 
 int DisplayDevice::DeviceGetGPOs()
@@ -1509,7 +1545,7 @@ protected:
   InputMapEntry *m_next;
 };
 
-InputMap::InputMap(const InputMap& other)
+void InputMap::Copy(const InputMap& other)
 {
   m_passUnknownInput = other.m_passUnknownInput;
   InputMapEntry **pentry = &m_entries;

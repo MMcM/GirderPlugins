@@ -8,7 +8,7 @@ $Header$
 
 CrystalfontzStreamLCD::CrystalfontzStreamLCD
 (DisplayDeviceFactory *factory, LPCSTR devtype,
- int cols, int rows, BOOL backlight)
+ int cols, int rows, int backlight)
   : DisplayDevice(factory, devtype)
 {
   m_cols = cols;
@@ -196,12 +196,12 @@ BOOL CrystalfontzStreamLCD::DeviceHasContrast()
 
 BOOL CrystalfontzStreamLCD::DeviceHasBrightness()
 {
-  return m_backlight;
+  return (m_backlight != NOBACKLIGHT);
 }
 
 BOOL CrystalfontzStreamLCD::DeviceHasBacklight()
 {
-  return m_backlight;
+  return (m_backlight != NOBACKLIGHT);
 }
 
 #if 0

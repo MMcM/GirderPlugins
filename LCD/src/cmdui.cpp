@@ -9,6 +9,10 @@ $Header$
 
 #define countof(x) sizeof(x)/sizeof(x[0])
 
+enum {
+  valNONE, valSTR, valINT, valBOOL, valVAR, valLIST, valSTR2, valLIST2
+};
+
 DisplayAction DisplayActions[] = {
   { "s", "String", valSTR, DisplayString },
   { "v", "Variable", valVAR, DisplayVariable },
@@ -19,6 +23,7 @@ DisplayAction DisplayActions[] = {
   { "#", "Screen", valNONE, DisplayScreen },
   { "*", "Character (numerical code)", valSTR, DisplayCharacter },
   { "$", "Custom Character", valSTR, DisplayCustomCharacter },
+  { "k", "Keypad Legend", valLIST2, DisplayKeypadLegend },
   { "o", "General Purpose Output", valBOOL, DisplayGPO },
 };
 
@@ -127,7 +132,7 @@ const LPARAM DEFAULT_DEVICE = (LPARAM)0;
 
 // Show input controls appropriate for this value type and optionally
 // load from edited command.
-static void ShowValueInputs(HWND hwnd, DisplayValueType valueType, BOOL reload)
+static void ShowValueInputs(HWND hwnd, int valueType, BOOL reload)
 {
   ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
              (valNONE != valueType) ? SW_SHOW : SW_HIDE);
@@ -135,10 +140,11 @@ static void ShowValueInputs(HWND hwnd, DisplayValueType valueType, BOOL reload)
   if (LoadString(g_hInstance,
                  (valVAR == valueType) ? IDS_VARIABLE : IDS_VALUE,
                  legend, sizeof(legend)))
-    SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), legend);
+    Static_SetText(GetDlgItem(hwnd, IDC_VALUEL), legend);
 
   ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
-             ((valSTR == valueType) || (valVAR == valueType)) ? SW_SHOW : SW_HIDE);
+             ((valSTR == valueType) || (valVAR == valueType) || (valSTR2 == valueType)) ?
+             SW_SHOW : SW_HIDE);
 
   ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
              (valINT == valueType) ? SW_SHOW : SW_HIDE);
@@ -148,12 +154,43 @@ static void ShowValueInputs(HWND hwnd, DisplayValueType valueType, BOOL reload)
   ShowWindow(GetDlgItem(hwnd, IDC_VALBOOL), 
              (valBOOL == valueType) ? SW_SHOW : SW_HIDE);
 
+  ShowWindow(GetDlgItem(hwnd, IDC_VALLIST),
+             ((valLIST == valueType) || (valLIST2 == valueType)) ? SW_SHOW : SW_HIDE);
+
+  ShowWindow(GetDlgItem(hwnd, IDC_VALUE2L), 
+             ((valSTR2 == valueType) || (valLIST2 == valueType)) ? SW_SHOW : SW_HIDE);
+  ShowWindow(GetDlgItem(hwnd, IDC_VALSTR2),
+             (valSTR2 == valueType) ? SW_SHOW : SW_HIDE);
+
+  ShowWindow(GetDlgItem(hwnd, IDC_VALLIST2),
+             (valLIST2 == valueType) ? SW_SHOW : SW_HIDE);
+
   if (reload && (NULL != g_editCommand)) {
     Button_SetCheck(GetDlgItem(hwnd, IDC_VALBOOL), g_editCommand->bvalue1);
     if (valINT == valueType)
-      SetWindowText(GetDlgItem(hwnd, IDC_VALINT), g_editCommand->svalue1);
+      Edit_SetText(GetDlgItem(hwnd, IDC_VALINT), g_editCommand->svalue1);
+    else if ((valLIST == valueType) || (valLIST2 == valueType))
+      ComboBox_SetText(GetDlgItem(hwnd, IDC_VALLIST), g_editCommand->svalue1);
     else
-      SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), g_editCommand->svalue1);
+      Edit_SetText(GetDlgItem(hwnd, IDC_VALSTR), g_editCommand->svalue1);
+    if (valLIST2 == valueType)
+      ComboBox_SetText(GetDlgItem(hwnd, IDC_VALLIST2), g_editCommand->svalue3);
+    else if (valSTR2 == valueType)
+      Edit_SetText(GetDlgItem(hwnd, IDC_VALSTR2), g_editCommand->svalue3);
+  }
+}
+
+static void FillValueListChoices(HWND hwnd, UINT ctlid, UINT strid, LPCSTR *choices)
+{
+  char legend[256];
+  if (LoadString(g_hInstance, strid, legend, sizeof(legend)))
+    Static_SetText(GetDlgItem(hwnd, (IDC_VALLIST == ctlid) ? IDC_VALUEL : IDC_VALUE2L),
+                   legend);
+  HWND combo = GetDlgItem(hwnd, ctlid);
+  ComboBox_ResetContent(combo);
+  if (NULL != choices) {
+    while (NULL != *choices)
+      ComboBox_AddString(combo, *choices++);
   }
 }
 
@@ -244,15 +281,16 @@ static void ShowScreenInputs(HWND hwnd, BOOL show, BOOL reload)
       }
       else
         next = pval + strlen(pval);
-      SetWindowText(GetDlgItem(hwnd, IDC_LINE1 + i), pval);
+      Edit_SetText(GetDlgItem(hwnd, IDC_LINE1 + i), pval);
       pval = next;
     }
   }
 }
-
+                            
 // Show input controls appropriate for this command type and
 // optionally load from edited command.
-static void ShowCommandInputs(HWND hwnd, DisplayAction *action, BOOL reload)
+static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice, 
+                              DisplayAction *action, BOOL reload)
 {
   if ((NULL == action) ||
       (DisplayClear == action->function) ||
@@ -269,6 +307,21 @@ static void ShowCommandInputs(HWND hwnd, DisplayAction *action, BOOL reload)
   else if (DisplayGPO == action->function) {
     ShowValueInputs(hwnd, valBOOL, reload);
     ShowPositionInputs(hwnd, IDC_GPO, reload);
+    ShowScreenInputs(hwnd, FALSE, reload);
+  }
+  else if (DisplayKeypadLegend == action->function) {
+    FillValueListChoices(hwnd, IDC_VALLIST, 
+                         IDS_BUTTON, commandDevice->GetKeypadButtonChoices());
+    FillValueListChoices(hwnd, IDC_VALLIST2, 
+                         IDS_LEGEND, commandDevice->GetKeypadLegendChoices());
+    ShowValueInputs(hwnd, valLIST2, reload);
+    ShowPositionInputs(hwnd, 0, reload);
+    ShowScreenInputs(hwnd, FALSE, reload);
+  }
+  else if ((valSTR2 == action->valueType) ||
+           (valLIST2 == action->valueType)) {
+    ShowValueInputs(hwnd, action->valueType, reload);
+    ShowPositionInputs(hwnd, 0, reload);
     ShowScreenInputs(hwnd, FALSE, reload);
   }
   else {
@@ -288,6 +341,9 @@ static void FillCommandChoices(HWND hwnd,
     if (NULL == commandDevice) {
       if (DisplayClose !=  action->function) continue;
     }
+    else if (DisplayKeypadLegend == action->function) {
+      if (!commandDevice->HasKeypadLegends()) continue;
+    }
     else if (DisplayGPO == action->function) {
       if (commandDevice->GetGPOs() <= 0) continue;
     }
@@ -305,7 +361,7 @@ static void LoadCommandSettings(HWND hwnd)
 
   if (NULL == g_editCommand) {
     ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_TYPE), CB_ERR);
-    ShowCommandInputs(hwnd, NULL, TRUE);
+    ShowCommandInputs(hwnd, NULL, NULL, TRUE);
     return;
   }
 
@@ -347,7 +403,7 @@ static void LoadCommandSettings(HWND hwnd)
 
   FillCommandChoices(hwnd, commandDevice, action);
   
-  ShowCommandInputs(hwnd, action, TRUE);
+  ShowCommandInputs(hwnd, commandDevice, action, TRUE);
 
   LeaveCriticalSection(&g_editCommand->critical_section);
 }
@@ -399,7 +455,7 @@ static BOOL SaveCommandSettings(HWND hwnd)
       if (Button_GetCheck(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i)))
         g_editCommand->ivalue2 |= (1 << i);
 
-      GetWindowText(GetDlgItem(hwnd, IDC_LINE1 + i), pval, sizeof(buf) - (pval - buf));
+      Edit_GetText(GetDlgItem(hwnd, IDC_LINE1 + i), pval, sizeof(buf) - (pval - buf));
       pval += strlen(pval);
     }
     SF.realloc_pchar(&g_editCommand->svalue1, buf);
@@ -415,12 +471,26 @@ static BOOL SaveCommandSettings(HWND hwnd)
       case valBOOL:
         break;
       case valINT:
-        GetWindowText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
+        Edit_GetText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
+        SF.realloc_pchar(&g_editCommand->svalue1, buf);
+        break;
+      case valLIST:
+      case valLIST2:
+        ComboBox_GetText(GetDlgItem(hwnd, IDC_VALLIST), buf, sizeof(buf));
         SF.realloc_pchar(&g_editCommand->svalue1, buf);
         break;
       default:
-        GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
+        Edit_GetText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
         SF.realloc_pchar(&g_editCommand->svalue1, buf);
+      }
+      switch (action->valueType) {
+      case valLIST2:
+        ComboBox_GetText(GetDlgItem(hwnd, IDC_VALLIST2), buf, sizeof(buf));
+        SF.realloc_pchar(&g_editCommand->svalue3, buf);
+        break;
+      case valSTR2:
+        Edit_GetText(GetDlgItem(hwnd, IDC_VALSTR2), buf, sizeof(buf));
+        SF.realloc_pchar(&g_editCommand->svalue3, buf);
       }
     }
 
@@ -521,10 +591,21 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg,
 
     case IDC_TYPE:
       if (HIWORD(wParam) == CBN_SELENDOK) {
-        int idx = ComboBox_GetCurSel(GetDlgItem(hwnd, IDC_TYPE));
+        HWND combo = GetDlgItem(hwnd, IDC_TYPE);
+        int selidx = ComboBox_GetCurSel(combo);
         DisplayAction *action = (DisplayAction *)
-          ComboBox_GetItemData(GetDlgItem(hwnd, IDC_TYPE), idx);
-        ShowCommandInputs(hwnd, action, FALSE);
+          ComboBox_GetItemData(combo, selidx);
+        combo = GetDlgItem(hwnd, IDC_DISPLAY);
+        selidx = ComboBox_GetCurSel(combo);
+        LPARAM devdata = ComboBox_GetItemData(combo, selidx);
+        DisplayDevice *commandDevice;
+        if (DEFAULT_DEVICE == devdata)
+          commandDevice = g_devices.GetDefault();
+        else if (ALL_DEVICE == devdata)
+          commandDevice = NULL;
+        else
+          commandDevice = (DisplayDevice *)devdata;
+        ShowCommandInputs(hwnd, commandDevice, action, FALSE);
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), (NULL != action));
       }
       break;

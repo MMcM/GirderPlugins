@@ -72,9 +72,9 @@ public:
     return (0 != m_customLastUse[index]);
   }
   
-  int FindCustomCharacter(const CustomCharacter& cust);
-  int AllocateCustomCharacter(const CustomCharacter& cust, LPCBYTE characterMap);
-  void ClearUnusedCustomCharacters(LPCBYTE characterMap);
+  int FindCustomCharacter(const CustomCharacter& cust, int ncust);
+  int AllocateCustomCharacter(const CustomCharacter& cust, int ncust, 
+                              LPCBYTE characterMap);
   void UseCustomCharacter(int index);
 
 protected:
@@ -82,9 +82,9 @@ protected:
   int m_rows, m_cols;
   BYTE m_space;
 
-#define NCUSTCHARS 8
-  CustomCharacter m_customCharacters[NCUSTCHARS];
-  DWORD m_customLastUse[NCUSTCHARS];
+#define MAXCUSTCHARS 8
+  CustomCharacter m_customCharacters[MAXCUSTCHARS];
+  DWORD m_customLastUse[MAXCUSTCHARS];
 };
 
 class LCD_API Marquee
@@ -131,9 +131,16 @@ public:
     m_passUnknownInput = FALSE;
     m_entries = NULL;
   }
-  InputMap(const InputMap& other);
+  InputMap(const InputMap& other) {
+    Copy(other);
+  }
   ~InputMap() {
     Clear();
+  }
+  InputMap& operator=(const InputMap& other) {
+    Clear();
+    Copy(other);
+    return *this;
   }
 
   LPCSTR Get(LPCSTR input) const;
@@ -155,6 +162,8 @@ public:
   void SaveToRegistry(HKEY hkey);
 
 protected:
+  void Copy(const InputMap& other);
+
   BOOL m_passUnknownInput;
   InputMapEntry *m_entries;
 };
@@ -281,6 +290,18 @@ public:
   void DisableInput() {
     DeviceDisableInput();
   }
+  BOOL HasKeypadLegends() {
+    return DeviceHasKeypadLegends();
+  }
+  LPCSTR *GetKeypadButtonChoices() {
+    return DeviceGetKeypadButtonChoices();
+  }
+  LPCSTR *GetKeypadLegendChoices() {
+    return DeviceGetKeypadLegendChoices();
+  }
+  void SetKeypadLegend(LPCSTR button, LPCSTR legend) {
+    DeviceSetKeypadLegend(button, legend);
+  }
 
   int GetGPOs() {
     return DeviceGetGPOs();
@@ -300,6 +321,7 @@ public:
   void Clear();
   PVOID Save();
   void Restore(PVOID state);
+  void ResetInputMap();
   void Test();
 
 protected:
@@ -309,6 +331,7 @@ protected:
   // Override these for each device.
   virtual void DeviceDisplay(int row, int col, LPCBYTE str, int length) = 0;
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust) = 0;
+  virtual int DeviceNCustomCharacters();
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
@@ -323,6 +346,10 @@ protected:
   virtual BOOL DeviceEnableInput();
   virtual void DeviceDisableInput();
   virtual void DeviceInput(BYTE b);
+  virtual BOOL DeviceHasKeypadLegends();
+  virtual LPCSTR *DeviceGetKeypadButtonChoices();
+  virtual LPCSTR *DeviceGetKeypadLegendChoices();
+  virtual void DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend);
   virtual int DeviceGetGPOs();
   virtual void DeviceSetGPO(int gpo, BOOL on);
   virtual void DeviceLoadSettings(HKEY hkey);
