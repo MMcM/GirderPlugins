@@ -62,6 +62,7 @@ const UINT EXTRACT_LPARAM = 2004;
 const UINT EXTRACT_WPARAM = 2005;
 const UINT EXTRACT_WPARAM_POINT = 2006;
 const UINT EXTRACT_CLASS = 2007;
+const UINT EXTRACT_HWND = 2008;
 const UINT EXTRACT_SB_GETTEXT = 2010;
 const UINT EXTRACT_MEDIA_SPY = 2030;
 
@@ -229,6 +230,13 @@ static MatchEntry g_matches[] = {
       ENTRY_STR(ENTRY_HWND_PARENT|MATCH_CLASS, "TOSDForm")
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_GETTEXT)
+    END_MATCH()
+
+    BEGIN_NMATCH(Init)
+      ENTRY_NUM(MATCH_MESSAGE, WM_CREATE)
+      ENTRY_STR(MATCH_CLASS, "TMainForm")
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_HWND)
     END_MATCH()
 
     BEGIN_NMATCH(Close)
@@ -635,6 +643,9 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
       GetClassName(hWnd, szCName, sizeof(szCName));
       strncpy(szBuf, szCName, nSize);
     }
+    break;
+  case EXTRACT_HWND:
+    sprintf(szBuf, "%X", hWnd);
     break;
   case EXTRACT_SB_GETTEXT:
     SendMessage(hWnd, SB_GETTEXT, pEntry->dwVal, (LPARAM)szBuf);

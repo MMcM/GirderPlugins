@@ -1,6 +1,6 @@
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.24"
+#define PLUGINVERSION "1.25"
 
 #include <girder.h>
 
@@ -32,3 +32,6 @@ extern HWND hLearnDialog;
 
 extern void GirderEvent(PCHAR event, PCHAR payload = NULL, size_t pllen = 0);
 extern void GetDVDTitle(LPCSTR disc, LPSTR title, size_t tsize, LPDWORD volser);
+
+extern void ZoomPlayerInit(LPCSTR data, HWND hMonitorWindow);
+extern void ZoomPlayerLCD(WPARAM wParam, LPARAM lParam);
