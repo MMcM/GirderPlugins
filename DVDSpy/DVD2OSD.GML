@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Girder>
+  <Group Name="Display" Identifier="58" Enabled="TRUE">
+    <Command Name="OSD" Identifier="59" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>100</ActionType>
+      <ActionSubType>33</ActionSubType>
+      <sValue1>[treg10]ÿþ[treg11] [treg12]ÿþ[treg13]/[treg14]ÿþ[treg15]</sValue1>
+      <iValue1>1500</iValue1>
+      <iValue2>42</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>8454016</lValue1>
+      <lValue2>65280</lValue2>
+    </Command>
+    <MultiGroup Name="Title" Identifier="60" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Disc.Insert.I" Identifier="61" Enabled="TRUE" Device="15" IrStr="Disc.Insert.I">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="PowerDVD.Title" Identifier="62" Enabled="TRUE" Device="15" IrStr="PowerDVD.Title">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ZoomPlayer.Media.File" Identifier="63" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.Media.File">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.MMC.File" Identifier="64" Enabled="TRUE" Device="15" IrStr="ATI.MMC.File">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ShowShifter.File" Identifier="65" Enabled="TRUE" Device="15" IrStr="ShowShifter.File">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="WMP.URL" Identifier="66" Enabled="FALSE" Device="15" IrStr="WMP.URL">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="WMP.Title" Identifier="67" Enabled="TRUE" Device="15" IrStr="WMP.Title">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="Winamp.File" Identifier="68" Enabled="TRUE" Device="15" IrStr="Winamp.File">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="Winamp.Title" Identifier="69" Enabled="TRUE" Device="15" IrStr="Winamp.Title">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="70" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>10</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="71" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Position 1" Identifier="72" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="accessDTV.Channel" Identifier="73" Enabled="TRUE" Device="15" IrStr="accessDTV.Channel">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="Winamp.Position" Identifier="74" Enabled="TRUE" Device="15" IrStr="Winamp.Position">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="75" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>11</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="76" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Position 2" Identifier="10143" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="accessDTV.ChanText" Identifier="10095" Enabled="TRUE" Device="15" IrStr="accessDTV.ChanText">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="accessDTV.ChanNoText" Identifier="10096" Enabled="TRUE" Device="15" IrStr="accessDTV.ChanNoText">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10097" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>12</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10098" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="TitleNo" Identifier="10144" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="10099" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.DVD.TitleNo">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="TheaterTek.TitleNo" Identifier="10100" Enabled="TRUE" Device="15" IrStr="TheaterTek.TitleNo">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.DVD.TitleNo" Identifier="10101" Enabled="TRUE" Device="15" IrStr="ATI.DVD.TitleNo">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10102" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>T:[pld1]</sValue1>
+        <iValue2>11</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10103" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Chapter" Identifier="10145" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="WinDVD.Chapter" Identifier="10104" Enabled="TRUE" Device="15" IrStr="WinDVD.Chapter">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10105" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.DVD.Chapter">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="TheaterTek.Chapter" Identifier="10106" Enabled="TRUE" Device="15" IrStr="TheaterTek.Chapter">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.DVD.Chapter" Identifier="10107" Enabled="TRUE" Device="15" IrStr="ATI.DVD.Chapter">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10108" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>CH:[pld1]</sValue1>
+        <iValue2>12</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10109" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Length" Identifier="10146" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="Winamp.Length" Identifier="10110" Enabled="TRUE" Device="15" IrStr="Winamp.Length">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10111" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>/[pld1]</sValue1>
+        <iValue2>12</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10112" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Elapsed" Identifier="10147" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="WinDVD.Elapsed" Identifier="10113" Enabled="TRUE" Device="15" IrStr="WinDVD.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="PowerDVD.Elapsed" Identifier="10114" Enabled="TRUE" Device="15" IrStr="PowerDVD.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10115" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.DVD.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="10116" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.Media.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="TheaterTek.Elapsed" Identifier="10117" Enabled="TRUE" Device="15" IrStr="TheaterTek.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.DVD.Elapsed" Identifier="10118" Enabled="TRUE" Device="15" IrStr="ATI.DVD.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.MMC.Elapsed" Identifier="10119" Enabled="TRUE" Device="15" IrStr="ATI.MMC.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ShowShifter.Elapsed" Identifier="10120" Enabled="TRUE" Device="15" IrStr="ShowShifter.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="WMP.Elapsed" Identifier="10121" Enabled="TRUE" Device="15" IrStr="WMP.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="Winamp.Elapsed" Identifier="10122" Enabled="TRUE" Device="15" IrStr="Winamp.Elapsed">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10123" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>13</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10124" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Duration" Identifier="10148" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="ZoomPlayer.DVD.Duration" Identifier="10125" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.DVD.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ZoomPlayer.Media.Duration" Identifier="10126" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.Media.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="TheaterTek.Duration" Identifier="10127" Enabled="TRUE" Device="15" IrStr="TheaterTek.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.DVD.Duration" Identifier="10128" Enabled="TRUE" Device="15" IrStr="ATI.DVD.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.MMC.Duration" Identifier="10129" Enabled="TRUE" Device="15" IrStr="ATI.MMC.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ShowShifter.Duration" Identifier="10130" Enabled="TRUE" Device="15" IrStr="ShowShifter.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="WMP.Duration" Identifier="10131" Enabled="TRUE" Device="15" IrStr="WMP.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="Winamp.Duration" Identifier="10132" Enabled="TRUE" Device="15" IrStr="Winamp.Duration">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10133" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>14</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10134" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Status" Identifier="10094" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="ZoomPlayer.DVD.Domain" Identifier="10135" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.DVD.Domain">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="TheaterTek.Domain" Identifier="10136" Enabled="TRUE" Device="15" IrStr="TheaterTek.Domain">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ATI.DVD.Domain" Identifier="10137" Enabled="TRUE" Device="15" IrStr="ATI.DVD.Domain">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="ZoomPlayer.OSD" Identifier="10138" Enabled="TRUE" Device="15" IrStr="ZoomPlayer.OSD">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="WMP.Status" Identifier="10139" Enabled="TRUE" Device="15" IrStr="WMP.Status">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <EventString Name="Winamp.Status" Identifier="10140" Enabled="TRUE" Device="15" IrStr="Winamp.Status">
+        <Invert>FALSE</Invert>
+      </EventString>
+      <Command Name="Set Register" Identifier="10141" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>29</ActionSubType>
+        <sValue1>[pld1]</sValue1>
+        <iValue2>15</iValue2>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="OSD" Identifier="10142" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>59</lValue1>
+      </Command>
+    </MultiGroup>
+  </Group>
+</Girder>
