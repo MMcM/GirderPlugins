@@ -7,6 +7,7 @@
 #include "resource.h"       // main symbols
 #include <atlctl.h>
 
+extern LONG OpenDVDSpyMJReg(CRegKey& reg);
 
 /////////////////////////////////////////////////////////////////////////////
 // CDVDSpyMJCtrl

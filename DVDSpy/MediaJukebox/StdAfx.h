@@ -29,8 +29,6 @@ extern CComModule _Module;
 
 #import "..\..\..\..\J River\Media Jukebox\Media Jukebox.tlb" no_namespace, named_guids
 
-#define REGISTRY_PATH_MJ_PLUGINS_INTERFACE	"Software\\J. River\\Music Exchange\\1.0\\Media Jukebox\\Plugins\\Interface\\"
-
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

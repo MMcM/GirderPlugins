@@ -83,12 +83,8 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 STDAPI DllRegisterServer(void)
 {
   // register with Media Jukebox
-  char szRegistryPath[1024];
-  strcpy(szRegistryPath, REGISTRY_PATH_MJ_PLUGINS_INTERFACE);
-  strcat(szRegistryPath, "DVDSpy");
-	
   CRegKey reg;
-  if (ERROR_SUCCESS == reg.Create(HKEY_CURRENT_USER, szRegistryPath)) {		
+  if (ERROR_SUCCESS == OpenDVDSpyMJReg(reg)) {		
     OLECHAR wszCLSID[128];
     StringFromGUID2(CLSID_DVDSpyMJCtrl, wszCLSID, sizeof(wszCLSID)/sizeof(OLECHAR));
     USES_CONVERSION;
@@ -96,7 +92,7 @@ STDAPI DllRegisterServer(void)
     // Stuff for MJ.
     reg.SetValue(OLE2T(wszCLSID), "CLSID");
     reg.SetValue(1, "IVersion");
-    reg.SetValue("1.54 (26)", "Version");
+    reg.SetValue("1.55 (28)", "Version");
     reg.SetValue("www.girder.nl", "URL");
     reg.SetValue(1, "PluginMode");
 

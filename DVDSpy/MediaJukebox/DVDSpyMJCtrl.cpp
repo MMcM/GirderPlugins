@@ -6,6 +6,24 @@
 #include "DVDSpyMJCtrl.h"
 #include "DVDSpyMJEvent.h"
 
+LONG OpenDVDSpyMJReg(CRegKey& reg)
+{
+  CRegKey parent;
+  LONG rc;
+
+  rc = parent.Open(HKEY_LOCAL_MACHINE, 
+                   "Software\\J. River\\Media Jukebox\\Plugins");
+  if (ERROR_SUCCESS != rc) {
+    rc = parent.Open(HKEY_CURRENT_USER, 
+                     "Software\\J. River\\Music Exchange\\1.0\\Media Jukebox\\Plugins");
+    if (ERROR_SUCCESS != rc)
+      return rc;
+  }
+
+  rc = reg.Create(parent, "Interface\\DVDSpy");
+  return rc;
+}
+
 HWND g_hwndDVDSpy = NULL;
 
 BOOL CALLBACK FindMonitorWindow(HWND hwnd, LPARAM lparam)
@@ -48,11 +66,8 @@ STDMETHODIMP CDVDSpyMJCtrl::Init(LPDISPATCH pDisp)
 
   m_pMJ = pDisp;
 
-  char szRegistryPath[1024];
-  strcpy(szRegistryPath, REGISTRY_PATH_MJ_PLUGINS_INTERFACE);
-  strcat(szRegistryPath, "DVDSpy");
   CRegKey reg;
-  if (ERROR_SUCCESS == reg.Create(HKEY_CURRENT_USER, szRegistryPath)) {
+  if (ERROR_SUCCESS == OpenDVDSpyMJReg(reg)) {		
     DWORD dwVal, dwType, dwSize;
     dwSize = sizeof(dwVal);
     if ((ERROR_SUCCESS == RegQueryValueEx(reg, "RefreshInterval", NULL,
@@ -86,11 +101,8 @@ STDMETHODIMP CDVDSpyMJCtrl::put_RefreshInterval(short newVal)
 
   m_nRefreshInterval = newVal;
 
-  char szRegistryPath[1024];
-  strcpy(szRegistryPath, REGISTRY_PATH_MJ_PLUGINS_INTERFACE);
-  strcat(szRegistryPath, "DVDSpy");
   CRegKey reg;
-  if (ERROR_SUCCESS == reg.Create(HKEY_CURRENT_USER, szRegistryPath)) {		
+  if (ERROR_SUCCESS == OpenDVDSpyMJReg(reg)) {		
     reg.SetValue(m_nRefreshInterval, "RefreshInterval");
   }
 
