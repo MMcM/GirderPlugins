@@ -163,10 +163,10 @@ void ParallelLCD::DeviceSaveSettings(HKEY hkey)
 #define PSR (m_portAddr + 1)
 #define PCR (m_portAddr + 2)
 
-#define STROBE 0x01             // Pin  1 (wired to E)
-#define AF     0x02             // Pin 14 (wired to R/W)
-#define INIT   0x04             // Pin 16 (wired to RS)
-#define SELE   0x08             // Pin 17 (wired to E2)
+#define STROBE 0x01             // Pin  1 (wired to E)   (inverted: 0 = H)
+#define AF     0x02             // Pin 14 (wired to R/W) (inverted: 1 = L = MPU -> LCD)
+#define INIT   0x04             // Pin 16 (wired to RS)  (0 = L = IR; 1 = H = DR)
+#define SELE   0x08             // Pin 17 (wired to E2)  (inverted: 0 = H)
 
 // Sort of like _out in DOS.
 inline static void outport(int a, BYTE b)
