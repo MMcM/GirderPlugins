@@ -28,8 +28,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,2,0,3
- PRODUCTVERSION 2,2,0,0
+ FILEVERSION 2,3,0,4
+ PRODUCTVERSION 2,3,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -45,11 +45,11 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "LCDriver 1.x interface\0"
-            VALUE "FileVersion", "2.2 (3)\0"
+            VALUE "FileVersion", "2.3 (4)\0"
             VALUE "InternalName", "LCDrvr1\0"
             VALUE "OriginalFilename", "LCDRVR1.DLL\0"
             VALUE "ProductName", "LCD\0"
-            VALUE "ProductVersion", "2.2\0"
+            VALUE "ProductVersion", "2.3\0"
         END
     END
     BLOCK "VarFileInfo"

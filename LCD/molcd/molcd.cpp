@@ -51,10 +51,13 @@ public:
   virtual void DeviceInput(BYTE b);
   virtual int DeviceGetGPOs();
   virtual void DeviceSetGPO(int gpo, BOOL on);
+  virtual void DeviceLoadSettings(HKEY hkey);
+  virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
   BOOL m_vfd, m_keypad;
   int m_gpos;
+  int m_debounceTime;
 };
 
 MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
@@ -85,6 +88,8 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(HWND parent, LPCSTR devname)
   m_characterMap[0xFE] = ' ';
   for (i = 8; i < 16; i++)
     m_characterMap[i] = ' ';
+
+  m_debounceTime = 52;
 }
 
 MatrixOrbitalDisplay::~MatrixOrbitalDisplay()
@@ -135,6 +140,11 @@ BOOL MatrixOrbitalDisplay::DeviceOpen()
     buf[nb++] = 0xFE;
     buf[nb++] = 0x50;           // Set contrast ...
     buf[nb++] = contrast(m_contrast);
+  }
+  if (m_keypad) {
+    buf[nb++] = 0xFE;
+    buf[nb++] = 0x55;           // Set debounce time ...
+    buf[nb++] = (BYTE)((double)m_debounceTime / 6.554 + 0.5);
   }
   buf[nb++] = 0xFE;
   buf[nb++] = 0x58;             // Clear display
@@ -248,6 +258,18 @@ void MatrixOrbitalDisplay::DeviceSetGPO(int gpo, BOOL on)
   if (m_gpos > 0)
     buf[nb++] = gpo;
   WriteSerial(buf, nb);
+}
+
+void MatrixOrbitalDisplay::DeviceLoadSettings(HKEY hkey)
+{
+  if (m_keypad)
+    GetSettingInt(hkey, "DebounceTime", m_debounceTime);
+}
+
+void MatrixOrbitalDisplay::DeviceSaveSettings(HKEY hkey)
+{
+  if (m_keypad)
+    SetSettingInt(hkey, "DebounceTime", m_debounceTime);
 }
 
 extern "C" __declspec(dllexport)
