@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.50. &nbsp;MMcM 12/02
+Version 1.52. &nbsp;MMcM 01/03
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -161,9 +161,9 @@ Sample Girder scripts.<p>
 
 These files show how to use the DVDSpy plug-in with the LCD plug-in to
 display player status on 4x20 and 2x20 displays, respectively.  They
-requires the LCD, Alarm Timer, and Switch plug-ins.  If the Winamp3
+require the LCD, Alarm Timer, and Switch plug-ins.  If the Winamp3
 group is enabled, that plug-in is needed.  Likewise MBM.  The LUA
-version of GVMS is required.<p>
+version of GVMS (the default) is required.<p>
 </li>
 
 <li><kbd>DVD2OSD.GML</kbd><br/>
@@ -975,6 +975,53 @@ top)</td>
 
 <tr><td><code>RadLight.Close</code></td>
 <td>RadLight application closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td><code>Eugenes.Name</code></td>
+<td>Current disc name changed</td>
+<td>New current name</td>
+</tr>
+
+<tr><td><code>Eugenes.TitleNo</code></td>
+<td>Title changed</td>
+<td>New title number (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>Eugenes.Chapter</code></td>
+<td>Chapter changed</td>
+<td>New chapter (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>Eugenes.Duration</code></td>
+<td>Duration changed</td>
+<td>New total duration (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>Eugenes.Elapsed</code></td>
+<td>Position changed</td>
+<td>New current position (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>Eugenes.Close</code></td>
+<td>Eugene's DVD player closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td><code>DVDStation.Title.1</code></td>
+<td>Left-hand text field changed</td>
+<td>New contents (<code>DVD</code>,<code>DATA</code>,<code>VCD2</code>,<code>SVCD</code>)</td>
+</tr>
+
+<tr><td><code>DVDStation.Title.2</code></td>
+<td>Right-hand text field changed</td>
+<td>New contents (<code>TT CCC HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>DVDStation.Close</code></td>
+<td>Hollywood+ DVD Station closed</td>
 </tr>
 
 </table><p>
