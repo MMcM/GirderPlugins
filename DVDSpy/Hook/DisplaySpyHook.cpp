@@ -323,7 +323,7 @@ static MatchEntry g_matches[] = {
     BEGIN_NMATCH(Init)
       ENTRY_NUM(MATCH_MESSAGE, WM_SHOWWINDOW)
       ENTRY_NUM(MATCH_WPARAM, TRUE)
-      ENTRY_STR(MATCH_CLASS, "TMainForm.UnicodeClass")
+      ENTRY_STR(MATCH_CLASS, "TMainForm")
       ENTRY0(MATCH_ONCE)
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_HWND)
@@ -331,7 +331,7 @@ static MatchEntry g_matches[] = {
 
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
-      ENTRY_STR(MATCH_CLASS, "TMainForm.UnicodeClass")
+      ENTRY_STR(MATCH_CLASS, "TMainForm")
      BEGIN_EXTRACT()
       ENTRY_STR(ENTRY_EVENT|EXTRACT_CONSTANT, "")
     END_MATCH()
