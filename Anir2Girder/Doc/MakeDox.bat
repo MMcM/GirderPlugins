@@ -3,7 +3,7 @@
 @echo *** Removing old docs ***
 rd /S /Q html
 
-@echo ***Copying some files ***
+@echo *** Copying some files ***
 
 SET VERSION=0.3.0
 
