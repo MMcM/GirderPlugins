@@ -1,0 +1,37 @@
+HKCR
+{
+  ShowShifterSpy.DVDSpyModule.1 = s 'DVDSpy ShowShifter Module'
+  {
+    CLSID = s '{121FFD70-6CC5-45B7-9541-EB499B9590A0}'
+  }
+  ShowShifterSpy.DVDSpyModule = s 'DVDSpy ShowShifter Module'
+  {
+    CLSID = s '{121FFD70-6CC5-45B7-9541-EB499B9590A0}'
+    CurVer = s 'ShowShifterSpy.DVDSpyModule.1'
+  }
+  NoRemove CLSID
+  {
+    ForceRemove {121FFD70-6CC5-45B7-9541-EB499B9590A0} = s 'DVDSpy ShowShifter Module'
+    {
+      ProgID = s 'ShowShifterSpy.DVDSpyModule.1'
+      VersionIndependentProgID = s 'ShowShifterSpy.DVDSpyModule'
+      ForceRemove 'Programmable'
+      InprocServer32 = s '%MODULE%'
+      {
+        val ThreadingModel = s 'Both'
+      }
+      'TypeLib' = s '{0A595B6C-F5FA-4E82-8CE7-5DA8F8402722}'
+    }
+  }
+  NoRemove 'Component Categories'
+  {
+    {5DFC62E0-82FB-11d3-891E-0080AD877781}
+    {
+      val 409 = s 'HMN Control Module'
+    }
+    {A28DB4C8-99FB-4b75-8BF6-7B5F0B8281FC}
+    {
+      val 409 = s 'DVDSpy ShowShifter Module'
+    }
+  }
+}

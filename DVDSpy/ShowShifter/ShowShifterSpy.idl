@@ -1,0 +1,41 @@
+// ShowShifterSpy.idl : IDL source for ShowShifterSpy.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (ShowShifterSpy.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+import "IHMNVortress.idl" ;
+import "IHMNModule.idl" ;
+  [
+    object,
+    uuid(477786BE-27FB-4724-AEB8-B1265AFF239A),
+    dual,
+    helpstring("IDVDSpyModule Interface"),
+    pointer_default(unique)
+  ]
+  interface IDVDSpyModule : IHMNModule
+  {
+  };
+
+[
+  uuid(0A595B6C-F5FA-4E82-8CE7-5DA8F8402722),
+  version(1.0),
+  helpstring("ShowShifterSpy 1.0 Type Library")
+]
+library ShowShifterSpyLib
+{
+  importlib("stdole32.tlb");
+  importlib("stdole2.tlb");
+
+  [
+    uuid(121FFD70-6CC5-45B7-9541-EB499B9590A0),
+    helpstring("DVDSpy ShowShifter Module")
+  ]
+  coclass DVDSpyModule
+  {
+    [default] interface IDVDSpyModule;
+  };
+};
