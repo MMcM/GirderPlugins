@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>RegSetValue plug-in</title>
+</head>
+
+<body>
+
+<h1>Girder plug-in for changing the registry</h1>
+Version 1.0. &nbsp;MMcM 5/01
+
+<h3>Use</h3>
+
+This plug-in changes a string value in the Windows registry.  The key
+and value must already exist (mainly to prevent typos).  They are
+specified as <kbd><i>root</i>\<i>key</i>\<i>value</i></kbd>.  Root is
+<kbd>HKEY_CURRENT_USER</kbd> or <kbd>HKEY_LOCAL_MACHINE</kbd>.  The
+unnamed value can be specified by the empty suffix or (as in regedit)
+with <kbd>@</kbd>.<p>
+
+The sample file shows how to switch the current sound playback device.
+This only works well on Win2K/NT.  On WinME/98, a reboot is required.
+There is therefore a special wave device switching plug-in.  See the
+<a href="../setwavedev/readme.htm">readme</a> file for that plug-in
+for more details.<p>
+
+<h3>Disclaimer</h3>
+You use this plug-in at your own risk.
+
+<h3>Contact</h3>
+To report problems or make suggestions, post a message to the Girder
+forum, rather than sending email directly.
+
+</body>
+
+</html>
