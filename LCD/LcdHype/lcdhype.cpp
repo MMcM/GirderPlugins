@@ -26,7 +26,9 @@ struct TDLLInfo {
   char IDArray[256];
   __int8 SupportGfxLCD;
   __int8 SupportTxtLCD;
-  __int8 SupportSlider;
+  __int8 SupportLightSlider; 
+  __int8 SupportContrastSlider; 
+  __int8 SupportOutports;	  
   __int8 CCharWidth;
   __int8 CCharHeight;
   __int8 FontPitch;
@@ -42,11 +44,13 @@ typedef (__stdcall  *TLCD_SendToController) (__int8 value);
 typedef (__stdcall  *TLCD_SendToMemory) (__int8 value);
 typedef (__stdcall  *TLCD_Init) ();
 typedef (__stdcall  *TLCD_CleanUp) ();
+typedef (__stdcall  *TLCD_LCD_ConfigDialog) ();
 typedef (__stdcall  *TLCD_SendToGfxMemory) (TArrayType* Pixels, __int16 X1,__int16 Y1,__int16 X2,__int16 Y2,__int8 inverted);
 typedef (__stdcall  *TLCD_SetOutputAddress) (__int32 x,__int32 y);
 typedef (__stdcall  *TLCD_SetIOPropertys) (char *port,__int32 Exectime,__int32 ExectimeGfx,
                                            __int32 x,__int32 y,__int32 gx,__int32 gy,__int8 LightOn,
-                                           __int8 SliderValue,__int8 UnderlineMode,__int8 UnderlineOutput);
+                                           __int8 LightSliderValue,__int8 ContrastOn,__int8 ContrastSliderValue,
+										   __int32 Outports,__int8 UnderlineMode,__int8 UnderlineOutput);
 
 struct TDLLInstance {
   int refcnt;
@@ -56,6 +60,7 @@ struct TDLLInstance {
   TLCD_SetIOPropertys LCD_SetIOPropertys;
   TLCD_Init LCD_Init;
   TLCD_CleanUp LCD_CleanUp;
+  TLCD_LCD_ConfigDialog LCD_ConfigDialog;
   TLCD_SetOutputAddress LCD_SetOutputAddress;
   TLCD_SendToMemory LCD_SendToMemory;
   TLCD_Customize LCD_Customize;
@@ -175,6 +180,7 @@ void LCDHypeDisplay::Load_Export()
   m_dll->LCD_SetIOPropertys=(TLCD_SetIOPropertys)GetProcAddress(m_dll->h, "LCD_SetIOPropertys");
   m_dll->LCD_Init=(TLCD_Init)GetProcAddress(m_dll->h, "LCD_Init");
   m_dll->LCD_CleanUp=(TLCD_CleanUp)GetProcAddress(m_dll->h, "LCD_CleanUp");
+  m_dll->LCD_ConfigDialog=(TLCD_LCD_ConfigDialog)GetProcAddress(m_dll->h, "LCD_ConfigDialog");
   m_dll->LCD_SetOutputAddress=(TLCD_SetOutputAddress)GetProcAddress(m_dll->h, "LCD_SetOutputAddress");
   m_dll->LCD_SendToMemory=(TLCD_SendToMemory)GetProcAddress(m_dll->h, "LCD_SendToMemory");
   m_dll->LCD_Customize=(TLCD_Customize)GetProcAddress(m_dll->h, "LCD_Customize");
@@ -246,10 +252,9 @@ BOOL LCDHypeDisplay::DeviceOpen()
     m_rows=height/m_dll->DLLInfo.CCharHeight;
   }
 
-  m_dll->LCD_SetIOPropertys(port,1,1,m_cols,m_rows,width,height,true,127,false,false);
+  m_dll->LCD_SetIOPropertys(port,1,1,m_cols,m_rows,width,height,false,127,false,127,0,false,false);
   m_dll->LCD_Init();
 
-  LCD_Font();
   DeviceClear();
 
   return TRUE;
@@ -266,6 +271,8 @@ void LCDHypeDisplay::DeviceClose()
 
 void LCDHypeDisplay::DeviceClear()
 {
+  LCD_Font();
+
   for (int i = 0; i < width*height; i++) {
     grbuff[i]=0;}
   m_dll->LCD_SendToGfxMemory((TArrayType*)grbuff,0,0,width-1,height-1,false);
@@ -323,7 +330,9 @@ void LCDHypeDisplay::DeviceDisplay(int row, int col, LPCBYTE str, int length)
     tempstr[length]=0;
     for (int i = 0; i < length; i++) {
       // TODO: Use custom bitmaps like SIMLCD.
-      if (tempstr[i]<0x10) {tempstr[i]=0x20;}}
+      if ((tempstr[i]<0x10) && (tempstr[i]>0x00))
+	   {tempstr[i]=0x20;}
+	}
     work(font,grbuff,width,height,col*fontWidth,(row+1)*fontHeight,tempstr);
     m_dll->LCD_SendToGfxMemory((TArrayType*)grbuff,0,0,width-1,height-1,false);
   }
