@@ -39,7 +39,8 @@
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>%a %#d-%b %#I:%M%p</sValue1>
-      <iValue1>2</iValue1>
+      <sValue2>t</sValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
@@ -61,13 +62,14 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>Title: [pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>2</iValue1>
+      <iValue2>-1</iValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>2</lValue1>
       <EventString Name="Disc.Insert.I" Identifier="9" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Disc.Insert.I"/>
     </Command>
     <Command Name="Domain" Identifier="10006" Enabled="TRUE">
@@ -84,14 +86,13 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue3>4</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue3>4</lValue3>
       <EventString Name="EventString" Identifier="20851" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="TitleNo" Identifier="10007" Enabled="TRUE">
@@ -109,13 +110,13 @@
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>T:[pld1]</sValue1>
-      <iValue2>1</iValue2>
+      <sValue2>s</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>5</iValue2>
+      <iValue3>4</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>5</lValue2>
-      <lValue3>4</lValue3>
       <EventString Name="EventString" Identifier="20852" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="Chapter" Identifier="10008" Enabled="TRUE">
@@ -133,13 +134,37 @@
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>CH:[pld1]</sValue1>
-      <iValue2>1</iValue2>
+      <sValue2>s</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>10</iValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>10</lValue2>
       <EventString Name="EventString" Identifier="20853" Enabled="TRUE" Invert="FALSE" Device="-1"/>
+    </Command>
+    <Command Name="State" Identifier="20916" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>118</ActionType>
+      <ActionSubType>1</ActionSubType>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <EventString Name="EventString" Identifier="20917" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="Duration" Identifier="10009" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -156,12 +181,13 @@
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>/[pld1]</sValue1>
-      <iValue2>1</iValue2>
+      <sValue2>s</sValue2>
+      <iValue1>3</iValue1>
+      <iValue2>8</iValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>3</lValue1>
-      <lValue2>8</lValue2>
       <EventString Name="EventString" Identifier="20854" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="Elapsed" Identifier="10010" Enabled="TRUE">
@@ -178,14 +204,13 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>3</iValue1>
+      <iValue3>8</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>3</lValue1>
-      <lValue3>8</lValue3>
       <EventString Name="EventString" Identifier="20855" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="File" Identifier="10011" Enabled="TRUE">
@@ -202,13 +227,14 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>6</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>f</sValue2>
+      <iValue1>2</iValue1>
+      <iValue2>-1</iValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>2</lValue1>
       <EventString Name="EventString" Identifier="20856" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="Title" Identifier="10012" Enabled="TRUE">
@@ -225,13 +251,14 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>2</iValue1>
+      <iValue2>-1</iValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>2</lValue1>
       <EventString Name="EventString" Identifier="20857" Enabled="TRUE" Invert="FALSE" Device="-1"/>
     </Command>
     <Command Name="Close" Identifier="10013" Enabled="TRUE">
@@ -248,7 +275,8 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <iValue1>4</iValue1>
+      <sValue2>x</sValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
@@ -271,13 +299,13 @@
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>CH:[pld1]</sValue1>
-      <iValue2>1</iValue2>
+      <sValue2>s</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>5</iValue2>
+      <iValue3>5</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>5</lValue2>
-      <lValue3>5</lValue3>
       <EventString Name="WinDVD.Chapter" Identifier="10017" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Chapter"/>
     </Command>
     <Command Name="Elapsed" Identifier="10018" Enabled="TRUE">
@@ -294,14 +322,13 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>3</iValue1>
+      <iValue3>8</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>3</lValue1>
-      <lValue3>8</lValue3>
       <EventString Name="WinDVD.Elapsed" Identifier="10019" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Elapsed"/>
     </Command>
     <Command Name="Video" Identifier="10020" Enabled="TRUE">
@@ -318,14 +345,13 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue3>4</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue3>4</lValue3>
       <EventString Name="WinDVD.Video" Identifier="10021" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Video"/>
     </Command>
     <Command Name="Audio" Identifier="10022" Enabled="TRUE">
@@ -342,15 +368,14 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>11</iValue2>
+      <iValue3>4</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>11</lValue2>
-      <lValue3>4</lValue3>
       <EventString Name="WinDVD.Audio" Identifier="10023" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Audio"/>
     </Command>
     <Command Name="Close" Identifier="10024" Enabled="TRUE">
@@ -507,6 +532,27 @@
       <lValue1>10008</lValue1>
       <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="10037" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Chapter"/>
     </Command>
+    <Command Name="State" Identifier="20918" Enabled="FALSE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="ZoomPlayer.DVD.State" Identifier="20919" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.State"/>
+    </Command>
     <Command Name="Duration" Identifier="10038" Enabled="FALSE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
@@ -550,6 +596,27 @@
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
       <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="10041" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Elapsed"/>
+    </Command>
+    <Command Name="State" Identifier="20920" Enabled="FALSE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="ZoomPlayer.Media.State" Identifier="20921" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.State"/>
     </Command>
     <Command Name="Duration" Identifier="10042" Enabled="FALSE">
       <StateCount>1</StateCount>
@@ -632,14 +699,14 @@
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>10</iValue2>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>10</lValue2>
       <EventString Name="ZoomPlayer.OSD" Identifier="10049" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
     </Command>
     <Command Name="State" Identifier="20887" Enabled="TRUE">
@@ -707,11 +774,13 @@ zposd = pld1;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>10</ActionSubType>
-        <sValue1>[zposd]</sValue1>
+        <sValue1>zposd</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>1</iValue1>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
       </Command>
     </MultiGroup>
     <MultiGroup Name="OSD Off" Identifier="20893" Enabled="TRUE">
@@ -754,11 +823,13 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>10</ActionSubType>
-        <sValue1>[zpstate]</sValue1>
+        <sValue1>zpstate</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>1</iValue1>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
       </Command>
     </MultiGroup>
     <Command Name="Time" Identifier="20897" Enabled="TRUE">
@@ -775,13 +846,13 @@ zposd = &#34;&#34;;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>3</iValue1>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>3</lValue1>
       <EventString Name="ZoomPlayer.LCD.Time" Identifier="20898" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.LCD.Time"/>
     </Command>
     <Command Name="Close" Identifier="10050" Enabled="TRUE">
@@ -870,6 +941,27 @@ zposd = &#34;&#34;;</sValue1>
       <bValue3>FALSE</bValue3>
       <lValue1>10008</lValue1>
       <EventString Name="TheaterTek.Chapter" Identifier="10058" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Chapter"/>
+    </Command>
+    <Command Name="State" Identifier="20922" Enabled="FALSE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="TheaterTek.State" Identifier="20923" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.State"/>
     </Command>
     <Command Name="Duration" Identifier="10059" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1002,6 +1094,27 @@ zposd = &#34;&#34;;</sValue1>
       <lValue1>10008</lValue1>
       <EventString Name="ATI.DVD.Chapter" Identifier="10071" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Chapter"/>
     </Command>
+    <Command Name="State" Identifier="20924" Enabled="FALSE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="ATI.DVD.State" Identifier="20925" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.State"/>
+    </Command>
     <Command Name="Duration" Identifier="10072" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
@@ -1045,6 +1158,27 @@ zposd = &#34;&#34;;</sValue1>
       <bValue3>FALSE</bValue3>
       <lValue1>10010</lValue1>
       <EventString Name="ATI.DVD.Elapsed" Identifier="10075" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Elapsed"/>
+    </Command>
+    <Command Name="State" Identifier="20926" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="ATI.MMC.State" Identifier="20927" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.State"/>
     </Command>
     <Command Name="Duration" Identifier="10076" Enabled="TRUE">
       <StateCount>1</StateCount>
@@ -1135,6 +1269,27 @@ zposd = &#34;&#34;;</sValue1>
     </Command>
   </Group>
   <Group Name="ShowShifter Display" Identifier="10084" Enabled="TRUE">
+    <Command Name="State" Identifier="20928" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="ShowShifter.State" Identifier="20929" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.State"/>
+    </Command>
     <Command Name="Duration" Identifier="10085" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
@@ -1245,11 +1400,12 @@ zposd = &#34;&#34;;</sValue1>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
         <sValue1>TV</sValue1>
+        <sValue2>s</sValue2>
+        <iValue1>1</iValue1>
+        <iValue3>4</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
-        <lValue3>4</lValue3>
       </Command>
       <Command Name="Chan" Identifier="10097" Enabled="TRUE">
         <StateCount>1</StateCount>
@@ -1265,15 +1421,14 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>[pld1]</sValue1>
-        <iValue1>5</iValue1>
-        <iValue2>1</iValue2>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>1</iValue1>
+        <iValue2>2</iValue2>
+        <iValue3>3</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
-        <lValue2>2</lValue2>
-        <lValue3>3</lValue3>
       </Command>
       <Command Name="Call" Identifier="10098" Enabled="TRUE">
         <StateCount>1</StateCount>
@@ -1289,14 +1444,14 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>[pld2]</sValue1>
-        <iValue1>5</iValue1>
-        <iValue2>2</iValue2>
+        <sValue1>pld2</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>1</iValue1>
+        <iValue2>9</iValue2>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
-        <lValue2>9</lValue2>
       </Command>
     </MultiGroup>
     <MultiGroup Name="Program" Identifier="10099" Enabled="TRUE">
@@ -1319,13 +1474,14 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>[pld1]</sValue1>
-        <iValue1>5</iValue1>
-        <iValue2>1</iValue2>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>2</iValue1>
+        <iValue2>-1</iValue2>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>2</lValue1>
       </Command>
       <Command Name="Time" Identifier="10102" Enabled="TRUE">
         <StateCount>1</StateCount>
@@ -1341,13 +1497,13 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>[pld2]</sValue1>
-        <iValue1>5</iValue1>
-        <iValue2>2</iValue2>
+        <sValue1>pld2</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>3</iValue1>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>3</lValue1>
       </Command>
     </MultiGroup>
   </Group>
@@ -1366,13 +1522,13 @@ zposd = &#34;&#34;;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>2</iValue1>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>2</lValue1>
       <EventString Name="accessDTV.ChanText" Identifier="10105" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChanText"/>
       <EventString Name="accessDTV.ChanNoText" Identifier="10106" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChanNoText"/>
     </Command>
@@ -1397,11 +1553,12 @@ zposd = &#34;&#34;;</sValue1>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
         <sValue1>HDTV</sValue1>
+        <sValue2>s</sValue2>
+        <iValue1>1</iValue1>
+        <iValue3>5</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
-        <lValue3>5</lValue3>
       </Command>
       <Command Name="Chan" Identifier="10110" Enabled="TRUE">
         <StateCount>1</StateCount>
@@ -1417,14 +1574,14 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
-        <sValue1>[pld1]</sValue1>
-        <iValue1>5</iValue1>
-        <iValue2>1</iValue2>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>1</iValue1>
+        <iValue2>5</iValue2>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>1</lValue1>
-        <lValue2>5</lValue2>
       </Command>
       <Command Name="Clear Text" Identifier="10111" Enabled="TRUE">
         <StateCount>1</StateCount>
@@ -1440,10 +1597,12 @@ zposd = &#34;&#34;;</sValue1>
         <MatchNum>1</MatchNum>
         <ActionType>118</ActionType>
         <ActionSubType>1</ActionSubType>
+        <sValue2>s</sValue2>
+        <iValue1>2</iValue1>
+        <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-        <lValue1>2</lValue1>
       </Command>
     </MultiGroup>
     <Command Name="Duration" Identifier="20858" Enabled="TRUE">
@@ -1527,13 +1686,13 @@ zposd = &#34;&#34;;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue3>-1</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
       <EventString Name="WMP.Status" Identifier="10116" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
     </Command>
     <Command Name="Duration" Identifier="10117" Enabled="TRUE">
@@ -1659,16 +1818,13 @@ zposd = &#34;&#34;;</sValue1>
       <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
-      <ActionType>118</ActionType>
-      <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>6</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue3>6</lValue3>
+      <lValue1>20916</lValue1>
       <EventString Name="Winamp.Status" Identifier="10129" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
     </Command>
     <Command Name="Length" Identifier="10130" Enabled="TRUE">
@@ -1686,13 +1842,13 @@ zposd = &#34;&#34;;</sValue1>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>/[pld1]</sValue1>
-      <iValue2>1</iValue2>
+      <sValue2>s</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>12</iValue2>
+      <iValue3>3</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>10</lValue2>
-      <lValue3>3</lValue3>
       <EventString Name="Winamp.Length" Identifier="10131" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
     </Command>
     <Command Name="Position" Identifier="10132" Enabled="TRUE">
@@ -1709,15 +1865,14 @@ zposd = &#34;&#34;;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>10</iValue2>
+      <iValue3>2</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>8</lValue2>
-      <lValue3>2</lValue3>
       <EventString Name="Winamp.Position" Identifier="10133" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
     </Command>
     <Command Name="Duration" Identifier="10134" Enabled="TRUE">
@@ -1831,6 +1986,27 @@ zposd = &#34;&#34;;</sValue1>
     </Command>
   </Group>
   <Group Name="BSPlayer Display" Identifier="20876" Enabled="TRUE">
+    <Command Name="State" Identifier="20930" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="BSPlayer.State" Identifier="20931" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.State"/>
+    </Command>
     <Command Name="Duration" Identifier="20877" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
@@ -1932,16 +2108,13 @@ zposd = &#34;&#34;;</sValue1>
       <UseVar>FALSE</UseVar>
       <MatchHidden>FALSE</MatchHidden>
       <MatchNum>1</MatchNum>
-      <ActionType>118</ActionType>
-      <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue3>8</lValue3>
+      <lValue1>20916</lValue1>
       <EventString Name="MediaJukebox.Playback.State" Identifier="20901" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
     </Command>
     <Command Name="Length" Identifier="20902" Enabled="TRUE">
@@ -1959,13 +2132,13 @@ zposd = &#34;&#34;;</sValue1>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
       <sValue1>/[pld1]</sValue1>
-      <iValue2>1</iValue2>
+      <sValue2>s</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>12</iValue2>
+      <iValue3>3</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>12</lValue2>
-      <lValue3>3</lValue3>
       <EventString Name="MediaJukebox.Playlist.Length" Identifier="20903" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Length"/>
     </Command>
     <Command Name="Position" Identifier="20904" Enabled="TRUE">
@@ -1982,15 +2155,14 @@ zposd = &#34;&#34;;</sValue1>
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>[pld1]</sValue1>
-      <iValue1>5</iValue1>
-      <iValue2>1</iValue2>
+      <sValue1>pld1</sValue1>
+      <sValue2>v</sValue2>
+      <iValue1>1</iValue1>
+      <iValue2>10</iValue2>
+      <iValue3>2</iValue3>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>1</lValue1>
-      <lValue2>10</lValue2>
-      <lValue3>2</lValue3>
       <EventString Name="MediaJukebox.Playlist.Position" Identifier="20905" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Position"/>
     </Command>
     <Command Name="Duration" Identifier="20906" Enabled="TRUE">
@@ -2101,6 +2273,226 @@ zposd = &#34;&#34;;</sValue1>
       <bValue3>FALSE</bValue3>
       <lValue1>10013</lValue1>
       <EventString Name="MediaJukebox.Close" Identifier="20915" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Close"/>
+    </Command>
+  </Group>
+  <Group Name="PowerDivX Display" Identifier="20932" Enabled="TRUE">
+    <Command Name="State" Identifier="20933" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="PowerDivX.State" Identifier="20934" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.State"/>
+    </Command>
+    <Command Name="Duration" Identifier="20935" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10009</lValue1>
+      <EventString Name="PowerDivX.Duration" Identifier="20936" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
+    </Command>
+    <Command Name="Elapsed" Identifier="20937" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10010</lValue1>
+      <EventString Name="PowerDivX.Elapsed" Identifier="20938" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
+    </Command>
+    <Command Name="File" Identifier="20939" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10011</lValue1>
+      <EventString Name="PowerDivX.File" Identifier="20940" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
+    </Command>
+    <Command Name="Close" Identifier="20941" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10013</lValue1>
+      <EventString Name="PowerDivX.Close" Identifier="20942" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Close"/>
+    </Command>
+  </Group>
+  <Group Name="RadLight Display" Identifier="20943" Enabled="TRUE">
+    <Command Name="State" Identifier="20944" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue3>8</iValue3>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>20916</lValue1>
+      <EventString Name="RadLight.State" Identifier="20945" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.State"/>
+    </Command>
+    <Command Name="Duration" Identifier="20946" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10009</lValue1>
+      <EventString Name="RadLight.Duration" Identifier="20947" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Duration"/>
+    </Command>
+    <Command Name="Elapsed" Identifier="20948" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10010</lValue1>
+      <EventString Name="RadLight.Elapsed" Identifier="20949" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Elapsed"/>
+    </Command>
+    <Command Name="File" Identifier="20950" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10011</lValue1>
+      <EventString Name="RadLight.File" Identifier="20951" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.File"/>
+    </Command>
+    <Command Name="Close" Identifier="20952" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>10013</lValue1>
+      <EventString Name="RadLight.Close" Identifier="20953" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Close"/>
     </Command>
   </Group>
 </Girder>
