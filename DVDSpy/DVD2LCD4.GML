@@ -4462,9 +4462,7 @@ result = idx
           <StateCurrent>1</StateCurrent>
           <StateInvert>FALSE</StateInvert>
           <Binary Encoding="Base64">hQAAAAIAAAA7AQAABgAAAAAAAAAFAAAACAAAADIAAAAQAAAANgAAABoAAABFAAAAIQAAACMAAAAp
-
 AAAAOwEAADEAAABGAAAAcGxkMgA9PQAiVGl0bGUiACJDaGFwdGVyIgAiVGltZSIAIlN0YXRlIgAi
-
 QW5nbGUiACJUb3RhbCIAAAAAAA==</Binary>
           <OSD>FALSE</OSD>
           <Submatch>FALSE</Submatch>
@@ -7139,13 +7137,11 @@ PlayerTitleNo = flds[3]
   </Group>
   <Group Name="MyHD Display" Identifier="555" Enabled="TRUE">
     <Comments>MyHD channel state *ON*</Comments>
-    <MultiGroup Name="Raw channel" Identifier="556" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
+    <MultiGroup Name="Channel" Identifier="556" Enabled="TRUE">
       <StateInvert>FALSE</StateInvert>
-      <EventString Name="MyHD.CPChannel" Identifier="557" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.CPChannel"/>
-      <Command Name="Open" Identifier="558" Enabled="TRUE">
+      <EventString Name="MyHD.Channel" Identifier="557" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Channel"/>
+      <EventString Name="MyHD.File" Identifier="558" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.File"/>
+      <Command Name="Open" Identifier="559" Enabled="TRUE">
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
         <StateCurrent>1</StateCurrent>
@@ -7164,101 +7160,7 @@ PlayerTitleNo = flds[3]
         <bValue3>FALSE</bValue3>
         <lValue1>25</lValue1>
       </Command>
-      <Command Name="Chan (4 line)" Identifier="559" Enabled="TRUE">
-        <Comments>*4L*</Comments>
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>pld1</sValue1>
-        <sValue2>v</sValue2>
-        <iValue1>1</iValue1>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Clear Text (4 line)" Identifier="560" Enabled="TRUE">
-        <Comments>*4L*</Comments>
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue2>s</sValue2>
-        <iValue1>2</iValue1>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Chan (2 line)" Identifier="561" Enabled="FALSE">
-        <Comments>*2L*</Comments>
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue1>pld1</sValue1>
-        <sValue2>v</sValue2>
-        <iValue3>6</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Clear Text (2 line)" Identifier="562" Enabled="FALSE">
-        <Comments>*2L*</Comments>
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>118</ActionType>
-        <ActionSubType>1</ActionSubType>
-        <sValue2>s</sValue2>
-        <iValue2>7</iValue2>
-        <iValue3>-1</iValue3>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="Channel" Identifier="563" Enabled="TRUE">
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="MyHD.Channel" Identifier="564" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Channel"/>
-      <EventString Name="MyHD.File" Identifier="565" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.File"/>
-      <Command Name="4 line" Identifier="566" Enabled="TRUE">
+      <Command Name="4 line" Identifier="560" Enabled="TRUE">
         <Comments>*4L*</Comments>
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -7281,7 +7183,7 @@ PlayerTitleNo = flds[3]
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
-      <Command Name="2 line" Identifier="567" Enabled="FALSE">
+      <Command Name="2 line" Identifier="561" Enabled="FALSE">
         <Comments>*2L*</Comments>
         <StateCount>1</StateCount>
         <StateBegin>1</StateBegin>
@@ -7298,14 +7200,60 @@ PlayerTitleNo = flds[3]
         <ActionSubType>1</ActionSubType>
         <sValue1>pld1</sValue1>
         <sValue2>v</sValue2>
-        <iValue2>7</iValue2>
         <iValue3>-1</iValue3>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
       </Command>
+      <Command Name="Clear Time" Identifier="562" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>34</ActionSubType>
+        <sValue1>-- Clear elapsed display in case stopping or restarting
+PlayerTime = nil
+result = 1
+</sValue1>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>73</lValue1>
+      </Command>
     </MultiGroup>
-    <Command Name="Elapsed" Identifier="568" Enabled="TRUE">
+    <Command Name="Elapsed" Identifier="563" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>34</ActionSubType>
+      <sValue1>-- If showing negative elapsed (time available for rewind), ignore it so that
+-- shift amount will take precedence.
+result = (strsub(pld1,1,2) ~= "- ")
+</sValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>72</lValue1>
+      <EventString Name="MyHD.Elapsed" Identifier="564" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Elapsed"/>
+    </Command>
+    <Command Name="Shift" Identifier="565" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -7319,37 +7267,13 @@ PlayerTitleNo = flds[3]
       <MatchNum>1</MatchNum>
       <ActionType>4</ActionType>
       <ActionSubType>10</ActionSubType>
-      <iValue1>1</iValue1>
-      <iValue2>1</iValue2>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
-      <lValue1>69</lValue1>
-      <EventString Name="MyHD.Elapsed" Identifier="569" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Elapsed"/>
+      <lValue1>72</lValue1>
+      <EventString Name="MyHD.Shift" Identifier="566" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Shift"/>
     </Command>
-    <Command Name="Shift" Identifier="570" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <OSD>FALSE</OSD>
-      <Submatch>FALSE</Submatch>
-      <Topmost>TRUE</Topmost>
-      <OneMatch>FALSE</OneMatch>
-      <UseVar>FALSE</UseVar>
-      <MatchHidden>FALSE</MatchHidden>
-      <MatchNum>1</MatchNum>
-      <ActionType>4</ActionType>
-      <ActionSubType>10</ActionSubType>
-      <iValue1>1</iValue1>
-      <iValue2>1</iValue2>
-      <bValue1>FALSE</bValue1>
-      <bValue2>FALSE</bValue2>
-      <bValue3>FALSE</bValue3>
-      <lValue1>70</lValue1>
-      <EventString Name="MyHD.Shift" Identifier="571" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Shift"/>
-    </Command>
-    <Command Name="Close" Identifier="572" Enabled="TRUE">
+    <Command Name="Close" Identifier="567" Enabled="TRUE">
       <StateCount>1</StateCount>
       <StateBegin>1</StateBegin>
       <StateCurrent>1</StateCurrent>
@@ -7368,7 +7292,7 @@ PlayerTitleNo = flds[3]
       <bValue2>FALSE</bValue2>
       <bValue3>FALSE</bValue3>
       <lValue1>26</lValue1>
-      <EventString Name="MyHD.Close" Identifier="573" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Close"/>
+      <EventString Name="MyHD.Close" Identifier="568" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Close"/>
     </Command>
   </Group>
 </Girder>
