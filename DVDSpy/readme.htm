@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.37. &nbsp;MMcM 10/02
+Version 1.38. &nbsp;MMcM 10/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -102,6 +102,13 @@ Windows path while registering.  Nothing special needs to be done for
 it to run properly, only to register.  See <a
 href="#ShowShifter">below</a> for more information on ShowShifter UI
 events.<p>
+</li>
+
+<li><kbd>DVDSpy.cmd</kbd><br/>
+A shell script to install and register all files.<p>
+
+You should look through this file and make sure everything is
+appropriate to your system <em>before</em> running it.<p>
 </li>
 
 <li><kbd>ROTEnable.reg</kbd><br/>
@@ -236,7 +243,8 @@ If you do see events, then double check the OSD PopUp settings.
 <td width="250"><b>2:</b>volume serial number (hex),<br>
 <b>3:</b>aspect ratio (<code>4:3</code>,<code>16:9</code>,<code>unknown</code>),<br>
 <b>4:</b>display format (<code>none</code>,<code>letterbox</code>,<code>pan-scan</code>,<code>both</code>),<br>
-<b>5:</b>video standard (<code>NTSC</code>,<code>PAL</code>)</td>
+<b>5:</b>video standard (<code>NTSC</code>,<code>PAL</code>),<br>
+<b>6:</b>enabled regions (<code>12345678</code>)</td>
 </tr>
 
 <tr><td><code>Disc.Eject.<i>X</i></code></td>
