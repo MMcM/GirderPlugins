@@ -135,10 +135,11 @@ public:
   virtual BOOL DeviceEnableInput();
   virtual void DeviceDisableInput();
   virtual void DeviceSerialInputThread();
-  virtual int DeviceGetGPOs();
+  virtual int DeviceGetNGPOs();
   virtual void DeviceSetGPO(int gpo, BOOL on);
-  virtual int DeviceGetFans();
+  virtual int DeviceGetNFans();
   virtual void DeviceSetFanPower(int fan, double dutyCycle);
+  virtual IntervalMode DeviceHasFanInterval();
   virtual BOOL DeviceHasSensors();
   virtual IntervalMode DeviceHasSensorInterval();
   virtual void DeviceDetectSensors(LPCSTR prefix);
@@ -146,6 +147,7 @@ public:
   virtual void DeviceSaveSettings(HKEY hkey);
 
 protected:
+  DWORD CheckFans();
   DWORD CheckSensors();
   void UpdateSensors(BOOL detect);
   DisplayReturnPacket *ReadReturnPacket();
@@ -195,7 +197,7 @@ MatrixOrbitalDisplay::MatrixOrbitalDisplay(DisplayDeviceFactory *factory, LPCSTR
 
   m_debounceTime = 52;
 
-  m_sensorInterval = 5000;
+  m_fanInterval = m_sensorInterval = 5000;
 }
 
 MatrixOrbitalDisplay::MatrixOrbitalDisplay(const MatrixOrbitalDisplay& other)
@@ -352,11 +354,18 @@ void MatrixOrbitalDisplay::DeviceDisableInput()
 void MatrixOrbitalDisplay::DeviceSerialInputThread()
 {
   while (TRUE) {
+    DWORD ftime = CheckFans();
     DWORD stime = CheckSensors();
 
     DWORD now = GetTickCount();
     DWORD timeout = INFINITE;
 
+    if (INFINITE != ftime) {
+      if (ftime <= now) continue;
+      DWORD delta = ftime - now;
+      if (timeout > delta)
+        timeout = delta;
+    }
     if (INFINITE != stime) {
       if (stime <= now) continue;
       DWORD delta = stime - now;
@@ -377,7 +386,7 @@ void MatrixOrbitalDisplay::DeviceSerialInputThread()
   }
 }
 
-int MatrixOrbitalDisplay::DeviceGetGPOs()
+int MatrixOrbitalDisplay::DeviceGetNGPOs()
 {
   return m_gpos;
 }
@@ -393,7 +402,7 @@ void MatrixOrbitalDisplay::DeviceSetGPO(int gpo, BOOL on)
   WriteSerial(buf, nb);
 }
 
-int MatrixOrbitalDisplay::DeviceGetFans()
+int MatrixOrbitalDisplay::DeviceGetNFans()
 {
   if (m_dow_pwm)
     return 4;
@@ -417,6 +426,17 @@ void MatrixOrbitalDisplay::DeviceSetFanPower(int fan, double dutyCycle)
     pwm = (BYTE)(dutyCycle * 255.0);
   buf[nb++] = pwm;
   WriteSerial(buf, nb);
+}
+
+DisplayDevice::IntervalMode MatrixOrbitalDisplay::DeviceHasFanInterval()
+{
+  return (m_dow_pwm) ? IM_EDITABLE : IM_NONE;
+}
+
+DWORD MatrixOrbitalDisplay::CheckFans()
+{
+  // TODO: add monitoring.
+  return INFINITE;
 }
 
 BOOL MatrixOrbitalDisplay::DeviceHasSensors()

@@ -173,8 +173,9 @@ DisplayDevice::DisplayDevice(DisplayDeviceFactory *factory, LPCSTR devtype)
   m_contrast = m_brightness = 50;
 
   m_enableKeypad = m_enableFans = m_enableSensors = FALSE;
+  m_fans = NULL;
   m_sensors = NULL;
-  m_sensorInterval = 0;         // A reasonable default probably depends on device.
+  m_fanInterval = m_sensorInterval = 0;
 
   m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
 }
@@ -214,6 +215,13 @@ DisplayDevice::DisplayDevice(const DisplayDevice& other)
   m_enableKeypad = other.m_enableKeypad;
   m_enableFans = other.m_enableFans;
   m_enableSensors = other.m_enableSensors;
+  FanMonitor **pfan = &m_fans;
+  for (FanMonitor *fan = other.m_fans; NULL != fan; fan = fan->GetNext()) {
+    FanMonitor *nfan = new FanMonitor(*fan);
+    *pfan = nfan;
+    pfan = &nfan->GetNext();
+  }
+  *pfan = NULL;
   DOWSensor **psensor = &m_sensors;
   for (DOWSensor *sensor = other.m_sensors; NULL != sensor; sensor = sensor->GetNext()) {
     DOWSensor *nsensor = new DOWSensor(*sensor);
@@ -221,6 +229,7 @@ DisplayDevice::DisplayDevice(const DisplayDevice& other)
     psensor = &nsensor->GetNext();
   }
   *psensor = NULL;
+  m_fanInterval = other.m_fanInterval;
   m_sensorInterval = other.m_sensorInterval;
 
   m_inputThread = m_inputEvent = m_inputStopEvent = m_outputEvent = NULL;
@@ -230,6 +239,11 @@ DisplayDevice::~DisplayDevice()
 {
   free(m_name);
   free(m_devtype);
+  while (NULL != m_fans) {
+    FanMonitor *fan = m_fans;
+    m_fans = fan->GetNext();
+    delete fan;
+  }
   DOWSensor::Destroy(m_sensors);
 }
 
@@ -355,6 +369,13 @@ void DisplayDevice::LoadSettings(HKEY hkey)
     m_inputMap.LoadFromRegistry(hkey);
   }
 
+  if (HasFans()) {
+    GetSettingBool(hkey, "EnableFans", m_enableFans);
+    if (IM_EDITABLE == HasFanInterval())
+      GetSettingInt(hkey, "FanInterval", *(int*)&m_fanInterval);
+    FanMonitor::LoadFromRegistry(hkey, &m_fans);
+  }
+
   if (HasSensors()) {
     GetSettingBool(hkey, "EnableSensors", m_enableSensors);
     if (IM_EDITABLE == HasSensorInterval())
@@ -398,6 +419,13 @@ void DisplayDevice::SaveSettings(HKEY hkey)
   if (HasKeypad()) {
     SetSettingBool(hkey, "EnableInput", m_enableKeypad); // Compatible value name.
     m_inputMap.SaveToRegistry(hkey);
+  }
+
+  if (HasFans()) {
+    SetSettingBool(hkey, "EnableFans", m_enableFans);
+    if (IM_EDITABLE == HasFanInterval())
+      SetSettingInt(hkey, "FanInterval", m_fanInterval);
+    FanMonitor::SaveToRegistry(hkey, m_fans);
   }
 
   if (HasSensors()) {
@@ -909,6 +937,26 @@ void DisplayDevice::ResetInputMap()
   delete fresh;
 }
 
+FanMonitor *DisplayDevice::GetFan(int n, LPCSTR createPrefix)
+{
+  FanMonitor **prev = &m_fans;
+  while (TRUE) {
+    FanMonitor *fan = *prev;
+    if (NULL == fan)
+      break;
+    if (fan->GetNumber() == n)
+      return fan;
+    prev = &fan->GetNext();
+  }
+  if (NULL == createPrefix)
+    return NULL;
+  char buf[32];
+  sprintf(buf, "%s%d", createPrefix, n);
+  FanMonitor *fan = new FanMonitor(buf, n);
+  *prev = fan;
+  return fan;
+}
+
 void DisplayDevice::Test()
 {
   CustomCharacter cust1("0b11110 0b10001 0b10001 0b11110 0b10100 0b10010 0b10001");
@@ -1159,7 +1207,7 @@ void DisplayDevice::DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend)
   m_inputMap.Put(button, legend);
 }
 
-int DisplayDevice::DeviceGetGPOs()
+int DisplayDevice::DeviceGetNGPOs()
 {
   return 0;
 }
@@ -1168,13 +1216,18 @@ void DisplayDevice::DeviceSetGPO(int gpo, BOOL on)
 {
 }
 
-int DisplayDevice::DeviceGetFans()
+int DisplayDevice::DeviceGetNFans()
 {
   return 0;
 }
 
 void DisplayDevice::DeviceSetFanPower(int fan, double dutyCycle)
 {
+}
+
+DisplayDevice::IntervalMode DisplayDevice::DeviceHasFanInterval()
+{
+  return IM_NONE;
 }
 
 BOOL DisplayDevice::DeviceHasSensors()
@@ -1750,6 +1803,126 @@ void InputMap::SaveToRegistry(HKEY hkey)
   }
 }
 
+FanMonitor::FanMonitor(LPCSTR name, int number)
+{
+  m_name = _strdup(name);
+  m_number = number;
+  m_ppr = 2;
+  m_enabled = FALSE;
+  m_anonymous = TRUE;
+  m_updateTime = 0;
+  m_next = NULL;
+}
+
+FanMonitor::FanMonitor(const FanMonitor& other)
+{
+  m_name = _strdup(other.m_name);
+  m_number = other.m_number;
+  m_ppr = other.m_ppr;
+  m_enabled = other.m_enabled;
+  m_anonymous = other.m_anonymous;
+  m_updateTime = 0;
+  m_next = NULL;
+}
+
+FanMonitor::~FanMonitor()
+{
+  free(m_name);
+}
+
+void FanMonitor::SetName(LPCSTR name)
+{
+  free(m_name);
+  m_name = _strdup(name);
+  m_anonymous = FALSE;
+}
+
+void FanMonitor::SetEnabled(BOOL enabled)
+{
+  m_enabled = enabled;
+  m_anonymous = FALSE;
+}
+
+void FanMonitor::LoadFromRegistry(HKEY hkey, FanMonitor **fans)
+{
+  HKEY subkey;
+  if (ERROR_SUCCESS == RegOpenKey(hkey, "Fans", &subkey)) {
+    while (NULL != *fans) {
+      FanMonitor *fan = *fans;
+      *fans = fan->GetNext();
+      delete fan;
+    }
+
+    int ppr = 0;
+
+    char name[128], data[32];
+    DWORD dwIndex, dwType, namel, datal;
+    dwIndex = 0; 
+    while (TRUE) {
+      namel = sizeof(name); 
+      datal = sizeof(data);
+      if (ERROR_SUCCESS != RegEnumValue(subkey, dwIndex++, name, &namel, NULL, &dwType,
+                                        (LPBYTE)data, &datal))
+        break;
+      if (REG_SZ == dwType) {
+        if (namel == 0) {
+          ppr = atoi(data);
+        }
+        else {
+          FanMonitor *fan = new FanMonitor(name, data);
+          if (ppr > 0) fan->SetPulsesPerRevolution(ppr);
+          *fans = fan;
+          fans = &fan->m_next;
+        }
+      }
+    }
+
+    *fans = NULL;
+    
+    RegCloseKey(subkey);
+  }
+}
+
+void FanMonitor::SaveToRegistry(HKEY hkey, FanMonitor *fans)
+{
+  HKEY subkey;
+  if (ERROR_SUCCESS == RegCreateKey(hkey, "Fans", &subkey)) {
+    for (FanMonitor *fan = fans; NULL != fan; fan = fan->m_next) {
+      if (fan->m_anonymous) continue;
+
+      char buf[32];
+      LPSTR pb = buf;
+      if (!fan->m_enabled)
+        *pb++ = '*';
+      sprintf(pb, "%d", fan->m_number);
+      DisplayDevice::SetSettingString(subkey, fan->m_name, buf);
+    }
+    if (NULL != fans) {
+      char buf[16];
+      sprintf(buf, "%d", fans->GetPulsesPerRevolution());
+      DisplayDevice::SetSettingString(subkey, NULL, buf);
+    }
+    RegCloseKey(subkey);
+  }
+}
+
+FanMonitor::FanMonitor(LPCSTR name, LPCSTR entry)
+{
+  m_name = _strdup(name);
+  m_updateTime = 0;
+  m_next = NULL;
+
+  if ('*' == *entry) {
+    m_enabled = FALSE;
+    entry++;
+  }
+  else
+    m_enabled = TRUE;
+  m_anonymous = FALSE;
+  m_number = atoi(entry);
+  m_ppr = 2;
+}
+
 DOWSensor::DOWSensor(LPCSTR name, LPCBYTE rom)
 {
   m_name = _strdup(name);
@@ -1941,3 +2114,4 @@ void DOWSensor::Destroy(DOWSensor *sensors)
     delete sensor;
   }
 }
+

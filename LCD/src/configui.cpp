@@ -426,6 +426,7 @@ static void SaveDisplaySettings(HWND hwnd)
 }
 
 static void FillKeypadPage(LPPROPSHEETPAGE ppsp);
+static void FillFansPage(LPPROPSHEETPAGE ppsp);
 static void FillSensorsPage(LPPROPSHEETPAGE ppsp);
 
 // Create new edit device and set fresh state from it.
@@ -480,6 +481,21 @@ static void CreateEditDevice(HWND hwnd)
         }
       }
     }
+    {
+      BOOL fans = g_editDevice->HasFans();
+      int index = PropSheet_IdToIndex(sheet, IDD_FANS);
+      if (fans != (index >= 0)) {
+        if (fans) {
+          PROPSHEETPAGE page;
+          FillFansPage(&page);
+          HPROPSHEETPAGE hpage = CreatePropertySheetPage(&page);
+          PropSheet_AddPage(sheet, hpage);
+        }
+        else {
+          PropSheet_RemovePage(sheet, index, NULL);
+        }
+      }
+    }    
     {
       BOOL sensors = g_editDevice->HasSensors();
       int index = PropSheet_IdToIndex(sheet, IDD_SENSORS);
@@ -863,9 +879,248 @@ static void FillKeypadPage(LPPROPSHEETPAGE ppsp)
   ppsp->pfnDlgProc = KeypadPageDialogProc;
 }
 
-void UpdateSensorsButtonEnabling(HWND hwnd)
+void UpdateFansButtonEnabling(HWND hwnd)
 {
   HWND list = GetDlgItem(hwnd, IDC_ENTRIES);
+  BOOL enable = FALSE;
+  int nSelItem = ListView_GetNextItem(list, -1, LVNI_SELECTED);
+  if (nSelItem >= 0) {
+    enable = TRUE;
+  }
+  Button_Enable(GetDlgItem(hwnd, IDC_EDIT), enable);
+}
+
+static void LoadFansSettings(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_FANS);
+  ListView_DeleteAllItems(list);
+  if (NULL != g_editDevice) {
+    Button_SetCheck(GetDlgItem(hwnd, IDC_ENABLED), g_editDevice->GetEnableFans());
+
+    DisplayDevice::IntervalMode im = g_editDevice->HasFanInterval();
+    int sw = (im == DisplayDevice::IM_NONE) ? SW_HIDE : SW_SHOW;
+    ShowWindow(GetDlgItem(hwnd, IDC_INTERVALL), sw);
+    ShowWindow(GetDlgItem(hwnd, IDC_INTERVAL), sw);
+    ShowWindow(GetDlgItem(hwnd, IDC_INTERVALL2), sw);
+    if (im != DisplayDevice::IM_NONE) {
+      char buf[32];
+      sprintf(buf, "%d", g_editDevice->GetFanInterval());
+      Edit_SetText(GetDlgItem(hwnd, IDC_INTERVAL), buf);
+      Edit_Enable(GetDlgItem(hwnd, IDC_INTERVAL), (im == DisplayDevice::IM_EDITABLE));
+    }
+
+    int nfans = g_editDevice->GetNFans();
+    char prefix[32];
+    LoadString(g_hInstance, IDS_NEW_FAN_NAME, prefix, sizeof(prefix));
+    int ppr;
+
+    LV_ITEM lvi;
+    memset(&lvi, 0, sizeof(LVITEM));
+    for (int i = 1; i <= nfans; i++) {
+      FanMonitor *fan = g_editDevice->GetFan(i, prefix);
+      if (i == 1)
+        ppr = fan->GetPulsesPerRevolution();
+      lvi.mask = LVIF_TEXT | LVIF_STATE | LVIF_PARAM;
+      lvi.iItem = i-1;
+      lvi.iSubItem = 0;
+      if (fan->IsEnabled())
+        lvi.state = INDEXTOSTATEIMAGEMASK(2);
+      else
+        lvi.state = INDEXTOSTATEIMAGEMASK(1);
+      lvi.stateMask = LVIS_STATEIMAGEMASK;
+      char buf[16];
+      sprintf(buf, "%d", i);
+      lvi.pszText = buf;
+      lvi.lParam = (LPARAM)fan;
+      lvi.iItem = ListView_InsertItem(list, &lvi);
+      // I'm not sure why this is necessary.  There is a notification
+      // of it changing back right away from the insert.
+      ListView_SetItemState(list, lvi.iItem, lvi.state, LVIS_STATEIMAGEMASK);
+      lvi.mask = LVIF_TEXT;
+      lvi.iSubItem = 1;
+      lvi.pszText = (LPSTR)fan->GetName();
+      ListView_SetItem(list, &lvi);
+    }
+    UpDown_SetPos(GetDlgItem(hwnd, IDC_PPR_SPIN), ppr);
+  }
+  UpdateFansButtonEnabling(hwnd);
+}
+
+static void SaveFansSettings(HWND hwnd)
+{
+  if (NULL == g_editDevice) return;
+  g_editDevice->SetEnableFans(Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLED)));
+  if (DisplayDevice::IM_EDITABLE == g_editDevice->HasFanInterval()) {
+    char buf[32];
+    Edit_GetText(GetDlgItem(hwnd, IDC_INTERVAL), buf, sizeof(buf));
+    g_editDevice->SetFanInterval(strtoul(buf, NULL, 10));
+  }
+  int ppr = UpDown_GetPos(GetDlgItem(hwnd, IDC_PPR_SPIN));
+  for (FanMonitor *fan = g_editDevice->GetFans(); NULL != fan; fan = fan->GetNext())
+    fan->SetPulsesPerRevolution(ppr);
+}
+
+static BOOL CALLBACK FanDialogProc(HWND hwnd, UINT uMsg, 
+                                      WPARAM wParam, LPARAM lParam)
+{
+  switch (uMsg) {
+  case WM_INITDIALOG:
+    {
+      SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
+                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_PLUGIN)));
+
+      SetWindowLong(hwnd, DWL_USER, lParam);
+
+      FanMonitor *fan = (FanMonitor *)lParam;
+      Edit_SetText(GetDlgItem(hwnd, IDC_NAME), fan->GetName());
+      return TRUE;
+    }
+
+  case WM_COMMAND:
+    switch (LOWORD(wParam)) {
+    case IDOK:
+      {
+        char buf[128];
+        FanMonitor *fan = (FanMonitor *)GetWindowLong(hwnd, DWL_USER);
+        Edit_GetText(GetDlgItem(hwnd, IDC_NAME), buf, sizeof(buf));
+        fan->SetName(buf);
+      }
+      EndDialog(hwnd, TRUE);
+      return TRUE;
+
+    case IDCANCEL:
+      EndDialog(hwnd, FALSE);
+      return TRUE;
+    }
+    break;
+  }
+  return FALSE;
+}
+
+static void EditFan(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_FANS);
+  int index = ListView_GetNextItem(list, -1, LVNI_SELECTED);
+  if (index < 0) return;
+  FanMonitor *fan = (FanMonitor *)ListView_GetItemData(list, index);
+  if (NULL == fan) return;
+  int result = DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_FAN), 
+                              GetParent(hwnd), FanDialogProc, (LPARAM)fan);
+  if (result) {
+    ListView_SetItemText(list, index, 0, (LPSTR)fan->GetName());
+    SetPageModified(hwnd);
+  }
+}
+
+static BOOL CALLBACK FansPageDialogProc(HWND hwnd, UINT uMsg, 
+                                           WPARAM wParam, LPARAM lParam)
+{
+  switch (uMsg) {
+  case WM_INITDIALOG:
+    {
+      HWND list = GetDlgItem(hwnd, IDC_FANS);
+      char title[128];
+
+      ListView_SetExtendedListViewStyle(list, LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
+
+      LV_COLUMN lvc;
+      memset(&lvc, 0, sizeof(lvc));
+      lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+      lvc.cx = 50;
+      if (LoadString(g_hInstance, IDS_FAN, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "Fan";
+      lvc.iSubItem = 0;
+      ListView_InsertColumn(list, 0, &lvc);
+      lvc.cx = 200;
+      if (LoadString(g_hInstance, IDS_EVENT, title, sizeof(title)))
+        lvc.pszText = title;
+      else
+        lvc.pszText = "Event";
+      lvc.iSubItem = 1;
+      ListView_InsertColumn(list, 1, &lvc);
+    }
+    LoadFansSettings(hwnd);
+    return TRUE;
+
+  case WM_COMMAND:
+    switch (LOWORD(wParam)) {
+    case IDC_EDIT:
+      EditFan(hwnd);
+      return TRUE;
+
+    case IDC_ENABLED:
+      SetPageModified(hwnd);
+      break;
+    }
+    break;
+
+  case WM_NOTIFY:
+    {
+      LPNMHDR phdr = (LPNMHDR)lParam;
+      switch (phdr->code) {
+      case PSN_SETACTIVE:
+        break;
+      case PSN_KILLACTIVE:
+        break;
+      case PSN_APPLY:
+        SaveFansSettings(hwnd);
+        OnApply(hwnd, lParam);
+        break;
+      case NM_DBLCLK:
+        EditFan(hwnd);
+        break;
+      case LVN_ITEMCHANGED:
+        {
+          LPNMLISTVIEW pNMLIST = (LPNMLISTVIEW)phdr;
+          if ((pNMLIST->uNewState ^ pNMLIST->uOldState) & LVNI_SELECTED) {
+            UpdateFansButtonEnabling(hwnd);
+          }
+          if ((pNMLIST->uNewState ^ pNMLIST->uOldState) & LVIS_STATEIMAGEMASK) {
+            HWND list = pNMLIST->hdr.hwndFrom;
+            int index = pNMLIST->iItem;
+            BOOL check = ListView_GetCheckState(list, index);
+            FanMonitor *fan = (FanMonitor *)ListView_GetItemData(list, index);
+            if (NULL != fan) {
+              fan->SetEnabled(check);
+              SetPageModified(hwnd);
+            }
+          }
+        }
+        break;
+      }
+    }
+    break;
+
+  case PSM_QUERYSIBLINGS:
+    switch (wParam) {
+    case PSQS_NEW_DEVICE:
+      LoadFansSettings(hwnd);
+      break;
+    case PSQS_SAVE_FOR_TEST:
+      SaveFansSettings(hwnd);
+      break;
+    }
+    break;
+
+  }
+
+  return FALSE;
+}
+
+static void FillFansPage(LPPROPSHEETPAGE ppsp)
+{
+  ppsp->dwSize = sizeof(PROPSHEETPAGE);
+  ppsp->dwFlags = PSP_DEFAULT;
+  ppsp->hInstance = g_hInstance;
+  ppsp->pszTemplate = MAKEINTRESOURCE(IDD_FANS);
+  ppsp->pfnDlgProc = FansPageDialogProc;
+}
+
+void UpdateSensorsButtonEnabling(HWND hwnd)
+{
+  HWND list = GetDlgItem(hwnd, IDC_SENSORS);
   BOOL enable = FALSE;
   int nSelItem = ListView_GetNextItem(list, -1, LVNI_SELECTED);
   if (nSelItem >= 0) {
@@ -1079,8 +1334,10 @@ static BOOL CALLBACK SensorsPageDialogProc(HWND hwnd, UINT uMsg,
             int index = pNMLIST->iItem;
             BOOL check = ListView_GetCheckState(list, index);
             DOWSensor *sensor = (DOWSensor *)ListView_GetItemData(list, index);
-            if (NULL != sensor)
+            if (NULL != sensor) {
               sensor->SetEnabled(check);
+              SetPageModified(hwnd);
+            }
           }
         }
         break;
@@ -1128,7 +1385,7 @@ static int EditDevice(DisplayDevice *dev)
   g_editOrigDevice = dev;
   g_editDevice = (NULL == g_editOrigDevice) ? NULL : g_editOrigDevice->Duplicate();
 
-  PROPSHEETPAGE pages[4];
+  PROPSHEETPAGE pages[8];
   UINT nPages, nStartPage;
   nPages = 0;
   if (NULL != g_displaysDialog)
@@ -1138,6 +1395,8 @@ static int EditDevice(DisplayDevice *dev)
   if (NULL != g_editDevice) {
     if (g_editDevice->HasKeypad())
       FillKeypadPage(pages + nPages++);
+    if (g_editDevice->HasFans())
+      FillFansPage(pages + nPages++);
     if (g_editDevice->HasSensors())
       FillSensorsPage(pages + nPages++);
   }

@@ -168,6 +168,54 @@ protected:
   InputMapEntry *m_entries;
 };
 
+class LCD_API FanMonitor
+{
+public:
+  FanMonitor(LPCSTR name, int number);
+  FanMonitor(const FanMonitor& other);
+  ~FanMonitor();
+
+  LPCSTR GetName() const {
+    return m_name;
+  }
+  void SetName(LPCSTR name);
+
+  int GetNumber() const {
+    return m_number;
+  }
+  BOOL IsEnabled() const {
+    return m_enabled;
+  }
+  void SetEnabled(BOOL enabled);
+  int GetPulsesPerRevolution() const {
+    return m_ppr;
+  }
+  void SetPulsesPerRevolution(int ppr) {
+    m_ppr = ppr;
+  }
+  DWORD GetUpdateTime() const {
+    return m_updateTime;
+  }
+  void SetUpdateTime(DWORD updateTime) {
+    m_updateTime = updateTime;
+  }
+  FanMonitor*& GetNext() {
+    return m_next;
+  }
+
+  static void LCD_DECL LoadFromRegistry(HKEY hkey, FanMonitor **sensors);
+  static void LCD_DECL SaveToRegistry(HKEY hkey, FanMonitor *sensors);
+  FanMonitor(LPCSTR number, LPCSTR entry);
+
+protected:
+  LPSTR m_name;
+  int m_number;
+  int m_ppr;
+  BOOL m_enabled, m_anonymous;
+  DWORD m_updateTime;
+  FanMonitor *m_next;
+};
+
 class LCD_API DOWSensor
 {
 public:
@@ -348,20 +396,45 @@ public:
     DeviceSetKeypadLegend(button, legend);
   }
 
-  enum IntervalMode { IM_NONE, IM_EDITABLE, IM_FIXED };
-
-  int GetGPOs() {
-    return DeviceGetGPOs();
+  BOOL HasGPOs() {
+    return (DeviceGetNGPOs() > 0);
+  }
+  int GetNGPOs() {
+    return DeviceGetNGPOs();
   }
   void SetGPO(int gpo, BOOL on) {
     DeviceSetGPO(gpo, on);
   }
-  int GetFans() {
-    return DeviceGetFans();
+
+  BOOL HasFans() {
+    return (DeviceGetNFans() > 0);
+  }
+  int GetNFans() {
+    return DeviceGetNFans();
   }
   void SetFanPower(int fan, double dutyCycle) {
     DeviceSetFanPower(fan, dutyCycle);
   }
+  BOOL GetEnableFans() const {
+    return m_enableFans;
+  }
+  void SetEnableFans(BOOL enable) {
+    m_enableFans = enable;
+  }
+  enum IntervalMode { IM_NONE, IM_EDITABLE, IM_FIXED };
+  IntervalMode HasFanInterval() {
+    return DeviceHasFanInterval();
+  }
+  DWORD GetFanInterval() const {
+    return m_fanInterval;
+  }
+  void SetFanInterval(DWORD interval) {
+    m_fanInterval = interval;
+  }
+  FanMonitor *GetFans() {
+    return m_fans;
+  }
+  FanMonitor *GetFan(int n, LPCSTR createPrefix = NULL);
 
   BOOL HasSensors() {
     return DeviceHasSensors();
@@ -434,10 +507,11 @@ protected:
   virtual LPCSTR *DeviceGetKeypadButtonChoices();
   virtual LPCSTR *DeviceGetKeypadLegendChoices();
   virtual void DeviceSetKeypadLegend(LPCSTR button, LPCSTR legend);
-  virtual int DeviceGetGPOs();
+  virtual int DeviceGetNGPOs();
   virtual void DeviceSetGPO(int gpo, BOOL on);
-  virtual int DeviceGetFans();
+  virtual int DeviceGetNFans();
   virtual void DeviceSetFanPower(int fan, double dutyCycle);
+  virtual IntervalMode DeviceHasFanInterval();
   virtual BOOL DeviceHasSensors();
   virtual IntervalMode DeviceHasSensorInterval();
   virtual void DeviceDetectSensors(LPCSTR prefix);
@@ -498,7 +572,8 @@ protected:
   InputMap m_inputMap;
 
   BOOL m_enableFans;
-  // ...
+  FanMonitor *m_fans;
+  DWORD m_fanInterval;
 
   BOOL m_enableSensors;
   DOWSensor *m_sensors;

@@ -323,7 +323,7 @@ static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice,
       Static_SetText(GetDlgItem(hwnd, IDC_VALUE2L), legend);
     UpDown_SetRange(GetDlgItem(hwnd, IDC_FANGPO_SPIN),
                     (DisplayGPO == action->function) ? 
-                    commandDevice->GetGPOs() : commandDevice->GetFans(),
+                    commandDevice->GetNGPOs() : commandDevice->GetNFans(),
                     1);
     ShowValueInputs(hwnd, action->valueType, reload);
     ShowPositionInputs(hwnd, IDC_FANGPO, reload);
@@ -358,10 +358,10 @@ static void FillCommandChoices(HWND hwnd,
       if (!commandDevice->HasKeypadLegends()) continue;
     }
     else if (DisplayGPO == action->function) {
-      if (commandDevice->GetGPOs() <= 0) continue;
+      if (!commandDevice->HasGPOs()) continue;
     }
     else if (DisplayFanPower == action->function) {
-      if (commandDevice->GetFans() <= 0) continue;
+      if (!commandDevice->HasFans()) continue;
     }
     int idx = ComboBox_AddString(combo, action->name);
     ComboBox_SetItemData(combo, idx, action);

@@ -139,8 +139,8 @@ BEGIN
     CONTROL         "Enable &keypad input",IDC_ENABLED,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,10,150,10
     CONTROL         "Entries",IDC_ENTRIES,"SysListView32",LVS_REPORT | 
-                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | WS_BORDER | 
-                    WS_TABSTOP,7,30,170,100
+                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOSORTHEADER | 
+                    WS_BORDER | WS_TABSTOP,7,30,170,100
     PUSHBUTTON      "&Add...",IDC_ADD,190,45,50,14
     PUSHBUTTON      "&Edit...",IDC_EDIT,190,65,50,14
     PUSHBUTTON      "&Remove",IDC_REMOVE,190,85,50,14
@@ -162,21 +162,52 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,101,69,50,14
 END
 
+IDD_FANS DIALOG DISCARDABLE  0, 0, 250, 175
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Fans"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "&Enable fan speed monitoring",IDC_ENABLED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,10,150,10
+    CONTROL         "Fans",IDC_FANS,"SysListView32",LVS_REPORT | 
+                    LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | 
+                    WS_TABSTOP,7,30,170,100
+    PUSHBUTTON      "&Rename...",IDC_EDIT,190,45,50,14
+    LTEXT           "Monitoring &interval:",IDC_INTERVALL,10,140,70,8
+    EDITTEXT        IDC_INTERVAL,85,137,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "ms",IDC_INTERVALL2,130,140,10,8
+    LTEXT           "&Pulses per revolution:",IDC_STATIC,10,160,70,8
+    EDITTEXT        IDC_PPR,85,157,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "PPRSpin",IDC_PPR_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS,125,157,10,14
+END
+
+IDD_FAN DIALOG DISCARDABLE  0, 0, 186, 70
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rename fan"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Event:",IDC_STATIC,15,20,19,8
+    EDITTEXT        IDC_NAME,60,17,100,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,35,50,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,101,50,50,14
+END
+
 IDD_SENSORS DIALOG DISCARDABLE  0, 0, 250, 175
 STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
 CAPTION "Sensors"
 FONT 8, "MS Sans Serif"
 BEGIN
-    CONTROL         "Enable &temperture sensors",IDC_ENABLED,"Button",
+    CONTROL         "&Enable temperture sensors",IDC_ENABLED,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,10,150,10
     CONTROL         "Sensors",IDC_SENSORS,"SysListView32",LVS_REPORT | 
-                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | WS_BORDER | 
-                    WS_TABSTOP,7,30,170,100
+                    LVS_SHOWSELALWAYS | LVS_SORTASCENDING | LVS_NOSORTHEADER |
+                    WS_BORDER | WS_TABSTOP,7,30,170,100
     PUSHBUTTON      "&Rename...",IDC_EDIT,190,45,50,14
     PUSHBUTTON      "&Detect",IDC_DETECT,190,65,50,14
-    LTEXT           "Monitoring &interval:",IDC_STATIC,10,140,70,8
+    LTEXT           "Monitoring &interval:",IDC_INTERVALL,10,140,70,8
     EDITTEXT        IDC_INTERVAL,85,137,40,14,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "ms",IDC_STATIC,130,140,10,8
+    LTEXT           "ms",IDC_INTERVALL2,130,140,10,8
 END
 
 IDD_SENSOR DIALOG DISCARDABLE  0, 0, 186, 70
