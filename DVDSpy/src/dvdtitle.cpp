@@ -84,8 +84,8 @@ LPCSTR CSVParser::NextField()
     if (NULL == m_fp)
       return NULL;
     *m_fp++ = '\0';
-	if ('\0' == *m_fp)
-	  return result;
+    if ('\0' == *m_fp)
+      return result;
     else if (',' != *m_fp)
       return NULL;
     *m_fp++ = '\0';
