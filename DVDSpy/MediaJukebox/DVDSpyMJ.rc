@@ -54,8 +54,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,45,0,17
- PRODUCTVERSION 1,45,0,0
+ FILEVERSION 1,47,0,19
+ PRODUCTVERSION 1,47,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -71,11 +71,11 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "DVDSpy MediaJukebox Control\0"
-            VALUE "FileVersion", "1.45 (17)\0"
+            VALUE "FileVersion", "1.47 (19)\0"
             VALUE "InternalName", "DVDSpyMJ\0"
             VALUE "OriginalFilename", "int_DVDSpy.DLL\0"
             VALUE "ProductName", "DVD Spy\0"
-            VALUE "ProductVersion", "1.45\0"
+            VALUE "ProductVersion", "1.47\0"
             VALUE "OLESelfRegister", "\0"
         END
     END

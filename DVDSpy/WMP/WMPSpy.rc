@@ -54,8 +54,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,45,0,25
- PRODUCTVERSION 1,45,0,0
+ FILEVERSION 1,47,0,28
+ PRODUCTVERSION 1,47,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -70,12 +70,12 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "DVDSpy WMP Control\0"
-            VALUE "FileVersion", "1.45 (25)\0"
+            VALUE "FileDescription", "DVDSpy WMPSpy Objects\0"
+            VALUE "FileVersion", "1.47 (28)\0"
             VALUE "InternalName", "WMPSpy\0"
             VALUE "OriginalFilename", "WMPSpy.DLL\0"
             VALUE "ProductName", "DVD Spy\0"
-            VALUE "ProductVersion", "1.45\0"
+            VALUE "ProductVersion", "1.47\0"
             VALUE "OLESelfRegister", "\0"
         END
     END
@@ -94,6 +94,7 @@ END
 //
 
 IDR_SPYCTRL             REGISTRY DISCARDABLE    "SpyCtrl.rgs"
+IDR_SPYPLUGIN           REGISTRY DISCARDABLE    "SpyPlugin.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
