@@ -63,6 +63,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "noritakevfd"=".\noritakevfd\noritakevfd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "paralcd"=".\paralcd\paralcd.dsp" - Package Owner=<4>
 
 Package=<5>

@@ -1,3 +1,5 @@
+3.4     05/27/2004      MMcM    Add NoritakeVFD support.
+
 3.3     05/25/2004      MMcM    Fix Crystalfontz temperature sensors.
 
 3.2     05/20/2004      MMcM    Add fan and temperature sensor monitoring.

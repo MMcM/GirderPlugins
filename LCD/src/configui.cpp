@@ -43,6 +43,7 @@ struct DisplayDeviceEntry {
   { "Matrix Orbital VK204-24-USB / MX5 (20x4, vfd, keypad, USB)", "MOLCD", "VK204U" },
   { "Futaba VFD (20x4)", "FutabaVFD", "M204" },
   { "Futaba VFD (40x2)", "FutabaVFD", "M402" },
+  { "Noritake CU20045SCPB (20x4, vfd)", "NoritakeVFD", "CU20045SCPB" },
   { "HD44780 (parallel)", "PARALCD", NULL }
 };
 
@@ -1664,6 +1665,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
         if (NULL != g_editOrigDevice)
           g_editOrigDevice->SetDefault(TRUE); // In case old default deleted.
         FillDisplaysList(hwnd);
+        Button_Enable(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
       return TRUE;
 
@@ -1675,6 +1677,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
         g_editOrigDevice = (DisplayDevice *)ListView_GetItemData(list, nSelItem);
         g_editDevices.SetDefault(g_editOrigDevice);
         FillDisplaysList(hwnd);
+        Button_Enable(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
       return TRUE;
     }
@@ -1706,6 +1709,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
               break;
             }
             ListView_SetItemState(list, nHitItem, nState, LVIS_STATEIMAGEMASK);
+            Button_Enable(GetDlgItem(hwnd, IDC_APPLY), TRUE);
           }
         }
         break;
