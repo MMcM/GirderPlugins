@@ -26,7 +26,7 @@ BOOL CALLBACK ConfigDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lP
   switch (uMsg) {
   case WM_INITDIALOG:
     {
-      PCHAR trans;
+      char trans[256];
       	
       hConfigDialog = hwnd;
 
@@ -34,10 +34,10 @@ BOOL CALLBACK ConfigDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lP
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      trans=I18NTranslate("Ok");
+      HFunctions.I18NTranslateEx("Ok", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDOK), trans);
 
-      trans=I18NTranslate("Cancel");
+      HFunctions.I18NTranslateEx("Cancel", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCANCEL), trans);
       return 0;
     }
@@ -80,7 +80,7 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
   switch (uMsg) {
   case WM_INITDIALOG:
     {
-      PCHAR trans;
+      char trans[256];
       	
       hLearnDialog = hwnd;
 
@@ -88,10 +88,10 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
 
       SetWindowText(hwnd, PLUGINNAME);
 			
-      trans=I18NTranslate("Learn");
+      HFunctions.I18NTranslateEx("Learn", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDC_LEARN), trans);
 
-      trans=I18NTranslate("Close");
+      HFunctions.I18NTranslateEx("Close", trans, sizeof(trans));
       SetWindowText(GetDlgItem(hwnd, IDCLOSE), trans);
 
       HWND events = GetDlgItem(hwnd, IDC_EVENTS);
@@ -111,10 +111,6 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
               LPSTR pe = ebuf + strlen(ebuf);
               *pe++ = '.';
               *pe++ = *pb;
-              if (0 == i) {
-                *pe++ = '.';
-                *pe++ = '9';
-              }
               *pe++ = '\0';
               SendMessage(events, LB_ADDSTRING, 0, (LPARAM)ebuf);
             }
@@ -148,28 +144,14 @@ BOOL CALLBACK LearnDialogProc(  HWND hwnd,  UINT uMsg, WPARAM wParam, LPARAM lPa
       // Do ones not mentioned in the registry.
       size_t nmatches = DS_GetMatchCount();
       for (size_t i = 0; i < nmatches; i++) {
-        char szName[128];
-        DS_GetMatchName(i, szName, sizeof(szName));
-        LPSTR end = szName + strlen(szName);
-        int nreg = DS_GetMatchRegister(i);
         size_t nindex = DS_GetMatchIndexCount(i);
-        if (nindex <= 1) {
-          if (nreg > 0)
-            sprintf(end, ".%d", nreg);
+        for (size_t j = 0; j < nindex; j++) {
+          char szName[128];
+          DS_GetName(i, j, szName, sizeof(szName));
           if ((NULL == hKey) ||
               (ERROR_SUCCESS != RegQueryValueEx(hKey, szName, 
                                                 NULL, NULL, NULL, NULL))) {
             SendMessage(events, LB_ADDSTRING, 0, (LPARAM)szName);
-          }
-        }
-        else {
-          for (size_t j = 0; j < nindex; j++) {
-            sprintf(end, ".%d", nreg + j);
-            if ((NULL == hKey) ||
-                (ERROR_SUCCESS != RegQueryValueEx(hKey, szName, 
-                                                  NULL, NULL, NULL, NULL))) {
-              SendMessage(events, LB_ADDSTRING, 0, (LPARAM)szName);
-            }
           }
         }
       }
