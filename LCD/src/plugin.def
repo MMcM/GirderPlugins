@@ -20,4 +20,4 @@ EXPORTS
         gir_command_gui
         gir_command_changed
 
-;       gir_info
+        gir_info

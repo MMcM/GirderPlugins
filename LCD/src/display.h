@@ -9,6 +9,7 @@ typedef const BYTE *LPCBYTE;
 #else
 #define LCD_API __declspec(dllimport)
 #endif
+#define LCD_DECL __cdecl
 
 class LCD_API CustomCharacter
 {
@@ -52,21 +53,22 @@ protected:
 class LCD_API DisplayDevice
 {
 public:
-  static HKEY GetSettingsKey();
-  static BOOL GetSettingString(HKEY hkey, LPCSTR valkey,
-                               LPSTR value, size_t vallen);
-  static BOOL GetSettingInt(HKEY hkey, LPCSTR valkey, int& value);
-  static BOOL GetSettingBool(HKEY hkey, LPCSTR valkey, BOOL& defval);
-  static BOOL GetSettingBinary(HKEY hkey, LPCSTR valkey,
-                               LPBYTE value, size_t vallen);
-  static void SetSettingString(HKEY hkey, LPCSTR valkey, LPCSTR value);
-  static void SetSettingInt(HKEY hkey, LPCSTR valkey, int value);
-  static void SetSettingBool(HKEY hkey, LPCSTR valkey, BOOL value);
-  static void SetSettingBinary(HKEY hkey, LPCSTR valkey,
-                               LPCBYTE value, size_t vallen);
+  static HKEY LCD_DECL GetSettingsKey();
+  static BOOL LCD_DECL GetSettingString(HKEY hkey, LPCSTR valkey,
+                                        LPSTR value, size_t vallen);
+  static BOOL LCD_DECL GetSettingInt(HKEY hkey, LPCSTR valkey, int& value);
+  static BOOL LCD_DECL GetSettingBool(HKEY hkey, LPCSTR valkey, BOOL& defval);
+  static BOOL LCD_DECL GetSettingBinary(HKEY hkey, LPCSTR valkey,
+                                        LPBYTE value, size_t vallen);
+  static void LCD_DECL SetSettingString(HKEY hkey, LPCSTR valkey, LPCSTR value);
+  static void LCD_DECL SetSettingInt(HKEY hkey, LPCSTR valkey, int value);
+  static void LCD_DECL SetSettingBool(HKEY hkey, LPCSTR valkey, BOOL value);
+  static void LCD_DECL SetSettingBinary(HKEY hkey, LPCSTR valkey,
+                                        LPCBYTE value, size_t vallen);
 
   // Create device based on registry settings.
-  static DisplayDevice *Create(HWND parent = NULL, LPCSTR lib = NULL, LPCSTR dev = NULL);
+  static DisplayDevice * LCD_DECL Create(HWND parent = NULL, 
+                                         LPCSTR lib = NULL, LPCSTR dev = NULL);
   virtual ~DisplayDevice();
 
   BOOL IsOpen() {
@@ -160,7 +162,7 @@ public:
   void Test();
 
 protected:
-  typedef DisplayDevice *(*CreateFun_t)(HWND parent, LPCSTR devname);
+  typedef DisplayDevice *(LCD_DECL *CreateFun_t)(HWND parent, LPCSTR devname);
   DisplayDevice();
 
   // Override these for each device.
@@ -228,6 +230,6 @@ protected:
 };
 
 extern "C" {
-LCD_API void DisplayWin32Error(HWND parent, DWORD dwErr);
-LCD_API void DisplaySendEvent(LPCSTR event);
+LCD_API void LCD_DECL DisplayWin32Error(HWND parent, DWORD dwErr);
+LCD_API void LCD_DECL DisplaySendEvent(LPCSTR event);
 }

@@ -4,10 +4,10 @@ $Header$
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "2.6"
+#define PLUGINVERSION "2.7"
 
 extern HINSTANCE g_hInstance;
-extern s_functions SF;
+extern s_functions_2 SF;
 
 extern void OpenConfigUI();
 extern void CloseConfigUI();
@@ -25,11 +25,13 @@ class DisplayDevice;
 extern int DisplayWidth();
 extern int DisplayHeight();
 extern int DisplayGPOs();
+extern BOOL DisplayOpen();
 extern void DisplayClose();
 extern void DisplayReopen(DisplayDevice *device);
 extern BOOL DisplayEnableInput();
 extern void DisplayDisableInput();
-extern void DisplaySendEvent(BYTE b);
+extern void DisplayString(int row, int col, int width, LPCSTR str);
+extern void DisplayCustomCharacter(int row, int col, LPCSTR bits);
 
 class DisplayCommandState;
 
@@ -60,3 +62,6 @@ extern void DisplayGPO(DisplayCommandState& state);
 
 extern void DisplayCommand(p_command command,
                            PCHAR status, int statuslen);
+
+extern void FunctionsOpen();
+extern void FunctionsClose();

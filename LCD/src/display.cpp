@@ -590,7 +590,7 @@ void DisplayDevice::Test()
   CustomCharacter cust1("0b11110 0b10001 0b10001 0b11110 0b10100 0b10010 0b10001");
   CustomCharacter cust2("0b01111 0b10001 0b10001 0b01111 0b00101 0b01001 0b10001");
 
-  Display(0, 0, 10, "LCD 2.6");
+  Display(0, 0, 10, "LCD 2.7");
   Display(1, -1, -1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   DisplayCustomCharacter(0, 10, cust1);
   DisplayCustomCharacter(0, 11, cust2);
@@ -810,7 +810,7 @@ void DisplayDevice::DeviceSaveSettings(HKEY hkey)
 {
 }
 
-LCD_API void DisplayWin32Error(HWND parent, DWORD dwErr)
+LCD_API void LCD_DECL DisplayWin32Error(HWND parent, DWORD dwErr)
 {
   HLOCAL pMsgBuf = NULL;
   char buf[128];

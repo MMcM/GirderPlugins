@@ -6,7 +6,7 @@ $Header$
 #include "plugin.h"
 
 HINSTANCE g_hInstance;
-s_functions SF;
+s_functions_2 SF;
 
 extern "C" void WINAPI
 gir_version(PCHAR buffer, BYTE length)
@@ -35,17 +35,18 @@ gir_devicenum()
 extern "C" int WINAPI
 gir_requested_api(int maxapi)
 {
-  return 1;
+  return 2;
 }
 
 extern "C" int WINAPI
-gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
+gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions_2 p)
 {
   if (p->size != sizeof(SF)) {
     return GIR_FALSE;
   }
   memcpy(&SF, p, p->size);
   DisplayInitCS();
+  FunctionsOpen();
   return GIR_TRUE;
 }
 
@@ -54,6 +55,7 @@ gir_close()
 {
   CloseConfigUI();
   CloseCommandUI();
+  FunctionsClose();
   DisplayClose();
   DisplayDeleteCS();
   return GIR_TRUE;
@@ -115,13 +117,16 @@ gir_command_changed(p_command command)
   UpdateCommandUI(command);
 }
 
-#if 0
 extern "C" int WINAPI
 gir_info(int message, int wparam, int lparam)
 {
+  switch (message) {
+  case GIRINFO_SCRIPT_STATE:
+    FunctionsOpen();
+    break;
+  }
   return GIR_TRUE;
 }
-#endif
 
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)

@@ -6,36 +6,15 @@ $Header$
 #include "plugin.h"
 #include "display.h"
 
-class DisplayCommandState
+void LCD_DECL DisplaySendEvent(LPCSTR event)
 {
-public:
-  p_command m_command;
-  PCHAR m_status;
-  int m_statuslen;
-
-  DisplayCommandState(p_command command,
-                      PCHAR status, int statuslen)
-    : m_command(command),
-      m_status(status), m_statuslen(statuslen) 
-  {
-    DisplayEnterCS();
-    EnterCriticalSection(&m_command->critical_section);    
-  }
-
-  ~DisplayCommandState() 
-  {
-    LeaveCriticalSection(&m_command->critical_section);
-    DisplayLeaveCS();
-  }
-  
-  void SetStatus(LPCSTR status)
-  {
-    strncpy(m_status, status, m_statuslen);
-  }
-};
+  SF.send_event((PCHAR)event, NULL, 0, PLUGINNUM);
+}
 
 CRITICAL_SECTION g_CS;          // Ensure events see consistent device Settings.
 DisplayDevice *g_device = NULL;
+
+/*** Display oriented routines ***/
 
 void DisplayInitCS()
 {
@@ -57,22 +36,14 @@ void DisplayLeaveCS()
   LeaveCriticalSection(&g_CS);
 }
 
-BOOL DisplayOpen(DisplayCommandState& state)
+BOOL DisplayOpen()
 {
   if (NULL == g_device) {
     g_device = DisplayDevice::Create(SF.parent_hwnd);
-    if (NULL == g_device) {
-      state.SetStatus("Could not create device.");
+    if (NULL == g_device)
       return FALSE;
-    }
   }
-
-  if (!g_device->Open()) {
-    state.SetStatus("Could not open device.");
-    return FALSE;
-  }
-
-  return TRUE;
+  return g_device->Open();
 }
 
 int DisplayWidth()
@@ -143,9 +114,57 @@ void DisplayDisableInput()
     g_device->DisableInput();
 }
 
-void DisplaySendEvent(LPCSTR event)
+void DisplayString(int row, int col, int width, LPCSTR str)
 {
-  SF.send_event((PCHAR)event, NULL, 0, PLUGINNUM);
+  if (!DisplayOpen())
+    return;
+  g_device->Display(row, col, width, str);
+}
+
+void DisplayCustomCharacter(int row, int col, LPCSTR bits)
+{
+  if (!DisplayOpen()) 
+    return;
+  g_device->DisplayCustomCharacter(row, col, CustomCharacter(bits));
+}
+
+/*** Actual command routines ***/
+
+class DisplayCommandState
+{
+public:
+  p_command m_command;
+  PCHAR m_status;
+  int m_statuslen;
+
+  DisplayCommandState(p_command command,
+                      PCHAR status, int statuslen)
+    : m_command(command),
+      m_status(status), m_statuslen(statuslen) 
+  {
+    DisplayEnterCS();
+    EnterCriticalSection(&m_command->critical_section);    
+  }
+
+  ~DisplayCommandState() 
+  {
+    LeaveCriticalSection(&m_command->critical_section);
+    DisplayLeaveCS();
+  }
+  
+  void SetStatus(LPCSTR status)
+  {
+    strncpy(m_status, status, m_statuslen);
+  }
+};
+
+BOOL DisplayOpen(DisplayCommandState& state)
+{
+  if (!DisplayOpen()) {
+    state.SetStatus("Could not open device.");
+    return FALSE;
+  }
+  return TRUE;
 }
 
 void DisplayClose(DisplayCommandState& state)

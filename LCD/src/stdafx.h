@@ -20,6 +20,11 @@
 
 #include <girder.h>
 
+extern "C" {
+#include "lua.h"
+#include "lauxlib.h"
+}
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

@@ -1,4 +1,6 @@
 
+2.7     03/09/2003      MMcM    Add LUA functions.
+
 2.6     01/19/2003      Adam Klotblixt  Add FutabaVFD support.
 
 2.5     01/07/2003      MMcM    First SourceForge release.

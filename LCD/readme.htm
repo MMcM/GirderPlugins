@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 2.6. &nbsp;MMcM 01/03
+Version 2.7. &nbsp;MMcM 03/03
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -197,6 +197,41 @@ Most Matrix Orbital displays have one or more general purpose outputs
 (GPOs).  These are low-current 5VDC outputs suitable for connecting to
 LEDs, fans, and relays.  If the chosen display has GPOs, there is a
 special action to turn one on or off.<p>
+</li>
+
+</ul>
+
+<h3>LUA functions</h3>
+
+The following functions are defined in LUA so that the display can be
+controlled directly from a script.<p>
+
+<ul>
+
+<li><code>LCD_Size()</code><br>
+
+Return the size of the display as two numbers (width, height).
+
+</li>
+
+<li><code>LCD_Close()</code><br>
+
+Close the display.
+
+</li>
+
+<li><code>LCD_String(row, column, width, string)</code><br>
+
+Display the given string at the given position.  If <code>width</code>
+is negative, the rest of the line is used.  If <code>column</code> is
+negative, a marquee is started on the given row.
+
+</li>
+
+<li><code>LCD_CustomCharacter(row, column, bits)</code><br>
+
+Display the given custom character at the given position.
+
 </li>
 
 </ul>
