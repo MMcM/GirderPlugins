@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.40. &nbsp;MMcM 10/02
+Version 1.45. &nbsp;MMcM 10/02
 
 <h3>Files</h3>
 These are the files contained in this archive and what purpose they serve.
@@ -133,6 +133,13 @@ This file is the database of DVD titles returned by the disc insert
 event.  See <a href="#DVDTitles">below</a> for more information.<p>
 </li>
 
+<li><kbd>DVDData.vbs</kbd><br/>
+A VBScript program to get title information from windowsmedia.com.<p>
+
+This file downloads DVD title and chapter information and returns it to Girder
+as events.  See <a href="#DVDData">below</a> for more information.<p>
+</li>
+
 <li><kbd>DVD2LCD4.GML</kbd>, <kbd>DVD2LCD2.GML</kbd><br/>
 Sample Girder scripts.<p>
 
@@ -169,6 +176,14 @@ A JScript program for getting weather information and putting it into
 Girder variables.<p>
 
 The Weather group in <kbd>DVD2LCD?.GML</kbd> uses this.<p>
+</li>
+
+<li><kbd>WinDVD3.reg</kbd><br/>
+Registry settings corresponding to the default skin in WinDVD 3.
+DVDSpy.reg contains the default skin for WinDVD 4.  
+(See <a href="#Skinned">below</a> for more information.)<p>
+
+This file is not needed for normal Girder operation.<p>
 </li>
 
 </ul>
@@ -240,11 +255,12 @@ If you do see events, then double check the OSD PopUp settings.
 <tr><td><code>Disc.Insert.<i>X</i></code></td>
 <td>A new DVD was inserted into drive <i>X:</i></td>
 <td>The volume name or disc title (see <a href="#DVDTitles">below</a>)</td>
-<td width="250"><b>2:</b>volume serial number (hex),<br>
+<td width="250"><b>2:</b>volume serial number (32-bit hex),<br>
 <b>3:</b>aspect ratio (<code>4:3</code>,<code>16:9</code>,<code>unknown</code>),<br>
 <b>4:</b>display format (<code>none</code>,<code>letterbox</code>,<code>pan-scan</code>,<code>both</code>),<br>
 <b>5:</b>video standard (<code>NTSC</code>,<code>PAL</code>),<br>
-<b>6:</b>enabled regions (<code>12345678</code>)</td>
+<b>6:</b>enabled regions (<code>12345678</code>),<br>
+<b>7:</b>DVD disc id (64-bit hex)</td>
 </tr>
 
 <tr><td><code>Disc.Eject.<i>X</i></code></td>
@@ -253,9 +269,9 @@ If you do see events, then double check the OSD PopUp settings.
 
 <tr></tr>
 
-<tr><td><code>WinDVD.Chapter</code></td>
-<td>Chapter changed</td>
-<td>New chapter (<code>NN</code>)</td>
+<tr><td><code>WinDVD.Status</code></td>
+<td>Player status changed</td>
+<td>New status (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>,<code>Rewind</code>,<code>FF</code>)</td>
 </tr>
 
 <tr><td><code>WinDVD.Elapsed</code></td>
@@ -263,14 +279,9 @@ If you do see events, then double check the OSD PopUp settings.
 <td>New time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>WinDVD.Video</code></td>
-<td>Video mode changed</td>
-<td>New mode (e.g. <code>MPEG</code>)</td>
-</tr>
-
-<tr><td><code>WinDVD.Audio</code></td>
-<td>Audio mode changed</td>
-<td>New mode (e.g. <code>BOTH</code>)</td>
+<tr><td><code>WinDVD.Chapter</code></td>
+<td>Chapter changed</td>
+<td>New chapter (<code>NN</code>)</td>
 </tr>
 
 <tr><td><code>WinDVD.Close</code></td>
@@ -279,14 +290,28 @@ If you do see events, then double check the OSD PopUp settings.
 
 <tr></tr>
 
+<tr><td><code>PowerDVD.Status</code></td>
+<td>Player status changed</td>
+<td>New status (<code>Playing</code>,<code>Paused</code>,<code>Still</code>,<code>Stopped</code>,<code>Eject</code>)</td>
+</tr>
+
 <tr><td><code>PowerDVD.Elapsed</code></td>
 <td>Elapsed time changed</td>
 <td>New time (<code>HH:MM:SS</code>)</td>
 </tr>
 
-<tr><td><code>PowerDVD.Title</code></td>
-<td>Title of video window changed</td>
-<td>New title (file name if playing file instead of disc)</td>
+<tr><td><code>PowerDVD.TitleNo</code></td>
+<td>Title changed</td>
+<td>New title number (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>PowerDVD.Chapter</code></td>
+<td>Chapter changed</td>
+<td>New chapter (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>PowerDVD.Close</code></td>
+<td>PowerDVD application closed</td>
 </tr>
 
 <tr></tr>
@@ -491,6 +516,50 @@ top)</td>
 </tr>
 
 <tr><td><code>TheaterTek.Close</code></td>
+<td>TT application closed</td>
+</tr>
+
+<tr></tr>
+
+<tr><td><code>CinePlayer.State</code></td>
+<td>Playback state changed</td>
+<td>New state (<code>Playing</code>,<code>Paused</code>,<code>Stopped</code>)</td>
+</tr>
+
+<tr><td><code>CinePlayer.VideoPosition</code></td>
+<td>Video window position changed</td>
+<td width="250">New sizes (window width, window height, window left,
+window top; destination width, destination height, destination left,
+destination top; source width, source height, source left, source
+top)</td>
+</tr>
+
+<tr><td><code>CinePlayer.Domain</code></td>
+<td>Domain changed</td>
+<td>New domain (<code>PLAY</code>,<code>MENU</code>,<code>DVD</code>,<code>STOP</code>)</td>
+</tr>
+
+<tr><td><code>CinePlayer.TitleNo</code></td>
+<td>Title changed</td>
+<td>New title number (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>CinePlayer.Chapter</code></td>
+<td>Chapter changed</td>
+<td>New chapter (<code>NN</code>)</td>
+</tr>
+
+<tr><td><code>CinePlayer.Duration</code></td>
+<td>Total changed</td>
+<td>New total time (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>CinePlayer.Elapsed</code></td>
+<td>Position changed</td>
+<td>New elapsed time (<code>HH:MM:SS</code>)</td>
+</tr>
+
+<tr><td><code>CinePlayer.Close</code></td>
 <td>TT application closed</td>
 </tr>
 
@@ -850,13 +919,25 @@ Developers area.  The source distribution also includes <a href="extending.htm">
 this document</a> outlining how to add support for a new application.<p>
 
 This plug-in intercepts various Windows messages that are used by
-WinDVD and PowerDVD to update their own windows with the information
+player applications to update their own windows with the information
 about the DVD currently being played.  When this information has
 changed, a Girder event is generated.  The associated information is
 placed in the event payload strings.<p>
 
-It also intercepts calls to Windows text drawing functions as used by
-accessDTV and exposes it similarly.<p>
+It also intercepts calls to Windows drawing functions as used by
+PowerDVD and accessDTV and exposes it similarly.<p>
+
+<a name="Skinned"/>
+The PowerDVD and WinDVD interfaces are based on user-changeable skins.
+Proper decoding of display updates requires accurate understanding of
+the positions of various fields.  If a non-standard skin is used,
+<kbd>HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\PowerDVD</kbd>
+or <kbd>HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\WinDVD</kbd>
+must be updated to reflect the correct positions (as given in the skin
+file).  PowerDVD additionally requires the size of the status and
+number bitmaps used to populate those fields.  DVDSpy.reg contains the
+positions for the default skins and can be used as a model for what
+values to set.<p>
 
 It wraps DirectX objects used by Zoom Player, TheaterTek, or the newer
 versions of the ATI player and exposes the playing state.  This
@@ -947,6 +1028,13 @@ fields.<p>
 If the disc is not included in the above database, then the PCFriendly
 <kbd>disc.id</kbd> file, if present, is used for the title.
 Otherwise, the volume name is used as a last resort.<p>
+
+<a name="DVDData"/>
+Alternatively, title information can be downloaded from
+<a href="http://www.windowsmedia.com">windowsmedia.com</a>.  Windows Media Player
+does this when playing DVDs under Windows XP.  An XML formatted file containing
+the title name and chapter names is parsed and returned to Girder.  The file
+can be cached locally so that it is only downloaded once.<p>
 
 A good place to display the extracted text is on an LCD display, using
 the LCD Software plug-in.  See the 
