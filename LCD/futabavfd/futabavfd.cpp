@@ -23,8 +23,15 @@ public:
 
 FutabaVFDDisplay::FutabaVFDDisplay(HWND parent, LPCSTR devname)
 {
-  m_cols = 20;
-  m_rows = 4;
+  // TODO: There are models with sizes other than just these two.
+  if ((NULL != devname) && !strcmp(devname, "M402")) {
+    m_cols = 40;
+    m_rows = 2;
+  }
+  else {
+    m_cols = 20;
+    m_rows = 4;
+  }
   m_portType = portSERIAL;
   strcpy(m_port, "COM2");
   m_portSpeed = CBR_9600;
@@ -71,8 +78,8 @@ void FutabaVFDDisplay::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
   BYTE buf[128];
   int nb = 0;
-  buf[nb++] = 0x10;
-  buf[nb++] = (row*20)+col;
+  buf[nb++] = 0x10;             // Display Position
+  buf[nb++] = (row * m_cols) + col;
   for (int i = 0; i < length; i++) {
     BYTE b = str[i];
     buf[nb++] = b;
@@ -86,14 +93,17 @@ void FutabaVFDDisplay::DeviceDefineCustomCharacter(int index,
 #if 0
   BYTE buf[128];
   int nb = 0;
-  // TODO: Need control code for define custom char (aka set CGRAM address).
-  buf[nb++] = ??;
+  buf[nb++] = 0x03;             // Define Character
+  // TODO: This is any printing byte (0x20 - 0xFF), so need to map them.
   buf[nb++] = index;
   for (int i = 0; i < NCUSTROWS; i++)
     buf[nb++] = cust.GetBits()[i];
   WriteSerial(buf, nb);
 #endif
 }
+
+// TODO: Some models can set the brightness with 0x04:
+// 100% - 0xFF, 60% - 0x60, 40% - 0x40, 20% - 0x20.
 
 extern "C" __declspec(dllexport)
 DisplayDevice *CreateDisplayDevice(HWND parent, LPCSTR name)

@@ -39,7 +39,8 @@ struct DisplayDeviceEntry {
   { "Matrix Orbital VK204-25 (20x4, vfd, keypad)", "MOLCD", "VK204" },
   { "Matrix Orbital VK202-24-USB (20x2, vfd, keypad, USB)", "MOLCD", "VK202U" },
   { "Matrix Orbital VK204-24-USB (20x4, vfd, keypad, USB)", "MOLCD", "VK204U" },
-  { "Futaba VFD (20x4)", "FutabaVFD", NULL },
+  { "Futaba VFD (20x4)", "FutabaVFD", "M204" },
+  { "Futaba VFD (40x2)", "FutabaVFD", "M402" },
   { "HD44780 (parallel)", "PARALCD", NULL }
 };
 
