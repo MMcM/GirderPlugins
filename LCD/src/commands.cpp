@@ -158,14 +158,18 @@ void DisplayString(DisplayCommandState& state)
 void DisplayVariable(DisplayCommandState& state)
 {
   char buf[1024];
-  SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
+  int len = SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
+  if (len < 0)                  // Does not exist, expand like empty string.
+    buf[0] = '\0';
   DisplayCommon(state, buf);
 }
 
 void DisplayFilename(DisplayCommandState& state)
 {
   char buf[1024];
-  SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
+  int len = SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
+  if (len < 0)                  // Does not exist, expand like empty string.
+    buf[0] = '\0';
   PCHAR sp = strrchr(buf, '\\');
   if (NULL != sp)
     sp++;

@@ -2,7 +2,7 @@
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "2.1"
+#define PLUGINVERSION "2.2"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

@@ -143,29 +143,16 @@ void SimulatedLCD::PaintFixed(HDC hDC, int row, int col, LPCSTR str, int length)
       nch++;
     }
     if (nch > 0) {
-      // Next segment is normal characters.  Can trim spaces off the ends.
-      while ((nch > 0) && (' ' == *str)) {
-        col++;
-        str++;
-        length--;
-        nch--;
-      }
+      // Next segment is normal characters.
       RECT rect;
       rect.left = col * m_charWidth;
       rect.top = row * m_lineHeight;
+      rect.right = rect.left + nch * m_charWidth;
       rect.bottom = rect.top + m_lineHeight;
-      LPCSTR seg = str;
+      DrawText(hDC, str, nch, &rect, DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
       col += nch;
       str += nch;
       length -= nch;
-      while ((nch > 0) && (' ' == seg[nch-1])) {
-        nch--;
-      }
-      if (nch > 0) {
-        rect.right = rect.left + nch * m_charWidth;
-        DrawText(hDC, seg, nch, &rect, 
-                 DT_LEFT | DT_SINGLELINE | DT_NOPREFIX);
-      }
     }
     else {
       // A custom character.
