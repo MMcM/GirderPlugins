@@ -44,13 +44,14 @@ const UINT ENTRY_NOT =              0x10000000;
 #define BASE_CODE(n) (n&0xFFFF)
 
 const UINT MATCH_MESSAGE = 1001;
-const UINT MATCH_WPARAM = 1002;
-const UINT MATCH_LPARAM = 1003;
-const UINT MATCH_LPARAM_STR = 1004;
-const UINT MATCH_GETTEXT = 1005;
-const UINT MATCH_CLASS = 1006;
-const UINT MATCH_CLASS_PREFIX = 1007;
-const UINT MATCH_CONTROLID = 1008;
+const UINT MATCH_REGISTERED_MESSAGE = 1002;
+const UINT MATCH_WPARAM = 1003;
+const UINT MATCH_LPARAM = 1004;
+const UINT MATCH_LPARAM_STR = 1005;
+const UINT MATCH_GETTEXT = 1006;
+const UINT MATCH_CLASS = 1007;
+const UINT MATCH_CLASS_PREFIX = 1008;
+const UINT MATCH_CONTROLID = 1009;
 const UINT MATCH_NOTIFY_CODE = 1010;
 const UINT MATCH_NOTIFY_FROM = 1011;
 const UINT MATCH_PATCH = 1020;
@@ -66,6 +67,7 @@ const UINT EXTRACT_WPARAM_POINT = 2007;
 const UINT EXTRACT_CLASS = 2008;
 const UINT EXTRACT_HWND = 2009;
 const UINT EXTRACT_SB_GETTEXT = 2010;
+const UINT EXTRACT_LPARAM_TIME_BCD = 2020;
 const UINT EXTRACT_MEDIA_SPY = 2030;
 
 const HWND HWND_PATCH = (HWND)0xDEADFACE;
@@ -559,6 +561,10 @@ BOOL DoMatch2(const MatchEntry *pEntry,
     }
   }
   switch (BASE_CODE(pEntry->nCode)) {
+  case MATCH_REGISTERED_MESSAGE:
+    if (0 == pEntry->dwVal)
+      ((MatchEntry*)pEntry)->dwVal = RegisterWindowMessage(pEntry->szVal);
+    /* falls through */
   case MATCH_MESSAGE:
     return (nMsg == (UINT)pEntry->dwVal);
   case MATCH_WPARAM:
@@ -700,6 +706,14 @@ void DoExtract1(const MatchEntry *pEntry, LPSTR szBuf, size_t nSize,
       if (!strncmp(szBuf, pEntry->szVal, prefixLen))
         memmove(szBuf, szBuf + prefixLen, strlen(szBuf) - prefixLen + 1);
     }
+    break;
+  case EXTRACT_LPARAM_TIME_BCD:
+    if (lParam & 0xFF000000)
+      sprintf(szBuf, "%d:%02d:%02d", ((lParam >> 24) & 0xFF), 
+              ((lParam >> 16) & 0xFF), ((lParam >> 8) & 0xFF));
+    else
+      sprintf(szBuf, "%02d:%02d", 
+              ((lParam >> 16) & 0xFF), ((lParam >> 8) & 0xFF));
     break;
   case EXTRACT_MEDIA_SPY:
     ExtractMediaSpy((UINT)pEntry->dwVal, szBuf, nSize);
