@@ -11,6 +11,7 @@ DisplayAction DisplayActions[] = {
   { "f", "Filename Variable", valVAR, DisplayFilename },
   { "x", "Close Display", valNONE, DisplayClose },
   { "c", "Clear Display", valNONE, DisplayClear },
+  { "#", "Screen", valSCREEN, DisplayScreen },
 };
 
 #define countof(x) sizeof(x)/sizeof(x[0])
@@ -99,6 +100,19 @@ static void LoadUISettings(HWND hwnd)
     SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, 0);
     EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), FALSE);
     EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
+    ShowWindow(GetDlgItem(hwnd, IDC_SCREENL), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE2), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE3), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE4), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE1), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE2), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE3), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE4), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE2), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE3), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE4), SW_HIDE);
     EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
     return;
   }
@@ -118,43 +132,118 @@ static void LoadUISettings(HWND hwnd)
     }
   }
   
-  if (valINT == action->valueType)
-    SetWindowText(GetDlgItem(hwnd, IDC_VALINT), g_pCommand->svalue1);
-  else
-    SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), g_pCommand->svalue1);
+  if (valSCREEN == action->valueType) {
+    ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALINT), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ROWL), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ROW), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_COL), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_COL), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_COL_SPIN), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_REST), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_WIDTH), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), SW_HIDE);
 
-  char trans[256];
-  SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
-                    trans, sizeof(trans));
-  SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
+    ShowWindow(GetDlgItem(hwnd, IDC_SCREENL), SW_SHOW);
+    char buf[1024];
+    strncpy(buf, g_pCommand->svalue1, sizeof(buf));
+    PCHAR pval = buf;
+    int nrows = lcdGetHeight();
+    if (nrows > 4) nrows = 4;
+    for (int i = 0; i < nrows; i++) {
+      ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), SW_SHOW);
+      ShowWindow(GetDlgItem(hwnd, IDC_LINE1 + i), SW_SHOW);
+      ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), SW_SHOW);
 
-  ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
-             (valNONE != action->valueType) ? SW_SHOW : SW_HIDE);
-  ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
-             ((valSTR == action->valueType) || (valVAR == action->valueType)) ?
-              SW_SHOW : SW_HIDE);
-  ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
-             (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
-  ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
-             (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+      SendMessage(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), BM_SETCHECK, 
+                  !(g_pCommand->ivalue1 & (1 << i)),
+                  0);
+      SendMessage(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), BM_SETCHECK, 
+                  !!(g_pCommand->ivalue2 & (1 << i)),
+                  0);
 
-  SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue1);
+      PCHAR next = strchr(pval, '\n');
+      if (NULL != next) {
+        if ((next > pval) && (*(next-1) == '\r'))
+          *(next-1) = '\0';
+        *next++ = '\0';
+      }
+      else
+        next = pval + strlen(pval);
+      SetWindowText(GetDlgItem(hwnd, IDC_LINE1 + i), pval);
+      pval = next;
+    }
+  }
+  else {
+    ShowWindow(GetDlgItem(hwnd, IDC_SCREENL), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE2), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE3), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE4), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE1), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE2), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE3), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_LINE4), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE2), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE3), SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE4), SW_HIDE);
 
-  BOOL wrap = (g_pCommand->ivalue2 < 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, wrap, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, !wrap, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue2);
-  EnableWindow(GetDlgItem(hwnd, IDC_COL), !wrap);
-  EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), !wrap);
+    ShowWindow(GetDlgItem(hwnd, IDC_ROWL), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_ROW), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_COL), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_COL), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_COL_SPIN), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_REST), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_WIDTH), SW_SHOW);
+    ShowWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), SW_SHOW);
 
-  BOOL rest = (wrap || (g_pCommand->ivalue3 <= 0));
-  EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), !wrap);
-  EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), !wrap);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, rest, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, !rest, 0);
-  SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue3);
-  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !rest);
-  EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !rest);
+    if (valINT == action->valueType)
+      SetWindowText(GetDlgItem(hwnd, IDC_VALINT), g_pCommand->svalue1);
+    else
+      SetWindowText(GetDlgItem(hwnd, IDC_VALSTR), g_pCommand->svalue1);
+
+    char trans[256];
+    SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
+                      trans, sizeof(trans));
+    SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
+
+    ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
+               (valNONE != action->valueType) ? SW_SHOW : SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
+               ((valSTR == action->valueType) || (valVAR == action->valueType)) ?
+               SW_SHOW : SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
+               (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+    ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
+               (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+
+    SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue1);
+
+    BOOL wrap = (g_pCommand->ivalue2 < 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_SETCHECK, wrap, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_COL), BM_SETCHECK, !wrap, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue2);
+    EnableWindow(GetDlgItem(hwnd, IDC_COL), !wrap);
+    EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), !wrap);
+
+    BOOL rest = (wrap || (g_pCommand->ivalue3 <= 0));
+    EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), !wrap);
+    EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), !wrap);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_SETCHECK, rest, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_USE_WIDTH), BM_SETCHECK, !rest, 0);
+    SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_SETPOS, 0, g_pCommand->ivalue3);
+    EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !rest);
+    EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !rest);
+  }
   EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
   
   LeaveCriticalSection(&g_pCommand->critical_section);
@@ -162,7 +251,7 @@ static void LoadUISettings(HWND hwnd)
 
 static BOOL SaveUISettings(HWND hwnd)
 {
-  char buf[256];
+  char buf[1024];
 
   if (g_pCommand == NULL)
      return FALSE;
@@ -177,21 +266,42 @@ static BOOL SaveUISettings(HWND hwnd)
   else
     SF.realloc_pchar(&g_pCommand->svalue2, "?");
 
-  if ((NULL != action) && (valINT == action->valueType))
-    GetWindowText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
-  else
-    GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
-  SF.realloc_pchar(&g_pCommand->svalue1, buf);
+  if (valSCREEN == action->valueType) {
+    PCHAR pval = buf;
+    g_pCommand->ivalue1 = g_pCommand->ivalue2 = 0;
+    int nrows = lcdGetHeight();
+    if (nrows > 4) nrows = 4;
+    for (int i = 0; i < nrows; i++) {
+      if (i > 0)
+        *pval++ = '\n';
 
-  g_pCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_GETPOS, 0, 0);
-  if (SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_GETCHECK, 0, 0))
-    g_pCommand->ivalue2 = -1;
-  else
-    g_pCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_GETPOS, 0, 0);
-  if (SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_GETCHECK, 0, 0))
-    g_pCommand->ivalue3 = -1;
-  else
-    g_pCommand->ivalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
+      if (!SendMessage(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), BM_GETCHECK, 0, 0))
+        g_pCommand->ivalue1 |= (1 << i);
+      if (SendMessage(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), BM_GETCHECK, 0, 0))
+        g_pCommand->ivalue2 |= (1 << i);
+
+      GetWindowText(GetDlgItem(hwnd, IDC_LINE1 + i), pval, sizeof(buf) - (pval - buf));
+      pval += strlen(pval);
+    }
+    SF.realloc_pchar(&g_pCommand->svalue1, buf);
+  }
+  else {
+    if ((NULL != action) && (valINT == action->valueType))
+      GetWindowText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
+    else
+      GetWindowText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
+    SF.realloc_pchar(&g_pCommand->svalue1, buf);
+
+    g_pCommand->ivalue1 = SendMessage(GetDlgItem(hwnd, IDC_ROW_SPIN), UDM_GETPOS, 0, 0);
+    if (SendMessage(GetDlgItem(hwnd, IDC_USE_WRAP), BM_GETCHECK, 0, 0))
+      g_pCommand->ivalue2 = -1;
+    else
+      g_pCommand->ivalue2 = SendMessage(GetDlgItem(hwnd, IDC_COL_SPIN), UDM_GETPOS, 0, 0);
+    if (SendMessage(GetDlgItem(hwnd, IDC_USE_REST), BM_GETCHECK, 0, 0))
+      g_pCommand->ivalue3 = -1;
+    else
+      g_pCommand->ivalue3 = SendMessage(GetDlgItem(hwnd, IDC_WIDTH_SPIN), UDM_GETPOS, 0, 0);
+  }
   
   g_pCommand->actiontype = PLUGINNUM;
   SF.set_command(g_pCommand);
@@ -203,7 +313,7 @@ static BOOL SaveUISettings(HWND hwnd)
   return TRUE;
 }
      
-static BOOL CALLBACK CommandDialogProc(HWND hwnd,  UINT uMsg, 
+static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg, 
                                        WPARAM wParam, LPARAM lParam)
 {
   switch (uMsg) {
@@ -292,19 +402,75 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd,  UINT uMsg,
         DisplayAction *action = (DisplayAction *)
           SendMessage(GetDlgItem(hwnd, IDC_TYPE), CB_GETITEMDATA, idx, 0);
         if (NULL == action) break;
-        char trans[256];
-        SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
-                          trans, sizeof(trans));
-        SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
-        ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
-                   (valNONE != action->valueType) ? SW_SHOW : SW_HIDE);
-        ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
-                   ((valSTR == action->valueType) || (valVAR == action->valueType)) ?
-                   SW_SHOW : SW_HIDE);
-        ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
-                   (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
-        ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
-                   (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+        if (valSCREEN == action->valueType) {
+          ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_VALINT), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ROWL), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ROW), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_COL), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_COL), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_COL_SPIN), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_REST), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_WIDTH), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), SW_HIDE);
+
+          ShowWindow(GetDlgItem(hwnd, IDC_SCREENL), SW_SHOW);
+          int nrows = lcdGetHeight();
+          if (nrows > 4) nrows = 4;
+          for (int i = 0; i < nrows; i++) {
+            ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), SW_SHOW);
+            ShowWindow(GetDlgItem(hwnd, IDC_LINE1 + i), SW_SHOW);
+            ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), SW_SHOW);
+            SendMessage(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), BM_SETCHECK, TRUE, 0);
+            SendMessage(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), BM_SETCHECK, FALSE, 0);
+          }
+        }
+        else {
+          ShowWindow(GetDlgItem(hwnd, IDC_SCREENL), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE2), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE3), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE4), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_LINE1), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_LINE2), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_LINE3), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_LINE4), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE2), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE3), SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE4), SW_HIDE);
+
+          ShowWindow(GetDlgItem(hwnd, IDC_ROWL), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_ROW), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_COL), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_COL), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_COL_SPIN), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_REST), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_WIDTH), SW_SHOW);
+          ShowWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), SW_SHOW);
+
+          char trans[256];
+          SF.i18n_translate((valVAR == action->valueType) ? "Variable:" : "Value:",
+                            trans, sizeof(trans));
+          SetWindowText(GetDlgItem(hwnd, IDC_VALUEL), trans);
+          ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
+                     (valNONE != action->valueType) ? SW_SHOW : SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
+                     ((valSTR == action->valueType) || (valVAR == action->valueType)) ?
+                     SW_SHOW : SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
+                     (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+          ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
+                     (valINT == action->valueType) ? SW_SHOW : SW_HIDE);
+        }
         EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       }
       break;
@@ -341,6 +507,29 @@ static BOOL CALLBACK CommandDialogProc(HWND hwnd,  UINT uMsg,
     case IDC_USE_WIDTH:
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), TRUE);
       EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), TRUE);
+      break;
+
+    case IDC_ENABLE_LINE1:
+    case IDC_ENABLE_LINE2:
+    case IDC_ENABLE_LINE3:
+    case IDC_ENABLE_LINE4:
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
+      break;
+
+    case IDC_MARQUEE_LINE1:
+    case IDC_MARQUEE_LINE2:
+    case IDC_MARQUEE_LINE3:
+    case IDC_MARQUEE_LINE4:
+      {
+        int off = LOWORD(wParam) - IDC_MARQUEE_LINE1;
+        BOOL check = !SendMessage(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + off), 
+                                  BM_GETCHECK, 0, 0);
+        for (int i = 0; i < 4; i++) {
+          SendMessage(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), BM_SETCHECK, 
+                      ((i == off) & check), 0);
+        }
+      }
+      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
       break;
     }
     break;
