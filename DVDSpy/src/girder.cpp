@@ -322,7 +322,7 @@ extern "C" void WINAPI support_device(PCHAR Buffer, BYTE Length)
 
 extern "C" void WINAPI version_device(PCHAR Buffer, BYTE Length)
 {
-  strncpy(Buffer, "1.21", Length);
+  strncpy(Buffer, "1.22", Length);
 }
 
 extern "C" bool WINAPI compare_str(PCHAR Orig,PCHAR Comp)
