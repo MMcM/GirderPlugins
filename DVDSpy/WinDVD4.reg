@@ -1,0 +1,12 @@
+REGEDIT4
+
+[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\WinDVD]
+"Chapter_100_Display_Location"="256,20"
+"Chapter_10_Display_Location"="270,20"
+"Chapter_0_Display_Location"="284,20"
+"Hour_10_Display_Location"="313,20"
+"Hour_0_Display_Location"="327,20"
+"Minute_10_Display_Location"="352,20"
+"Minute_0_Display_Location"="366,20"
+"Second_10_Display_Location"="390,20"
+"Second_0_Display_Location"="404,20"
