@@ -1,0 +1,34 @@
+HKCR
+{
+  NoRemove CLSID
+  {
+    ForceRemove {0A90CDAD-FD32-400d-BFF0-49BB692940D4} = s 'WMPSpy SpyPlugin'
+    {
+      InprocServer32 = s '%MODULE%'
+      {
+        val ThreadingModel = s 'Apartment'
+      }
+    }
+  }
+}
+HKEY_LOCAL_MACHINE
+{
+  NoRemove SOFTWARE
+  {
+    NoRemove Microsoft
+    {
+      NoRemove MediaPlayer
+      {
+        NoRemove UIPlugins
+        {
+          ForceRemove {0A90CDAD-FD32-400d-BFF0-49BB692940D4}
+          {
+            val FriendlyName = s 'Girder DVDSpy'
+            val Description = s 'Send events to Girder via DVDSpy'
+            val Capabilities = d '1073741825'
+          }
+        }
+      }
+    }
+  }
+}
