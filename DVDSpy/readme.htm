@@ -3,51 +3,179 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta http-equiv="Content-Language" content="en-us">
-<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
 <title>DVDSpy plug-in</title>
 </head>
 
 <body>
 
 <h1>Girder plug-in for software DVD players</h1>
-Version 1.13. &nbsp;MMcM 03/02
+Version 1.15. &nbsp;MMcM 03/02
 
-<h3>Use</h3>
+<h3>Files</h3>
+These are the files contained in this archive and what purpose they serve.
+<ul>
 
-This plug-in intercepts various Windows messages that are used by
-WinDVD and PowerDVD to update their own windows with the information
-about the DVD currently being played.  When this information has
-changed, a Girder event is generated.  The associated information is
-placed in Girder registers.<p>
+<li><kbd>readme.htm</kbd><br/>
+This file.<p>
+</li>
 
-It also intercepts calls to Windows text drawing functions as used by
-accessDTV and exposes it similarly.<p>
+<li><kbd>DVDSpy.dll</kbd><br/>
+The Girder plug-in proper.<p>
 
-It wraps DirectX objects used by Zoom Player, TheaterTek, or the newer
-versions of the ATI player and exposes the playing state.  This
-approach can probably be extended trivially to any other DirectShow
-DVD player.<p>
+This file must be placed in the <kbd>Plugins/Hardware/</kbd> folder
+beneath where Girder is installed.<p>
+</li>
 
-It defines an ActiveX control element for use in Windows Media Player
-skins and thereby exposes that player's state when a special skin is
-used.<p>
+<li><kbd>DisplaySpyHook.dll</kbd><br/>
+The Windows hook DLL.<p>
 
-It includes a Winamp general plugin that exposes state changes.<p>
+This file must be placed in the same folder where Girder is installed.<p>
+</li>
+
+<li><kbd>DVDSpy.reg</kbd><br/>
+Registry settings for the plug-in.<p>
+
+Run this file to merge its settings into the Windows registry.  This
+will inform the Learn command of DVDSpy Girder events that are not
+defined within the plug-in itself.<p>
+
+It will also point to the default DVD titles CSV file (see <a
+href="#DVDTitles">below</a>).<p> 
+</li>
+
+<li><kbd>MediaSpy.dll</kbd><br/>
+An ActiveX wrapper for DirectShow objects.<p>
+
+This file is needed for spying on DirectShow-based applications, such
+as Zoom Player, TheaterTek, ShowShifter, and ATI Player.  It should be
+copied to any convenient folder (the Girder installation folder is
+fine) and self-registered by running <kbd>regsvr32 MediaSpy.dll</kbd>.<p>
+</li>
+
+<li><kbd>WMPSpy.dll</kbd><br/>
+A Windows Media Player skins control extension.<p>
+
+This file is needed for spying on Windows Media Player.  It should be
+copied to any convenient folder (the Girder installation folder is
+fine) and self-registered by running <kbd>regsvr32 WMPSpy.dll</kbd>.
+See <a href="#WMPSpy">below</a> for more information.<p>
+</li>
+
+<li><kbd>WMPSpy.wmz</kbd><br/>
+A Windows Media Player skin that sends events to DVDSpy.<p>
+
+This file (or one like it) is needed for spying on Windows Media
+Player.  It should be copied to the Windows Media Player skins folder,
+which is usually <kbd>c:\Program Files\Windows Media
+Player\Skins</kbd>.  See <a href="#WMPSpy">below</a> for more information.<p>
+</li>
+
+<li><kbd>gen_DVDSpy.dll</kbd><br/>
+A Winamp plugin that sends events to DVDSpy.<p>
+
+This file is needed for spying on Winamp.  It should be copied to the
+Winamp plugins folder, which is usually <kbd>C:\Program
+Files\Winamp\Plugins</kbd>.  See <a href="#Winamp">below</a> for more
+information.<p> 
+</li>
+
+<li><kbd>ROTEnable.reg</kbd><br/>
+A registry setting which will allow the DirectX GraphEdit tool to
+Connect to any application's filter graph.<p>
+
+This file is not needed for normal Girder operation.<p>
+</li>
+
+<li><kbd>event-changes.txt</kbd><br/>
+An outline of the changes to the event naming convention over various
+releases of this plug-in.<p>
+
+This file is only needed for converting old Girder scripts to a newer
+version of the plug-in.<p>
+</li>
+
+<li><kbd>DVDTitles.csv</kbd><br/>
+A sample DVD titles CSV file.<p>
+
+This file is the database of DVD titles returned by the disc insert
+event.  See <a href="#DVDTitles">below</a> for more information.<p>
+</li>
+
+<li><kbd>DVD2LCD.GML</kbd><br/>
+A sample Girder script.<p>
+
+This file shows how to use the DVDSpy plug-in with the LCD plug-in to
+display player status on a 4x20 display.<p>
+</li>
+
+</ul>
+
+<h3>Getting Started</h3>
+
+If you have an LCD or VFD display and the LCD plug-in is installed and
+working, you can try to display events from player applications using
+the included same script.<p>
+
+Otherwise, here is a step-by-step procedure for use with an on-screen display.<p>
+
+<ul>
+
+<li>Copy the DVDSpy files that you see need from the list above.
+
+<li>Download and install the pop-up OSD plug-in if you have not already done so.
+
+<li>Launch Girder.
+
+<li>From the File>Settings... dialog, enable DVDSpy under Hardware
+Plugins and OSD PopUp under Action Plugins.
+
+<li>Add a new command with Edit>Add Command.
+
+<li>Assign a DVDSpy event to this command.
+<ul>
+<li>Do File>Enable Input Devices.
+<li>Select DVDSpy from the combo-box to the left of Learn Event.
+<li>Click Learn Event.
+<li>From the DVDSpy learn list, select an event for a player
+application that is installed and working.  Elapsed time events are a
+good choice.  See <a href="#Events">below</a> for a list of DVDSpy events.
+<li>Click Learn and then Close.
+<li>The event that you chose should appear in the "LED" display.
+</ul>
+
+<li>Assign an OSD PopUp action to this command.
+<ul>
+<li>Select the Plugins tab from the actions at the bottom of the screen.
+<li>Select OSD PopUp from the list beneath that tab.
+<li>Click Settings to display the OSD PopUp action settings for the command.
+<li>Replace <kbd>Place text here</kbd> with <kbd>[pl1]</kbd>.
+<li>Click OK.
+</ul>
+
+<li>Launch the chosen player application and start it playing
+something.  You should see a pop-up display when the state changes.
+If you chose an elapsed time event, this will be every second.
+
+<li>If you do not see anything, you can install the Logger action
+plugin to see each event.  If you do not see any DVDSpy events, then
+double check the installation of the plug-in and its support files.
+If you do see events, then double check the OSD PopUp settings.
+</ul>
+
+<h3>Events</h3>
+<a name="Events"/>
 
 <table border="yes">
 <tr><th>Code</th>
 <th>Meaning</th>
-<th>Register</th>
-<th>Integer</th>
-<th>String</th>
+<th>Payload String 1</th>
+<th>Payload String 2</th>
 </tr>
 
-<tr><td>Disc.Insert.<i>X</i>.9</td>
+<tr><td>Disc.Insert.<i>X</i></td>
 <td>A new DVD was inserted into drive <i>X:</i></td>
-<td align="right">9</td>
+<td>The volume name or disc title (see <a href="#DVDTitles">below</a>)</td>
 <td>The volume serial number</td>
-<td>The volume name or disc title (see below)</td>
 </tr>
 
 <tr><td>Disc.Eject.<i>X</i></td>
@@ -56,31 +184,23 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>WinDVD.1</td>
+<tr><td>WinDVD.Chapter</td>
 <td>Chapter changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>WinDVD.2</td>
+<tr><td>WinDVD.Time</td>
 <td>Elapsed time changed</td>
-<td align="right">2</td>
-<td></td>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>WinDVD.3</td>
+<tr><td>WinDVD.Video</td>
 <td>Video mode changed</td>
-<td align="right">3</td>
-<td></td>
 <td>New mode (e.g. MPEG)</td>
 </tr>
 
-<tr><td>WinDVD.5</td>
+<tr><td>WinDVD.Audio</td>
 <td>Audio mode changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New mode (e.g. BOTH)</td>
 </tr>
 
@@ -90,26 +210,20 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>PowerDVD.Time.5</td>
+<tr><td>PowerDVD.Time</td>
 <td>Elapsed time changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>PowerDVD.Title.7</td>
+<tr><td>PowerDVD.Title</td>
 <td>Title of video window changed</td>
-<td align="right">6</td>
-<td></td>
 <td>New title (file name if playing file instead of disc)</td>
 </tr>
 
 <tr></tr>
 
-<tr><td>accessDTV.ChanText.1</td>
+<tr><td>accessDTV.ChanText</td>
 <td>The channel description changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New description (NNN.n XXXX_XX)</td>
 </tr>
 
@@ -117,10 +231,8 @@ It includes a Winamp general plugin that exposes state changes.<p>
 <td>The channel description was not present</td>
 </tr>
 
-<tr><td>accessDTV.Channel.2</td>
+<tr><td>accessDTV.Channel</td>
 <td>The big channel digits changed</td>
-<td align="right">2</td>
-<td></td>
 <td>New digits (NN.n)</td>
 </tr>
 
@@ -130,66 +242,48 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>ZoomPlayer.DVD.1</td>
+<tr><td>ZoomPlayer.DVD.Domain</td>
 <td>Domain changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.2</td>
+<tr><td>ZoomPlayer.DVD.Title</td>
 <td>Title changed</td>
-<td align="right">2</td>
-<td></td>
 <td>New title (NN)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.3</td>
+<tr><td>ZoomPlayer.DVD.Chapter</td>
 <td>Chapter changed</td>
-<td align="right">3</td>
-<td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.4</td>
+<tr><td>ZoomPlayer.DVD.Total</td>
 <td>Total changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.DVD.5</td>
+<tr><td>ZoomPlayer.DVD.Time</td>
 <td>Location changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.4</td>
+<tr><td>ZoomPlayer.Media.Duration</td>
 <td>Duration changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.5</td>
+<tr><td>ZoomPlayer.Media.Position</td>
 <td>Position changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ZoomPlayer.Media.6</td>
+<tr><td>ZoomPlayer.Media.File</td>
 <td>Source changed</td>
-<td align="right">6</td>
-<td></td>
 <td>New source file name</td>
 </tr>
 
-<tr><td>ZoomPlayer.OSD.7</td>
+<tr><td>ZoomPlayer.OSD</td>
 <td>OSD caption changed</td>
-<td align="right">7</td>
-<td></td>
 <td>New OSD message (Play, Pause, ...)</td>
 </tr>
 
@@ -199,38 +293,28 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>TheaterTek.1</td>
+<tr><td>TheaterTek.Domain</td>
 <td>Domain changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>TheaterTek.2</td>
+<tr><td>TheaterTek.Title</td>
 <td>Title changed</td>
-<td align="right">2</td>
-<td></td>
 <td>New title (NN)</td>
 </tr>
 
-<tr><td>TheaterTek.3</td>
+<tr><td>TheaterTek.Chapter</td>
 <td>Chapter changed</td>
-<td align="right">3</td>
-<td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>TheaterTek.4</td>
+<tr><td>TheaterTek.Total</td>
 <td>Total changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>TheaterTek.5</td>
+<tr><td>TheaterTek.Time</td>
 <td>Location changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
@@ -240,59 +324,43 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>ATI.DVD.1</td>
+<tr><td>ATI.DVD.Domain</td>
 <td>Domain changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New domain (PLAY,MENU,DVD,STOP)</td>
 </tr>
 
-<tr><td>ATI.DVD.2</td>
+<tr><td>ATI.DVD.Title</td>
 <td>Title changed</td>
-<td align="right">2</td>
-<td></td>
 <td>New title (NN)</td>
 </tr>
 
-<tr><td>ATI.DVD.3</td>
+<tr><td>ATI.DVD.Chapter</td>
 <td>Chapter changed</td>
-<td align="right">3</td>
-<td></td>
 <td>New chapter (NN)</td>
 </tr>
 
-<tr><td>ATI.DVD.4</td>
+<tr><td>ATI.DVD.Total</td>
 <td>Total changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.DVD.5</td>
+<tr><td>ATI.DVD.Time</td>
 <td>Location changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New elapsed time (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.MMC.4</td>
+<tr><td>ATI.MMC.Duration</td>
 <td>Duration changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.MMC.5</td>
+<tr><td>ATI.MMC.Position</td>
 <td>Position changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ATI.MMC.6</td>
+<tr><td>ATI.MMC.File</td>
 <td>Source changed</td>
-<td align="right">6</td>
-<td></td>
 <td>New source file name</td>
 </tr>
 
@@ -302,38 +370,28 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>WMP.Status.1</td>
+<tr><td>WMP.Status</td>
 <td>Media player status changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New player status</td>
 </tr>
 
-<tr><td>WMP.Duration.4</td>
+<tr><td>WMP.Duration</td>
 <td>Media duration changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total time (MM:SS)</td>
 </tr>
 
-<tr><td>WMP.Position.5</td>
+<tr><td>WMP.Position</td>
 <td>Media player position changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New elapsed time (MM:SS)</td>
 </tr>
 
-<tr><td>WMP.URL.6</td>
+<tr><td>WMP.URL</td>
 <td>Media source changed</td>
-<td align="right">6</td>
-<td></td>
 <td>New current media URL</td>
 </tr>
 
-<tr><td>WMP.Title.7</td>
+<tr><td>WMP.Title</td>
 <td>Media name changed</td>
-<td align="right">7</td>
-<td></td>
 <td>New current media name</td>
 </tr>
 
@@ -343,52 +401,38 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>Winamp.Status.1</td>
+<tr><td>Winamp.Status</td>
 <td>Status changed</td>
-<td align="right">1</td>
-<td></td>
 <td>New status (STOP, PLAY, PAUSE)</td>
 </tr>
 
-<tr><td>Winamp.Length.2</td>
+<tr><td>Winamp.Length</td>
 <td>Playlist length changed</td>
-<td align="right">2</td>
-<td></td>
 <td>New playlist length</td>
 </tr>
 
-<tr><td>Winamp.Position.3</td>
+<tr><td>Winamp.Position</td>
 <td>Playlist position changed</td>
-<td align="right">3</td>
-<td></td>
 <td>New playlist position (1-based)</td>
 </tr>
 
-<tr><td>Winamp.Total.4</td>
+<tr><td>Winamp.Total</td>
 <td>Total time changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total time (MM:SS)</td>
 </tr>
 
-<tr><td>Winamp.Elasped.5</td>
+<tr><td>Winamp.Elasped</td>
 <td>Time position changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New elapsed time (MM:SS)</td>
 </tr>
 
-<tr><td>Winamp.File.6</td>
+<tr><td>Winamp.File</td>
 <td>Track file changed</td>
-<td align="right">6</td>
-<td></td>
 <td>New current filename</td>
 </tr>
 
-<tr><td>Winamp.Title.7</td>
+<tr><td>Winamp.Title</td>
 <td>Track title changed</td>
-<td align="right">7</td>
-<td></td>
 <td>New current title</td>
 </tr>
 
@@ -398,53 +442,66 @@ It includes a Winamp general plugin that exposes state changes.<p>
 
 <tr></tr>
 
-<tr><td>ShowShifter.4</td>
+<tr><td>ShowShifter.Duration</td>
 <td>Duration changed</td>
-<td align="right">4</td>
-<td></td>
 <td>New total duration (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ShowShifter.5</td>
+<tr><td>ShowShifter.Position</td>
 <td>Position changed</td>
-<td align="right">5</td>
-<td></td>
 <td>New current position (HH:MM:SS)</td>
 </tr>
 
-<tr><td>ShowShifter.6</td>
+<tr><td>ShowShifter.File</td>
 <td>Source changed</td>
-<td align="right">6</td>
-<td></td>
 <td>New source file name</td>
 </tr>
 
 </table><p>
 
-In order for the DirectX wrappers to work, the MEDIASPY.DLL library
-must be registered using <kbd>regsvr32</kbd>.  This may impact
-programs even when Girder is not running.  Unregistering it should
-return things to normal.<p>
+<h3>Details</h3>
+To completely understand how the various spy techniques used by this
+plug-in work, look at the C++ source, which can be downloaded from the
+Developers area.<p>
 
-In order for the Windows Media Player interface to work, the
-WMPSPY.DLL library must be registered in the same way.  It defines a
-new control element type, <code>WMPSpy</code>, for use in skin
-definition (WMS) files.  This control has two properties,
-<code>event</code> for the Girder event name, and <code>value</code>
-the other for the associated value.  The control will normally not be
-visible and will normally use a <code>wmpprop:</code> listening
-attribute.  The sample WMPSpy.wmz skin package (really a ZIP file)
-shows how to do this; it is based on Microsoft's <kbd>Classic</kbd>
-skin.  It can be placed in the <kbd>c:\Program Files\Windows Media
-Player\Skins</kbd> directory and then used with
-<kbd>?WMPSkin=WMPSpy</kbd> in URLs for content to be displayed using
-it.  This skin also makes the player full screen when playing, since
-Girder is presumably used to control it directly and to display its
-status someplace else.  More information on WMP skins is available in
-the Windows Media Player SDK.<p>
+This plug-in intercepts various Windows messages that are used by
+WinDVD and PowerDVD to update their own windows with the information
+about the DVD currently being played.  When this information has
+changed, a Girder event is generated.  The associated information is
+placed in Girder text registers.<p>
 
-In order for the Winamp plugin to be accessible, the file
-<kbd>gen_DVDSpy.dll</kbd> needs to be copied into the
+It also intercepts calls to Windows text drawing functions as used by
+accessDTV and exposes it similarly.<p>
+
+It wraps DirectX objects used by Zoom Player, TheaterTek, or the newer
+versions of the ATI player and exposes the playing state.  This
+approach can probably be extended trivially to any other DirectShow
+DVD player.  The MEDIASPY.DLL library must be registered using
+<kbd>regsvr32</kbd>.  This may impact programs even when Girder is not
+running.  Unregistering it should return things to normal.<p>
+
+<a name="WMPSpy"/>
+It defines an ActiveX control element for use in Windows Media Player
+skins and thereby exposes that player's state when a special skin is
+used.  The WMPSPY.DLL library must be registered using
+<kbd>regsvr32</kbd>.  It defines a new control element type,
+<code>WMPSpy</code>, for use in skin definition (WMS) files.  This
+control has two properties, <code>event</code> for the Girder event
+name, and <code>value</code> the other for the associated value.  The
+control will normally not be visible and will normally use a
+<code>wmpprop:</code> listening attribute.  The sample WMPSpy.wmz skin
+package (really a ZIP file) shows how to do this; it is based on
+Microsoft's <kbd>Classic</kbd> skin.  It can be placed in the
+<kbd>c:\Program Files\Windows Media Player\Skins</kbd> directory and
+then used with <kbd>?WMPSkin=WMPSpy</kbd> in URLs for content to be
+displayed using it.  This skin also makes the player full screen when
+playing, since Girder is presumably used to control it directly and to
+display its status someplace else.  More information on WMP skins is
+available in the Windows Media Player SDK.<p>
+
+<a name="Winamp"/>
+It includes a Winamp general plugin that exposes state changes.  The
+file <kbd>gen_DVDSpy.dll</kbd> needs to be copied into the
 <kbd>Plugins</kbd> subdirectory of the Winamp installation directory,
 which is usually <kbd>C:\Program Files\Winamp</kbd>.  Once installed,
 the plugin can be configured from inside Winamp to set the interval
@@ -457,6 +514,7 @@ means other than the hook.  This is needed for Learn mode to work
 properly from inside Girder.  The file <kbd>DVDSpy.reg</kbd> installs
 the events included in this package.<p>
 
+<a name="DVDTitles"/>
 The registry key
 <kbd>HKEY_CURRENT_USER\Software\Girder3\HardPlugins\DVDSpy</kbd> can
 contain a string value <kbd>DVDTitles</kbd> giving the name of a
