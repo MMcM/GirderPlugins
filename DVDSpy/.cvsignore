@@ -1,5 +1,6 @@
 Release
 Debug
+Trace
 *.plg
 *.opt
 *.ncb

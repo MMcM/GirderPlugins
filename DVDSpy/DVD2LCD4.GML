@@ -7137,4 +7137,238 @@ PlayerTitleNo = flds[3]
       <EventString Name="Foobar.Close" Identifier="554" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Close"/>
     </Command>
   </Group>
+  <Group Name="MyHD Display" Identifier="555" Enabled="FALSE">
+    <Comments>MyHD channel state</Comments>
+    <MultiGroup Name="Raw channel" Identifier="556" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="MyHD.CPChannel" Identifier="557" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.CPChannel"/>
+      <Command Name="Open" Identifier="558" Enabled="TRUE">
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>4</ActionType>
+        <ActionSubType>10</ActionSubType>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+        <lValue1>25</lValue1>
+      </Command>
+      <Command Name="Chan (4 line)" Identifier="559" Enabled="TRUE">
+        <Comments>*4L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>1</iValue1>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Clear Text (4 line)" Identifier="560" Enabled="TRUE">
+        <Comments>*4L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>s</sValue2>
+        <iValue1>2</iValue1>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Chan (2 line)" Identifier="561" Enabled="FALSE">
+        <Comments>*2L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue3>6</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="Clear Text (2 line)" Identifier="562" Enabled="FALSE">
+        <Comments>*2L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue2>s</sValue2>
+        <iValue2>7</iValue2>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+    </MultiGroup>
+    <MultiGroup Name="Channel" Identifier="563" Enabled="TRUE">
+      <StateInvert>FALSE</StateInvert>
+      <EventString Name="MyHD.Channel" Identifier="564" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Channel"/>
+      <EventString Name="MyHD.File" Identifier="565" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.File"/>
+      <Command Name="4 line" Identifier="566" Enabled="TRUE">
+        <Comments>*4L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue1>2</iValue1>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+      <Command Name="2 line" Identifier="567" Enabled="FALSE">
+        <Comments>*2L*</Comments>
+        <StateCount>1</StateCount>
+        <StateBegin>1</StateBegin>
+        <StateCurrent>1</StateCurrent>
+        <StateInvert>FALSE</StateInvert>
+        <OSD>FALSE</OSD>
+        <Submatch>FALSE</Submatch>
+        <Topmost>TRUE</Topmost>
+        <OneMatch>FALSE</OneMatch>
+        <UseVar>FALSE</UseVar>
+        <MatchHidden>FALSE</MatchHidden>
+        <MatchNum>1</MatchNum>
+        <ActionType>118</ActionType>
+        <ActionSubType>1</ActionSubType>
+        <sValue1>pld1</sValue1>
+        <sValue2>v</sValue2>
+        <iValue2>7</iValue2>
+        <iValue3>-1</iValue3>
+        <bValue1>FALSE</bValue1>
+        <bValue2>FALSE</bValue2>
+        <bValue3>FALSE</bValue3>
+      </Command>
+    </MultiGroup>
+    <Command Name="Elapsed" Identifier="568" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>69</lValue1>
+      <EventString Name="MyHD.Elapsed" Identifier="569" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Elapsed"/>
+    </Command>
+    <Command Name="Shift" Identifier="570" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>1</iValue1>
+      <iValue2>1</iValue2>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>70</lValue1>
+      <EventString Name="MyHD.Shift" Identifier="571" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Shift"/>
+    </Command>
+    <Command Name="Close" Identifier="572" Enabled="TRUE">
+      <StateCount>1</StateCount>
+      <StateBegin>1</StateBegin>
+      <StateCurrent>1</StateCurrent>
+      <StateInvert>FALSE</StateInvert>
+      <OSD>FALSE</OSD>
+      <Submatch>FALSE</Submatch>
+      <Topmost>TRUE</Topmost>
+      <OneMatch>FALSE</OneMatch>
+      <UseVar>FALSE</UseVar>
+      <MatchHidden>FALSE</MatchHidden>
+      <MatchNum>1</MatchNum>
+      <ActionType>4</ActionType>
+      <ActionSubType>10</ActionSubType>
+      <iValue1>4</iValue1>
+      <bValue1>FALSE</bValue1>
+      <bValue2>FALSE</bValue2>
+      <bValue3>FALSE</bValue3>
+      <lValue1>26</lValue1>
+      <EventString Name="MyHD.Close" Identifier="573" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Close"/>
+    </Command>
+  </Group>
 </Girder>

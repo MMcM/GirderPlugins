@@ -5,6 +5,10 @@ $Header$
 #include "stdafx.h"
 #include "plugin.h"
 
+#ifdef _DEBUG
+#define _TRACE
+#endif
+
 HANDLE g_hMonitorThread = NULL;
 DWORD g_dwMonitorThreadId = 0;
 HWND g_hMonitorWindow = NULL;
@@ -12,7 +16,7 @@ BOOL g_bRunning = FALSE, g_bStartHook = TRUE, g_bOleInited = FALSE;
 
 void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
 {
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char dbuf[1024];
     sprintf(dbuf, "Girder event: '%s' pld='%s'.\n", event, payload);
@@ -75,7 +79,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
 {
   switch (uMsg) {
   case WM_CREATE:  
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char dbuf[1024];
     sprintf(dbuf, "DVDSpy monitor window started.\n");
@@ -84,7 +88,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
 #endif
     break;	
   case WM_DESTROY: 
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char dbuf[1024];
     sprintf(dbuf, "DVDSpy monitor window ended.\n");
@@ -127,7 +131,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
     break;
   case WM_DEVICECHANGE:
     {
-#ifdef _DEBUG
+#ifdef _TRACE
       {
         char dbuf[1024];
         sprintf(dbuf, "WM_DEVICECHANGE received: wParam=%X.\n", wParam);
@@ -137,7 +141,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
       if ((DBT_DEVICEARRIVAL != wParam) && (DBT_DEVICEREMOVECOMPLETE != wParam))
         break;
       PDEV_BROADCAST_HDR lpdb = (PDEV_BROADCAST_HDR)lParam;
-#ifdef _DEBUG
+#ifdef _TRACE
       {
         char dbuf[1024];
         sprintf(dbuf, "PDEV_BROADCAST_HDR.dbch_devicetype=%X.\n", lpdb->dbch_devicetype);
@@ -147,7 +151,7 @@ LRESULT CALLBACK MonitorWindow(HWND hwnd,  UINT uMsg,
       if (lpdb->dbch_devicetype != DBT_DEVTYP_VOLUME)
         break;
       PDEV_BROADCAST_VOLUME lpdbv = (PDEV_BROADCAST_VOLUME)lpdb;
-#ifdef _DEBUG
+#ifdef _TRACE
       {
         char dbuf[1024];
         sprintf(dbuf, "PDEV_BROADCAST_VOLUME.dbcv_flags=%X  .dbcv_unitmask=%X.\n", lpdbv->dbcv_flags, lpdbv->dbcv_unitmask);

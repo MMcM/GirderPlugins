@@ -19,6 +19,7 @@ CFG=DVDSpy - Win32 Release
 !MESSAGE 
 !MESSAGE "DVDSpy - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE "DVDSpy - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "DVDSpy - Win32 Trace" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -81,12 +82,40 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 kernel32.lib winspool.lib comdlg32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib advapi32.lib user32.lib gdi32.lib strmiids.lib DisplaySpyHook.lib /nologo /dll /debug /machine:I386 /out:"../DVDSpy.dll" /pdbtype:sept /libpath:"Debug"
 
+!ELSEIF  "$(CFG)" == "DVDSpy - Win32 Trace"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "DVDSpy___Win32_Trace"
+# PROP BASE Intermediate_Dir "DVDSpy___Win32_Trace"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "Trace"
+# PROP Intermediate_Dir "Trace"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /Gz /MD /W3 /GX /O2 /I "..\..\include" /I "Hook" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /Yu"stdafx.h" /FD /c
+# ADD CPP /nologo /Gz /MD /W3 /GX /O2 /I "..\..\include" /I "Hook" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "DVDSpy_EXPORTS" /D "_TRACE" /Yu"stdafx.h" /FD /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 advapi32.lib user32.lib gdi32.lib ole32.lib oleaut32.lib uuid.lib strmiids.lib DisplaySpyHook.lib /nologo /dll /machine:I386 /out:"../DVDSpy.dll" /libpath:"Release"
+# ADD LINK32 advapi32.lib user32.lib gdi32.lib ole32.lib oleaut32.lib uuid.lib strmiids.lib DisplaySpyHook.lib /nologo /dll /machine:I386 /out:"../DVDSpy.dll" /libpath:"Trace"
+
 !ENDIF 
 
 # Begin Target
 
 # Name "DVDSpy - Win32 Release"
 # Name "DVDSpy - Win32 Debug"
+# Name "DVDSpy - Win32 Trace"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

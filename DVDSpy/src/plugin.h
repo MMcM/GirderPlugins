@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.64"
+#define PLUGINVERSION "1.65"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

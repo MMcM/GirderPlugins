@@ -5,6 +5,10 @@ $Header$
 #include "stdafx.h"
 #include "plugin.h"
 
+#ifdef _DEBUG
+#define _TRACE
+#endif
+
 struct DVD_INFO_STRUCT {
   char szDiskName[16];
   char szCurrentTime[8];
@@ -42,7 +46,7 @@ LRESULT CALLBACK EugenesWindow(HWND hwnd,  UINT uMsg,
 {
   switch (uMsg) {
   case WM_CREATE:  
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char dbuf[1024];
     sprintf(dbuf, "DVDSpy Eugene's window started.\n");
@@ -51,7 +55,7 @@ LRESULT CALLBACK EugenesWindow(HWND hwnd,  UINT uMsg,
 #endif
     break;	
   case WM_DESTROY: 
-#ifdef _DEBUG
+#ifdef _TRACE
   {
     char dbuf[1024];
     sprintf(dbuf, "DVDSpy Eugene's window ended.\n");
