@@ -2,7 +2,7 @@
 
 #define PLUGINNUM 49
 #define PLUGINNAME "Winamp3"
-#define PLUGINVERSION "1.1"
+#define PLUGINVERSION "1.2"
 
 extern HINSTANCE g_hInstance;
 extern s_functions SF;

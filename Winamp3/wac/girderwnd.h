@@ -63,6 +63,7 @@ protected:
   void sendPos(IPC_OPCODE op, const char *logop);
   void sendPos(IPC_OPCODE op, const char *logop, int pos, int len);
   Playlist *getPlaylist();
+  void nextPlaylist(int delta);
 
   BOOL logging();
   void log(const char *dir, const char *command, const char *data);
