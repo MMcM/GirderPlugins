@@ -30,8 +30,8 @@ $Header$
 #ifndef _GIRDERLOGWND_H
 #define _GIRDERLOGWND_H
 
-#include <common/listwnd.h>
-#include <studio/corecb.h>
+#include <bfc/wnds/listwnd.h>
+#include <core/corecb.h>
 #include <bfc/wnds/buttwnd.h>
 #include <common/nsGUID.h>
 

@@ -45,6 +45,7 @@ $Header$
 #include <pledit/svc_pldir.h>
 #include <pledit/playlist.h>
 #include <pledit/editor.h>
+#include <common/metatags.h>
 
 #if 0
 static void dumpCfgItem(CfgItem *cfg, int depth)

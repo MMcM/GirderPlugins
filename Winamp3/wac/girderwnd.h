@@ -30,11 +30,11 @@ $Header$
 #ifndef _GIRDERWND_H
 #define _GIRDERWND_H
 
-#include <common/basewnd.h>
-#include <studio/corecb.h>
+#include <bfc/basewnd.h>
+#include <core/corecb.h>
 #include <bfc/wnds/buttwnd.h>
 #include <common/nsGUID.h>
-#include <common/corehandle.h>
+#include <core/corehandle.h>
 
 class svc_plDir;
 class Playlist;

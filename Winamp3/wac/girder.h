@@ -31,9 +31,9 @@ $Header$
 #define _GIRDER_H
 
 #include <studio/wac.h>
-#include <attribs/attrbool.h>
-#include <attribs/attrint.h>
-#include <attribs/attrstr.h>
+#include <bfc/attribs/attrbool.h>
+#include <bfc/attribs/attrint.h>
+#include <bfc/attribs/attrstr.h>
 
 class GirderWnd;
 

@@ -31,7 +31,7 @@ $Header$
 // Only shows events that take place while it is open.
 
 #include <bfc/std.h>
-#include <common/corehandle.h>
+#include <core/corehandle.h>
 
 #include "girder.h"
 #include "girderlogwnd.h"
