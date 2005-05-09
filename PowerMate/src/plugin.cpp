@@ -6,7 +6,7 @@ $Header$
 #include "plugin.h"
 
 HINSTANCE g_hInstance;
-s_functions SF;
+sFunctions3 SF;
 
 extern "C" void WINAPI
 gir_version(PCHAR buffer, BYTE length)
@@ -35,29 +35,26 @@ gir_devicenum()
 extern "C" int WINAPI
 gir_requested_api(int maxapi)
 {
-  return 1;
+  return 3;
 }
 
 extern "C" int WINAPI
-gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
+gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, pFunctions3 p)
 {
   if (p->size != sizeof(SF)) {
     return GIR_FALSE;
   }
   memcpy(&SF, p, p->size);
+  if (!DUIOpen())
+    return GIR_FALSE;
   return GIR_TRUE;
 }
 
 extern "C" int WINAPI
 gir_close()
 {
-  CloseCommandUI();
+  DUIClose();
   return GIR_TRUE;
-}
-
-extern "C" void WINAPI
-gir_config()
-{
 }
 
 extern "C" int WINAPI
@@ -79,27 +76,24 @@ gir_compare(PCHAR orig, PCHAR recv)
   return strcmp(orig, recv);
 }
 
-#if 0
 extern "C" int WINAPI
-gir_learn_event(char *oldevent, char *newevent, int len)
+gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event, 
+          char * status,  int statuslen)
 {
-  return GIR_FALSE;
-}
-#endif
+  PCommand command;
 
-extern "C" int WINAPI
-gir_event(p_command command, 
-          char *eventString, void *payload, int len,
-          char *status, int statuslen)
-{
-  switch (command->actionsubtype) {
+  EnterCriticalSection(cs);
+
+  command = (PCommand)node->Data;
+
+  switch (command->ActionSubType) {
   case ACTION_REPEAT:
     {
-      char buf[32];
-      SF.get_string_var("pld1", buf, sizeof(buf));
+      PCHAR buf = ParseString("[pld1]");
       int n = strtol(buf, NULL, 10);
+      SafeFree(buf);
       while (n-- > 0) {
-        int ret = SF.trigger_command(command->lvalue1);
+        int ret = TriggerNodeEx(command->Action.lValue1, &command->Action.FileGUID1);
         if (retContinue != ret) return ret;
       }
     }
@@ -107,10 +101,10 @@ gir_event(p_command command,
 
   case ACTION_REQUEST:
     {
-      char buf[32];
-      SF.parse_reg_string(command->svalue1, buf, sizeof(buf));
+      PCHAR buf = ParseString(command->Action.sValue1);
       USHORT nVal = (USHORT)strtoul(buf, NULL, 0);
-      if (DeviceRequest((RequestType_t)command->ivalue1, nVal))
+      SafeFree(buf);
+      if (DeviceRequest((RequestType_t)strtol(command->Action.iValue1, NULL, 10), nVal))
         strncpy(status, "Request completed", statuslen);
       else
         strncpy(status, "Request failed", statuslen);
@@ -121,18 +115,8 @@ gir_event(p_command command,
     strncpy(status, "Unknown command subtype", statuslen);
     return retStopProcessing;
   }
-}
 
-extern "C" void WINAPI
-gir_command_gui()
-{
-  OpenCommandUI();
-}
-
-extern "C" void WINAPI
-gir_command_changed(p_command command)
-{
-  UpdateCommandUI(command);
+  LeaveCriticalSection(cs);
 }
 
 #if 0
@@ -142,6 +126,30 @@ gir_info(int message, int wparam, int lparam)
   return GIR_TRUE;
 }
 #endif
+
+extern "C" void * WINAPI
+gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+               int val1, int val2, void *userdata)
+{
+  switch (val1) {
+  case duOnHookConfig:		
+    DUIOpenConfig(tree);
+    break;
+
+  case duOnUnHookConfig:
+    DUICloseConfig(tree);
+    break;
+
+  case duOnHookCommand:
+    DUIOpenCommand(tree);
+    break;
+
+  case duOnUnHookCommand:
+    DUICloseCommand(tree);
+    break;
+  }
+  return NULL;
+}
 
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)

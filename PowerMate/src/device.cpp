@@ -243,7 +243,7 @@ DWORD WINAPI DeviceThread(LPVOID lpParam)
       payload = buf;
       pllen = strlen(payload) + 1; // Including both count and null bytes.
     }
-    SF.send_event(event, payload, pllen, PLUGINNUM);
+    SendEventEx(event, payload, pllen, PLUGINNUM, EVENT_MOD_NONE);
   }
 
   g_hEvent = NULL;

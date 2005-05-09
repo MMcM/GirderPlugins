@@ -318,7 +318,7 @@ $Header$
       <ActionSubType>34</ActionSubType>
       <sValue1>if bright == nil then bright = 128 end
 bright = bright + tonumber(pld1)
-result = bright &#60; 256
+return (bright &#60; 256)
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -342,7 +342,7 @@ result = bright &#60; 256
       <ActionSubType>34</ActionSubType>
       <sValue1>if bright == nil then bright = 128 end
 bright = bright - tonumber(pld1)
-result = bright &#62; 0
+return (bright &#62; 0)
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -386,7 +386,7 @@ result = bright &#62; 0
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>deltavol = tonumber(pld1) * 1000
-result = 1
+return true
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -409,7 +409,7 @@ result = 1
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>deltavol = tonumber(pld1) * -1000
-result = 1
+return true
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>

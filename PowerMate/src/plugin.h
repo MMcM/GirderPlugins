@@ -4,10 +4,10 @@ $Header$
 
 #define PLUGINNUM 44
 #define PLUGINNAME "PowerMate"
-#define PLUGINVERSION "2.0"
+#define PLUGINVERSION "3.0"
 
 extern HINSTANCE g_hInstance;
-extern s_functions SF;
+extern sFunctions3 SF;
 
 enum ActionType_t { ACTION_REQUEST = 1, ACTION_REPEAT };
 enum RequestType_t { LED_BRIGHTNESS, 
@@ -17,6 +17,9 @@ extern BOOL DeviceStart();
 extern BOOL DeviceStop();
 extern BOOL DeviceRequest(RequestType_t nReq, USHORT nVal);
 
-extern void OpenCommandUI();
-extern void CloseCommandUI();
-extern void UpdateCommandUI(p_command command);
+extern BOOL DUIOpen();
+extern void DUIClose();
+extern void DUIOpenConfig(PFTree tree);
+extern void DUICloseConfig(PFTree tree);
+extern void DUIOpenCommand(PFTree tree);
+extern void DUICloseCommand(PFTree tree);

@@ -1,3 +1,4 @@
+3.0     05/08/2005      MMcM    Girder 4.
 
 2.0     04/29/2004      MMcM    Optionally use HID mode.
 
