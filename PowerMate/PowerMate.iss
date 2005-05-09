@@ -12,7 +12,7 @@ DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugi
 DirExistsWarning=no 
 ;LicenseFile=license.txt
 OutputBaseFilename=PowerMate
-OutputDir=.
+OutputDir=..\..
 SetupIconFile=src\plugin.ico
 
 [Types]
