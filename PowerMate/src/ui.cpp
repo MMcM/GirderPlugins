@@ -76,14 +76,17 @@ void DUICloseConfig(PFTree tree)
 {
 }
 
+static sGroups GROUP = 
+  // {9685E045-28DA-45A2-865B-6FDE6514459F}
+  { {0x9685E045, 0x28DA, 0x45A2, {0x86, 0X5B, 0x6F, 0xDE, 0x65, 0x14, 0x45, 0x9F} }, 
+    "PowerMate" };
+
 void DUIOpenCommand(PFTree tree)
 {
   g_RequestPageActive = InsertDUIPage(tree, g_DUI, g_RequestPage,
-                                      &Groups[GIRDER_GROUP].PageGUID, 
-                                      &Groups[GIRDER_GROUP]);
+                                      &GROUP.PageGUID, &GROUP);
   g_RepeatPageActive = InsertDUIPage(tree, g_DUI, g_RepeatPage,
-                                     &Groups[GIRDER_GROUP].PageGUID, 
-                                     &Groups[GIRDER_GROUP]);
+                                     &GROUP.PageGUID, &GROUP);
 }
 
 void DUICloseCommand(PFTree tree)
