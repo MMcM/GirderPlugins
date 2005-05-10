@@ -24,7 +24,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmt1 = format(&#34;%2.0fC&#34;, pld1)</sValue1>
+        <sValue1>mbmt1 = string.format(&#34;%2.0fC&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -69,7 +69,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmt2 = format(&#34;%2.0fC&#34;, pld1)</sValue1>
+        <sValue1>mbmt2 = string.format(&#34;%2.0fC&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -114,7 +114,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmf1 = format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
+        <sValue1>mbmf1 = string.format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -159,7 +159,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmf2 = format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
+        <sValue1>mbmf2 = string.format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -204,7 +204,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmv1 = format(&#34;%2.2fV&#34;, pld1)</sValue1>
+        <sValue1>mbmv1 = string.format(&#34;%2.2fV&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -249,7 +249,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmv2 = format(&#34;%2.2fV&#34;, pld1)</sValue1>
+        <sValue1>mbmv2 = string.format(&#34;%2.2fV&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
@@ -294,7 +294,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>mbmv3 = format(&#34;%2.2fV&#34;, pld1)</sValue1>
+        <sValue1>mbmv3 = string.format(&#34;%2.2fV&#34;, pld1)</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>

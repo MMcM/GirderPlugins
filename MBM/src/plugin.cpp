@@ -6,7 +6,7 @@ $Header$
 #include "plugin.h"
 
 HINSTANCE g_hInstance;
-s_functions SF;
+sFunctions3 SF;
 
 extern "C" void WINAPI
 gir_version(PCHAR buffer, BYTE length)
@@ -35,33 +35,28 @@ gir_devicenum()
 extern "C" int WINAPI
 gir_requested_api(int maxapi)
 {
-  return 1;
+  return 3;
 }
 
 extern "C" int WINAPI
-gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions p)
+gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, pFunctions3 p)
 {
   if (p->size != sizeof(SF)) {
     return GIR_FALSE;
   }
   memcpy(&SF, p, p->size);
+  if (!DUIOpen())
+    return GIR_FALSE;
   return GIR_TRUE;
 }
 
 extern "C" int WINAPI
 gir_close()
 {
-  CloseLearnUI();
+  DUIClose();
   CloseSharedMemory();
   return GIR_TRUE;
 }
-
-#if 0
-extern "C" void WINAPI
-gir_config()
-{
-}
-#endif
 
 extern "C" int WINAPI
 gir_start()
@@ -83,16 +78,7 @@ gir_compare(PCHAR orig, PCHAR recv)
   // Unlikely to need this.
   return strcmp(orig, recv);
 }
-#endif
 
-extern "C" int WINAPI
-gir_learn_event(char *oldevent, char *newevent, int len)
-{
-  OpenLearnUI(oldevent);
-  return GIR_ASYNC_LEARN;
-}
-
-#if 0
 extern "C" int WINAPI
 gir_event(p_command command, 
           char *eventString, void *payload, int len,
@@ -101,22 +87,36 @@ gir_event(p_command command,
   return retStopProcessing;
 }
 
-extern "C" void WINAPI
-gir_command_gui()
-{
-}
-
-extern "C" void WINAPI
-gir_command_changed(p_command command)
-{
-}
-
 extern "C" int WINAPI
 gir_info(int message, int wparam, int lparam)
 {
   return GIR_TRUE;
 }
 #endif
+
+extern "C" void * WINAPI
+gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+               int val1, int val2, void *userdata)
+{
+  switch (val1) {
+  case duOnHookConfig:		
+    DUIOpenConfig(tree);
+    break;
+
+  case duOnUnHookConfig:
+    DUICloseConfig(tree);
+    break;
+
+  case duOnHookCommand:
+    DUIOpenCommand(tree);
+    break;
+
+  case duOnUnHookCommand:
+    DUICloseCommand(tree);
+    break;
+  }
+  return NULL;
+}
 
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)

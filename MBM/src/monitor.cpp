@@ -187,7 +187,7 @@ DWORD WINAPI MonitorThread(LPVOID lpParam)
         char buf[32];
         buf[0] = 1;
         sprintf(buf + 1, "%g", curr);
-        SF.send_event(pss->ssName, buf, strlen(buf) + 1, PLUGINNUM);
+        SendEventEx(pss->ssName, buf, strlen(buf) + 1, PLUGINNUM, EVENT_MOD_NONE);
       }
     }
 
