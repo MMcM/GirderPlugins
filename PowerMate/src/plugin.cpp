@@ -78,13 +78,14 @@ gir_compare(PCHAR orig, PCHAR recv)
 
 extern "C" int WINAPI
 gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event, 
-          char * status,  int statuslen)
+          char *status, int statuslen)
 {
   PCommand command;
 
   EnterCriticalSection(cs);
 
   command = (PCommand)node->Data;
+  int result;
 
   switch (command->ActionSubType) {
   case ACTION_REPEAT:
@@ -97,7 +98,7 @@ gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event,
         if (retContinue != ret) return ret;
       }
     }
-    return retContinue;
+    result = retContinue;
 
   case ACTION_REQUEST:
     {
@@ -109,14 +110,15 @@ gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event,
       else
         strncpy(status, "Request failed", statuslen);
     }
-    return retContinue;
+    result = retContinue;
 
   default:
     strncpy(status, "Unknown command subtype", statuslen);
-    return retStopProcessing;
+    result = retStopProcessing;
   }
 
   LeaveCriticalSection(cs);
+  return result;
 }
 
 #if 0

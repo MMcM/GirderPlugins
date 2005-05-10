@@ -56,6 +56,7 @@ END
 // remains consistent on all systems.
 PLUGINICON              ICON    DISCARDABLE     "plugin.ico"
 
+
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -94,24 +95,6 @@ END
 
 #endif    // !_MAC
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
-BEGIN
-    IDD_LEARN_DIALOG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 193
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 163
-    END
-END
-#endif    // APSTUDIO_INVOKED
 
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////

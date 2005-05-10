@@ -4,10 +4,10 @@
 [Setup] 
 AppName=PowerMate
 AppVerName=PowerMate 3.0
-AppID=PowerMate
+AppID=PowerMate-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=1.66
+AppVersion=3.0
 DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugins}
 DirExistsWarning=no 
 ;LicenseFile=license.txt

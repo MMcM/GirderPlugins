@@ -80,11 +80,24 @@ gir_compare(PCHAR orig, PCHAR recv)
 }
 
 extern "C" int WINAPI
-gir_event(p_command command, 
-          char *eventString, void *payload, int len,
+gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event, 
           char *status, int statuslen)
 {
-  return retStopProcessing;
+  PCommand command;
+
+  EnterCriticalSection(cs);
+
+  command = (PCommand)node->Data;
+  int result;
+
+  switch (command->ActionSubType) {
+  default:
+    strncpy(status, "Unknown command subtype", statuslen);
+    result = retStopProcessing;
+  }
+
+  LeaveCriticalSection(cs);
+  return result;
 }
 
 extern "C" int WINAPI
