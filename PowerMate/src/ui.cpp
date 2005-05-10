@@ -8,6 +8,11 @@ $Header$
 
 #include <dui.h>
 
+static sGroups GROUP = 
+  // {9685E045-28DA-45A2-865B-6FDE6514459F}
+  { {0x9685E045, 0x28DA, 0x45A2, {0x86, 0X5B, 0x6F, 0xDE, 0x65, 0x14, 0x45, 0x9F} }, 
+    "PowerMate" };
+
 #define POWERMATE_DUI_GUID  "{9685E046-28DA-45A2-865B-6FDE6514459F}"
 #define REQUEST_PAGE_GUID   "{9685E047-28DA-45A2-865B-6FDE6514459F}"
 #define REPEAT_PAGE_GUID    "{9685E048-28DA-45A2-865B-6FDE6514459F}"
@@ -75,11 +80,6 @@ void DUIOpenConfig(PFTree tree)
 void DUICloseConfig(PFTree tree)
 {
 }
-
-static sGroups GROUP = 
-  // {9685E045-28DA-45A2-865B-6FDE6514459F}
-  { {0x9685E045, 0x28DA, 0x45A2, {0x86, 0X5B, 0x6F, 0xDE, 0x65, 0x14, 0x45, 0x9F} }, 
-    "PowerMate" };
 
 void DUIOpenCommand(PFTree tree)
 {

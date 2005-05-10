@@ -8,7 +8,7 @@ AppID=MBM
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
 AppVersion=1.66
-DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugins}\MBM
+DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugins}
 DirExistsWarning=no 
 ;LicenseFile=license.txt
 OutputBaseFilename=MBM
@@ -26,11 +26,11 @@ Name: "readme"; Description: "Readme File"; Types: full compact
 Name: "sample"; Description: "Samples"; Types: full
 
 [Files] 
-Source: "..\MBM.dll"; DestDir: "{app}\.."; Components: main; AFlags: promptifolder
-Source: "MBM.xml"; DestDir: "{app}\..\UI"; Components: main; Flags: promptifolder
-Source: "readme.htm"; DestDir: "{app}"; Components: readme; Flags: isreadme
-Source: "license.txt"; DestDir: "{app}"; Components: readme
-Source: "Test.GML"; DestDir: "{app}"; Components: sample; Flags: promptifolder
+Source: "..\MBM.dll"; DestDir: "{app}"; Components: main; Flags: promptifolder
+Source: "MBM.xml"; DestDir: "{app}\UI"; Components: main; Flags: promptifolder
+Source: "readme.htm"; DestDir: "{app}\MBM"; Components: readme; Flags: isreadme
+Source: "license.txt"; DestDir: "{app}\MBM"; Components: readme
+Source: "Test.GML"; DestDir: "{app}\MBM"; Components: sample; Flags: promptifolder
 
 [Registry] 
 Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins"; ValueName: 46; ValueType: dword; ValueData: 1
