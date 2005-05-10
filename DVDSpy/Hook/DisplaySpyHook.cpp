@@ -2090,7 +2090,7 @@ void PDVDLoadRegistry()
   // Hopefully it is okay to load ADVAPI32 into all these processes.
   HKEY hkey;
   if (ERROR_SUCCESS != RegOpenKey(HKEY_LOCAL_MACHINE, 
-                                  "Software\\Girder3\\HardPlugins\\DVDSpy\\PowerDVD", 
+                                  DVDSPY_KEY "\\PowerDVD", 
                                   &hkey))
     return;
   
@@ -2315,7 +2315,7 @@ void WDVDLoadRegistry()
   
   HKEY hkey;
   if (ERROR_SUCCESS != RegOpenKey(HKEY_LOCAL_MACHINE, 
-                                  "Software\\Girder3\\HardPlugins\\DVDSpy\\WinDVD", 
+                                  DVDSPY_KEY "\\WinDVD", 
                                   &hkey))
     return;
   

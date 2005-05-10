@@ -3,12 +3,12 @@
 
 [Setup] 
 AppName=DVDSpy
-AppVerName=DVDSpy 1.66
-AppID=DVDSpy
+AppVerName=DVDSpy 2.0
+AppID=DVDSpy-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=1.66
-DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
+AppVersion=2.0
+DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugins}\..
 DirExistsWarning=no 
 ;LicenseFile=plugins\DVDSpy\license.txt
 OutputBaseFilename=DVDSpy
@@ -50,6 +50,7 @@ Name: "sample"; Description: "Samples"; Types: full
 
 [Files] 
 Source: "plugins\DVDSpy.dll"; DestDir: "{app}\plugins"; Components: main; Flags: promptifolder
+Source: "plugins\DVDSpy\DVDSpy.xml"; DestDir: "{app}\plugins\UI"; Components: main; Flags: promptifolder
 Source: "DisplaySpyHook.dll"; DestDir: "{app}"; Components: main; Flags: promptifolder
 Source: "MediaSpy.dll"; DestDir: "{app}"; Components: zp tt cineplayer ati ssf bsplay powerdivx radlight; Flags: promptifolder regserver
 Source: "plugins\DVDSpy\WinDVD3.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: windvd; Flags: promptifolder
@@ -82,96 +83,96 @@ Source: "plugins\DVDSpy\DVDInsert.GML"; DestDir: "{app}\plugins\DVDSpy"; Compone
 Name: "DVDData"; Components: dvddata
 
 [Registry] 
-Root: HKLM; Subkey: "SOFTWARE\girder3\Plugins"; ValueName: 215; ValueType: dword; ValueData: 1
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "False"
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "True"; Components: windvd powerdvd adtv zp tt cineplayer ati ssf bsplay powerdivx radlight eugenes dvdstation
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "MixerMonitor"; ValueType: dword; ValueData: 1; Components: mixer
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy"; ValueName: "DVDTitles"; ValueType: string; ValueData: "{app}\DVDTitles.csv"; Components: dvdtitles; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins"; ValueName: 215; ValueType: dword; ValueData: 1
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "False"
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy"; ValueName: "StartHook"; ValueType: string; ValueData: "True"; Components: windvd powerdvd adtv zp tt cineplayer ati ssf bsplay powerdivx radlight eugenes dvdstation
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy"; ValueName: "MixerMonitor"; ValueType: dword; ValueData: 1; Components: mixer
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy"; ValueName: "DVDTitles"; ValueType: string; ValueData: "{app}\DVDTitles.csv"; Components: dvdtitles; Flags: createvalueifdoesntexist
 ; Events: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.PlayState"; ValueType: string; Components: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Status"; ValueType: string; Components: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Duration"; ValueType: string; Components: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Elapsed"; ValueType: string; Components: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.URL"; ValueType: string; Components: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Title"; ValueType: string; Components: wmp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "WMP.Close"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.PlayState"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.Status"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.Duration"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.Elapsed"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.URL"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.Title"; ValueType: string; Components: wmp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "WMP.Close"; ValueType: string; Components: wmp
 ; Events: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Duration"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Elapsed"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.URL"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Title"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Author"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.State"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Buffering"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Contacting"; ValueType: string; Components: real
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Real.Close"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Duration"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Elapsed"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.URL"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Title"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Author"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.State"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Buffering"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Contacting"; ValueType: string; Components: real
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Real.Close"; ValueType: string; Components: real
 ; Events: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Elapsed"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.File"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Length"; ValueData:"of playlist"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Position"; ValueData:"in playlist"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Status"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Title"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Duration"; ValueType: string; Components: winamp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Winamp.Close"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Elapsed"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.File"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Length"; ValueData:"of playlist"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Position"; ValueData:"in playlist"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Status"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Title"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Duration"; ValueType: string; Components: winamp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Winamp.Close"; ValueType: string; Components: winamp
 ; Events: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.State"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Time"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.OSD"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.OSD.Off"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Mode"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Title"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Chapter"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Audio"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Sub"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.File"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Position"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Resolution"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.FrameRate"; ValueType: string; Components: zp
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.AspectRatio"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.State"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Time"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.OSD"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.OSD.Off"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Mode"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Title"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Chapter"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Audio"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.DVD.Sub"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.File"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Position"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.Resolution"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.FrameRate"; ValueType: string; Components: zp
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "ZoomPlayer.LCD.AspectRatio"; ValueType: string; Components: zp
 ; Events: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playlist.Position"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playlist.Length"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Filename"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Artist"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Album"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Name"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Custom1"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Custom2"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Custom3"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.FileType"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.State"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.Elapsed"; ValueType: string; Components: mj
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.Duration"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playlist.Position"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playlist.Length"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Filename"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Artist"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Album"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Name"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Custom1"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Custom2"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.Custom3"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.File.FileType"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.State"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.Elapsed"; ValueType: string; Components: mj
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "MediaJukebox.Playback.Duration"; ValueType: string; Components: mj
 ; Events: eugenes
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Name"; ValueType: string; Components: eugenes
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Elapsed"; ValueType: string; Components: eugenes
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Duration"; ValueType: string; Components: eugenes
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.TitleNo"; ValueType: string; Components: eugenes
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Eugenes.Chapter"; ValueType: string; Components: eugenes
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Eugenes.Name"; ValueType: string; Components: eugenes
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Eugenes.Elapsed"; ValueType: string; Components: eugenes
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Eugenes.Duration"; ValueType: string; Components: eugenes
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Eugenes.TitleNo"; ValueType: string; Components: eugenes
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Eugenes.Chapter"; ValueType: string; Components: eugenes
 ; Events: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Volume"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Mute"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Mode"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.AudioMode"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Resolution"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.ColorSpace"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.SourceFormat"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.DestFormat"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.RecordElapsed"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.PlaybackPosition"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.ProgramLength"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.Channel"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.ChannelPSIP"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "accessDTV.SignalMeter"; ValueType: string; Components: adtv
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Close"; ValueType: string; Components: foobar
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Duration"; ValueType: string; Components: foobar
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Elapsed"; ValueType: string; Components: foobar
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Status"; ValueType: string; Components: foobar
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Foobar.Title"; ValueType: string; Components: foobar
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Mixer.Master Mute"; ValueType: string; Components: mixer
-Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Mixer.Master Volume"; ValueType: string; Components: mixer
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.Volume"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.Mute"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.Mode"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.AudioMode"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.Resolution"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.ColorSpace"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.SourceFormat"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.DestFormat"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.RecordElapsed"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.PlaybackPosition"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.ProgramLength"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.Channel"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.ChannelPSIP"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "accessDTV.SignalMeter"; ValueType: string; Components: adtv
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Foobar.Close"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Foobar.Duration"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Foobar.Elapsed"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Foobar.Status"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Foobar.Title"; ValueType: string; Components: foobar
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Mixer.Master Mute"; ValueType: string; Components: mixer
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events"; ValueName: "Mixer.Master Volume"; ValueType: string; Components: mixer
 
 [Run]
 Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s ShowShifter.reg"; Components: ssf

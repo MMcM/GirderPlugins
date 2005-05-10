@@ -4,15 +4,10 @@ $Header$
 
 #define PLUGINNUM 215
 #define PLUGINNAME "DVDSpy"
-#define PLUGINVERSION "1.66"
+#define PLUGINVERSION "2.0"
 
 extern HINSTANCE g_hInstance;
-extern s_functions SF;
-
-extern void OpenConfigUI();
-extern void CloseConfigUI();
-extern void OpenLearnUI(PCHAR old);
-extern void CloseLearnUI();
+extern sFunctions3 SF;
 
 extern BOOL StartMonitor();
 extern void StopMonitor();
@@ -31,3 +26,10 @@ extern void EugenesClose();
 extern void MixerMonitorInit(HWND hwndMonitor);
 extern void MixerMonitorMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 extern void MixerMonitorClose();
+
+extern BOOL DUIOpen();
+extern void DUIClose();
+extern void DUIOpenConfig(PFTree tree);
+extern void DUICloseConfig(PFTree tree);
+extern void DUIOpenCommand(PFTree tree);
+extern void DUICloseCommand(PFTree tree);

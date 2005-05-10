@@ -24,7 +24,7 @@ void GirderEvent(PCHAR event, PCHAR payload, size_t pllen)
     OutputDebugString(dbuf);
   }
 #endif
-  SF.send_event(event, payload, pllen, PLUGINNUM);
+  SendEventEx(event, payload, pllen, PLUGINNUM, EVENT_MOD_NONE);
 }
 
 size_t GetDVDPayload(char cd, PCHAR payload)
@@ -286,9 +286,7 @@ BOOL StartMonitor()
 
   g_bStartHook = TRUE;
   HKEY hkey;
-  if (ERROR_SUCCESS == RegOpenKey(HKEY_LOCAL_MACHINE, 
-                                  "Software\\Girder3\\HardPlugins\\DVDSpy", 
-                                  &hkey)) {
+  if (ERROR_SUCCESS == RegOpenKey(HKEY_LOCAL_MACHINE, DVDSPY_KEY, &hkey)) {
     char buf[32];
     DWORD dtype, len;
     len = sizeof(buf);

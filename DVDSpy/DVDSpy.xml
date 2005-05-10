@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DVDSpy DUI definition.
+$Header$
+-->
+<DynamicUI>
+  <Group Name="MBM" GUID="{0AA4874B-2EF5-447e-A7DD-AF4DFEBECE50}" ImageIndex="-1" Show="3">
+  </Group>
+</DynamicUI>

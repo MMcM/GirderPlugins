@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ShowShifterSpy.h"
 #include "DVDSpyModule.h"
+#include "..\Hook\DisplaySpyHook.h"
 
 class ControlMonitor
 {
@@ -73,7 +74,7 @@ STDMETHODIMP CDVDSpyModule::Init(IHMNVortress * pVortress)
 
   CRegKey settings;
   if (ERROR_SUCCESS != settings.Open(HKEY_LOCAL_MACHINE,
-                                     "Software\\Girder3\\HardPlugins\\DVDSpy\\ShowShifter")) {
+                                     DVDSPY_KEY "\\ShowShifter")) {
     TRACE("Spy missing registry settings.");
     m_csMonitor.Unlock();
     return E_FAIL;
