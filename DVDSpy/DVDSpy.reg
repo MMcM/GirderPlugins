@@ -1,10 +1,10 @@
 REGEDIT4
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy]
 "DVDTitles"="c:\\Program Files\\girder\\DVDTitles.csv"
 "StartHook="True"
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\Events]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events]
 "WMP.PlayState"=""
 "WMP.Status"=""
 "WMP.Duration"=""
@@ -139,7 +139,7 @@ REGEDIT4
 "accessDTV.ChannelPSIP"=""
 "accessDTV.SignalMeter"=""
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\ShowShifter\ControlIdents]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\ShowShifter\ControlIdents]
 "ChannelNumberOverlay"=""
 "ChannelNumberOverlayLabel"=""
 "PVRStatusBar"=""
@@ -172,7 +172,7 @@ REGEDIT4
 "ToChannelsButton"="visible"
 "ToVideoFilesButton"="visible"
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\PowerDVD]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\PowerDVD]
 "Status_SIZE"="16,15"
 "TimeDigit_SIZE"="8,12"
 "LocationDigit_SIZE"="7,10"
@@ -190,7 +190,7 @@ REGEDIT4
 "Second_M_POSITION"="207,58"
 "Second_L_POSITION"="215,58"
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\WinDVD]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\WinDVD]
 "Chapter_100_Display_Location"="362,7"
 "Chapter_10_Display_Location"="375,7"
 "Chapter_0_Display_Location"="388,7"

@@ -1,6 +1,6 @@
 REGEDIT4
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\Events]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\Events]
 "ShowShifter.Module"=""
 "ShowShifter.UI.ChannelNumberOverlay"=""
 "ShowShifter.NoUI.ChannelNumberOverlay"=""
@@ -65,7 +65,7 @@ REGEDIT4
 "ShowShifter.UI.ToVideoFilesButton"=""
 "ShowShifter.NoUI.ToVideoFilesButton"=""
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\ShowShifter\ControlIdents]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\ShowShifter\ControlIdents]
 "ChannelNumberOverlay"=""
 "ChannelNumberOverlayLabel"=""
 "PVRStatusBar"=""

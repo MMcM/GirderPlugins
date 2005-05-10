@@ -1,6 +1,6 @@
 REGEDIT4
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\PowerDVD]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\PowerDVD]
 "Status_SIZE"="16,15"
 "TimeDigit_SIZE"="8,12"
 "LocationDigit_SIZE"="7,10"

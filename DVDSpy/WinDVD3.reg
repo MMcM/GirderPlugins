@@ -1,6 +1,6 @@
 REGEDIT4
 
-[HKEY_LOCAL_MACHINE\Software\Girder3\HardPlugins\DVDSpy\WinDVD]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\WinDVD]
 "Playback_Status_Display_Location"="231,70"
 "Chapter_100_Display_Location"="307,70"
 "Chapter_10_Display_Location"="317,70"
