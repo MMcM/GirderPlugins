@@ -43,7 +43,7 @@ $Header$
       <MatchNum>1</MatchNum>
       <ActionType>118</ActionType>
       <ActionSubType>1</ActionSubType>
-      <sValue1>PI</sValue1>
+      <sValue1>math.pi</sValue1>
       <sValue2>v</sValue2>
       <iValue3>4</iValue3>
       <bValue1>FALSE</bValue1>

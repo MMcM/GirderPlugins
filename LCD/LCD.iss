@@ -3,18 +3,18 @@
 
 [Setup] 
 AppName=LCD
-AppVerName=LCD 3.8
-AppID=Girder_LCD
+AppVerName=LCD 4.0
+AppID=Girder_LCD-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=3.8
-DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
+AppVersion=4.0
+DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=LCD
 OutputDir=.
 SetupIconFile=plugins\LCD\src\plugin.ico
 SourceDir=..\..
-UninstallDisplayName=Girder LCD 3.8
+UninstallDisplayName=Girder LCD 4.0
 
 [Types]
 Name: "full"; Description: "Full installation"
@@ -46,11 +46,12 @@ Source: "LcdHype.dll"; DestDir: "{app}"; Components: lcdhype; Flags: promptifold
 Source: "vlsyslis.dll"; DestDir: "{app}"; Components: vlsyslis; Flags: promptifolder
 Source: "paralcd.dll"; DestDir: "{app}"; Components: parallel; Flags: promptifolder
 Source: "plugins\LCD.dll"; DestDir: "{app}\plugins"; Components: main; Flags: promptifolder
+Source: "plugins\LCD\LCD.xml"; DestDir: "{app}\plugins\UI"; Components: main; Flags: promptifolder
 Source: "plugins\LCD\readme.htm"; DestDir: "{app}\plugins\LCD"; Components: readme; Flags: isreadme
 Source: "plugins\LCD\license.txt"; DestDir: "{app}\plugins\LCD"; Components: readme
 Source: "plugins\LCD\LCDTests.gml"; DestDir: "{app}\plugins\LCD"; Components: sample
 
 [Registry] 
-Root: HKLM; Subkey: "SOFTWARE\girder3\Plugins"; ValueName: 118; ValueType: dword; ValueData: 1
-Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "SOFTWARE\girder3\SoftPlugins\LCD"; ValueType: string; ValueData: "LCD"; Components: multdev; Flags: createvalueifdoesntexist
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins"; ValueName: 118; ValueType: dword; ValueData: 1
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\LCD"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "SOFTWARE\Promixis\Girder\4\Plugins\LCD"; ValueType: string; ValueData: "LCD"; Components: multdev; Flags: createvalueifdoesntexist

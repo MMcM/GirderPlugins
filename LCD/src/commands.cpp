@@ -6,9 +6,13 @@ $Header$
 #include "plugin.h"
 #include "display.h"
 
+#define Groups Groups_NOT
+#include <dui.h>
+#undef Groups
+
 LCD_API HWND LCD_DECL DisplayWindowParent()
 {
-  return SF.parent_hwnd;
+  return SF.CoreVars->MainWindow;
 }
 
 LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, LPCSTR msg, ...)
@@ -39,12 +43,12 @@ LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, LPCSTR msg, ...)
 void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)
 {
   if (NULL == payload)
-    SF.send_event((PCHAR)event, NULL, 0, PLUGINNUM);
+    SendEventEx((PCHAR)event, NULL, 0, PLUGINNUM, EVENT_MOD_NONE);
   else {
     char buf[128];
     buf[0] = 1;
     strncpy(buf+1, payload, sizeof(buf)-1);
-    SF.send_event((PCHAR)event, buf, strlen(buf+1)+2, PLUGINNUM);
+    SendEventEx((PCHAR)event, buf, strlen(buf+1)+2, PLUGINNUM, EVENT_MOD_NONE);
   }
 }
 
@@ -282,26 +286,20 @@ void DisplaySetSetting(LPCSTR key, PVOID val, int vlen, LPCSTR devname)
 class DisplayCommandState : public DisplayCriticalSection
 {
 public:
-  p_command m_command;
+  PCommand m_command;
   DisplayActionDeviceType m_devtype;
   DisplayDevice *m_device;
   DisplayAction *m_action;
   PCHAR m_status;
   int m_statuslen;
 
-  DisplayCommandState(p_command command,
+  DisplayCommandState(PCommand command,
                       PCHAR status, int statuslen)
     : m_command(command),
       m_status(status), m_statuslen(statuslen) 
   {
-    EnterCriticalSection(&m_command->critical_section);    
   }
 
-  ~DisplayCommandState() 
-  {
-    LeaveCriticalSection(&m_command->critical_section);
-  }
-  
   void SetStatus(LPCSTR status)
   {
     strncpy(m_status, status, m_statuslen);
@@ -347,8 +345,10 @@ void DisplayClear(DisplayCommandState& state)
 void DisplayCommon(DisplayCommandState& state, LPCSTR str)
 {
   if (!DisplayOpen(state)) return; 
-  state.m_device->Display(state.m_command->ivalue1, state.m_command->ivalue2, 
-                          state.m_command->ivalue3, str);
+  state.m_device->Display(strtol(state.m_command->Action.iValue1, NULL, 10),
+                          strtol(state.m_command->Action.iValue2, NULL, 10),
+                          strtol(state.m_command->Action.iValue3, NULL, 10),
+                          str);
   state.SetStatus(str);
 }
 
@@ -357,9 +357,9 @@ void DisplayCommon(DisplayCommandState& state, LPCSTR str)
 // See DisplayCommon for position.
 void DisplayString(DisplayCommandState& state)
 {
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  PCHAR buf = ParseString(state.m_command->Action.sValue1);
   DisplayCommon(state, buf);
+  SafeFree(buf);
 }
 
 // Display Variable
@@ -367,11 +367,13 @@ void DisplayString(DisplayCommandState& state)
 // See DisplayCommon for position.
 void DisplayVariable(DisplayCommandState& state)
 {
-  char buf[1024];
-  int len = SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
-  if (len < 0)                  // Does not exist, expand like empty string.
-    buf[0] = '\0';
+  char var[128];
+  var[0] = '[';
+  strncpy(var+1, state.m_command->Action.sValue1, sizeof(var)-2);
+  strncat(var, "]", sizeof(var));
+  PCHAR buf = ParseString(var);
   DisplayCommon(state, buf);
+  SafeFree(buf);
 }
 
 // Display Filename / URL Variable, trimming directory and extension.
@@ -380,9 +382,12 @@ void DisplayVariable(DisplayCommandState& state)
 void DisplayFilename(DisplayCommandState& state)
 {
   char buf[1024];
-  int len = SF.get_string_var(state.m_command->svalue1, buf, sizeof(buf));
-  if (len < 0)                  // Does not exist, expand like empty string.
-    buf[0] = '\0';
+  buf[0] = '[';
+  strncpy(buf+1, state.m_command->Action.sValue1, sizeof(buf)-2);
+  strncat(buf, "]", sizeof(buf));
+  PCHAR buf2 = ParseString(buf);
+  strcpy(buf, buf2);
+  SafeFree(buf2);
   PCHAR sp = strrchr(buf, '\\');
   if (NULL != sp)
     sp++;
@@ -401,7 +406,7 @@ void DisplayFilename(DisplayCommandState& state)
 // See DisplayCommon for position.
 void DisplayCurrentTime(DisplayCommandState& state)
 {
-  const char *fmt = state.m_command->svalue1;
+  const char *fmt = state.m_command->Action.sValue1;
   if ((NULL == fmt) || ('\0' == *fmt))
     fmt = "%H:%M:%S";
 
@@ -425,13 +430,14 @@ void DisplayScreen(DisplayCommandState& state)
 
   int nrows = state.m_device->GetHeight();
 
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  PCHAR buf = ParseString(state.m_command->Action.sValue1);
+  DWORD enabled = strtoul(state.m_command->Action.iValue1, NULL, 10);
+  DWORD marquee = strtoul(state.m_command->Action.iValue2, NULL, 10);
   for (int pass = 0; pass <= 1; pass++) { // Do marquee after others.
     PCHAR pval = buf;
     for (int i = 0; i < nrows; i++) {
-      if (!(state.m_command->ivalue1 & (1 << i))) { // Enabled
-        if (pass == !!(state.m_command->ivalue2 & (1 << i))) { // Marquee
+      if (!(enabled & (1 << i))) {
+        if (pass == !!(marquee & (1 << i))) {
           state.m_device->Display(i, (pass) ? -1 : 0, -1, pval);
         }
       }
@@ -442,6 +448,7 @@ void DisplayScreen(DisplayCommandState& state)
         pval += strlen(pval);
     }
   }
+  SafeFree(buf);
   state.SetStatus("LCD screen");
 }
 
@@ -452,10 +459,11 @@ void DisplayScreen(DisplayCommandState& state)
 void DisplayCharacter(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  PCHAR buf = ParseString(state.m_command->Action.sValue1);
   char ch = (char)strtoul(buf, NULL, 0);
-  state.m_device->DisplayCharacter(state.m_command->ivalue1, state.m_command->ivalue2, 
+  SafeFree(buf);
+  state.m_device->DisplayCharacter(strtol(state.m_command->Action.iValue1, NULL, 10),
+                                   strtol(state.m_command->Action.iValue2, NULL, 10),
                                    ch);
   sprintf(buf, "%c", ch);
   state.SetStatus(buf);
@@ -468,10 +476,11 @@ void DisplayCharacter(DisplayCommandState& state)
 void DisplayCustomCharacter(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  PCHAR buf = ParseString(state.m_command->Action.sValue1);
   CustomCharacter cust(buf);
-  state.m_device->DisplayCustomCharacter(state.m_command->ivalue1, state.m_command->ivalue2,
+  SafeFree(buf);
+  state.m_device->DisplayCustomCharacter(strtol(state.m_command->Action.iValue1, NULL, 10),
+                                         strtol(state.m_command->Action.iValue2, NULL, 10),
                                          cust);
   state.SetStatus("Custom character displayed");
 }
@@ -482,10 +491,11 @@ void DisplayCustomCharacter(DisplayCommandState& state)
 void DisplayKeypadLegend(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
-  char buf1[512], buf2[512];
-  SF.parse_reg_string(state.m_command->svalue1, buf1, sizeof(buf1));
-  SF.parse_reg_string(state.m_command->svalue3, buf2, sizeof(buf2));
+  PCHAR buf1 = ParseString(state.m_command->Action.sValue1);
+  PCHAR buf2 = ParseString(state.m_command->Action.sValue3);
   state.m_device->SetKeypadLegend(buf1, buf2);
+  SafeFree(buf2);
+  SafeFree(buf1);
 }
 
 // Set General Purpose Output
@@ -494,7 +504,8 @@ void DisplayKeypadLegend(DisplayCommandState& state)
 void DisplayGPO(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
-  state.m_device->SetGPO(state.m_command->ivalue1, state.m_command->bvalue1);
+  state.m_device->SetGPO(strtol(state.m_command->Action.iValue1, NULL, 10), 
+                         StringToBool(state.m_command->Action.bValue1));
   state.SetStatus("GPO set");
 }
 
@@ -504,15 +515,16 @@ void DisplayGPO(DisplayCommandState& state)
 void DisplayFanPower(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 
-  char buf[1024];
-  SF.parse_reg_string(state.m_command->svalue1, buf, sizeof(buf));
+  PCHAR buf = ParseString(state.m_command->Action.sValue1);
   double n = strtod(buf, NULL);
-  state.m_device->SetFanPower(state.m_command->ivalue1, n / 100);
+  SafeFree(buf);
+  state.m_device->SetFanPower(strtol(state.m_command->Action.iValue1, NULL, 10),
+                              n / 100);
   sprintf(buf, "Power %.f%%", n);
   state.SetStatus(buf);
 }
 
-void DisplayCommand(p_command command, PCHAR status, int statuslen)
+void DisplayCommand(PCommand command, PCHAR status, int statuslen)
 {
   DisplayCommandState state(command, status, statuslen);
   if (FindDisplayAction(g_devices, command, 

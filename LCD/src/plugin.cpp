@@ -7,7 +7,7 @@ $Header$
 
 /* Global variables */
 HINSTANCE g_hInstance;
-s_functions_2 SF;
+sFunctions3 SF;
 
 extern "C" void WINAPI
 gir_version(PCHAR buffer, BYTE length)
@@ -36,16 +36,17 @@ gir_devicenum()
 extern "C" int WINAPI
 gir_requested_api(int maxapi)
 {
-  return 2;
+  return 3;
 }
 
-extern "C" int WINAPI
-gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, p_functions_2 p)
+gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, pFunctions3 p)
 {
   if (p->size != sizeof(SF)) {
     return GIR_FALSE;
   }
   memcpy(&SF, p, p->size);
+  if (!DUIOpen())
+    return GIR_FALSE;
   DisplayInitCS();
   FunctionsOpen();
   return GIR_TRUE;
@@ -55,18 +56,12 @@ extern "C" int WINAPI
 gir_close()
 {
   CloseConfigUI();
-  CloseCommandUI();
+  DUIClose();
   FunctionsClose();
   DisplayClose();
   DisplayUnload();
   DisplayDeleteCS();
   return GIR_TRUE;
-}
-
-extern "C" void WINAPI
-gir_config()
-{
-  OpenConfigUI();
 }
 
 extern "C" int WINAPI
@@ -89,41 +84,29 @@ gir_compare(PCHAR orig, PCHAR recv)
   // Unlikely to need this.
   return strcmp(orig, recv);
 }
-
-extern "C" int WINAPI
-gir_learn_event(char *oldevent, char *newevent, int len)
-{
-  return GIR_FALSE;
-}
 #endif
 
 extern "C" int WINAPI
-gir_event(p_command command, 
-          char *eventString, void *payload, int len,
+gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event, 
           char *status, int statuslen)
 {
+  PCommand command;
+
+  EnterCriticalSection(cs);
+
+  command = (PCommand)node->Data;
   DisplayCommand(command, 
                  status, statuslen);
+  
+  LeaveCriticalSection(cs);
   return retContinue;
-}
-
-extern "C" void WINAPI
-gir_command_gui()
-{
-  OpenCommandUI();
-}
-
-extern "C" void WINAPI
-gir_command_changed(p_command command)
-{
-  UpdateCommandUI(command);
 }
 
 extern "C" int WINAPI
 gir_info(int message, int wparam, int lparam)
 {
   switch (message) {
-  case GIRINFO_SCRIPT_STATE:
+  case GIRINFO_SCRIPT_AFTER_STARTED:
     FunctionsOpen();
     break;
   case GIRINFO_POWERBROADCAST:
@@ -155,6 +138,41 @@ gir_info(int message, int wparam, int lparam)
   }
   return GIR_TRUE;
 }
+
+extern "C" void * WINAPI
+gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+               int val1, int val2, void *userdata)
+{
+  switch (val1) {
+#if 0
+  case duOnHookConfig:		
+    DUIOpenConfig(tree);
+    break;
+
+  case duOnUnHookConfig:
+    DUICloseConfig(tree);
+    break;
+#endif
+
+  case duOnHookCommand:
+    DUIOpenCommand(tree);
+    break;
+
+  case duOnUnHookCommand:
+    DUICloseCommand(tree);
+    break;
+  }
+  return NULL;
+}
+
+#if 1
+/** OLD STYLE **/
+extern "C" void WINAPI
+gir_config()
+{
+  OpenConfigUI();
+}
+#endif
 
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)

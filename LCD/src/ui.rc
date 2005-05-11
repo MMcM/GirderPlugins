@@ -222,82 +222,6 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,101,50,50,14
 END
 
-IDD_COMMAND DIALOG DISCARDABLE  0, 0, 300, 200
-STYLE DS_MODALFRAME | DS_CENTER | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | 
-    WS_SYSMENU
-CAPTION "LCD"
-FONT 8, "MS Sans Serif"
-BEGIN
-    LTEXT           "Display:",IDC_DISPLAYL,15,20,30,8,NOT WS_VISIBLE
-    COMBOBOX        IDC_DISPLAY,50,18,190,100,CBS_DROPDOWNLIST |
-                    NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Type:",IDC_TYPEL,15,40,30,8
-    COMBOBOX        IDC_TYPE,50,38,190,100,CBS_DROPDOWNLIST | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Value:",IDC_VALUEL,15,65,30,8
-    EDITTEXT        IDC_VALSTR,50,62,190,14,ES_AUTOHSCROLL
-    COMBOBOX        IDC_VALLIST,50,62,190,100,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | 
-                    NOT WS_VISIBLE
-    EDITTEXT        IDC_VALINT,50,62,30,14,ES_AUTOHSCROLL | ES_NUMBER | NOT 
-                    WS_VISIBLE
-    CONTROL         "ValSpin",IDC_VAL_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | NOT WS_VISIBLE,80,62,10,
-                    14
-    CONTROL         "On",IDC_VALBOOL,"Button",BS_AUTOCHECKBOX | NOT 
-                    WS_VISIBLE | WS_TABSTOP,15,64,100,10
-    LTEXT           "Row:",IDC_ROWL,15,90,30,8
-    EDITTEXT        IDC_ROW,50,87,30,14,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "RowSpin",IDC_ROW_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS,80,87,10,14
-    CONTROL         "Marquee",IDC_USE_WRAP,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,15,115,51,10
-    CONTROL         "Column:",IDC_USE_COL,"Button",BS_AUTORADIOBUTTON,110,
-                    115,40,8
-    EDITTEXT        IDC_COL,155,112,30,14,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "ColSpin",IDC_COL_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS,185,112,11,14
-    CONTROL         "Rest of line",IDC_USE_REST,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,15,140,51,10
-    CONTROL         "Width:",IDC_USE_WIDTH,"Button",BS_AUTORADIOBUTTON,110,
-                    140,40,10
-    EDITTEXT        IDC_WIDTH,155,138,30,14,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "WidthSpin",IDC_WIDTH_SPIN,"msctls_updown32",
-                    UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,185,138,
-                    11,14
-    LTEXT           "Enabled                                           Value                                         Marquee",
-                    IDC_SCREENL,7,65,241,8,NOT WS_VISIBLE
-    CONTROL         "",IDC_ENABLE_LINE1,"Button",BS_AUTOCHECKBOX | NOT 
-                    WS_VISIBLE | WS_GROUP,10,83,8,8
-    CONTROL         "",IDC_ENABLE_LINE2,"Button",BS_AUTOCHECKBOX | NOT 
-                    WS_VISIBLE,10,98,8,8
-    CONTROL         "",IDC_ENABLE_LINE3,"Button",BS_AUTOCHECKBOX | NOT 
-                    WS_VISIBLE,10,113,8,8
-    CONTROL         "",IDC_ENABLE_LINE4,"Button",BS_AUTOCHECKBOX | NOT 
-                    WS_VISIBLE,10,128,8,8
-    EDITTEXT        IDC_LINE1,29,80,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE | 
-                    WS_GROUP
-    EDITTEXT        IDC_LINE2,29,95,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_LINE3,29,110,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    EDITTEXT        IDC_LINE4,29,125,200,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    RADIOBUTTON     "",IDC_MARQUEE_LINE1,235,82,10,10,NOT WS_VISIBLE | 
-                    WS_GROUP
-    RADIOBUTTON     "",IDC_MARQUEE_LINE2,235,97,10,10,NOT WS_VISIBLE
-    RADIOBUTTON     "",IDC_MARQUEE_LINE3,235,112,10,10,NOT WS_VISIBLE
-    RADIOBUTTON     "",IDC_MARQUEE_LINE4,235,127,10,10,NOT WS_VISIBLE
-    LTEXT           "Value 2:",IDC_VALUE2L,15,90,30,8, NOT WS_VISIBLE
-    EDITTEXT        IDC_VALSTR2,50,87,190,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    COMBOBOX        IDC_VALLIST2,50,87,190,100,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP | 
-                    NOT WS_VISIBLE
-    EDITTEXT        IDC_FANGPO,50,87,30,14,ES_AUTOHSCROLL | ES_NUMBER | NOT 
-                    WS_VISIBLE
-    CONTROL         "Fan/GPOSpin",IDC_FANGPO_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | NOT WS_VISIBLE,80,87,10,
-                    14
-    DEFPUSHBUTTON   "OK",IDOK,36,175,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,102,175,50,14
-    PUSHBUTTON      "Apply",IDC_APPLY,168,175,50,14
-END
-
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -306,8 +230,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,8,0,49
- PRODUCTVERSION 3,8,0,0
+ FILEVERSION 4,0,0,50
+ PRODUCTVERSION 4,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -323,12 +247,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "LCD Girder plug-in\0"
-            VALUE "FileVersion", "3.8 (49)\0"
+            VALUE "FileVersion", "4.0 (50)\0"
             VALUE "InternalName", "LCD\0"
             VALUE "LegalCopyright", "Copyright \251 2001-2004 Mike McMahon\0"
             VALUE "OriginalFilename", "LCD.DLL\0"
             VALUE "ProductName", "LCD\0"
-            VALUE "ProductVersion", "3.8\0"
+            VALUE "ProductVersion", "4.0\0"
         END
     END
     BLOCK "VarFileInfo"

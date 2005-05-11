@@ -1452,7 +1452,7 @@ static void FillSensorsPage(LPPROPSHEETPAGE ppsp)
   ppsp->pfnDlgProc = SensorsPageDialogProc;
 }
 
-static int PropertySheetCallback(HWND hwnd, UINT uMsg, LPARAM lParam)
+static int WINAPI PropertySheetCallback(HWND hwnd, UINT uMsg, LPARAM lParam)
 {
   switch (uMsg) {
   case PSCB_INITIALIZED:

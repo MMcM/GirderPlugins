@@ -4,16 +4,10 @@ $Header$
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "3.8"
+#define PLUGINVERSION "4.0"
 
 extern HINSTANCE g_hInstance;
-extern s_functions_2 SF;
-
-extern void OpenConfigUI();
-extern void CloseConfigUI();
-extern void OpenCommandUI();
-extern void CloseCommandUI();
-extern void UpdateCommandUI(p_command command);
+extern sFunctions3 SF;
 
 extern void DisplayInitCS();
 extern void DisplayDeleteCS();
@@ -47,6 +41,7 @@ struct DisplayAction
   const char *key;
   const char *name;
   int valueType;
+  int editorType;
   void (*function)(DisplayCommandState& state);
 };
 
@@ -56,7 +51,7 @@ enum DisplayActionDeviceType {
 
 class DisplayDeviceList;
 class DisplayDevice;
-extern BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
+extern BOOL FindDisplayAction(DisplayDeviceList& devices, PCommand command,
                               DisplayActionDeviceType& devtype, DisplayDevice*& device,
                               DisplayAction*& action);
 
@@ -73,7 +68,15 @@ extern void DisplayKeypadLegend(DisplayCommandState& state);
 extern void DisplayGPO(DisplayCommandState& state);
 extern void DisplayFanPower(DisplayCommandState& state);
 
-extern void DisplayCommand(p_command command, PCHAR status, int statuslen);
+extern void DisplayCommand(PCommand command, PCHAR status, int statuslen);
 
 extern void FunctionsOpen();
 extern void FunctionsClose();
+
+extern BOOL DUIOpen();
+extern void DUIClose();
+extern void DUIOpenCommand(PFTree tree);
+extern void DUICloseCommand(PFTree tree);
+/** OLD STYLE **/
+extern void OpenConfigUI();
+extern void CloseConfigUI();

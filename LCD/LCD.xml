@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- LCD DUI definition.
+$Header$
+-->
+<DynamicUI>
+  <Group Name="LCD" GUID="{6F829807-2544-40e9-B150-A7655F93C906}" ImageIndex="-1" Show="3">
+    <Item Name="Display" Description="Display parameters" GUID="{6F829809-2544-40e9-B150-A7655F93C906}" AType="118" ASType="1" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="Type:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="type" Field="0" ControlType="5" Width="152" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+        <Values>String&#xD;
+Variable&#xD;
+Current Date/Time&#xD;
+Filename Variable&#xD;
+Character (numerical code)&#xD;
+Customer Character&#xD;
+</Values>
+        <Values2>s&#xD;
+v&#xD;
+t&#xD;
+f&#xD;
+*&#xD;
+$&#xD;
+</Values2>
+      </Control>
+    </Item>
+    <Item Name="Control" Description="Control parameters" GUID="{6F82980A-2544-40e9-B150-A7655F93C906}" AType="118" ASType="2" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="Type:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="type" Field="0" ControlType="5" Width="152" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+        <Values>Close Display&#xD;
+Clear Display&#xD;
+</Values>
+        <Values2>x&#xD;
+c&#xD;
+</Values2>
+      </Control>
+    </Item>
+    <Item Name="Screen" Description="Screen parameters" GUID="{6F82980B-2544-40e9-B150-A7655F93C906}" AType="118" ASType="3" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+    </Item>
+    <Item Name="Keypad" Description="Keypad parameters" GUID="{6F82980C-2544-40e9-B150-A7655F93C906}" AType="118" ASType="4" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+    </Item>
+    <Item Name="GPO" Description="GPO parameters" GUID="{6F82980D-2544-40e9-B150-A7655F93C906}" AType="118" ASType="5" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+    </Item>
+    <Item Name="Fan" Description="Fan parameters" GUID="{6F82980E-2544-40e9-B150-A7655F93C906}" AType="118" ASType="6" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+    </Item>
+  </Group>
+</DynamicUI>

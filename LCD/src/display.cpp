@@ -1009,7 +1009,7 @@ void DisplayDevice::Test()
   CustomCharacter cust1("0b11110 0b10001 0b10001 0b11110 0b10100 0b10010 0b10001");
   CustomCharacter cust2("0b01111 0b10001 0b10001 0b01111 0b00101 0b01001 0b10001");
 
-  Display(0, 0, 10, "LCD 3.8");
+  Display(0, 0, 10, "LCD 4.0");
   Display(1, -1, -1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   DisplayCustomCharacter(0, 10, cust1);
   DisplayCustomCharacter(0, 11, cust2);
@@ -1579,7 +1579,7 @@ void DisplayDeviceList::SaveToRegistry()
   }
 
   // Clear out all previous settings.
-  SHDeleteKey(HKEY_LOCAL_MACHINE, "Software\\Girder3\\SoftPlugins\\LCD");
+  SHDeleteKey(HKEY_LOCAL_MACHINE, "SOFTWARE\\Promixis\\Girder\\4\\Plugins\\LCD");
 
   HKEY hkey = GetSettingsKey();
 
@@ -1618,7 +1618,7 @@ HKEY DisplayDeviceList::GetSettingsKey()
 {
   HKEY hkey;
   if (ERROR_SUCCESS == RegCreateKey(HKEY_LOCAL_MACHINE,
-                                    "Software\\Girder3\\SoftPlugins\\LCD", 
+                                    "SOFTWARE\\Promixis\\Girder\\4\\Plugins\\LCD", 
                                     &hkey))
     return hkey;
   else

@@ -7,35 +7,65 @@ $Header$
 #include "resource.h"
 #include "display.h"
 
-#define countof(x) sizeof(x)/sizeof(x[0])
+#include <dui.h>
+
+static sGroups GROUP = 
+  // {6F829806-2544-40e9-B150-A7655F93C906}
+  { { 0x6f829806, 0x2544, 0x40e9, { 0xb1, 0x50, 0xa7, 0x65, 0x5f, 0x93, 0xc9, 0x6 } },
+    "LCD" };
+
+#define LCD_DUI_GUID  "{6F829807-2544-40e9-B150-A7655F93C906}"
+#define DISPLAY_PAGE_GUID  "{6F829809-2544-40e9-B150-A7655F93C906}"
+#define CONTROL_PAGE_GUID  "{6F82980A-2544-40e9-B150-A7655F93C906}"
+#define SCREEN_PAGE_GUID  "{6F82980B-2544-40e9-B150-A7655F93C906}"
+#define KEYPAD_PAGE_GUID  "{6F82980C-2544-40e9-B150-A7655F93C906}"
+#define GPO_PAGE_GUID  "{6F82980D-2544-40e9-B150-A7655F93C906}"
+#define FAN_PAGE_GUID  "{6F82980E-2544-40e9-B150-A7655F93C906}"
+
+static DisplayDeviceList g_devices;
+static BOOL g_bMultipleDevices = FALSE;
+PFTree g_DUI;
+PFTreeNode g_DisplayPage, g_ControlPage, g_ScreenPage, 
+  g_KeypadPage, g_GPOPage, g_FanPage;
+PFTreeNode g_DisplayPageActive, g_ControlPageActive, g_ScreenPageActive, 
+  g_KeypadPageActive, g_GPOPageActive, g_FanPageActive;
 
 enum {
   valNONE, valSTR, valINT, valBOOL, valVAR, valLIST, valSTR2, valLIST2
 };
 
-DisplayAction DisplayActions[] = {
-  { "s", "String", valSTR, DisplayString },
-  { "v", "Variable", valVAR, DisplayVariable },
-  { "t", "Current Date/Time", valSTR, DisplayCurrentTime },
-  { "f", "Filename Variable", valVAR, DisplayFilename },
-  { "x", "Close Display", valNONE, DisplayClose },
-  { "c", "Clear Display", valNONE, DisplayClear },
-  { "#", "Screen", valNONE, DisplayScreen },
-  { "*", "Character (numerical code)", valSTR, DisplayCharacter },
-  { "$", "Custom Character", valSTR, DisplayCustomCharacter },
-  { "k", "Keypad Legend", valLIST2, DisplayKeypadLegend },
-  { "o", "General Purpose Output", valBOOL, DisplayGPO },
-  { "p", "Fan Power", valSTR, DisplayFanPower },
+enum {
+  editDisplay = 1, editControl, editScreen, editKeypad, editGPO, editFan
 };
 
-BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
+DisplayAction DisplayActions[] = {
+  { "s", "String", valSTR, editDisplay, DisplayString },
+  { "v", "Variable", valVAR, editDisplay, DisplayVariable },
+  { "t", "Current Date/Time", valSTR, editDisplay, DisplayCurrentTime },
+  { "f", "Filename Variable", valVAR, editDisplay, DisplayFilename },
+  { "*", "Character (numerical code)", valSTR, editDisplay, DisplayCharacter },
+  { "$", "Custom Character", valSTR, editDisplay, DisplayCustomCharacter },
+
+  { "x", "Close Display", valNONE, editControl, DisplayClose },
+  { "c", "Clear Display", valNONE, editControl, DisplayClear },
+
+  { "#", "Screen", valNONE, editScreen, DisplayScreen },
+
+  { "k", "Keypad Legend", valLIST2, editKeypad, DisplayKeypadLegend },
+
+  { "o", "General Purpose Output", valBOOL, editGPO, DisplayGPO },
+
+  { "p", "Fan Power", valSTR, editFan, DisplayFanPower },
+};
+
+BOOL FindDisplayAction(DisplayDeviceList& devices, PCommand command,
                        DisplayActionDeviceType& devtype, DisplayDevice*& device,
                        DisplayAction*& action)
 {
   devtype = devDEFAULT;
   device = devices.GetDefault();
 
-  PCHAR key = command->svalue2;
+  PCHAR key = command->Action.sValue2;
 
 #if 0
   if ((NULL == key) || ('\0' == *key)) {
@@ -43,13 +73,13 @@ BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
     PCHAR val = NULL;
     char buf[128];
 
-    switch (command->ivalue1) {
+    switch (strtol(command->Action.iValue1, NULL, 10)) {
     case 0:                       // String
       key = "s";
       break;
     case 1:                       // String Register
       key = "v";
-      sprintf(buf, "treg%d", command->ivalue2);
+      sprintf(buf, "treg%s", command->Action.iValue2);
       val = buf;
       break;
     case 2:                       // Current Date/Time
@@ -63,29 +93,36 @@ BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
       break;
     case 5:                       // Payload
       key = "v";
-      sprintf(buf, "pld%d", command->ivalue2);
+      sprintf(buf, "pld%s", command->Action.iValue2);
       val = buf;
       break;
     case 6:                       // Filename Payload
       key = "f";
-      sprintf(buf, "pld%d", command->ivalue2);
+      sprintf(buf, "pld%s", command->Action.iValue2);
       val = buf;
       break;
     default:
       return FALSE;
     }
+    if (NULL != val) {
+      SafeFree(command->Action.sValue1);
+      command->Action.sValue1 = GStrDup(val);
+    }
+    SafeFree(command->Action.sValue2);
+    command->Action.sValue2 = GStrDup(key);
     // Position information.
-    command->ivalue1 = command->lvalue1; // Row
-    command->ivalue2 = command->lvalue2; // Column
-    command->ivalue3 = command->lvalue3; // Width
-    if (command->ivalue3 <= 0)
-      command->ivalue3 = -1;    // Standardize rest value.
+    SafeFree(command->Action.iValue1);
+    sprintf(buf, "%d", command->lvalue1); // Row
+    command->Action.iValue1 = GStrDup(buf);
+    SafeFree(command->Action.iValue2);
+    sprintf(buf, "%d", command->lvalue2); // Column
+    command->Action.iValue2 = GStrDup(buf);
+    SafeFree(command->Action.iValue3);
+    sprintf(buf, "%d", (command->lvalue3 <= 0) ? -1 : command->lvalue3); // Width
+    command->Action.iValue3 = GStrDup(buf);
     command->lvalue1 = 0;       // No links.
     command->lvalue2 = 0;
     command->lvalue3 = 0;
-    if (NULL != val)
-      SF.realloc_pchar(&command->svalue1, val);
-    SF.realloc_pchar(&command->svalue2, key);
   }
 #endif
 
@@ -121,654 +158,182 @@ BOOL FindDisplayAction(DisplayDeviceList& devices, p_command command,
   return FALSE;
 }
 
-/* Local variables */
-static DisplayDeviceList g_devices;
-static BOOL g_bMultipleDevices = FALSE;
-static p_command g_editCommand = NULL;
-static HWND g_commandDialog = NULL;
-static HANDLE g_commandThread = NULL;
-
-const LPARAM ALL_DEVICE = (LPARAM)-1;
-const LPARAM DEFAULT_DEVICE = (LPARAM)0;
-
-// Show input controls appropriate for this value type and optionally
-// load from edited command.
-static void ShowValueInputs(HWND hwnd, int valueType, BOOL reload)
+void * WINAPI
+DisplayPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+                    int val1, int val2, void *userdata)
 {
-  ShowWindow(GetDlgItem(hwnd, IDC_VALUEL), 
-             (valNONE != valueType) ? SW_SHOW : SW_HIDE);
-  char legend[256];
-  if (LoadString(g_hInstance,
-                 (valVAR == valueType) ? IDS_VARIABLE : IDS_VALUE,
-                 legend, sizeof(legend)))
-    Static_SetText(GetDlgItem(hwnd, IDC_VALUEL), legend);
-
-  ShowWindow(GetDlgItem(hwnd, IDC_VALSTR), 
-             ((valSTR == valueType) || (valVAR == valueType) || (valSTR2 == valueType)) ?
-             SW_SHOW : SW_HIDE);
-
-  ShowWindow(GetDlgItem(hwnd, IDC_VALINT), 
-             (valINT == valueType) ? SW_SHOW : SW_HIDE);
-  ShowWindow(GetDlgItem(hwnd, IDC_VAL_SPIN), 
-             (valINT == valueType) ? SW_SHOW : SW_HIDE);
-
-  ShowWindow(GetDlgItem(hwnd, IDC_VALBOOL), 
-             (valBOOL == valueType) ? SW_SHOW : SW_HIDE);
-
-  ShowWindow(GetDlgItem(hwnd, IDC_VALLIST),
-             ((valLIST == valueType) || (valLIST2 == valueType)) ? SW_SHOW : SW_HIDE);
-
-  ShowWindow(GetDlgItem(hwnd, IDC_VALUE2L), 
-             ((valSTR2 == valueType) || (valLIST2 == valueType)) ? SW_SHOW : SW_HIDE);
-  ShowWindow(GetDlgItem(hwnd, IDC_VALSTR2),
-             (valSTR2 == valueType) ? SW_SHOW : SW_HIDE);
-
-  ShowWindow(GetDlgItem(hwnd, IDC_VALLIST2),
-             (valLIST2 == valueType) ? SW_SHOW : SW_HIDE);
-
-  if (reload && (NULL != g_editCommand)) {
-    Button_SetCheck(GetDlgItem(hwnd, IDC_VALBOOL), g_editCommand->bvalue1);
-    if (valINT == valueType)
-      Edit_SetText(GetDlgItem(hwnd, IDC_VALINT), g_editCommand->svalue1);
-    else if ((valLIST == valueType) || (valLIST2 == valueType))
-      ComboBox_SetText(GetDlgItem(hwnd, IDC_VALLIST), g_editCommand->svalue1);
-    else
-      Edit_SetText(GetDlgItem(hwnd, IDC_VALSTR), g_editCommand->svalue1);
-    if (valLIST2 == valueType)
-      ComboBox_SetText(GetDlgItem(hwnd, IDC_VALLIST2), g_editCommand->svalue3);
-    else if (valSTR2 == valueType)
-      Edit_SetText(GetDlgItem(hwnd, IDC_VALSTR2), g_editCommand->svalue3);
-  }
-}
-
-static void FillValueListChoices(HWND hwnd, UINT ctlid, UINT strid, LPCSTR *choices)
-{
-  char legend[256];
-  if (LoadString(g_hInstance, strid, legend, sizeof(legend)))
-    Static_SetText(GetDlgItem(hwnd, (IDC_VALLIST == ctlid) ? IDC_VALUEL : IDC_VALUE2L),
-                   legend);
-  HWND combo = GetDlgItem(hwnd, ctlid);
-  ComboBox_ResetContent(combo);
-  if (NULL != choices) {
-    while (NULL != *choices)
-      ComboBox_AddString(combo, *choices++);
-  }
-}
-
-// Show position inputs and optionally load from edited command.
-static void ShowPositionInputs(HWND hwnd, UINT ctlid, BOOL reload)
-{
-  int sw = ((IDC_WIDTH == ctlid) || (IDC_ROW == ctlid)) ? SW_SHOW : SW_HIDE;
-  ShowWindow(GetDlgItem(hwnd, IDC_ROWL), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_ROW), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_ROW_SPIN), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_USE_COL), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_COL), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_COL_SPIN), sw);
-  sw = (IDC_WIDTH == ctlid) ? SW_SHOW : SW_HIDE;
-  ShowWindow(GetDlgItem(hwnd, IDC_USE_WRAP), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_USE_REST), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_WIDTH), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), sw);
-
-  if (reload) {
-    UpDown_SetPos(GetDlgItem(hwnd, IDC_ROW_SPIN),
-                  ((IDC_WIDTH == ctlid) || (IDC_ROW == ctlid)) ? 
-                  g_editCommand->ivalue1 : 0);
-    UpDown_SetPos(GetDlgItem(hwnd, IDC_COL_SPIN),
-                  ((IDC_WIDTH == ctlid) || (IDC_ROW == ctlid)) ?
-                  g_editCommand->ivalue2 : 0);
-    BOOL wrap = (IDC_WIDTH == ctlid) && (g_editCommand->ivalue2 < 0);
-    Button_SetCheck(GetDlgItem(hwnd, IDC_USE_WRAP), wrap);
-    Button_SetCheck(GetDlgItem(hwnd, IDC_USE_COL), !wrap);
-    UpDown_SetPos(GetDlgItem(hwnd, IDC_WIDTH_SPIN), g_editCommand->ivalue3);
-    EnableWindow(GetDlgItem(hwnd, IDC_COL), !wrap);
-    EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), !wrap);
-    EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), !wrap);
-    EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), !wrap);
-    BOOL rest = (wrap || (IDC_WIDTH != ctlid) || (g_editCommand->ivalue3 <= 0));
-    Button_SetCheck(GetDlgItem(hwnd, IDC_USE_REST), rest);
-    Button_SetCheck(GetDlgItem(hwnd, IDC_USE_WIDTH), !rest);
-    EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), !rest);
-    EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), !rest);
-  }
-
-  sw = (IDC_FANGPO == ctlid) ? SW_SHOW : SW_HIDE;
-  ShowWindow(GetDlgItem(hwnd, IDC_VALUE2L), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_FANGPO), sw);
-  ShowWindow(GetDlgItem(hwnd, IDC_FANGPO_SPIN), sw);
-  if (reload)
-    UpDown_SetPos(GetDlgItem(hwnd, IDC_FANGPO_SPIN),
-                  (IDC_FANGPO == ctlid) ? g_editCommand->ivalue1 : 0);
-}
-
-// Show inputs for screen command and optionally load from edited command.
-static void ShowScreenInputs(HWND hwnd, BOOL show, BOOL reload)
-{
-  ShowWindow(GetDlgItem(hwnd, IDC_SCREENL), (show) ? SW_SHOW : SW_HIDE);
-  int nrows = 0;
-  if (show) {
-    nrows = DisplayHeight();
-    if (nrows > 4) nrows = 4;
-  }
-  for (int i = 0; i < nrows; i++) {
-    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), SW_SHOW);
-    ShowWindow(GetDlgItem(hwnd, IDC_LINE1 + i), SW_SHOW);
-    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), SW_SHOW);
-  }    
-  for (i = nrows; i < 4; i++) {
-    ShowWindow(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i), SW_HIDE);
-    ShowWindow(GetDlgItem(hwnd, IDC_LINE1 + i), SW_HIDE);
-    ShowWindow(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), SW_HIDE);
-  }
-
-  if (reload) {
-    char buf[1024];
-    PCHAR pval = buf;
-    if (show)
-      strncpy(buf, g_editCommand->svalue1, sizeof(buf));
-    else
-      buf[0] = '\0';
-
-    for (i = 0; i < 4; i++) {
-      Button_SetCheck(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i),
-                      !show || !(g_editCommand->ivalue1 & (1 << i)));
-      Button_SetCheck(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i),
-                      show && !!(g_editCommand->ivalue2 & (1 << i)));
-
-      PCHAR next = strchr(pval, '\n');
-      if (NULL != next) {
-        if ((next > pval) && (*(next-1) == '\r'))
-          *(next-1) = '\0';
-        *next++ = '\0';
-      }
-      else
-        next = pval + strlen(pval);
-      Edit_SetText(GetDlgItem(hwnd, IDC_LINE1 + i), pval);
-      pval = next;
-    }
-  }
-}
-                            
-// Show input controls appropriate for this command type and
-// optionally load from edited command.
-static void ShowCommandInputs(HWND hwnd, DisplayDevice *commandDevice, 
-                              DisplayAction *action, BOOL reload)
-{
-  if ((NULL == action) ||
-      (DisplayClear == action->function) ||
-      (DisplayClose == action->function)) {
-    ShowValueInputs(hwnd, valNONE, reload);
-    ShowPositionInputs(hwnd, 0, reload);
-    ShowScreenInputs(hwnd, FALSE, reload);
-  }
-  else if (DisplayScreen == action->function) {
-    ShowValueInputs(hwnd, valNONE, reload);
-    ShowPositionInputs(hwnd, 0, reload);
-    ShowScreenInputs(hwnd, TRUE, reload);
-  }
-  else if (DisplayKeypadLegend == action->function) {
-    FillValueListChoices(hwnd, IDC_VALLIST, 
-                         IDS_BUTTON, commandDevice->GetKeypadButtonChoices());
-    FillValueListChoices(hwnd, IDC_VALLIST2, 
-                         IDS_LEGEND, commandDevice->GetKeypadLegendChoices());
-    ShowValueInputs(hwnd, valLIST2, reload);
-    ShowPositionInputs(hwnd, 0, reload);
-    ShowScreenInputs(hwnd, FALSE, reload);
-  }
-  else if ((DisplayGPO == action->function) ||
-           (DisplayFanPower == action->function)) {
-    char legend[256];
-    if (LoadString(g_hInstance,
-                   (DisplayGPO == action->function) ? IDS_GPOL : IDS_FANL,
-                   legend, sizeof(legend)))
-      Static_SetText(GetDlgItem(hwnd, IDC_VALUE2L), legend);
-    UpDown_SetRange(GetDlgItem(hwnd, IDC_FANGPO_SPIN),
-                    (DisplayGPO == action->function) ? 
-                    commandDevice->GetNGPOs() : commandDevice->GetNFans(),
-                    1);
-    ShowValueInputs(hwnd, action->valueType, reload);
-    ShowPositionInputs(hwnd, IDC_FANGPO, reload);
-    ShowScreenInputs(hwnd, FALSE, reload);
-  }
-  else if ((valSTR2 == action->valueType) ||
-           (valLIST2 == action->valueType)) {
-    ShowValueInputs(hwnd, action->valueType, reload);
-    ShowPositionInputs(hwnd, 0, reload);
-    ShowScreenInputs(hwnd, FALSE, reload);
+  PCommand command;
+  if (ntCommand == baseNode->NodeType) {
+    command = (PCommand)baseNode;
   }
   else {
-    UpDown_SetRange(GetDlgItem(hwnd, IDC_ROW_SPIN), commandDevice->GetHeight() - 1, 0);
-    UpDown_SetRange(GetDlgItem(hwnd, IDC_COL_SPIN), commandDevice->GetWidth() - 1, 0);
-    ShowValueInputs(hwnd, action->valueType, reload);
-    ShowPositionInputs(hwnd, 
-                       ((DisplayCharacter == action->function) ||
-                        (DisplayCustomCharacter == action->function)) ?
-                       IDC_ROW : IDC_WIDTH, 
-                       reload);
-    ShowScreenInputs(hwnd, FALSE, reload);
+    return NULL;
   }
+
+  switch (val1) {
+  case duOnGetValues:
+    {
+      EnterCriticalSection(&lua->CS);
+  
+      DisplayActionDeviceType deviceType;  
+      DisplayDevice *commandDevice;
+      DisplayAction *action;
+      if (!FindDisplayAction(g_devices, command, deviceType, commandDevice, action))
+        action = DisplayActions;    // String
+
+      if (command->ActionSubType != action->editorType) {
+        LeaveCriticalSection(&lua->CS);
+        return g_ControlPageActive;
+      }
+
+      LeaveCriticalSection(&lua->CS);
+    }
+    break;
+				
+  case duOnApply:
+    break;
+
+  case duOnEvent:
+    break;
+  }
+
+  return NULL;
 }
 
-static void FillCommandChoices(HWND hwnd, 
-                               DisplayDevice *commandDevice, DisplayAction *selact)
+void * WINAPI
+ControlPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+                   int val1, int val2, void *userdata)
 {
-  HWND combo = GetDlgItem(hwnd, IDC_TYPE);
-  ComboBox_ResetContent(combo);
-  for (size_t i = 0; i < countof(DisplayActions); i++) {
-    DisplayAction *action = DisplayActions + i;
-    if (NULL == commandDevice) {
-      if (DisplayClose !=  action->function) continue;
-    }
-    else if (DisplayKeypadLegend == action->function) {
-      if (!commandDevice->HasKeypadLegends()) continue;
-    }
-    else if (DisplayGPO == action->function) {
-      if (!commandDevice->HasGPOs()) continue;
-    }
-    else if (DisplayFanPower == action->function) {
-      if (!commandDevice->HasFans()) continue;
-    }
-    int idx = ComboBox_AddString(combo, action->name);
-    ComboBox_SetItemData(combo, idx, action);
-    if (action == selact)
-      ComboBox_SetCurSel(combo, idx);
-  }
+  return NULL;
 }
 
-// Load state from edited command.
-static void LoadCommandSettings(HWND hwnd)
+void * WINAPI
+ScreenPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+                   int val1, int val2, void *userdata)
 {
-  EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-
-  if (NULL == g_editCommand) {
-    ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_TYPE), CB_ERR);
-    ShowCommandInputs(hwnd, NULL, NULL, TRUE);
-    return;
-  }
-
-  EnterCriticalSection(&g_editCommand->critical_section);
-  
-  DisplayActionDeviceType deviceType;  
-  DisplayDevice *commandDevice;
-  DisplayAction *action;
-  if (!FindDisplayAction(g_devices, g_editCommand, 
-                         deviceType, commandDevice, 
-                         action))
-    action = DisplayActions;    // String
-
-  if (g_bMultipleDevices) {
-    LPARAM devdata;
-    switch (deviceType) {
-    case devDEFAULT:
-      devdata = DEFAULT_DEVICE;
-      break;
-    case devALL:
-      devdata = ALL_DEVICE;
-      break;
-    case devNAMED:
-      devdata = (LPARAM)commandDevice;
-      break;
-    case devUNKNOWN:
-      devdata = (LPARAM)-2;     // Something that won't match.
-      break;
-    }
-    HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
-    int nidx = ComboBox_GetCount(combo);
-    for (int idx = 0; idx < nidx; idx++) {
-      if (devdata == ComboBox_GetItemData(combo, idx)) {
-        ComboBox_SetCurSel(combo, idx);
-        break;
-      }
-    }
-  }
-
-  FillCommandChoices(hwnd, commandDevice, action);
-  
-  ShowCommandInputs(hwnd, commandDevice, action, TRUE);
-
-  LeaveCriticalSection(&g_editCommand->critical_section);
+  return NULL;
 }
 
-// Save state back into edited command.
-static BOOL SaveCommandSettings(HWND hwnd)
+void * WINAPI
+KeypadPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+                   int val1, int val2, void *userdata)
 {
-  char buf[1024];
+  return NULL;
+}
 
-  if (g_editCommand == NULL)
-     return FALSE;
+void * WINAPI
+GPOPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+                int val1, int val2, void *userdata)
+{
+  return NULL;
+}
 
-  EnterCriticalSection(&g_editCommand->critical_section);
+void * WINAPI
+FanPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
+                int val1, int val2, void *userdata)
+{
+  return NULL;
+}
 
-  HWND combo = GetDlgItem(hwnd, IDC_TYPE);
-  int selidx = ComboBox_GetCurSel(combo);
-  DisplayAction *action = (DisplayAction *)
-    ComboBox_GetItemData(combo, selidx);
-  PCHAR key = (NULL != action) ? (PCHAR)action->key : "?";
-  if (g_bMultipleDevices) {
-    combo = GetDlgItem(hwnd, IDC_DISPLAY);
-    selidx = ComboBox_GetCurSel(combo);
-    if (CB_ERR != selidx) {
-      LPARAM devdata = ComboBox_GetItemData(combo, selidx);
-      if (DEFAULT_DEVICE != devdata) {
-        if (ALL_DEVICE == devdata)
-          strcpy(buf, "*");
-        else
-          strncpy(buf, ((DisplayDevice *)devdata)->GetName(), sizeof(buf));
-        strncat(buf, ":", sizeof(buf));
-        strncat(buf, key, sizeof(buf));
-        key = buf;
-      }
-    }
-  }
-  SF.realloc_pchar(&g_editCommand->svalue2, key);
-
-  if (DisplayScreen == action->function) {
-    PCHAR pval = buf;
-    g_editCommand->ivalue1 = g_editCommand->ivalue2 = 0;
-    int nrows = DisplayHeight();
-    if (nrows > 4) nrows = 4;
-    for (int i = 0; i < nrows; i++) {
-      if (i > 0)
-        *pval++ = '\n';
-
-      if (!Button_GetCheck(GetDlgItem(hwnd, IDC_ENABLE_LINE1 + i)))
-        g_editCommand->ivalue1 |= (1 << i);
-      if (Button_GetCheck(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i)))
-        g_editCommand->ivalue2 |= (1 << i);
-
-      Edit_GetText(GetDlgItem(hwnd, IDC_LINE1 + i), pval, sizeof(buf) - (pval - buf));
-      pval += strlen(pval);
-    }
-    SF.realloc_pchar(&g_editCommand->svalue1, buf);
-  }
-  else {
-    if (NULL != action) {
-      switch (action->valueType) {
-      case valNONE:
-      case valBOOL:
-        break;
-      case valINT:
-        Edit_GetText(GetDlgItem(hwnd, IDC_VALINT), buf, sizeof(buf));
-        SF.realloc_pchar(&g_editCommand->svalue1, buf);
-        break;
-      case valLIST:
-      case valLIST2:
-        ComboBox_GetText(GetDlgItem(hwnd, IDC_VALLIST), buf, sizeof(buf));
-        SF.realloc_pchar(&g_editCommand->svalue1, buf);
-        break;
-      default:
-        Edit_GetText(GetDlgItem(hwnd, IDC_VALSTR), buf, sizeof(buf));
-        SF.realloc_pchar(&g_editCommand->svalue1, buf);
-      }
-      switch (action->valueType) {
-      case valLIST2:
-        ComboBox_GetText(GetDlgItem(hwnd, IDC_VALLIST2), buf, sizeof(buf));
-        SF.realloc_pchar(&g_editCommand->svalue3, buf);
-        break;
-      case valSTR2:
-        Edit_GetText(GetDlgItem(hwnd, IDC_VALSTR2), buf, sizeof(buf));
-        SF.realloc_pchar(&g_editCommand->svalue3, buf);
-      }
-    }
-
-    g_editCommand->bvalue1 = Button_GetCheck(GetDlgItem(hwnd, IDC_VALBOOL));
-
-    if ((DisplayGPO == action->function) ||
-        (DisplayFanPower == action->function)) {
-      g_editCommand->ivalue1 = UpDown_GetPos(GetDlgItem(hwnd, IDC_FANGPO_SPIN));
-    }
-    else {
-      g_editCommand->ivalue1 = UpDown_GetPos(GetDlgItem(hwnd, IDC_ROW_SPIN));
-      if (Button_GetCheck(GetDlgItem(hwnd, IDC_USE_WRAP)))
-        g_editCommand->ivalue2 = -1;
-      else
-        g_editCommand->ivalue2 = UpDown_GetPos(GetDlgItem(hwnd, IDC_COL_SPIN));
-      if (Button_GetCheck(GetDlgItem(hwnd, IDC_USE_REST)))
-        g_editCommand->ivalue3 = -1;
-      else
-        g_editCommand->ivalue3 = UpDown_GetPos(GetDlgItem(hwnd, IDC_WIDTH_SPIN));
-    }
+BOOL DUIOpen()
+{
+  char path[MAX_PATH];
+  strcpy(path, SF.CoreVars->ExePath);
+  strcat(path, "plugins\\UI\\LCD.xml");
+  g_DUI = LoadDUI(path);
+  if (NULL == g_DUI) {
+    GirderLogMessageEx(PLUGINNAME, "Could not open DUI File (LCD.xml).",
+                       GLM_ERROR_ICON);
+    return FALSE;
   }
   
-  g_editCommand->actiontype = PLUGINNUM;
-  SF.set_command(g_editCommand);
+  g_DisplayPage = FindNodeS(DISPLAY_PAGE_GUID, g_DUI, NULL);
+  if (NULL == g_DisplayPage) {	
+    GirderLogMessageEx(PLUGINNAME, "Could not find the Display Page in PowerMate.xml.", 
+                       GLM_ERROR_ICON);
+    return FALSE;
+  }
+  SetCallbacks(g_DUI, g_DisplayPage, DisplayPageCallback, TRUE);
 
-  EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
+  g_ControlPage = FindNodeS(CONTROL_PAGE_GUID, g_DUI, NULL);
+  if (NULL == g_ControlPage) {	
+    GirderLogMessageEx(PLUGINNAME, "Could not find the Control Page in PowerMate.xml.", 
+                       GLM_ERROR_ICON);
+    return FALSE;
+  }
+  SetCallbacks(g_DUI, g_ControlPage, ControlPageCallback, TRUE);
 
-  LeaveCriticalSection(&g_editCommand->critical_section);
+  g_ScreenPage = FindNodeS(SCREEN_PAGE_GUID, g_DUI, NULL);
+  if (NULL == g_ScreenPage) {	
+    GirderLogMessageEx(PLUGINNAME, "Could not find the Screen Page in PowerMate.xml.", 
+                       GLM_ERROR_ICON);
+    return FALSE;
+  }
+  SetCallbacks(g_DUI, g_ScreenPage, ScreenPageCallback, TRUE);
+
+  g_KeypadPage = FindNodeS(KEYPAD_PAGE_GUID, g_DUI, NULL);
+  if (NULL == g_KeypadPage) {	
+    GirderLogMessageEx(PLUGINNAME, "Could not find the Keypad Page in PowerMate.xml.", 
+                       GLM_ERROR_ICON);
+    return FALSE;
+  }
+  SetCallbacks(g_DUI, g_KeypadPage, KeypadPageCallback, TRUE);
+
+  g_GPOPage = FindNodeS(GPO_PAGE_GUID, g_DUI, NULL);
+  if (NULL == g_GPOPage) {	
+    GirderLogMessageEx(PLUGINNAME, "Could not find the GPO Page in PowerMate.xml.", 
+                       GLM_ERROR_ICON);
+    return FALSE;
+  }
+  SetCallbacks(g_DUI, g_GPOPage, GPOPageCallback, TRUE);
+
+  g_FanPage = FindNodeS(FAN_PAGE_GUID, g_DUI, NULL);
+  if (NULL == g_FanPage) {	
+    GirderLogMessageEx(PLUGINNAME, "Could not find the Fan Page in PowerMate.xml.", 
+                       GLM_ERROR_ICON);
+    return FALSE;
+  }
+  SetCallbacks(g_DUI, g_FanPage, FanPageCallback, TRUE);
 
   return TRUE;
 }
-     
-static BOOL CALLBACK CommandDialogProc(HWND hwnd, UINT uMsg, 
-                                       WPARAM wParam, LPARAM lParam)
+
+void DUIClose()
 {
-  switch (uMsg) {
-  case WM_INITDIALOG:
-    {
-      g_commandDialog = hwnd;
-
-      SendMessage(hwnd, WM_SETICON, ICON_SMALL, 
-                  (LPARAM)LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_PLUGIN)));
-
-      SetWindowText(hwnd, PLUGINNAME);
-			
-      if (g_bMultipleDevices) {
-        HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
-        int idx = ComboBox_AddString(combo, " All");
-        ComboBox_SetItemData(combo, idx, ALL_DEVICE);
-        idx = ComboBox_AddString(combo, " Default");
-        ComboBox_SetItemData(combo, idx, DEFAULT_DEVICE);
-        for (DisplayDevice *dev = g_devices.GetFirst(); NULL != dev;
-             dev = dev->GetNext()) {
-          idx = ComboBox_AddString(combo, dev->GetName());
-          ComboBox_SetItemData(combo, idx, dev);
-        }
-        ShowWindow(GetDlgItem(hwnd, IDC_DISPLAYL), SW_SHOW);
-        ShowWindow(combo, SW_SHOW);
-      }
-
-      LoadCommandSettings(hwnd);
-
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), FALSE);
-      return TRUE;
-    }
-
-  case WM_COMMAND:
-    switch (LOWORD(wParam)) {
-    case IDOK:
-      if (SaveCommandSettings(hwnd))
-        EndDialog(hwnd, TRUE);
-      return TRUE;
-
-    case IDC_APPLY:
-      SaveCommandSettings(hwnd);
-      return TRUE;
-
-    case IDCANCEL:
-      EndDialog(hwnd, FALSE);
-      return TRUE;
-
-    case IDC_DISPLAY:
-      if (HIWORD(wParam) == CBN_SELENDOK) {
-        HWND combo = GetDlgItem(hwnd, IDC_DISPLAY);
-        int selidx = ComboBox_GetCurSel(combo);
-        LPARAM devdata = ComboBox_GetItemData(combo, selidx);
-        DisplayDevice *commandDevice;
-        if (DEFAULT_DEVICE == devdata)
-          commandDevice = g_devices.GetDefault();
-        else if (ALL_DEVICE == devdata)
-          commandDevice = NULL;
-        else
-          commandDevice = (DisplayDevice *)devdata;
-        DisplayAction *selact = NULL;
-        combo = GetDlgItem(hwnd, IDC_TYPE);
-        selidx = ComboBox_GetCurSel(combo);
-        if (CB_ERR != selidx)
-          // Maintain existing action type selection if possible.
-          selact = (DisplayAction *)ComboBox_GetItemData(combo, selidx);
-        FillCommandChoices(hwnd, commandDevice, selact);
-        EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      }
-      break;
-
-    case IDC_TYPE:
-      if (HIWORD(wParam) == CBN_SELENDOK) {
-        HWND combo = GetDlgItem(hwnd, IDC_TYPE);
-        int selidx = ComboBox_GetCurSel(combo);
-        DisplayAction *action = (DisplayAction *)
-          ComboBox_GetItemData(combo, selidx);
-        DisplayDevice *commandDevice;
-        if (g_bMultipleDevices) {
-          combo = GetDlgItem(hwnd, IDC_DISPLAY);
-          selidx = ComboBox_GetCurSel(combo);
-          LPARAM devdata = ComboBox_GetItemData(combo, selidx);
-          if (DEFAULT_DEVICE == devdata)
-            commandDevice = g_devices.GetDefault();
-          else if (ALL_DEVICE == devdata)
-            commandDevice = NULL;
-          else
-            commandDevice = (DisplayDevice *)devdata;
-        }
-        else
-          commandDevice = g_devices.GetDefault();
-        ShowCommandInputs(hwnd, commandDevice, action, FALSE);
-        EnableWindow(GetDlgItem(hwnd, IDC_APPLY), (NULL != action));
-      }
-      break;
-
-    case IDC_VALSTR:
-    case IDC_VALINT:
-    case IDC_ROW:
-    case IDC_COL:
-    case IDC_WIDTH:
-      if (HIWORD(wParam) == EN_CHANGE) {
-        EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      }
-      break;
-
-    case IDC_VALBOOL:
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      break;
-
-    case IDC_USE_WRAP:
-      EnableWindow(GetDlgItem(hwnd, IDC_COL), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), FALSE);
-      Button_SetCheck(GetDlgItem(hwnd, IDC_USE_REST), TRUE);
-      Button_SetCheck(GetDlgItem(hwnd, IDC_USE_WIDTH), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), FALSE);
-      /* falls through */
-    case IDC_USE_REST:
-      EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), FALSE);
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      break;
-
-    case IDC_USE_COL:
-      EnableWindow(GetDlgItem(hwnd, IDC_COL), TRUE);
-      EnableWindow(GetDlgItem(hwnd, IDC_COL_SPIN), TRUE);
-      EnableWindow(GetDlgItem(hwnd, IDC_USE_REST), TRUE);
-      EnableWindow(GetDlgItem(hwnd, IDC_USE_WIDTH), TRUE);
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      break;
-
-    case IDC_USE_WIDTH:
-      EnableWindow(GetDlgItem(hwnd, IDC_WIDTH), TRUE);
-      EnableWindow(GetDlgItem(hwnd, IDC_WIDTH_SPIN), TRUE);
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      break;
-
-    case IDC_ENABLE_LINE1:
-    case IDC_ENABLE_LINE2:
-    case IDC_ENABLE_LINE3:
-    case IDC_ENABLE_LINE4:
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      break;
-
-    case IDC_MARQUEE_LINE1:
-    case IDC_MARQUEE_LINE2:
-    case IDC_MARQUEE_LINE3:
-    case IDC_MARQUEE_LINE4:
-      {
-        int off = LOWORD(wParam) - IDC_MARQUEE_LINE1;
-        BOOL check = !Button_GetCheck(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + off));
-        for (int i = 0; i < 4; i++) {
-          Button_SetCheck(GetDlgItem(hwnd, IDC_MARQUEE_LINE1 + i), 
-                          ((i == off) & check));
-        }
-      }
-      EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-      break;
-    }
-    break;
-
-  case WM_NOTIFY:
-    {
-      LPNMHDR phdr = (LPNMHDR)lParam;
-      switch (phdr->code) {
-      case UDN_DELTAPOS:
-        EnableWindow(GetDlgItem(hwnd, IDC_APPLY), TRUE);
-        break;
-      }
-    }
-    break;
-
-  case WM_USER+100:
-    LoadCommandSettings(hwnd);
-    return TRUE;
-  }
-  return FALSE;
+  DeleteFTree(g_DUI);
+  g_DUI = NULL;
+  g_DisplayPage =  g_ControlPage = g_ScreenPage = 
+    g_KeypadPage = g_GPOPage = g_FanPage = NULL;
 }
 
-static DWORD WINAPI CommandThread(LPVOID lpParam)
+void DUIOpenCommand(PFTree tree)
 {
-  g_devices.LoadFromRegistry();
-  g_bMultipleDevices = ((NULL == g_devices.GetFirst()) ||
-                        (NULL != g_devices.GetFirst()->GetName()));
-
-  DialogBoxParam(g_hInstance, MAKEINTRESOURCE(IDD_COMMAND), DisplayWindowParent(), 
-                 CommandDialogProc, (LPARAM)lpParam);
-  g_commandDialog = NULL;
-   
-  g_devices.Clear();
-  return 0;
+  g_DisplayPageActive = InsertDUIPage(tree, g_DUI, g_DisplayPage,
+                                      &GROUP.PageGUID, &GROUP);
+  g_ControlPageActive = InsertDUIPage(tree, g_DUI, g_ControlPage,
+                                      &GROUP.PageGUID, &GROUP);
+  g_ScreenPageActive = InsertDUIPage(tree, g_DUI, g_ScreenPage,
+                                     &GROUP.PageGUID, &GROUP);
+  g_KeypadPageActive = InsertDUIPage(tree, g_DUI, g_KeypadPage,
+                                     &GROUP.PageGUID, &GROUP);
+  g_GPOPageActive = InsertDUIPage(tree, g_DUI, g_GPOPage,
+                                  &GROUP.PageGUID, &GROUP);
+  g_FanPageActive = InsertDUIPage(tree, g_DUI, g_FanPage,
+                                  &GROUP.PageGUID, &GROUP);
 }
 
-// Plugin request for Settings dialog.
-void OpenCommandUI()
+void DUICloseCommand(PFTree tree)
 {
-  // TODO: I think there is a race condition here when thread is
-  // starting or finishing
-  if (NULL != g_commandDialog) {
-    SetForegroundWindow(g_commandDialog);
-  }
-  else {
-    if (NULL != g_commandThread)
-      CloseHandle(g_commandThread);
-    DWORD dwThreadId;
-    g_commandThread = CreateThread(NULL, 0, &CommandThread, NULL, 0, &dwThreadId);
-    if (NULL == g_commandThread)
-      MessageBox(NULL, "Cannot create dialog thread.", "Error", MB_OK);
-  }
-}
-
-// Plugin request to edit another command.
-void UpdateCommandUI(p_command command)
-{
-  g_editCommand = command;
-  if (NULL != g_commandDialog)
-    SendMessage(g_commandDialog, WM_USER+100, 0, 0);
-}
-
-// Plugin request to close any Settings dialog.
-void CloseCommandUI()
-{
-  if (NULL != g_commandDialog) {
-    SendMessage(g_commandDialog, WM_DESTROY, 0, 0);
-    WaitForSingleObject(g_commandThread, 4000);
-    CloseHandle(g_commandThread);
-  }
+  RemoveDUIPageS(tree, DISPLAY_PAGE_GUID);
+  g_DisplayPageActive = NULL;
+  RemoveDUIPageS(tree, CONTROL_PAGE_GUID);
+  g_ControlPageActive = NULL;
+  RemoveDUIPageS(tree, SCREEN_PAGE_GUID);
+  g_ScreenPageActive = NULL;
+  RemoveDUIPageS(tree, KEYPAD_PAGE_GUID);
+  g_KeypadPageActive = NULL;
+  RemoveDUIPageS(tree, GPO_PAGE_GUID);
+  g_GPOPageActive = NULL;
+  RemoveDUIPageS(tree, FAN_PAGE_GUID);
+  g_FanPageActive = NULL;
 }

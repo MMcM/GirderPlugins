@@ -25,7 +25,7 @@ int luaSize(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 0, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_Width");
+    luaL_error(L, "incorrect number of arguments to LCD_Width");
     return 0;
   }
   lua_pushnumber(L, DisplayWidth(dev));
@@ -38,7 +38,7 @@ int luaClose(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 0, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_Close");
+    luaL_error(L, "incorrect number of arguments to LCD_Close");
     return 0;
   }
   DisplayClose(dev);
@@ -50,14 +50,14 @@ int luaString(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 4, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_Display");
+    luaL_error(L, "incorrect number of arguments to LCD_Display");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         lua_isnumber(L, 2) &&
         lua_isnumber(L, 3) &&
         lua_isstring(L, 4))) {
-    lua_error(L, "wrong type argument to LCD_Display");
+    luaL_error(L, "wrong type argument to LCD_Display");
     return 0;
   }
   DisplayString((int)lua_tonumber(L, 1), 
@@ -73,13 +73,13 @@ int luaCustomCharacter(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 3, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_CustomCharacter");
+    luaL_error(L, "incorrect number of arguments to LCD_CustomCharacter");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         lua_isnumber(L, 2) &&
         lua_isstring(L, 3))) {
-    lua_error(L, "wrong type argument to LCD_CustomCharacter");
+    luaL_error(L, "wrong type argument to LCD_CustomCharacter");
     return 0;
   }
   DisplayCustomCharacter((int)lua_tonumber(L, 1), 
@@ -94,12 +94,12 @@ int luaGPO(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 2, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_GPO");
+    luaL_error(L, "incorrect number of arguments to LCD_GPO");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         (lua_isnumber(L, 2) || lua_isnil(L, 2)))) {
-    lua_error(L, "wrong type argument to LCD_GPO");
+    luaL_error(L, "wrong type argument to LCD_GPO");
     return 0;
   }
   DisplayGPO((int)lua_tonumber(L, 1), 
@@ -113,12 +113,12 @@ int luaFanPower(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 2, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_FanPower");
+    luaL_error(L, "incorrect number of arguments to LCD_FanPower");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         lua_isnumber(L, 2))) {
-    lua_error(L, "wrong type argument to LCD_FanPower");
+    luaL_error(L, "wrong type argument to LCD_FanPower");
     return 0;
   }
   DisplayFanPower((int)lua_tonumber(L, 1), 
@@ -132,11 +132,11 @@ int luaGetSetting(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 1, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_GetSetting");
+    luaL_error(L, "incorrect number of arguments to LCD_GetSetting");
     return 0;
   }
   if (!lua_isstring(L, 1)) {
-    lua_error(L, "wrong type argument to LCD_GetSetting");
+    luaL_error(L, "wrong type argument to LCD_GetSetting");
     return 0;
   }
   LPCSTR key = lua_tostring(L, 1);
@@ -156,12 +156,12 @@ int luaSetSetting(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 2, dev)) {
-    lua_error(L, "incorrect number of arguments to LCD_SetSetting");
+    luaL_error(L, "incorrect number of arguments to LCD_SetSetting");
     return 0;
   }
   if (!(lua_isstring(L, 1) &&
         (lua_isstring(L, 2) || lua_isnil(L, 2)))) {
-    lua_error(L, "wrong type argument to LCD_SetSetting");
+    luaL_error(L, "wrong type argument to LCD_SetSetting");
     return 0;
   }
   LPCSTR key = lua_tostring(L, 1);
@@ -201,14 +201,14 @@ struct luaL_reg luaFunctions[] = {
 
 void FunctionsOpen()
 {
-  lua_State *L = (lua_State *)SF.get_script_state();
+  lua_State *L = (lua_State *)SF.CoreVars->LuaState;
   if (NULL == L) return;
-  luaL_openl(L, luaFunctions);
+  luaL_openlib(L, "LCD", luaFunctions, countof(luaFunctions));
 }
 
 void FunctionsClose()
 {
-  lua_State *L = (lua_State *)SF.get_script_state();
+  lua_State *L = (lua_State *)SF.CoreVars->LuaState;
   if (NULL == L) return;
-  luaL_closel(L, luaFunctions);
+  //luaL_closel(L, luaFunctions);
 }

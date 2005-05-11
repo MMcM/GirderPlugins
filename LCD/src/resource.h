@@ -13,7 +13,6 @@
 #define IDD_FAN                         109
 #define IDD_SENSORS                     110
 #define IDD_SENSOR                      111
-#define IDD_COMMAND                     112
 #define IDS_NEW_DEVICE_NAME             101
 #define IDS_NAME                        102
 #define IDS_DEVICE                      103
@@ -72,49 +71,15 @@
 #define IDC_PPR                         1036
 #define IDC_PPR_SPIN                    1037
 #define IDC_SENSORS                     1038
-#define IDC_DISPLAYL                    1039
-#define IDC_DISPLAY                     1040
-#define IDC_TYPEL                       1041
-#define IDC_TYPE                        1042
-#define IDC_VALUEL                      1043
-#define IDC_VALSTR                      1044
-#define IDC_VALLIST                     1045
-#define IDC_VALINT                      1046
-#define IDC_VAL_SPIN                    1047
-#define IDC_VALBOOL                     1048
-#define IDC_USE_WRAP                    1049
-#define IDC_USE_COL                     1050
-#define IDC_USE_REST                    1051
-#define IDC_USE_WIDTH                   1052
-#define IDC_WIDTH                       1053
-#define IDC_WIDTH_SPIN                  1054
-#define IDC_SCREENL                     1055
-#define IDC_ENABLE_LINE1                1056
-#define IDC_ENABLE_LINE2                1057
-#define IDC_ENABLE_LINE3                1058
-#define IDC_ENABLE_LINE4                1059
-#define IDC_LINE1                       1060
-#define IDC_LINE2                       1061
-#define IDC_LINE3                       1062
-#define IDC_LINE4                       1063
-#define IDC_MARQUEE_LINE1               1064
-#define IDC_MARQUEE_LINE2               1065
-#define IDC_MARQUEE_LINE3               1066
-#define IDC_MARQUEE_LINE4               1067
-#define IDC_VALUE2L                     1068
-#define IDC_VALSTR2                     1069
-#define IDC_VALLIST2                    1070
-#define IDC_FANGPO                      1071
-#define IDC_FANGPO_SPIN                 1072
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        113
+#define _APS_NEXT_RESOURCE_VALUE        112
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1073
+#define _APS_NEXT_CONTROL_VALUE         1039
 #define _APS_NEXT_SYMED_VALUE           120
 #endif
 #endif

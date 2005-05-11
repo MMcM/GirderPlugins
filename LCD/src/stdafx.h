@@ -101,12 +101,15 @@
 
 #endif
 
-#include <girder.h>
+#include <girder4.h>
 
 extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
+
+#define countof(x) sizeof(x)/sizeof(x[0])
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
