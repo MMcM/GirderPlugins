@@ -487,7 +487,7 @@ void DisplayCustomCharacter(DisplayCommandState& state)
 
 // Set Keypad Legend
 // svalue1: button name / code (variables expanded)
-// svalue2: legend (variables expanded)
+// svalue3: legend (variables expanded)
 void DisplayKeypadLegend(DisplayCommandState& state)
 {
   if (!DisplayOpen(state)) return; 

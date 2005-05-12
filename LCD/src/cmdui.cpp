@@ -27,7 +27,8 @@ static PCHAR PAGE_GUIDS[] = {
 };
 
 static DisplayDeviceList g_devices;
-static BOOL g_bMultipleDevices = FALSE;
+static DisplayDevice **g_deviceComboContents = NULL;
+static BOOL g_bMultipleDevices = FALSE, g_bDevicesValid = FALSE;
 PFTree g_DUI;
 PFTreeNode g_pages[countof(PAGE_GUIDS)], g_activePages[countof(PAGE_GUIDS)];
 
@@ -159,6 +160,22 @@ BOOL FindDisplayAction(DisplayDeviceList& devices, PCommand command,
   return FALSE;
 }
 
+void EnsureDevices()
+{
+  if (g_bDevicesValid) return;
+
+  g_devices.Clear();
+  g_devices.LoadFromRegistry();
+  g_bMultipleDevices = ((NULL == g_devices.GetFirst()) ||
+                        (NULL != g_devices.GetFirst()->GetName()));
+
+  if (NULL != g_deviceComboContents)
+    delete [] g_deviceComboContents;
+  g_deviceComboContents = new DisplayDevice*[g_devices.Size() + 2];
+
+  g_bDevicesValid = TRUE;
+}
+
 void * WINAPI
 PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
              int val1, int val2, void *userdata)
@@ -183,31 +200,131 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
 
   EnterCriticalSection(&lua->CS);
 
+  DisplayActionDeviceType deviceType;  
+  DisplayDevice *commandDevice;
+  DisplayAction *commandAction;
+
+  if ((val1 == duOnGetPage) || (val1 == duOnGetValues)) {
+    EnsureDevices();
+
+    if (!FindDisplayAction(g_devices, command, deviceType, commandDevice, commandAction))
+      commandAction = DisplayActions;  // String
+  }
+  else {
+    if ((val1 == duOnApply) ||
+        ((val1 == duOnEvent) && (val2 == 0))) {
+      int itemIndex = 0;
+      double d;
+      if (ControlGetNumber(L, "display", "ItemIndex", d))
+        itemIndex = (int)d;
+      commandDevice = g_deviceComboContents[itemIndex];
+      if (itemIndex == 0)
+        deviceType = devDEFAULT;
+      else if (NULL == commandDevice)
+        deviceType = devALL;
+      else
+        deviceType = devNAMED;
+    }
+    if ((val1 == duOnApply) ||
+        ((val1 == duOnEvent) && FALSE)) {
+      int itemIndex = 0;
+      if ((editDisplay == item->ActionSubType) ||
+          (editControl == item->ActionSubType)) {
+        double d;
+        if (ControlGetNumber(L, "type", "ItemIndex", d))
+          itemIndex = (int)d;
+      }
+      for (int i = 0; i < countof(DisplayActions); i++) {
+        if (DisplayActions[i].editorType == item->ActionSubType) {
+          commandAction = DisplayActions+i;
+          if (itemIndex-- <= 0)
+            break;
+        }
+      }
+    }
+  }
+
   switch (val1) {
   case duOnGetPage:
     {
-      DisplayActionDeviceType deviceType;  
-      DisplayDevice *commandDevice;
-      DisplayAction *action;
-      if (!FindDisplayAction(g_devices, command, deviceType, commandDevice, action))
-        action = DisplayActions;    // String
-
-      if (command->ActionSubType != action->editorType) {
-        command->ActionSubType = action->editorType;
+      if (command->ActionSubType != commandAction->editorType) {
+        command->ActionSubType = commandAction->editorType;
       }
 
-      if (pageNode != g_activePages[action->editorType])
-        newPage = g_activePages[action->editorType]; // Switch to proper editor.
+      if (pageNode != g_activePages[commandAction->editorType])
+        newPage = g_activePages[commandAction->editorType]; // Switch to proper editor.
     }
     break;
 				
   case duOnGetValues:
     {
-      ControlSetString(L, "displayLabel", "Caption", "Display:");
+      if (g_bMultipleDevices) {
+        ControlSetString(L, "displayLabel", "Caption", "Display:");
+        ControlSetBool(L, "displayLabel", "Visible", TRUE);
+
+        char strings[2048];
+        int itemIndex = 0, i = 0;
+        strncpy(strings, "Default\n", sizeof(strings));
+        g_deviceComboContents[i++] = g_devices.GetDefault();
+        if (editControl == item->ActionSubType) {
+          strncat(strings, "All\n", sizeof(strings));
+          if (devALL == deviceType)
+            itemIndex = i;
+          g_deviceComboContents[i++] = NULL;
+        }
+        for (DisplayDevice *dev = g_devices.GetFirst(); NULL != dev;
+             dev = dev->GetNext()) {
+          switch (item->ActionSubType) {
+          case editKeypad:
+            if (!dev->HasKeypadLegends()) continue;
+            break;
+          case editGPO:
+            if (!dev->HasGPOs()) continue;
+            break;
+          case editFan:
+            if (!dev->HasFans()) continue;
+            break;
+          }
+          strncat(strings, dev->GetName(), sizeof(strings));
+          strncat(strings, "\n", sizeof(strings));
+          if ((devNAMED == deviceType) && (commandDevice == dev))
+            itemIndex = i;
+          g_deviceComboContents[i++] = dev;
+        }
+        ControlSetString(L, "display", "Strings", strings);
+        ControlSetNumber(L, "display", "ItemIndex", itemIndex);
+        ControlSetBool(L, "display", "Visible", TRUE);
+      }
+      else {
+        ControlSetBool(L, "displayLabel", "Visible", FALSE);
+        ControlSetBool(L, "display", "Visible", FALSE);
+      }
+
+      if ((editDisplay == item->ActionSubType) ||
+          (editControl == item->ActionSubType)) {
+        char strings[2048];
+        int itemIndex = 0, i = 0;
+        for (int j = 0; j < countof(DisplayActions); j++) {
+          if (DisplayActions[j].editorType == item->ActionSubType) {
+            if (i == 0)
+              strncpy(strings, DisplayActions[j].name, sizeof(strings));
+            else
+              strncat(strings, DisplayActions[j].name, sizeof(strings));
+            strncat(strings, "\n", sizeof(strings));
+            if (commandAction == DisplayActions+j)
+              itemIndex = i;
+            i++;
+          }
+        }
+        ControlSetString(L, "type", "Strings", strings);
+        ControlSetNumber(L, "type", "ItemIndex", itemIndex);
+      }
 
       switch (item->ActionSubType) {
       case editDisplay:
         {
+          ControlSetNumber(L, "row", "Max", 
+                           (NULL == commandDevice) ? 0 : commandDevice->GetHeight() - 1);
           ControlSetString(L, "marquee", "Caption", "Marquee");
           int column = strtol(command->Action.iValue2, NULL, 10);
           BOOL marquee = (column < 0);
@@ -215,7 +332,8 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
           ControlSetString(L, "columnCheck", "Caption", "Column:");
           ControlSetBool(L, "columnCheck", "Checked", !marquee);
           ControlSetBool(L, "column", "Enabled", !marquee);
-          ControlSetNumber(L, "column", "Max", 2);
+          ControlSetNumber(L, "column", "Max", 
+                           (NULL == commandDevice) ? 0 : commandDevice->GetWidth() - 1);
           if (!marquee)
             ControlSetNumber(L, "column", "Position", column);
           int width = strtol(command->Action.iValue3, NULL, 10);
@@ -225,9 +343,22 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
           ControlSetString(L, "widthCheck", "Caption", "Width:");
           ControlSetBool(L, "widthCheck", "Checked", !rest);
           ControlSetBool(L, "width", "Enabled", !rest);
-          ControlSetNumber(L, "width", "Max", 10);
+          ControlSetNumber(L, "width", "Max", 
+                           (NULL == commandDevice) ? 0 : commandDevice->GetWidth());
           if (!rest)
             ControlSetNumber(L, "width", "Position", width);
+        }
+        break;
+      case editScreen:
+        {
+          // TODO: ...
+        }
+        break;
+      case editKeypad:
+        {
+          // TODO: fill combos.
+          ControlSetString(L, "key", "Text", command->Action.sValue1); 
+          ControlSetString(L, "legend", "Text", command->Action.sValue3);
         }
         break;
       }
@@ -236,22 +367,55 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
 				
   case duOnApply:
     {
+      if (devDEFAULT == deviceType)
+        command->Action.sValue2 = GStrDup(commandAction->key);
+      else {
+        char key[1024];
+        strncpy(key, 
+                (devALL == deviceType) ? "*" : commandDevice->GetName(),
+                sizeof(key));
+        strncat(key, ":", sizeof(key));
+        strncat(key, commandAction->key, sizeof(key));
+        command->Action.sValue2 = GStrDup(key);
+      }
+
       switch (item->ActionSubType) {
       case editDisplay:
         {
           BOOL marquee;
-          ControlGetBool(L, "marquee", "Checked", marquee);
-          if (marquee)
-            command->Action.iValue2 = GStrDup("-1");
-          else
-            ControlGetString(L, "column", "Position", command->Action.iValue2);
-          
+          if (ControlGetBool(L, "marquee", "Checked", marquee)) {
+            if (marquee)
+              command->Action.iValue2 = GStrDup("-1");
+            else {
+              const char *str;
+              if (ControlGetString(L, "column", "Position", str))
+                command->Action.iValue2 = GStrDup(str);
+            }
+          }
           BOOL rest;
-          ControlGetBool(L, "rest", "Checked", rest);
-          if (rest)
-            command->Action.iValue3 = GStrDup("-1");
-          else
-            ControlGetString(L, "width", "Position", command->Action.iValue3);
+          if (ControlGetBool(L, "rest", "Checked", rest)) {
+            if (rest)
+              command->Action.iValue3 = GStrDup("-1");
+            else {
+              const char *str;
+              if (ControlGetString(L, "width", "Position", str))
+                command->Action.iValue3 = GStrDup(str);
+            }
+          }
+        }
+        break;
+      case editScreen:
+        {
+          // TODO: ...
+        }
+        break;
+      case editKeypad:
+        {
+          const char *str;
+          if (ControlGetString(L, "key", "Text", str))
+            command->Action.sValue1 = GStrDup(str);
+          if (ControlGetString(L, "legend", "Text", str))
+            command->Action.sValue3 = GStrDup(str);
         }
         break;
       }
@@ -263,36 +427,50 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
       switch (item->ActionSubType) {
       case editDisplay:
         switch (val2) {
+        case 0:
+          {
+            ControlSetNumber(L, "row", "Max", 
+                             (NULL == commandDevice) ? 0 : commandDevice->GetHeight() - 1);
+            ControlSetNumber(L, "column", "Max", 
+                             (NULL == commandDevice) ? 0 : commandDevice->GetWidth() - 1);
+            ControlSetNumber(L, "width", "Max", 
+                             (NULL == commandDevice) ? 0 : commandDevice->GetWidth());
+          }
+          break;
         case 1:
           {
             BOOL marquee;
-            ControlGetBool(L, "marquee", "Checked", marquee);
-            ControlSetBool(L, "columnCheck", "Checked", !marquee);
-            ControlSetBool(L, "column", "Enabled", !marquee);
+            if (ControlGetBool(L, "marquee", "Checked", marquee)) {
+              ControlSetBool(L, "columnCheck", "Checked", !marquee);
+              ControlSetBool(L, "column", "Enabled", !marquee);
+            }
           }
           break;
         case 2:
           {
             BOOL notMarquee;
-            ControlGetBool(L, "columnCheck", "Checked", notMarquee);
-            ControlSetBool(L, "marquee", "Checked", !notMarquee);
-            ControlSetBool(L, "column", "Enabled", notMarquee);
+            if (ControlGetBool(L, "columnCheck", "Checked", notMarquee)) {
+              ControlSetBool(L, "marquee", "Checked", !notMarquee);
+              ControlSetBool(L, "column", "Enabled", notMarquee);
+            }
           }
           break;
         case 3:
           {
             BOOL rest;
-            ControlGetBool(L, "rest", "Checked", rest);
-            ControlSetBool(L, "widthCheck", "Checked", !rest);
-            ControlSetBool(L, "width", "Enabled", !rest);
+            if (ControlGetBool(L, "rest", "Checked", rest)) {
+              ControlSetBool(L, "widthCheck", "Checked", !rest);
+              ControlSetBool(L, "width", "Enabled", !rest);
+            }
           }
           break;
         case 4:
           {
             BOOL notRest;
-            ControlGetBool(L, "widthCheck", "Checked", notRest);
-            ControlSetBool(L, "rest", "Checked", !notRest);
-            ControlSetBool(L, "width", "Enabled", notRest);
+            if (ControlGetBool(L, "widthCheck", "Checked", notRest)) {
+              ControlSetBool(L, "rest", "Checked", !notRest);
+              ControlSetBool(L, "width", "Enabled", notRest);
+            }
           }
           break;
         }
@@ -339,6 +517,13 @@ void DUIClose()
   for (int i = 1; i < countof(PAGE_GUIDS); i++) {
     g_pages[i] = NULL;
   }
+
+  g_devices.Clear();
+  if (NULL != g_deviceComboContents) {
+    delete [] g_deviceComboContents;
+    g_deviceComboContents = NULL;
+  }
+  g_bDevicesValid = FALSE;
 }
 
 void DUIOpenCommand(PFTree tree)
@@ -355,4 +540,9 @@ void DUICloseCommand(PFTree tree)
     RemoveDUIPageS(tree, PAGE_GUIDS[i]);
     g_activePages[i] = NULL;
   }
+}
+
+void DUIDevicesChanged()
+{
+  g_bDevicesValid = FALSE;
 }

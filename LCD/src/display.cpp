@@ -1392,6 +1392,15 @@ BOOL DisplayDeviceList::Contains(DisplayDevice *kdev)
   return FALSE;
 }
 
+size_t DisplayDeviceList::Size() const
+{
+  size_t result = 0;
+  for (DisplayDevice *dev = m_head; NULL != dev; dev = dev->m_next) {
+    result++;
+  }
+  return result;
+}
+
 void DisplayDeviceList::Clear()
 {
   while (TRUE) {

@@ -652,6 +652,7 @@ public:
   DisplayDevice *GetDefault();
   DisplayDevice *Get(LPCSTR name);
   BOOL Contains(DisplayDevice *dev);
+  size_t Size() const;
   
   void Clear();
 

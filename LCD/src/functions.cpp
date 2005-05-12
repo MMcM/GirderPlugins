@@ -204,7 +204,7 @@ void FunctionsOpen()
 {
   lua_State *L = (lua_State *)SF.CoreVars->LuaState;
   if (NULL == L) return;
-  luaL_openlib(L, "LCD", luaFunctions, 0);
+  luaL_openlib(L, "lcd", luaFunctions, 0);
   lua_pop(L, 1);
 }
 
@@ -213,5 +213,5 @@ void FunctionsClose()
   lua_State *L = (lua_State *)SF.CoreVars->LuaState;
   if (NULL == L) return;
   lua_pushnil(L);
-  lua_setglobal(L, "LCD");
+  lua_setglobal(L, "lcd");
 }

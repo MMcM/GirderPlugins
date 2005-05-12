@@ -93,7 +93,7 @@ $Header$
         <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <sValue1>FileName = GetDirectory("GIRDERDIR") .. "\\girder.exe"
+        <sValue1>FileName = win.GetDirectory("GIRDERDIR") .. "\\girder.exe"
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -2497,9 +2497,9 @@ pqrstuvwxyz{|}~</sValue1>
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>GPOCounter = (GPOCounter or 0) + 1
-LCD.GPO(5, band(GPOCounter,1))
-LCD.GPO(6, band(GPOCounter,2))
-LCD.GPO(7, band(GPOCounter,4))
+lcd.GPO(5, band(GPOCounter,1))
+lcd.GPO(6, band(GPOCounter,2))
+lcd.GPO(7, band(GPOCounter,4))
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -2622,7 +2622,7 @@ function AddFanSensor(fan, sensor, target)
       changed = 1
     end
     if changed then
-      LCD.FanPower(self.fan, self.power)
+      lcd.FanPower(self.fan, self.power)
       print(self.fanEvent .. " power now " .. self.power)
     end
   end
@@ -2963,20 +2963,20 @@ end
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>-- Reset display
-LCD.Close()
+lcd.Close()
 
 -- Size
-local w,h = LCD.Size()
+local w,h = lcd.Size()
 print(w, h)
 
 -- String
-LCD.String(0, w / 2, 2, "**")
+lcd.String(0, w / 2, 2, "**")
 
 -- Custom characters
-LCD.CustomCharacter(0, 0, "0b11111 0b10101 0b11101 0b10001 0b10001 0b11111")
-LCD.CustomCharacter(0, w - 1, "0b11111 0b10101 0b10111 0b10001 0b10001 0b11111")
-LCD.CustomCharacter(h - 1, 0, "0b11111 0b10001 0b10001 0b11101 0b10101 0b11111")
-LCD.CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b11111")
+lcd.CustomCharacter(0, 0, "0b11111 0b10101 0b11101 0b10001 0b10001 0b11111")
+lcd.CustomCharacter(0, w - 1, "0b11111 0b10101 0b10111 0b10001 0b10001 0b11111")
+lcd.CustomCharacter(h - 1, 0, "0b11111 0b10001 0b10001 0b11101 0b10101 0b11111")
+lcd.CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b11111")
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -2998,11 +2998,11 @@ LCD.CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b111
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>-- These only really work with Simulated LCD or LcdHype display devices.
-print(LCD.GetSetting("SimLCDFont"))
-print(LCD.GetSetting("SimLCDFontSize"))
+print(lcd.GetSetting("SimLCDFont"))
+print(lcd.GetSetting("SimLCDFontSize"))
 
-LCD.SetSetting("SimLCDFont", "Lucida Console")
-LCD.SetSetting("SimLCDFontSize", 18)
+lcd.SetSetting("SimLCDFont", "Lucida Console")
+lcd.SetSetting("SimLCDFontSize", 18)
 
 </sValue1>
       <bValue1>FALSE</bValue1>
