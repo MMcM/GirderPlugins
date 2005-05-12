@@ -16,7 +16,7 @@ EXPORTS
 
         gir_event
 
-;       gir_info
+        gir_info
         gir_dynamic_ui
 ; OLD STYLE
         gir_config

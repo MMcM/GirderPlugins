@@ -189,26 +189,29 @@ int luaSetSetting(lua_State *L)
 }
 
 struct luaL_reg luaFunctions[] = {
-  { "LCD_Size", luaSize },
-  { "LCD_Close", luaClose },
-  { "LCD_String", luaString },
-  { "LCD_CustomCharacter", luaCustomCharacter },
-  { "LCD_GPO", luaGPO },
-  { "LCD_FanPower", luaFanPower },
-  { "LCD_GetSetting", luaGetSetting },
-  { "LCD_SetSetting", luaSetSetting },
+  { "Size", luaSize },
+  { "Close", luaClose },
+  { "String", luaString },
+  { "CustomCharacter", luaCustomCharacter },
+  { "GPO", luaGPO },
+  { "FanPower", luaFanPower },
+  { "GetSetting", luaGetSetting },
+  { "SetSetting", luaSetSetting },
+  { NULL, NULL }
 };
 
 void FunctionsOpen()
 {
   lua_State *L = (lua_State *)SF.CoreVars->LuaState;
   if (NULL == L) return;
-  luaL_openlib(L, "LCD", luaFunctions, countof(luaFunctions));
+  luaL_openlib(L, "LCD", luaFunctions, 0);
+  lua_pop(L, 1);
 }
 
 void FunctionsClose()
 {
   lua_State *L = (lua_State *)SF.CoreVars->LuaState;
   if (NULL == L) return;
-  //luaL_closel(L, luaFunctions);
+  lua_pushnil(L);
+  lua_setglobal(L, "LCD");
 }

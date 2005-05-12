@@ -48,7 +48,6 @@ gir_open(int gir_major_ver, int gir_minor_ver, int gir_micro_ver, pFunctions3 p)
   if (!DUIOpen())
     return GIR_FALSE;
   DisplayInitCS();
-  FunctionsOpen();
   return GIR_TRUE;
 }
 
@@ -57,7 +56,6 @@ gir_close()
 {
   CloseConfigUI();
   DUIClose();
-  FunctionsClose();
   DisplayClose();
   DisplayUnload();
   DisplayDeleteCS();
@@ -108,6 +106,9 @@ gir_info(int message, int wparam, int lparam)
   switch (message) {
   case GIRINFO_SCRIPT_AFTER_STARTED:
     FunctionsOpen();
+    break;
+  case GIRINFO_SCRIPT_BEFORE_STOPPED:
+    FunctionsClose();
     break;
   case GIRINFO_POWERBROADCAST:
     {

@@ -15,20 +15,21 @@ static sGroups GROUP =
     "LCD" };
 
 #define LCD_DUI_GUID  "{6F829807-2544-40e9-B150-A7655F93C906}"
-#define DISPLAY_PAGE_GUID  "{6F829809-2544-40e9-B150-A7655F93C906}"
-#define CONTROL_PAGE_GUID  "{6F82980A-2544-40e9-B150-A7655F93C906}"
-#define SCREEN_PAGE_GUID  "{6F82980B-2544-40e9-B150-A7655F93C906}"
-#define KEYPAD_PAGE_GUID  "{6F82980C-2544-40e9-B150-A7655F93C906}"
-#define GPO_PAGE_GUID  "{6F82980D-2544-40e9-B150-A7655F93C906}"
-#define FAN_PAGE_GUID  "{6F82980E-2544-40e9-B150-A7655F93C906}"
+
+static PCHAR PAGE_GUIDS[] = {
+  NULL,
+  "{6F829809-2544-40e9-B150-A7655F93C906}", // Display
+  "{6F82980A-2544-40e9-B150-A7655F93C906}", // Control
+  "{6F82980B-2544-40e9-B150-A7655F93C906}", // Screen
+  "{6F82980C-2544-40e9-B150-A7655F93C906}", // Keypad
+  "{6F82980D-2544-40e9-B150-A7655F93C906}", // GPO
+  "{6F82980E-2544-40e9-B150-A7655F93C906}", // Fan
+};
 
 static DisplayDeviceList g_devices;
 static BOOL g_bMultipleDevices = FALSE;
 PFTree g_DUI;
-PFTreeNode g_DisplayPage, g_ControlPage, g_ScreenPage, 
-  g_KeypadPage, g_GPOPage, g_FanPage;
-PFTreeNode g_DisplayPageActive, g_ControlPageActive, g_ScreenPageActive, 
-  g_KeypadPageActive, g_GPOPageActive, g_FanPageActive;
+PFTreeNode g_pages[countof(PAGE_GUIDS)], g_activePages[countof(PAGE_GUIDS)];
 
 enum {
   valNONE, valSTR, valINT, valBOOL, valVAR, valLIST, valSTR2, valLIST2
@@ -159,22 +160,32 @@ BOOL FindDisplayAction(DisplayDeviceList& devices, PCommand command,
 }
 
 void * WINAPI
-DisplayPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-                    int val1, int val2, void *userdata)
+PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
+             int val1, int val2, void *userdata)
 {
-  PCommand command;
-  if (ntCommand == baseNode->NodeType) {
-    command = (PCommand)baseNode;
-  }
-  else {
+  if (ntCommand != baseNode->NodeType)
     return NULL;
+  PCommand command = (PCommand)baseNode;
+
+  PDUIControl control = NULL;
+  PDUIItem item = (PDUIItem)pageNode->Data;
+  if (duControl == item->NodeType) {
+    control = (PDUIControl)item;
+    pageNode = pageNode->Parent;
+    item = (PDUIItem)pageNode->Data;
   }
+  if (duItem != item->NodeType)
+    return NULL;
+
+  lua_State *L = (lua_State *)lua->L;
+
+  PFTreeNode newPage = NULL;
+
+  EnterCriticalSection(&lua->CS);
 
   switch (val1) {
-  case duOnGetValues:
+  case duOnGetPage:
     {
-      EnterCriticalSection(&lua->CS);
-  
       DisplayActionDeviceType deviceType;  
       DisplayDevice *commandDevice;
       DisplayAction *action;
@@ -182,57 +193,118 @@ DisplayPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNod
         action = DisplayActions;    // String
 
       if (command->ActionSubType != action->editorType) {
-        LeaveCriticalSection(&lua->CS);
-        return g_ControlPageActive;
+        command->ActionSubType = action->editorType;
       }
 
-      LeaveCriticalSection(&lua->CS);
+      if (pageNode != g_activePages[action->editorType])
+        newPage = g_activePages[action->editorType]; // Switch to proper editor.
+    }
+    break;
+				
+  case duOnGetValues:
+    {
+      ControlSetString(L, "displayLabel", "Caption", "Display:");
+
+      switch (item->ActionSubType) {
+      case editDisplay:
+        {
+          ControlSetString(L, "marquee", "Caption", "Marquee");
+          int column = strtol(command->Action.iValue2, NULL, 10);
+          BOOL marquee = (column < 0);
+          ControlSetBool(L, "marquee", "Checked", marquee);
+          ControlSetString(L, "columnCheck", "Caption", "Column:");
+          ControlSetBool(L, "columnCheck", "Checked", !marquee);
+          ControlSetBool(L, "column", "Enabled", !marquee);
+          ControlSetNumber(L, "column", "Max", 2);
+          if (!marquee)
+            ControlSetNumber(L, "column", "Position", column);
+          int width = strtol(command->Action.iValue3, NULL, 10);
+          BOOL rest = (width < 0);
+          ControlSetString(L, "rest", "Caption", "Rest of line");
+          ControlSetBool(L, "rest", "Checked", rest);
+          ControlSetString(L, "widthCheck", "Caption", "Width:");
+          ControlSetBool(L, "widthCheck", "Checked", !rest);
+          ControlSetBool(L, "width", "Enabled", !rest);
+          ControlSetNumber(L, "width", "Max", 10);
+          if (!rest)
+            ControlSetNumber(L, "width", "Position", width);
+        }
+        break;
+      }
     }
     break;
 				
   case duOnApply:
+    {
+      switch (item->ActionSubType) {
+      case editDisplay:
+        {
+          BOOL marquee;
+          ControlGetBool(L, "marquee", "Checked", marquee);
+          if (marquee)
+            command->Action.iValue2 = GStrDup("-1");
+          else
+            ControlGetString(L, "column", "Position", command->Action.iValue2);
+          
+          BOOL rest;
+          ControlGetBool(L, "rest", "Checked", rest);
+          if (rest)
+            command->Action.iValue3 = GStrDup("-1");
+          else
+            ControlGetString(L, "width", "Position", command->Action.iValue3);
+        }
+        break;
+      }
+    }
     break;
 
   case duOnEvent:
+    {
+      switch (item->ActionSubType) {
+      case editDisplay:
+        switch (val2) {
+        case 1:
+          {
+            BOOL marquee;
+            ControlGetBool(L, "marquee", "Checked", marquee);
+            ControlSetBool(L, "columnCheck", "Checked", !marquee);
+            ControlSetBool(L, "column", "Enabled", !marquee);
+          }
+          break;
+        case 2:
+          {
+            BOOL notMarquee;
+            ControlGetBool(L, "columnCheck", "Checked", notMarquee);
+            ControlSetBool(L, "marquee", "Checked", !notMarquee);
+            ControlSetBool(L, "column", "Enabled", notMarquee);
+          }
+          break;
+        case 3:
+          {
+            BOOL rest;
+            ControlGetBool(L, "rest", "Checked", rest);
+            ControlSetBool(L, "widthCheck", "Checked", !rest);
+            ControlSetBool(L, "width", "Enabled", !rest);
+          }
+          break;
+        case 4:
+          {
+            BOOL notRest;
+            ControlGetBool(L, "widthCheck", "Checked", notRest);
+            ControlSetBool(L, "rest", "Checked", !notRest);
+            ControlSetBool(L, "width", "Enabled", notRest);
+          }
+          break;
+        }
+        break;
+      }
+    }
     break;
   }
 
-  return NULL;
-}
+  LeaveCriticalSection(&lua->CS);
 
-void * WINAPI
-ControlPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-                   int val1, int val2, void *userdata)
-{
-  return NULL;
-}
-
-void * WINAPI
-ScreenPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-                   int val1, int val2, void *userdata)
-{
-  return NULL;
-}
-
-void * WINAPI
-KeypadPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-                   int val1, int val2, void *userdata)
-{
-  return NULL;
-}
-
-void * WINAPI
-GPOPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-                int val1, int val2, void *userdata)
-{
-  return NULL;
-}
-
-void * WINAPI
-FanPageCallback(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-                int val1, int val2, void *userdata)
-{
-  return NULL;
+  return newPage;
 }
 
 BOOL DUIOpen()
@@ -247,53 +319,15 @@ BOOL DUIOpen()
     return FALSE;
   }
   
-  g_DisplayPage = FindNodeS(DISPLAY_PAGE_GUID, g_DUI, NULL);
-  if (NULL == g_DisplayPage) {	
-    GirderLogMessageEx(PLUGINNAME, "Could not find the Display Page in PowerMate.xml.", 
-                       GLM_ERROR_ICON);
-    return FALSE;
+  for (int i = 1; i < countof(PAGE_GUIDS); i++) {
+    g_pages[i] = FindNodeS(PAGE_GUIDS[i], g_DUI, NULL);
+    if (NULL == g_pages[i]) {	
+      GirderLogMessageEx(PLUGINNAME, "Could not find page in LCD.xml.",
+                         GLM_ERROR_ICON);
+      return FALSE;
+    }
+    SetCallbacks(g_DUI, g_pages[i], PageCallback, TRUE);
   }
-  SetCallbacks(g_DUI, g_DisplayPage, DisplayPageCallback, TRUE);
-
-  g_ControlPage = FindNodeS(CONTROL_PAGE_GUID, g_DUI, NULL);
-  if (NULL == g_ControlPage) {	
-    GirderLogMessageEx(PLUGINNAME, "Could not find the Control Page in PowerMate.xml.", 
-                       GLM_ERROR_ICON);
-    return FALSE;
-  }
-  SetCallbacks(g_DUI, g_ControlPage, ControlPageCallback, TRUE);
-
-  g_ScreenPage = FindNodeS(SCREEN_PAGE_GUID, g_DUI, NULL);
-  if (NULL == g_ScreenPage) {	
-    GirderLogMessageEx(PLUGINNAME, "Could not find the Screen Page in PowerMate.xml.", 
-                       GLM_ERROR_ICON);
-    return FALSE;
-  }
-  SetCallbacks(g_DUI, g_ScreenPage, ScreenPageCallback, TRUE);
-
-  g_KeypadPage = FindNodeS(KEYPAD_PAGE_GUID, g_DUI, NULL);
-  if (NULL == g_KeypadPage) {	
-    GirderLogMessageEx(PLUGINNAME, "Could not find the Keypad Page in PowerMate.xml.", 
-                       GLM_ERROR_ICON);
-    return FALSE;
-  }
-  SetCallbacks(g_DUI, g_KeypadPage, KeypadPageCallback, TRUE);
-
-  g_GPOPage = FindNodeS(GPO_PAGE_GUID, g_DUI, NULL);
-  if (NULL == g_GPOPage) {	
-    GirderLogMessageEx(PLUGINNAME, "Could not find the GPO Page in PowerMate.xml.", 
-                       GLM_ERROR_ICON);
-    return FALSE;
-  }
-  SetCallbacks(g_DUI, g_GPOPage, GPOPageCallback, TRUE);
-
-  g_FanPage = FindNodeS(FAN_PAGE_GUID, g_DUI, NULL);
-  if (NULL == g_FanPage) {	
-    GirderLogMessageEx(PLUGINNAME, "Could not find the Fan Page in PowerMate.xml.", 
-                       GLM_ERROR_ICON);
-    return FALSE;
-  }
-  SetCallbacks(g_DUI, g_FanPage, FanPageCallback, TRUE);
 
   return TRUE;
 }
@@ -302,38 +336,23 @@ void DUIClose()
 {
   DeleteFTree(g_DUI);
   g_DUI = NULL;
-  g_DisplayPage =  g_ControlPage = g_ScreenPage = 
-    g_KeypadPage = g_GPOPage = g_FanPage = NULL;
+  for (int i = 1; i < countof(PAGE_GUIDS); i++) {
+    g_pages[i] = NULL;
+  }
 }
 
 void DUIOpenCommand(PFTree tree)
 {
-  g_DisplayPageActive = InsertDUIPage(tree, g_DUI, g_DisplayPage,
-                                      &GROUP.PageGUID, &GROUP);
-  g_ControlPageActive = InsertDUIPage(tree, g_DUI, g_ControlPage,
-                                      &GROUP.PageGUID, &GROUP);
-  g_ScreenPageActive = InsertDUIPage(tree, g_DUI, g_ScreenPage,
+  for (int i = 1; i < countof(PAGE_GUIDS); i++) {
+    g_activePages[i] = InsertDUIPage(tree, g_DUI, g_pages[i],
                                      &GROUP.PageGUID, &GROUP);
-  g_KeypadPageActive = InsertDUIPage(tree, g_DUI, g_KeypadPage,
-                                     &GROUP.PageGUID, &GROUP);
-  g_GPOPageActive = InsertDUIPage(tree, g_DUI, g_GPOPage,
-                                  &GROUP.PageGUID, &GROUP);
-  g_FanPageActive = InsertDUIPage(tree, g_DUI, g_FanPage,
-                                  &GROUP.PageGUID, &GROUP);
+  }
 }
 
 void DUICloseCommand(PFTree tree)
 {
-  RemoveDUIPageS(tree, DISPLAY_PAGE_GUID);
-  g_DisplayPageActive = NULL;
-  RemoveDUIPageS(tree, CONTROL_PAGE_GUID);
-  g_ControlPageActive = NULL;
-  RemoveDUIPageS(tree, SCREEN_PAGE_GUID);
-  g_ScreenPageActive = NULL;
-  RemoveDUIPageS(tree, KEYPAD_PAGE_GUID);
-  g_KeypadPageActive = NULL;
-  RemoveDUIPageS(tree, GPO_PAGE_GUID);
-  g_GPOPageActive = NULL;
-  RemoveDUIPageS(tree, FAN_PAGE_GUID);
-  g_FanPageActive = NULL;
+  for (int i = 1; i < countof(PAGE_GUIDS); i++) {
+    RemoveDUIPageS(tree, PAGE_GUIDS[i]);
+    g_activePages[i] = NULL;
+  }
 }

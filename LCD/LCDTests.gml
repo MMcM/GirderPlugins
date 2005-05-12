@@ -2497,9 +2497,9 @@ pqrstuvwxyz{|}~</sValue1>
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>GPOCounter = (GPOCounter or 0) + 1
-LCD_GPO(5, band(GPOCounter,1))
-LCD_GPO(6, band(GPOCounter,2))
-LCD_GPO(7, band(GPOCounter,4))
+LCD.GPO(5, band(GPOCounter,1))
+LCD.GPO(6, band(GPOCounter,2))
+LCD.GPO(7, band(GPOCounter,4))
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -2622,7 +2622,7 @@ function AddFanSensor(fan, sensor, target)
       changed = 1
     end
     if changed then
-      LCD_FanPower(self.fan, self.power)
+      LCD.FanPower(self.fan, self.power)
       print(self.fanEvent .. " power now " .. self.power)
     end
   end
@@ -2963,20 +2963,20 @@ end
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>-- Reset display
-LCD_Close()
+LCD.Close()
 
 -- Size
-local w,h = LCD_Size()
+local w,h = LCD.Size()
 print(w, h)
 
 -- String
-LCD_String(0, w / 2, 2, "**")
+LCD.String(0, w / 2, 2, "**")
 
 -- Custom characters
-LCD_CustomCharacter(0, 0, "0b11111 0b10101 0b11101 0b10001 0b10001 0b11111")
-LCD_CustomCharacter(0, w - 1, "0b11111 0b10101 0b10111 0b10001 0b10001 0b11111")
-LCD_CustomCharacter(h - 1, 0, "0b11111 0b10001 0b10001 0b11101 0b10101 0b11111")
-LCD_CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b11111")
+LCD.CustomCharacter(0, 0, "0b11111 0b10101 0b11101 0b10001 0b10001 0b11111")
+LCD.CustomCharacter(0, w - 1, "0b11111 0b10101 0b10111 0b10001 0b10001 0b11111")
+LCD.CustomCharacter(h - 1, 0, "0b11111 0b10001 0b10001 0b11101 0b10101 0b11111")
+LCD.CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b11111")
 </sValue1>
       <bValue1>FALSE</bValue1>
       <bValue2>FALSE</bValue2>
@@ -2998,11 +2998,11 @@ LCD_CustomCharacter(h - 1, w - 1, "0b11111 0b10001 0b10001 0b10111 0b10101 0b111
       <ActionType>4</ActionType>
       <ActionSubType>34</ActionSubType>
       <sValue1>-- These only really work with Simulated LCD or LcdHype display devices.
-print(LCD_GetSetting("SimLCDFont"))
-print(LCD_GetSetting("SimLCDFontSize"))
+print(LCD.GetSetting("SimLCDFont"))
+print(LCD.GetSetting("SimLCDFontSize"))
 
-LCD_SetSetting("SimLCDFont", "Lucida Console")
-LCD_SetSetting("SimLCDFontSize", 18)
+LCD.SetSetting("SimLCDFont", "Lucida Console")
+LCD.SetSetting("SimLCDFontSize", 18)
 
 </sValue1>
       <bValue1>FALSE</bValue1>
