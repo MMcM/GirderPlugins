@@ -77,6 +77,7 @@ extern BOOL DUIOpen();
 extern void DUIClose();
 extern void DUIOpenCommand(PFTree tree);
 extern void DUICloseCommand(PFTree tree);
+extern void DUIDevicesChanged();
 /** OLD STYLE **/
 extern void OpenConfigUI();
 extern void CloseConfigUI();

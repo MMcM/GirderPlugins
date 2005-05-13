@@ -360,6 +360,8 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
       switch (item->ActionSubType) {
       case editDisplay:
         {
+          int row = strtol(command->Action.iValue1, NULL, 10);
+          ControlSetNumber(L, "row", "Position", row);
           ControlSetString(L, "marquee", "Caption", "Marquee");
           int column = strtol(command->Action.iValue2, NULL, 10);
           BOOL marquee = (column < 0);
@@ -450,12 +452,14 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
       switch (item->ActionSubType) {
       case editDisplay:
         {
+          const char *str;
+          if (ControlGetString(L, "row", "Position", str))
+            command->Action.iValue1 = GStrDup(str);
           BOOL marquee;
           if (ControlGetBool(L, "marquee", "Checked", marquee)) {
             if (marquee)
               command->Action.iValue2 = GStrDup("-1");
             else {
-              const char *str;
               if (ControlGetString(L, "column", "Position", str))
                 command->Action.iValue2 = GStrDup(str);
             }
@@ -465,7 +469,6 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
             if (rest)
               command->Action.iValue3 = GStrDup("-1");
             else {
-              const char *str;
               if (ControlGetString(L, "width", "Position", str))
                 command->Action.iValue3 = GStrDup(str);
             }

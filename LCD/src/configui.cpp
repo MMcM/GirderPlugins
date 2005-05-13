@@ -145,6 +145,7 @@ static void OnApply(HWND hwnd, LPARAM lParam)
     if (NULL == g_displaysDialog) {
       DisplayBeginConfigUpdate();
       g_editDevices.SaveToRegistry();
+      DUIDevicesChanged();
       DisplayEndConfigUpdate();
     }
     LPPSHNOTIFY pshn = (LPPSHNOTIFY)lParam;
@@ -1666,6 +1667,7 @@ static BOOL CALLBACK DisplaysDialogProc(HWND hwnd, UINT uMsg,
     case IDC_APPLY:
       DisplayBeginConfigUpdate();
       g_editDevices.SaveToRegistry();
+      DUIDevicesChanged();
       DisplayEndConfigUpdate();
       Button_Enable(GetDlgItem(hwnd, IDC_APPLY), FALSE);
       return TRUE;

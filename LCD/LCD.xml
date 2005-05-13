@@ -30,7 +30,7 @@ $&#xD;
       <Control Name="Value:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
       <Control Name="Value" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="1" ControlType="1" Width="200" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
       <Control Name="Row:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Row" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="4" ControlType="18" Width="48" Height="24" Left="58" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+      <Control Name="Row" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="row" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
         <Values>0&#xD;
 3&#xD;
 </Values>
