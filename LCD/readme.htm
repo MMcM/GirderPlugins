@@ -366,19 +366,19 @@ default is used.<p>
 
 <ul>
 
-<li><code>LCD_Size()</code><br>
+<li><code>lcd.Size()</code><br>
 
 Return the size of the display as two numbers (width, height).
 
 </li>
 
-<li><code>LCD_Close()</code><br>
+<li><code>lcd.Close()</code><br>
 
 Close the display.
 
 </li>
 
-<li><code>LCD_String(row, column, width, string)</code><br>
+<li><code>lcd.String(row, column, width, string)</code><br>
 
 Display the given string at the given position.  If <code>width</code>
 is negative, the rest of the line is used.  If <code>column</code> is
@@ -386,33 +386,33 @@ negative, a marquee is started on the given row.
 
 </li>
 
-<li><code>LCD_CustomCharacter(row, column, bits)</code><br>
+<li><code>lcd.CustomCharacter(row, column, bits)</code><br>
 
 Display the given custom character at the given position.
 
 </li>
 
-<li><code>LCD_GPO(gpo, on/off)</code><br>
+<li><code>lcd.GPO(gpo, on/off)</code><br>
 
 Set the given GPO state.
 
 </li>
 
-<li><code>LCD_FanPower(gpo, power)</code><br>
+<li><code>lcd.FanPower(gpo, power)</code><br>
 
 Set the given fan's power (PWM duty cycle).  <code>power</code> is a
 fraction: 0 for no power and 1 for full power.
 
 </li>
 
-<li><code>LCD_GetSetting(key)</code><br>
+<li><code>lcd.GetSetting(key)</code><br>
 
 Return a registry setting for the display device.  <code>key</code> is
 one of the registry values described below.
 
 </li>
 
-<li><code>LCD_SetSetting(key, value)</code><br>
+<li><code>lcd.SetSetting(key, value)</code><br>
 
 Change a registry setting for the display device.  The change takes
 effect the next time the device is opened.
