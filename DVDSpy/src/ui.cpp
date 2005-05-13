@@ -6,14 +6,9 @@ $Header$
 #include "plugin.h"
 #include "resource.h"
 
-#include <dui.h>
-
-static sGroups GROUP = 
-  // {0AA4874A-2EF5-447e-A7DD-AF4DFEBECE50}
-  { { 0xaa4874a, 0x2ef5, 0x447e, { 0xa7, 0xdd, 0xaf, 0x4d, 0xfe, 0xbe, 0xce, 0x50 } },
-    "DVDSpy" };
-
-#define MBM_DUI_GUID  "{0AA4874B-2EF5-447e-A7DD-AF4DFEBECE50}"
+#define DVDSPY_GROUP_NAME "DVDSpy"
+#define DVDSPY_GROUP_GUID "{0AA4874A-2EF5-447e-A7DD-AF4DFEBECE50}"
+#define DVDSPY_DUI_GUID   "{0AA4874B-2EF5-447e-A7DD-AF4DFEBECE50}"
 
 PFTree g_DUI;
 

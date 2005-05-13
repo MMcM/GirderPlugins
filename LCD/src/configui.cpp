@@ -306,7 +306,7 @@ static void LoadDisplaySettings(HWND hwnd)
       int selidx = 0;
       for (int i = 1; i < 20; i++) {
         char dev[8];
-        sprintf(dev, "COM%d", i);
+        _snprintf(dev, sizeof(dev), "COM%d", i);
         COMMCONFIG cfg;
         DWORD dwSize = sizeof(cfg);
         if (!GetDefaultCommConfig(dev, &cfg, &dwSize))
@@ -327,7 +327,7 @@ static void LoadDisplaySettings(HWND hwnd)
       int selidx = 0;
       for (int i = 1; i < countof(speeds); i++) {
         char speed[8];
-        sprintf(speed, "%d", speeds[i]);
+        _snprintf(speed, sizeof(speed), "%d", speeds[i]);
         int idx = ComboBox_AddString(combo, speed);
         ComboBox_SetItemData(combo, idx, speeds[i]);
         if (speeds[i] == g_editDevice->GetPortSpeed())
@@ -347,7 +347,7 @@ static void LoadDisplaySettings(HWND hwnd)
       int selidx = 0;
       for (int i = 1; i <= 3; i++) {
         char dev[8];
-        sprintf(dev, "LPT%d", i);
+        _snprintf(dev, sizeof(dev), "LPT%d", i);
         int idx = ComboBox_AddString(combo, dev);
         if (!strcmp(dev, g_editDevice->GetPort()))
           selidx = idx;
@@ -937,7 +937,7 @@ static void LoadFansSettings(HWND hwnd)
     ShowWindow(GetDlgItem(hwnd, IDC_INTERVALL2), sw);
     if (im != DisplayDevice::IM_NONE) {
       char buf[32];
-      sprintf(buf, "%d", g_editDevice->GetFanInterval());
+      _snprintf(buf, sizeof(buf), "%d", g_editDevice->GetFanInterval());
       Edit_SetText(GetDlgItem(hwnd, IDC_INTERVAL), buf);
       Edit_Enable(GetDlgItem(hwnd, IDC_INTERVAL), (im == DisplayDevice::IM_EDITABLE));
     }
@@ -962,7 +962,7 @@ static void LoadFansSettings(HWND hwnd)
         lvi.state = INDEXTOSTATEIMAGEMASK(1);
       lvi.stateMask = LVIS_STATEIMAGEMASK;
       char buf[16];
-      sprintf(buf, "%d", i);
+      _snprintf(buf, sizeof(buf), "%d", i);
       lvi.pszText = buf;
       lvi.lParam = (LPARAM)fan;
       lvi.iItem = ListView_InsertItem(list, &lvi);
@@ -1210,7 +1210,7 @@ static void LoadSensorsSettings(HWND hwnd)
                (im == DisplayDevice::IM_NONE) ? SW_HIDE : SW_SHOW);
     if (im != DisplayDevice::IM_NONE) {
       char buf[32];
-      sprintf(buf, "%d", g_editDevice->GetSensorInterval());
+      _snprintf(buf, sizeof(buf), "%d", g_editDevice->GetSensorInterval());
       Edit_SetText(GetDlgItem(hwnd, IDC_INTERVAL), buf);
       Edit_Enable(GetDlgItem(hwnd, IDC_INTERVAL), (im == DisplayDevice::IM_EDITABLE));
     }
@@ -1239,7 +1239,7 @@ static void LoadSensorsSettings(HWND hwnd)
       lvi.iSubItem = 1;
       char buf[17];
       for (int i = 0; i < 8; i++)
-        sprintf(buf + i * 2, "%02X", sensor->GetROM()[i]);
+        _snprintf(buf + i * 2, 3, "%02X", sensor->GetROM()[i]);
       lvi.pszText = buf;
       ListView_SetItem(list, &lvi);
       lvi.iSubItem = 2;
@@ -1597,7 +1597,7 @@ static void EditSelectedDevice(HWND hwnd, BOOL copy)
     int n = atoi(name+idx);
     while (TRUE) {
       if (n > 0)
-        sprintf(name+idx, "%d", n);
+        _snprintf(name+idx, sizeof(name)-idx, "%d", n);
       if (NULL == g_editDevices.Get(name))
         break;                  // Name not in use.
       n++;

@@ -7,13 +7,8 @@ $Header$
 #include "resource.h"
 #include "display.h"
 
-#include <dui.h>
-
-static sGroups GROUP = 
-  // {6F829806-2544-40e9-B150-A7655F93C906}
-  { { 0x6f829806, 0x2544, 0x40e9, { 0xb1, 0x50, 0xa7, 0x65, 0x5f, 0x93, 0xc9, 0x6 } },
-    "LCD" };
-
+#define LCD_GROUP_NAME "LCD"
+#define LCD_GROUP_GUID "{6F829806-2544-40e9-B150-A7655F93C906}"
 #define LCD_DUI_GUID  "{6F829807-2544-40e9-B150-A7655F93C906}"
 
 static PCHAR PAGE_GUIDS[] = {
@@ -111,9 +106,12 @@ void EnsureDevices()
   g_bMultipleDevices = ((NULL == g_devices.GetFirst()) ||
                         (NULL != g_devices.GetFirst()->GetName()));
 
-  if (NULL != g_deviceComboContents)
+  if (NULL != g_deviceComboContents) {
     delete [] g_deviceComboContents;
-  g_deviceComboContents = new DisplayDevice*[g_devices.Size() + 2];
+    g_deviceComboContents = NULL;
+  }
+  if (g_bMultipleDevices)
+    g_deviceComboContents = new DisplayDevice*[g_devices.Size() + 2];
 
   g_bDevicesValid = TRUE;
 }
@@ -158,17 +156,23 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
     // Decode device and action from controls.
     if ((duOnApply == val1) ||
         ((duOnEvent == val1) && (0 == val2))) {
-      int itemIndex = 0;
-      double d;
-      if (ControlGetNumber(L, "display", "ItemIndex", d))
-        itemIndex = (int)d;
-      commandDevice = g_deviceComboContents[itemIndex];
-      if (itemIndex == 0)
+      if (g_bMultipleDevices) {
+        int itemIndex = 0;
+        double d;
+        if (ControlGetNumber(L, "display", "ItemIndex", d))
+          itemIndex = (int)d;
+        commandDevice = g_deviceComboContents[itemIndex];
+        if (itemIndex == 0)
+          deviceType = devDEFAULT;
+        else if (NULL == commandDevice)
+          deviceType = devALL;
+        else
+          deviceType = devNAMED;
+      }
+      else {
         deviceType = devDEFAULT;
-      else if (NULL == commandDevice)
-        deviceType = devALL;
-      else
-        deviceType = devNAMED;
+        commandDevice = g_devices.GetDefault();
+      }
     }
     if ((duOnApply == val1) ||
         ((duOnEvent == val1) && FALSE)) {
@@ -655,8 +659,8 @@ void DUIClose()
 void DUIOpenCommand(PFTree tree)
 {
   for (int i = 1; i < countof(PAGE_GUIDS); i++) {
-    g_activePages[i] = InsertDUIPage(tree, g_DUI, g_pages[i],
-                                     &GROUP.PageGUID, &GROUP);
+    g_activePages[i] = InsertDUIPageExS(tree, g_DUI, g_pages[i], 
+                                        LCD_GROUP_GUID, LCD_GROUP_NAME);
   }
 }
 

@@ -131,6 +131,29 @@ gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
   return NULL;
 }
 
+extern "C" PCHAR WINAPI
+gir_eventstrings_advise()
+{
+  PCHAR result;
+  size_t nb;
+  for (int pass = 1; pass <= 2; pass++) {
+    nb = 0;
+    for (size_t i = 0; i < NSENSORS; i++) {
+      LPCSTR event = GetEventName(i);
+      if (NULL != event) {
+        if (pass == 2)
+          MemCopy(result + nb, (void *)event, strlen(event) + 1);
+        nb += strlen(event) + 1;
+      }
+    }
+    if (pass == 1)
+      result = (PCHAR)Malloc(nb + 1);
+    else
+      result[nb++] = '\0';
+  }
+  return result;
+}
+
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)
 {

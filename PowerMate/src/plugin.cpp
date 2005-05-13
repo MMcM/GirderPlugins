@@ -153,6 +153,21 @@ gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
   return NULL;
 }
 
+extern "C" PCHAR WINAPI
+gir_eventstrings_advise()
+{
+  const char events[] = 
+    "PowerMate.Right\0"
+    "PowerMate.Left\0"
+    "PowerMate.Up\0"
+    "PowerMate.Down\0"
+    "PowerMate.RightDown\0"
+    "PowerMate.LeftDown\0";
+  PCHAR result = (PCHAR)Malloc(sizeof(events));
+  MemCopy(result, (void *)events, sizeof(events));
+  return result;
+}
+
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)
 {

@@ -6,10 +6,6 @@ $Header$
 #include "plugin.h"
 #include "display.h"
 
-#define Groups Groups_NOT
-#include <dui.h>
-#undef Groups
-
 LCD_API HWND LCD_DECL DisplayWindowParent()
 {
   return SF.CoreVars->MainWindow;
@@ -29,7 +25,7 @@ LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, LPCSTR msg, ...)
     pMsg = (LPSTR)pMsgBuf;
   }
   else {
-    sprintf(xbuf, "%lX", dwErr);
+    _snprintf(xbuf, sizeof(xbuf), "%lX", dwErr);
     pMsg = xbuf;
   }
   _snprintf(msgbuf, sizeof(msgbuf), "Error: %s", pMsg);
@@ -465,8 +461,9 @@ void DisplayCharacter(DisplayCommandState& state)
   state.m_device->DisplayCharacter(strtol(state.m_command->Action.iValue1, NULL, 10),
                                    strtol(state.m_command->Action.iValue2, NULL, 10),
                                    ch);
-  sprintf(buf, "%c", ch);
-  state.SetStatus(buf);
+  char buf2[16];
+  _snprintf(buf2, sizeof(buf2), "%c", ch);
+  state.SetStatus(buf2);
 }
 
 // Display Custom Character
@@ -520,8 +517,9 @@ void DisplayFanPower(DisplayCommandState& state)
   SafeFree(buf);
   state.m_device->SetFanPower(strtol(state.m_command->Action.iValue1, NULL, 10),
                               n / 100);
-  sprintf(buf, "Power %.f%%", n);
-  state.SetStatus(buf);
+  char buf2[32];
+  _snprintf(buf2, sizeof(buf2), "Power %.f%%", n);
+  state.SetStatus(buf2);
 }
 
 void DisplayCommand(PCommand command, PCHAR status, int statuslen)

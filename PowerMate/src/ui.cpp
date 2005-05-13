@@ -6,16 +6,11 @@ $Header$
 #include "plugin.h"
 #include "resource.h"
 
-#include <dui.h>
-
-static sGroups GROUP = 
-  // {9685E045-28DA-45A2-865B-6FDE6514459F}
-  { {0x9685e045, 0x28da, 0x45a2, {0x86, 0x5b, 0x6f, 0xde, 0x65, 0x14, 0x45, 0x9f} }, 
-    "PowerMate" };
-
-#define POWERMATE_DUI_GUID  "{9685E046-28DA-45A2-865B-6FDE6514459F}"
-#define REQUEST_PAGE_GUID   "{9685E047-28DA-45A2-865B-6FDE6514459F}"
-#define REPEAT_PAGE_GUID    "{9685E048-28DA-45A2-865B-6FDE6514459F}"
+#define POWERMATE_GROUP_NAME "PowerMate"
+#define POWERMATE_GROUP_GUID "{9685E045-28DA-45A2-865B-6FDE6514459F}"
+#define POWERMATE_DUI_GUID   "{9685E046-28DA-45A2-865B-6FDE6514459F}"
+#define REQUEST_PAGE_GUID    "{9685E047-28DA-45A2-865B-6FDE6514459F}"
+#define REPEAT_PAGE_GUID     "{9685E048-28DA-45A2-865B-6FDE6514459F}"
 
 PFTree g_DUI;
 PFTreeNode g_RequestPage, g_RepeatPage;
@@ -83,10 +78,10 @@ void DUICloseConfig(PFTree tree)
 
 void DUIOpenCommand(PFTree tree)
 {
-  g_RequestPageActive = InsertDUIPage(tree, g_DUI, g_RequestPage,
-                                      &GROUP.PageGUID, &GROUP);
-  g_RepeatPageActive = InsertDUIPage(tree, g_DUI, g_RepeatPage,
-                                     &GROUP.PageGUID, &GROUP);
+  g_RequestPageActive = InsertDUIPageExS(tree, g_DUI, g_RequestPage,
+                                         POWERMATE_GROUP_GUID, POWERMATE_GROUP_NAME);
+  g_RepeatPageActive = InsertDUIPageExS(tree, g_DUI, g_RepeatPage,
+                                        POWERMATE_GROUP_GUID, POWERMATE_GROUP_NAME);
 }
 
 void DUICloseCommand(PFTree tree)

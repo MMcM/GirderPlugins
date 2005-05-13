@@ -146,7 +146,7 @@ BOOL Delay::LoadSetting(HKEY hkey, LPCSTR valkey)
 void Delay::SaveSetting(HKEY hkey, LPCSTR valkey) const
 {
   char buf[64];
-  sprintf(buf, "%g", m_delay);
+  _snprintf(buf, sizeof(buf), "%g", m_delay);
   if (AllDigits(buf))
     strcat(buf, ".0");          // See compatibility interpretation above.
   RegSetValueEx(hkey, valkey, NULL, REG_SZ, (LPBYTE)buf, strlen(buf));
@@ -638,7 +638,7 @@ void DisplayDevice::DisplayInternal(int row, int col, LPCBYTE str, int length)
 #ifdef _TRACE
   {
     char dbuf[1024];
-    sprintf(dbuf, "LCD: @%d,%d: ", row, col);
+    _snprintf(dbuf, sizeof(dbuf), "LCD: @%d,%d: ", row, col);
     char *ep = dbuf + strlen(dbuf);
     if ((1 == length) && (*str < MAXCUSTCHARS)) {
       *ep++ = '0' + *str;
@@ -665,7 +665,7 @@ void DisplayDevice::DefineCustomCharacterInternal(int index, const CustomCharact
 #ifdef _TRACE
   {
     char dbuf[1024];
-    sprintf(dbuf, "LCD: [%d] =>", index);
+    _snprintf(dbuf, sizeof(dbuf), "LCD: [%d] =>", index);
     char *ep = dbuf + strlen(dbuf);
     for (int i = 0; i < NCUSTROWS; i++) {
       BYTE b = cust.GetBits()[i];
@@ -686,7 +686,7 @@ void DisplayDevice::SetMarqueeInternal(Marquee *marquee)
 #ifdef _TRACE
   {
     char dbuf[1024];
-    sprintf(dbuf, "LCD: @%d<<<: '", marquee->GetRow());
+    _snprintf(dbuf, sizeof(dbuf), "LCD: @%d<<<: '", marquee->GetRow());
     char *ep = dbuf + strlen(dbuf);
     size_t nb = marquee->GetLength();
     if (nb > sizeof(dbuf) - (ep - dbuf) - 3)
@@ -1140,7 +1140,7 @@ void DisplayDevice::DeviceSerialInputThread()
       break;
     if (m_enableKeypad && (nb > 0)) {
       char input[8];
-      sprintf(input, "%02X", buf[0]);
+      _snprintf(input, sizeof(input), "%02X", buf[0]);
       MapInput(input);
     }
   }
@@ -1933,7 +1933,7 @@ BOOL FanMonitor::SetValue(LPCSTR value)
 BOOL FanMonitor::SetRPM(int rpm)
 {
   char buf[16];
-  sprintf(buf, "%d", rpm);
+  _snprintf(buf, sizeof(buf), "%d", rpm);
   return SetValue(buf);
 }
 
@@ -1988,12 +1988,12 @@ void FanMonitor::SaveToRegistry(HKEY hkey, FanMonitor *fans)
       LPSTR pb = buf;
       if (!fan->m_enabled)
         *pb++ = '*';
-      sprintf(pb, "%d", fan->m_number);
+      _snprintf(pb, sizeof(buf)-1, "%d", fan->m_number);
       DisplayDevice::SetSettingString(subkey, fan->m_name, buf);
     }
     if (NULL != fans) {
       char buf[16];
-      sprintf(buf, "%d", fans->GetPulsesPerRevolution());
+      _snprintf(buf, sizeof(buf), "%d", fans->GetPulsesPerRevolution());
       DisplayDevice::SetSettingString(subkey, NULL, buf);
     }
     RegCloseKey(subkey);
@@ -2092,7 +2092,7 @@ BOOL DOWSensor::LoadFromScratchpad(LPCBYTE pb, size_t nb)
       if (nb >= 8) {
         temp = temp - 0.25 + ((pb[7] - pb[6]) / pb[7]);
       }
-      sprintf(buf, "%.1f", temp);
+      _snprintf(buf, sizeof(buf), "%.1f", temp);
       value = buf;
     }
     break;
@@ -2100,7 +2100,7 @@ BOOL DOWSensor::LoadFromScratchpad(LPCBYTE pb, size_t nb)
   case DS18B20:
     if (nb >= 2) {
       double temp = ((double)*(SHORT UNALIGNED*)pb) / 16.0;
-      sprintf(buf, "%.1f", temp);
+      _snprintf(buf, sizeof(buf), "%.1f", temp);
       value = buf;
     }
     break;
@@ -2174,7 +2174,7 @@ void DOWSensor::SaveToRegistry(HKEY hkey, DOWSensor *sensors)
       // Formatted as 8 bytes rather than one 64-bit integer, which
       // would put family last.
       for (int i = 0; i < 8; i++)
-        sprintf(pb + i * 2, "%02X", sensor->m_rom[i]);
+        _snprintf(pb + i * 2, 3, "%02X", sensor->m_rom[i]);
       DisplayDevice::SetSettingString(subkey, sensor->m_name, buf);
     }
     RegCloseKey(subkey);

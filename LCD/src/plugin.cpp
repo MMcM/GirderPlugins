@@ -166,6 +166,14 @@ gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
   return NULL;
 }
 
+#if 0
+extern "C" PCHAR WINAPI
+gir_eventstrings_advise()
+{
+  // TODO: Could get button names.
+}
+#endif
+
 #if 1
 /** OLD STYLE **/
 extern "C" void WINAPI

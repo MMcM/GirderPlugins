@@ -102,6 +102,7 @@
 #endif
 
 #include <girder4.h>
+#include <dui.h>
 
 extern "C" {
 #include <lua.h>

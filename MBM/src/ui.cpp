@@ -6,14 +6,9 @@ $Header$
 #include "plugin.h"
 #include "resource.h"
 
-#include <dui.h>
-
-static sGroups GROUP = 
-  // {661DD302-90C5-45e9-8B20-D979D5E3ADFA}
-  { { 0x661dd302, 0x90c5, 0x45e9, { 0x8b, 0x20, 0xd9, 0x79, 0xd5, 0xe3, 0xad, 0xfa } },
-    "MBM" };
-
-#define MBM_DUI_GUID  "{661DD303-90C5-45e9-8B20-D979D5E3ADFA}"
+#define MBM_GROUP_NAME "MBM"
+#define MBM_GROUP_GUID "{661DD302-90C5-45e9-8B20-D979D5E3ADFA}"
+#define MBM_DUI_GUID   "{661DD303-90C5-45e9-8B20-D979D5E3ADFA}"
 
 PFTree g_DUI;
 

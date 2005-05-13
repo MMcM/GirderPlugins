@@ -18,3 +18,4 @@ EXPORTS
 
 ;       gir_info
         gir_dynamic_ui
+        gir_eventstrings_advise
