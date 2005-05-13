@@ -3,7 +3,7 @@
 $Header$
 -->
 <Girder Version="400">
-  <FileRoot Name="C:\Program Files\Girder4\Plugins\LCD\LCDTests.gml" Identifier="-1" Enabled="TRUE" FileGUID="{C94C17F9-8E25-4615-80AD-94F20257BB45}" TimeStamp="0" Locked="FALSE">
+  <FileRoot Name="C:\Program Files\Promixis\Girder\plugins\LCD\LCDTests.gml" Identifier="-1" Enabled="TRUE" FileGUID="{C94C17F9-8E25-4615-80AD-94F20257BB45}" TimeStamp="0" Locked="FALSE">
     <Group Name="Display Commands" Identifier="1" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Test each command type</Comments>
       <Command Name="String" Identifier="2" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">

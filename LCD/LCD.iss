@@ -8,7 +8,7 @@ AppID=Girder_LCD-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
 AppVersion=4.0
-DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\girder4\plugins}\..
+DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\Promixis\Girder\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=LCD
 OutputDir=.

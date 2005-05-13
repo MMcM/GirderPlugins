@@ -3,7 +3,7 @@
 $Header$
 -->
 <Girder Version="400">
-  <FileRoot Name="C:\Program Files\Girder4\Plugins\MBM\Test.GML" Identifier="-1" Enabled="TRUE" FileGUID="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}" TimeStamp="0" Locked="FALSE">
+  <FileRoot Name="C:\Program Files\Promixis\Girder\plugins\MBM\Test.GML" Identifier="-1" Enabled="TRUE" FileGUID="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}" TimeStamp="0" Locked="FALSE">
     <Group Name="MBM" Identifier="14" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <MultiGroup Name="T1" Identifier="15" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <EventString Name="Case" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Case"/>
@@ -196,5 +196,5 @@ $Header$
         <ActionSubType>9</ActionSubType>
       </Command>
     </Group>
-  </FileRoot>
+s  </FileRoot>
 </Girder>

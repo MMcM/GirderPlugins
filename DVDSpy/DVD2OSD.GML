@@ -3,7 +3,7 @@
 $Header$
 -->
 <Girder Version="400">
-  <FileRoot Name="C:\Program Files\Girder4\Plugins\DVDSpy\DVD2OSD.GML" Identifier="-1" Enabled="TRUE" FileGUID="{423FE647-3A84-440F-B854-ED4A62AA301F}" TimeStamp="0" Locked="FALSE">
+  <FileRoot Name="C:\Program Files\Promixis\Girder\plugins\DVDSpy\DVD2OSD.GML" Identifier="-1" Enabled="TRUE" FileGUID="{423FE647-3A84-440F-B854-ED4A62AA301F}" TimeStamp="0" Locked="FALSE">
     <Group Name="Display" Identifier="1" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Command Name="OSD" Identifier="2" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSDTimeout>1500</OSDTimeout>
