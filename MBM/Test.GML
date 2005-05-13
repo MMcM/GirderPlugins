@@ -2,345 +2,199 @@
 <!-- Motherboard Monitor to OSD 
 $Header$
 -->
-<Girder>
-  <Group Name="MBM" Identifier="14" Enabled="TRUE">
-    <MultiGroup Name="T1" Identifier="15" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="Case" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Case"/>
-      <Command Name="Set variable" Identifier="17" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
+<Girder Version="400">
+  <FileRoot Name="C:\Program Files\Girder4\Plugins\MBM\Test.GML" Identifier="-1" Enabled="TRUE" FileGUID="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}" TimeStamp="0" Locked="FALSE">
+    <Group Name="MBM" Identifier="14" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="T1" Identifier="15" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Case" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Case"/>
+        <Command Name="Set variable" Identifier="17" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmt1 = string.format("%2.0fC", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="18" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="T2" Identifier="19" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="CPU" Identifier="20" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="CPU"/>
+        <Command Name="Set variable" Identifier="21" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmt2 = string.format("%2.0fC", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="22" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="F1" Identifier="23" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Fan 1" Identifier="24" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Fan 1"/>
+        <Command Name="Set variable" Identifier="25" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmf1 = string.format("%4.0fRPM", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="26" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="F2" Identifier="27" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Fan 2" Identifier="28" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Fan 2"/>
+        <Command Name="Set variable" Identifier="29" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmf2 = string.format("%4.0fRPM", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="30" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="V1" Identifier="31" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Core 0" Identifier="32" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Core 0"/>
+        <Command Name="Set variable" Identifier="33" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmv1 = string.format("%2.2fV", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="34" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="V2" Identifier="35" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="+5.00" Identifier="36" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="+5.00"/>
+        <Command Name="Set variable" Identifier="37" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmv2 = string.format("%2.2fV", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="38" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <MultiGroup Name="V3" Identifier="39" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="+12.00" Identifier="40" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="+12.00"/>
+        <Command Name="Set variable" Identifier="41" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <sValue1>mbmv3 = string.format("%2.2fV", pld1)</sValue1>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <ActionType>4</ActionType>
+          <ActionSubType>34</ActionSubType>
+        </Command>
+        <Command Name="Display" Identifier="42" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{0D04EE03-0C1B-4CF2-8A8F-91CD891C6607}">
+          <OSD>FALSE</OSD>
+          <Topmost>TRUE</Topmost>
+          <MatchNum>1</MatchNum>
+          <bValue1>FALSE</bValue1>
+          <bValue2>FALSE</bValue2>
+          <bValue3>FALSE</bValue3>
+          <lValue1>43</lValue1>
+          <ActionType>4</ActionType>
+          <ActionSubType>10</ActionSubType>
+        </Command>
+      </MultiGroup>
+      <Command Name="OSD" Identifier="43" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <OSDTimeout>500</OSDTimeout>
         <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
         <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
         <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmt1 = string.format(&#34;%2.0fC&#34;, pld1)</sValue1>
+        <sValue1>[mbmt1] [mbmt2]
+[mbmv1] [mbmv2] [mbmv3]
+[mbmf1] [mbmf2]
+</sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
         <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="18" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
         <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
+        <ActionSubType>9</ActionSubType>
       </Command>
-    </MultiGroup>
-    <MultiGroup Name="T2" Identifier="19" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="CPU" Identifier="20" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="CPU"/>
-      <Command Name="Set variable" Identifier="21" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmt2 = string.format(&#34;%2.0fC&#34;, pld1)</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="22" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="F1" Identifier="23" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="Fan 1" Identifier="24" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Fan 1"/>
-      <Command Name="Set variable" Identifier="25" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmf1 = string.format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="26" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="F2" Identifier="27" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="Fan 2" Identifier="28" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Fan 2"/>
-      <Command Name="Set variable" Identifier="29" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmf2 = string.format(&#34;%4.0fRPM&#34;, pld1)</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="30" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="V1" Identifier="31" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="Core 0" Identifier="32" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="Core 0"/>
-      <Command Name="Set variable" Identifier="33" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmv1 = string.format(&#34;%2.2fV&#34;, pld1)</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="34" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="V2" Identifier="35" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="+5.00" Identifier="36" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="+5.00"/>
-      <Command Name="Set variable" Identifier="37" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmv2 = string.format(&#34;%2.2fV&#34;, pld1)</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="38" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
-      </Command>
-    </MultiGroup>
-    <MultiGroup Name="V3" Identifier="39" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <EventString Name="+12.00" Identifier="40" Enabled="TRUE" Invert="FALSE" Device="46" IrStr="+12.00"/>
-      <Command Name="Set variable" Identifier="41" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>34</ActionSubType>
-        <sValue1>mbmv3 = string.format(&#34;%2.2fV&#34;, pld1)</sValue1>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-      </Command>
-      <Command Name="Display" Identifier="42" Enabled="TRUE">
-        <StateCount>1</StateCount>
-        <StateBegin>1</StateBegin>
-        <StateCurrent>1</StateCurrent>
-        <StateInvert>FALSE</StateInvert>
-        <OSD>FALSE</OSD>
-        <Submatch>FALSE</Submatch>
-        <Topmost>TRUE</Topmost>
-        <OneMatch>FALSE</OneMatch>
-        <UseVar>FALSE</UseVar>
-        <MatchHidden>FALSE</MatchHidden>
-        <MatchNum>1</MatchNum>
-        <ActionType>4</ActionType>
-        <ActionSubType>10</ActionSubType>
-        <bValue1>FALSE</bValue1>
-        <bValue2>FALSE</bValue2>
-        <bValue3>FALSE</bValue3>
-        <lValue1>43</lValue1>
-      </Command>
-    </MultiGroup>
-    <Command Name="OSD" Identifier="43" Enabled="TRUE">
-      <StateCount>1</StateCount>
-      <StateBegin>1</StateBegin>
-      <StateCurrent>1</StateCurrent>
-      <StateInvert>FALSE</StateInvert>
-      <OSD>FALSE</OSD>
-      <Submatch>FALSE</Submatch>
-      <Topmost>TRUE</Topmost>
-      <OneMatch>FALSE</OneMatch>
-      <UseVar>FALSE</UseVar>
-      <MatchHidden>FALSE</MatchHidden>
-      <MatchNum>1</MatchNum>
-      <ActionType>100</ActionType>
-      <ActionSubType>33</ActionSubType>
-      <sValue1>[mbmt1] [mbmt2]ÿþ[mbmv1] [mbmv2] [mbmv3]ÿþ[mbmf1] [mbmf2]ÿþ</sValue1>
-      <iValue1>500</iValue1>
-      <iValue2>42</iValue2>
-      <bValue1>FALSE</bValue1>
-      <bValue2>FALSE</bValue2>
-      <bValue3>FALSE</bValue3>
-      <lValue1>8454016</lValue1>
-      <lValue2>65280</lValue2>
-    </Command>
-  </Group>
+    </Group>
+  </FileRoot>
 </Girder>
