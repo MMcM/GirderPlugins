@@ -60,6 +60,8 @@ DisplayAction DisplayActions[] = {
   { "p", "Fan Power", valSTR, editFan, DisplayFanPower },
 };
 
+#define SCREEN_NLINES 4
+
 BOOL FindDisplayAction(DisplayDeviceList& devices, PCommand command,
                        DisplayActionDeviceType& devtype, DisplayDevice*& device,
                        DisplayAction*& action)
@@ -68,66 +70,6 @@ BOOL FindDisplayAction(DisplayDeviceList& devices, PCommand command,
   device = devices.GetDefault();
 
   PCHAR key = command->Action.sValue2;
-
-#if 0
-  if ((NULL == key) || ('\0' == *key)) {
-    // An older GML file.  Convert the command to the new format.
-    PCHAR val = NULL;
-    char buf[128];
-
-    switch (strtol(command->Action.iValue1, NULL, 10)) {
-    case 0:                       // String
-      key = "s";
-      break;
-    case 1:                       // String Register
-      key = "v";
-      sprintf(buf, "treg%s", command->Action.iValue2);
-      val = buf;
-      break;
-    case 2:                       // Current Date/Time
-      key = "t";
-      break;
-    case 3:                       // Clear Display
-      key = "c";
-      break;
-    case 4:                       // Close Display
-      key = "x";
-      break;
-    case 5:                       // Payload
-      key = "v";
-      sprintf(buf, "pld%s", command->Action.iValue2);
-      val = buf;
-      break;
-    case 6:                       // Filename Payload
-      key = "f";
-      sprintf(buf, "pld%s", command->Action.iValue2);
-      val = buf;
-      break;
-    default:
-      return FALSE;
-    }
-    if (NULL != val) {
-      SafeFree(command->Action.sValue1);
-      command->Action.sValue1 = GStrDup(val);
-    }
-    SafeFree(command->Action.sValue2);
-    command->Action.sValue2 = GStrDup(key);
-    // Position information.
-    SafeFree(command->Action.iValue1);
-    sprintf(buf, "%d", command->lvalue1); // Row
-    command->Action.iValue1 = GStrDup(buf);
-    SafeFree(command->Action.iValue2);
-    sprintf(buf, "%d", command->lvalue2); // Column
-    command->Action.iValue2 = GStrDup(buf);
-    SafeFree(command->Action.iValue3);
-    sprintf(buf, "%d", (command->lvalue3 <= 0) ? -1 : command->lvalue3); // Width
-    command->Action.iValue3 = GStrDup(buf);
-    command->lvalue1 = 0;       // No links.
-    command->lvalue2 = 0;
-    command->lvalue3 = 0;
-  }
-#endif
-
   LPSTR cpos = strchr(key, ':');
   if (NULL != cpos) {
     char name[128];
@@ -204,15 +146,18 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
   DisplayDevice *commandDevice;
   DisplayAction *commandAction;
 
-  if ((val1 == duOnGetPage) || (val1 == duOnGetValues)) {
+  if ((duOnGetPage == val1) || (duOnGetValues == val1)) {
+    // Decode device and action from command.
+
     EnsureDevices();
 
     if (!FindDisplayAction(g_devices, command, deviceType, commandDevice, commandAction))
       commandAction = DisplayActions;  // String
   }
   else {
-    if ((val1 == duOnApply) ||
-        ((val1 == duOnEvent) && (val2 == 0))) {
+    // Decode device and action from controls.
+    if ((duOnApply == val1) ||
+        ((duOnEvent == val1) && (0 == val2))) {
       int itemIndex = 0;
       double d;
       if (ControlGetNumber(L, "display", "ItemIndex", d))
@@ -225,8 +170,8 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
       else
         deviceType = devNAMED;
     }
-    if ((val1 == duOnApply) ||
-        ((val1 == duOnEvent) && FALSE)) {
+    if ((duOnApply == val1) ||
+        ((duOnEvent == val1) && FALSE)) {
       int itemIndex = 0;
       if ((editDisplay == item->ActionSubType) ||
           (editControl == item->ActionSubType)) {
@@ -244,21 +189,108 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
     }
   }
 
+  if ((duOnGetValues == val1) ||
+      ((duOnEvent == val1) && (0 == val2))) {
+    // Handle device ranges and choices.
+    switch (item->ActionSubType) {
+    case editDisplay:
+      ControlSetNumber(L, "row", "Max", 
+                       (NULL == commandDevice) ? 0 : commandDevice->GetHeight() - 1);
+      ControlSetNumber(L, "column", "Max", 
+                       (NULL == commandDevice) ? 0 : commandDevice->GetWidth() - 1);
+      ControlSetNumber(L, "width", "Max", 
+                       (NULL == commandDevice) ? 0 : commandDevice->GetWidth());
+      break;
+    case editScreen:
+      {
+        int nrows = 0;
+        if (NULL != commandDevice)
+          nrows = commandDevice->GetHeight();
+        char buf[18];
+        const char *cnames[] = { "enabled", "line", "marquee" };
+        for (int i = 0; i < SCREEN_NLINES; i++) {
+          BOOL visible = (i < nrows);
+          for (int j = 0; j < countof(cnames); j++) {
+            _snprintf(buf, sizeof(buf), "%s%d", cnames[j], i+1);
+            ControlSetBool(L, buf, "Visible", visible);
+          }
+        }    
+      }
+      break;
+    case editKeypad:
+      {
+        // TODO: fill combos.
+        char strings[2048];
+        strings[0] = '\0';
+        LPCSTR *choices = commandDevice->GetKeypadButtonChoices();
+        if (NULL != choices) {
+          while (NULL != *choices) {
+            strncat(strings, *choices++, sizeof(strings));
+            strncat(strings, "\n", sizeof(strings));
+          }
+        }
+        ControlSetString(L, "key", "Strings", strings);
+        strings[0] = '\0';
+        choices = commandDevice->GetKeypadLegendChoices();
+        if (NULL != choices) {
+          while (NULL != *choices) {
+            strncat(strings, *choices++, sizeof(strings));
+            strncat(strings, "\n", sizeof(strings));
+          }
+        }
+        ControlSetString(L, "legend", "Strings", strings);
+      }
+      break;
+    case editGPO:
+      {
+        int ngpos = 0;
+        if (NULL != commandDevice)
+          ngpos = commandDevice->GetNGPOs();
+        if (ngpos > 0) {
+          ControlSetNumber(L, "gpo", "Min", 1);
+          ControlSetNumber(L, "gpo", "Max", ngpos);
+          ControlSetBool(L, "gpo", "Enabled", TRUE);
+        }
+        else
+          ControlSetBool(L, "gpo", "Enabled", FALSE);
+      }
+      break;
+    case editFan:
+      {
+        int nfans = 0;
+        if (NULL != commandDevice)
+          nfans = commandDevice->GetNFans();
+        if (nfans > 0) {
+          ControlSetNumber(L, "fan", "Min", 1);
+          ControlSetNumber(L, "fan", "Max", nfans);
+          ControlSetBool(L, "fan", "Enabled", TRUE);
+        }
+        else
+          ControlSetBool(L, "fan", "Enabled", FALSE);
+      }
+      break;
+    }
+  }
+
   switch (val1) {
   case duOnGetPage:
     {
+      // For compatibility with old GML files, adjust command to point
+      // to correct subtype and switch to proper editor.
+
       if (command->ActionSubType != commandAction->editorType) {
         command->ActionSubType = commandAction->editorType;
       }
 
       if (pageNode != g_activePages[commandAction->editorType])
-        newPage = g_activePages[commandAction->editorType]; // Switch to proper editor.
+        newPage = g_activePages[commandAction->editorType];
     }
     break;
 				
   case duOnGetValues:
     {
       if (g_bMultipleDevices) {
+        // Populate device choice combo.
         ControlSetString(L, "displayLabel", "Caption", "Display:");
         ControlSetBool(L, "displayLabel", "Visible", TRUE);
 
@@ -302,6 +334,7 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
 
       if ((editDisplay == item->ActionSubType) ||
           (editControl == item->ActionSubType)) {
+        // Populate action choice combo.
         char strings[2048];
         int itemIndex = 0, i = 0;
         for (int j = 0; j < countof(DisplayActions); j++) {
@@ -323,8 +356,6 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
       switch (item->ActionSubType) {
       case editDisplay:
         {
-          ControlSetNumber(L, "row", "Max", 
-                           (NULL == commandDevice) ? 0 : commandDevice->GetHeight() - 1);
           ControlSetString(L, "marquee", "Caption", "Marquee");
           int column = strtol(command->Action.iValue2, NULL, 10);
           BOOL marquee = (column < 0);
@@ -332,8 +363,6 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
           ControlSetString(L, "columnCheck", "Caption", "Column:");
           ControlSetBool(L, "columnCheck", "Checked", !marquee);
           ControlSetBool(L, "column", "Enabled", !marquee);
-          ControlSetNumber(L, "column", "Max", 
-                           (NULL == commandDevice) ? 0 : commandDevice->GetWidth() - 1);
           if (!marquee)
             ControlSetNumber(L, "column", "Position", column);
           int width = strtol(command->Action.iValue3, NULL, 10);
@@ -343,22 +372,57 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
           ControlSetString(L, "widthCheck", "Caption", "Width:");
           ControlSetBool(L, "widthCheck", "Checked", !rest);
           ControlSetBool(L, "width", "Enabled", !rest);
-          ControlSetNumber(L, "width", "Max", 
-                           (NULL == commandDevice) ? 0 : commandDevice->GetWidth());
           if (!rest)
             ControlSetNumber(L, "width", "Position", width);
         }
         break;
       case editScreen:
         {
-          // TODO: ...
+          char lines[1024], buf[128];
+          BOOL checked;
+          strncpy(lines, command->Action.sValue1, sizeof(lines));
+          int enabled = strtol(command->Action.iValue1, NULL, 10);
+          int marquee = strtol(command->Action.iValue2, NULL, 10);
+          PCHAR pval = lines;
+          for (int i = 0; i < SCREEN_NLINES; i++) {
+            _snprintf(buf, sizeof(buf), "enabled%d", i+1);
+            checked = !(enabled & (1 << i));
+            ControlSetBool(L, buf, "Checked", checked);
+            _snprintf(buf, sizeof(buf), "marquee%d", i+1);
+            ControlSetBool(L, buf, "Enabled", checked);
+            checked = !!(marquee & (1 << i));
+            ControlSetBool(L, buf, "Checked", checked);
+
+            PCHAR next = strchr(pval, '\n');
+            if (NULL != next) {
+              if ((next > pval) && (*(next-1) == '\r'))
+                *(next-1) = '\0';
+              *next++ = '\0';
+            }
+            else
+              next = pval + strlen(pval);
+            _snprintf(buf, sizeof(buf), "line%d", i+1);
+            ControlSetString(L, buf, "Text", pval);
+            pval = next;
+          }
         }
         break;
       case editKeypad:
         {
-          // TODO: fill combos.
           ControlSetString(L, "key", "Text", command->Action.sValue1); 
           ControlSetString(L, "legend", "Text", command->Action.sValue3);
+        }
+        break;
+      case editGPO:
+        {
+          int gpo = strtol(command->Action.iValue1, NULL, 10);
+          ControlSetNumber(L, "gpo", "Position", gpo); 
+        }
+        break;
+      case editFan:
+        {
+          int fan = strtol(command->Action.iValue1, NULL, 10);
+          ControlSetNumber(L, "fan", "Position", fan); 
         }
         break;
       }
@@ -406,7 +470,37 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
         break;
       case editScreen:
         {
-          // TODO: ...
+          char lines[1024], buf[128];
+          int enabled = 0, marquee = 0;
+          int nrows = 0;
+          if (NULL != commandDevice)
+            nrows = commandDevice->GetHeight();
+          if (nrows > SCREEN_NLINES) nrows = SCREEN_NLINES;
+          for (int i = 0; i < nrows; i++) {
+            BOOL checked;
+            _snprintf(buf, sizeof(buf), "enabled%d", i+1);
+            if (ControlGetBool(L, buf, "Checked", checked) && !checked)
+              enabled |= (1 << i);
+            _snprintf(buf, sizeof(buf), "marquee%d", i+1);
+            if (ControlGetBool(L, buf, "Checked", checked) && checked)
+              marquee |= (1 << i);
+
+            const char *str;
+            _snprintf(buf, sizeof(buf), "line%d", i+1);
+            if (ControlGetString(L, buf, "Text", str)) {
+              if (i == 0)
+                strncpy(lines, str, sizeof(lines));
+              else {
+                strncat(lines, "\n", sizeof(lines));
+                strncat(lines, str, sizeof(lines));
+              }
+            }
+          }
+          _snprintf(buf, sizeof(buf), "%d", enabled);
+          command->Action.iValue1 = GStrDup(buf);
+          _snprintf(buf, sizeof(buf), "%d", marquee);
+          command->Action.iValue2 = GStrDup(buf);
+          command->Action.sValue1 = GStrDup(lines);
         }
         break;
       case editKeypad:
@@ -418,6 +512,20 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
             command->Action.sValue3 = GStrDup(str);
         }
         break;
+      case editGPO:
+        {
+          const char *str;
+          if (ControlGetString(L, "gpo", "Position", str))
+            command->Action.iValue1 = GStrDup(str);
+        }
+        break;
+      case editFan:
+        {
+          const char *str;
+          if (ControlGetString(L, "fan", "Position", str))
+            command->Action.iValue1 = GStrDup(str);
+        }
+        break;
       }
     }
     break;
@@ -427,16 +535,6 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
       switch (item->ActionSubType) {
       case editDisplay:
         switch (val2) {
-        case 0:
-          {
-            ControlSetNumber(L, "row", "Max", 
-                             (NULL == commandDevice) ? 0 : commandDevice->GetHeight() - 1);
-            ControlSetNumber(L, "column", "Max", 
-                             (NULL == commandDevice) ? 0 : commandDevice->GetWidth() - 1);
-            ControlSetNumber(L, "width", "Max", 
-                             (NULL == commandDevice) ? 0 : commandDevice->GetWidth());
-          }
-          break;
         case 1:
           {
             BOOL marquee;
@@ -473,6 +571,34 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
             }
           }
           break;
+        }
+        break;
+      case editScreen:
+        if ((val2 >= 1) && (val2 <= 8)) {
+          char buf[128];
+          BOOL checked;
+          int line = (val2 + 1) / 2;
+          if ((val2 & 1) != 0) {
+            // Enabled affects marquee.
+            _snprintf(buf, sizeof(buf), "enabled%d", line);
+            if (!ControlGetBool(L, buf, "Checked", checked)) checked = FALSE;
+            _snprintf(buf, sizeof(buf), "marquee%d", line);
+            if (!checked)
+              ControlSetBool(L, buf, "Checked", FALSE);
+            ControlSetBool(L, buf, "Enabled", checked);
+          }
+          else {
+            // Marquee turns off all others.
+            _snprintf(buf, sizeof(buf), "marquee%d", line);
+            if (!ControlGetBool(L, buf, "Checked", checked)) checked = FALSE;
+            if (checked) {
+              for (int i = 0; i < SCREEN_NLINES; i++) {
+                if (line == i+1) continue;
+                _snprintf(buf, sizeof(buf), "marquee%d", i+1);
+                ControlSetBool(L, buf, "Checked", FALSE);
+              }
+            }            
+          }
         }
         break;
       }
