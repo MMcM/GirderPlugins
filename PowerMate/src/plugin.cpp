@@ -164,7 +164,7 @@ gir_eventstrings_advise()
     "PowerMate.RightDown\0"
     "PowerMate.LeftDown\0";
   PCHAR result = (PCHAR)Malloc(sizeof(events));
-  MemCopy(result, (void *)events, sizeof(events));
+  MemCopy(result, events, sizeof(events));
   return result;
 }
 

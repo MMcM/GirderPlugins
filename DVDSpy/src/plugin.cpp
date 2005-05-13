@@ -174,7 +174,7 @@ gir_eventstrings_advise()
             *pe++ = cd;
             *pe++ = '\0';
             if (pass == 2)
-              MemCopy(result + nb, (void *)buf, (pe - buf));
+              MemCopy(result + nb, buf, (pe - buf));
             nb += (pe - buf);
           }
         }

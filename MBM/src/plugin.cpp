@@ -142,7 +142,7 @@ gir_eventstrings_advise()
       LPCSTR event = GetEventName(i);
       if (NULL != event) {
         if (pass == 2)
-          MemCopy(result + nb, (void *)event, strlen(event) + 1);
+          MemCopy(result + nb, event, strlen(event) + 1);
         nb += strlen(event) + 1;
       }
     }
