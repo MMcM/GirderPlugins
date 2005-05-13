@@ -14,6 +14,7 @@ DirExistsWarning=no
 OutputBaseFilename=PowerMate
 OutputDir=..\..
 SetupIconFile=src\plugin.ico
+UninstallDisplayName=Girder PowerMate 3.0
 
 [Types]
 Name: "compact"; Description: "Minimal installation"

@@ -14,6 +14,7 @@ DirExistsWarning=no
 OutputBaseFilename=MBM
 OutputDir=..\..
 SetupIconFile=src\plugin.ico
+UninstallDisplayName=Girder MBM 2.0
 
 [Types]
 Name: "compact"; Description: "Minimal installation"

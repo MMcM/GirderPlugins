@@ -91,7 +91,7 @@ gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event,
   case ACTION_REPEAT:
     {
       PCHAR buf = ParseString("[pld1]");
-      int n = strtol(buf, NULL, 10);
+      int n = atoi(buf);
       SafeFree(buf);
       while (n-- > 0) {
         int ret = TriggerNodeEx(command->Action.lValue1, &command->Action.FileGUID1);

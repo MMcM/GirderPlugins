@@ -4,7 +4,8 @@ $Header$
 -->
 <DynamicUI>
   <Group Name="PowerMate" GUID="{9685E046-28DA-45A2-865B-6FDE6514459F}" ImageIndex="-1" Show="3">
-    <Item Name="Device Request" Description="Device request parameters" GUID="{9685E047-28DA-45A2-865B-6FDE6514459F}" AType="44" ASType="1" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+    <Item Name="Device Request" Description="change LED setting" GUID="{9685E047-28DA-45A2-865B-6FDE6514459F}" AType="44" ASType="1" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+      <Control Name="Action:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
       <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="4" ControlType="5" Width="152" Height="21" Left="58" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
         <Values>Set LED Brightness (0-255)&#xD;
 Pulse during sleep (0 / 1)&#xD;
@@ -17,11 +18,10 @@ Pulse speed (1-24)&#xD;
 3&#xD;
 </Values2>
       </Control>
-      <Control Name="Action:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
       <Control Name="Value:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
       <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="1" ControlType="1" Width="152" Height="24" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
     </Item>
-    <Item Name="Repeat Command" Description="Repeat parameters" GUID="{9685E048-28DA-45A2-865B-6FDE6514459F}" AType="44" ASType="2" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+    <Item Name="Repeat Command" Description="repeat [pld1] times" GUID="{9685E048-28DA-45A2-865B-6FDE6514459F}" AType="44" ASType="2" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
       <Control Name="Command to repeat" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="10" ControlType="2" Width="280" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
       <Control Name="Browse..." GUID="{9685E049-28DA-45A2-865B-6FDE6514459F}" Default="" LuaName="" Field="10" ControlType="13" Width="104" Height="24" Left="290" Top="8" Anchors="6" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
     </Item>
