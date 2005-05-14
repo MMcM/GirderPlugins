@@ -144,11 +144,22 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
   DisplayDevice *commandDevice;
   DisplayAction *commandAction;
 
-  if ((duOnGetPage == val1) || (duOnGetValues == val1)) {
-    // Decode device and action from command.
-
+  if (duOnGetDefaults == val1) {
+    // Default device and action.
     EnsureDevices();
-
+    deviceType = devDEFAULT;
+    commandDevice = g_devices.GetDefault();
+    
+    for (int i = 0; i < countof(DisplayActions); i++) {
+      if (DisplayActions[i].editorType == item->ActionSubType) {
+        commandAction = DisplayActions+i;
+        break;
+      }
+    }
+  }
+  else if ((duOnGetPage == val1) || (duOnGetValues == val1)) {
+    // Decode device and action from command.
+    EnsureDevices();
     if (!FindDisplayAction(g_devices, command, deviceType, commandDevice, commandAction))
       commandAction = DisplayActions;  // String
   }
@@ -193,7 +204,8 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
     }
   }
 
-  if ((duOnGetValues == val1) ||
+  if ((duOnGetDefaults == val1) ||
+      (duOnGetValues == val1) ||
       ((duOnEvent == val1) && (0 == val2))) {
     // Handle device ranges and choices.
     switch (item->ActionSubType) {
@@ -288,6 +300,56 @@ PageCallback(pLuaRec lua, PFTree tree, PFTreeNode pageNode, PBaseNode baseNode,
 
       if (pageNode != g_activePages[commandAction->editorType])
         newPage = g_activePages[commandAction->editorType];
+    }
+    break;
+				
+  case duOnGetDefaults:
+    {
+      if (g_bMultipleDevices) {
+        // Minimal device choice combo.
+        ControlSetString(L, "display", "Strings", "Default\n");
+        ControlSetNumber(L, "display", "ItemIndex", 0);
+        g_deviceComboContents[0] = commandDevice;
+      }
+
+      if ((editDisplay == item->ActionSubType) ||
+          (editControl == item->ActionSubType)) {
+        // Minimal action choice combo.
+        ControlSetString(L, "type", "Strings", commandAction->name);
+        ControlSetNumber(L, "type", "ItemIndex", 0);
+      }
+
+      switch (item->ActionSubType) {
+      case editDisplay:
+        {
+          ControlSetNumber(L, "row", "Position", 0);
+          ControlSetBool(L, "marquee", "Checked", FALSE);
+          ControlSetNumber(L, "column", "Position", 0);
+          ControlSetBool(L, "rest", "Checked", TRUE);
+        }
+        break;
+      case editScreen:
+        {
+          char buf[128];
+          for (int i = 0; i < SCREEN_NLINES; i++) {
+            _snprintf(buf, sizeof(buf), "enabled%d", i+1);
+            ControlSetBool(L, buf, "Checked", FALSE);
+            _snprintf(buf, sizeof(buf), "marquee%d", i+1);
+            ControlSetBool(L, buf, "Checked", FALSE);
+          }
+        }
+        break;
+      case editGPO:
+        {
+          ControlSetNumber(L, "gpo", "Position", 1); 
+        }
+        break;
+      case editFan:
+        {
+          ControlSetNumber(L, "fan", "Position", 1); 
+        }
+        break;
+      }
     }
     break;
 				
