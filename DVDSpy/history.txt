@@ -1,3 +1,5 @@
+1.67    05/22/2005      audiophile      Add skin support for WinDVD 6.
+
 1.66    03/27/2005      shura_k Add mixer control monitoring.
 
 1.65    12/04/2004      kyle    Add support for MyHD.
