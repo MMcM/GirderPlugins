@@ -1,0 +1,12 @@
+REGEDIT4
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\WinDVD]
+"Chapter_100_Display_Location"="376,11" 
+"Chapter_10_Display_Location"="386,11" 
+"Chapter_0_Display_Location"="396,11" 
+"Hour_10_Display_Location"="282,11" 
+"Hour_0_Display_Location"="292,11" 
+"Minute_10_Display_Location"="313,11" 
+"Minute_0_Display_Location"="323,11" 
+"Second_10_Display_Location"="342,11" 
+"Second_0_Display_Location"="352,11"
