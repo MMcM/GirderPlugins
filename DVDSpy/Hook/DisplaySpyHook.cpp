@@ -2063,6 +2063,14 @@ POINT SkinDVDRegistryPoint(HKEY hkey, LPCSTR szName)
       (REG_SZ != dwType))
     return ptResult;
 
+#ifdef _TRACE
+    {
+      char szDBuf[1024];
+      sprintf(szDBuf, "DVDRegistryPoint: (%s) %s", szBuf, szName);
+      OutputDebugString(szDBuf);
+    }
+#endif
+
   LPSTR psz = strchr(szBuf, ',');
   if (NULL == psz) return ptResult;
   *psz++ = '\0';

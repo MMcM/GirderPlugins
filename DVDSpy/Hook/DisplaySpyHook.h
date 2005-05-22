@@ -22,4 +22,4 @@ BOOL DISPLAYSPYHOOK_API DS_GetNext(size_t *nMatch, size_t *nIndex,
 void DISPLAYSPYHOOK_API DS_Reset();
 }
 
-#define DVDSPY_KEY "\\SOFTWARE\\Promixis\\Girder\\4\\Plugins\\DVDSpy"
+#define DVDSPY_KEY "SOFTWARE\\Promixis\\Girder\\4\\Plugins\\DVDSpy"
