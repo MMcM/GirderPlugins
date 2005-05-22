@@ -56,6 +56,7 @@ Source: "plugins\DVDSpy\WinDVD3.reg"; DestDir: "{app}\plugins\DVDSpy"; Component
 Source: "plugins\DVDSpy\WinDVD4.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: windvd; Flags: promptifolder
 Source: "plugins\DVDSpy\WinDVD4PR.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: windvd; Flags: promptifolder
 Source: "plugins\DVDSpy\WinDVD5.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: windvd; Flags: promptifolder
+Source: "plugins\DVDSpy\WinDVD6.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: windvd; Flags: promptifolder
 Source: "plugins\DVDSpy\PowerDVD.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: powerdvd; Flags: promptifolder
 Source: "plugins\DVDSpy\ShowShifter.reg"; DestDir: "{app}\plugins\DVDSpy"; Components: ssf; Flags: promptifolder
 Source: "WMPSpy.dll"; DestDir: "{app}"; Components: wmp; Flags: promptifolder regserver
@@ -176,4 +177,4 @@ Root: HKLM; Subkey: "SOFTWARE\girder3\HardPlugins\DVDSpy\Events"; ValueName: "Mi
 [Run]
 Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s ShowShifter.reg"; Components: ssf
 Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s PowerDVD.reg"; Components: powerdvd
-Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s WinDVD5.reg"; Components: windvd
+Filename: "{win}\REGEDIT.EXE"; WorkingDir: "{app}\plugins\DVDSpy"; Parameters: "/s WinDVD6.reg"; Components: windvd
