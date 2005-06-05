@@ -21,3 +21,5 @@ BOOL DISPLAYSPYHOOK_API DS_GetNext(size_t *nMatch, size_t *nIndex,
                                    char *szBuf, size_t nSize);
 void DISPLAYSPYHOOK_API DS_Reset();
 }
+
+#define DVDSPY_KEY "Software\\Girder3\\HardPlugins\\DVDSpy"
