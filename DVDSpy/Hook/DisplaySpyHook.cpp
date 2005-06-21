@@ -96,6 +96,9 @@ const UINT PATCH_TEXTIMAGE = 3;
 const UINT PATCH_POWERDVD_STRETCHDIBITS = 4;
 const UINT PATCH_WINDVD_GETIMAGE = 5;
 const UINT PATCH_WINDVD_BITBLT = 6;
+#if 0
+const UINT PATCH_WINDVD_GETPROCADDRESS = 7;
+#endif
 
 const UINT MS_FILTER_GRAPH = 1;
 const UINT MS_DVD_NAVIGATOR = 2;
@@ -125,6 +128,8 @@ enum MatchContext { CONTEXT_WNDPROC = 1, CONTEXT_GETMSG, CONTEXT_PATCH };
 static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(WinDVD)
+
+#if 1
 
     BEGIN_NMATCH(Status)
       ENTRY_NUM(MATCH_MESSAGE, STM_SETIMAGE)
@@ -175,6 +180,15 @@ static MatchEntry g_matches[] = {
      BEGIN_EXTRACT()
       ENTRY0(EXTRACT_LPARAM_STR)
     END_MATCH()
+
+#else
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_GETPROCADDRESS)
+     BEGIN_EXTRACT()
+    END_MATCH()
+
+#endif
 
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
@@ -1590,6 +1604,12 @@ GpStatus WINGDIPAPI PatchWinDVDGdipDisposeImage(GpImage *);
 BOOL WINAPI PatchWinDVDBitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, 
                               HDC hdcSrc, int nXSrc, int nYSrc, DWORD dwRop);
 
+#if 0
+PROC *GetProcAddressIAT = NULL;
+FARPROC (WINAPI *OrigGetProcAddress)(HMODULE, LPCSTR) = NULL;
+FARPROC WINGDIPAPI PatchWinDVDGetProcAddress(HMODULE, LPCSTR);
+#endif
+
 void InstallPatches()
 {
   if (NULL == g_pMatches)
@@ -1705,6 +1725,14 @@ void InstallPatches()
                         (PROC)PatchWinDVDBitBlt, &BitBltIAT, (PROC*)&OrigBitBlt);
         }
         break;
+#if 0
+      case PATCH_WINDVD_GETPROCADDRESS:
+        if (NULL == GetProcAddressIAT) {
+          PatchFunction("KERNEL32.DLL", "GetProcAddress", "OLE32.DLL",
+                        (PROC)PatchWinDVDGetProcAddress, &GetProcAddressIAT, (PROC*)&OrigGetProcAddress);
+        }
+        break;
+#endif
       }
     }
   }
@@ -1790,6 +1818,15 @@ void RemovePatches()
       VirtualProtect(GdipDisposeImageIAT, sizeof(PROC), dwOldProt, &dwOldProt);
     }
   }
+#if 0
+  if (NULL != GetProcAddressIAT) {
+    DWORD dwOldProt;
+    if (VirtualProtect(GetProcAddressIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *GetProcAddressIAT = (PROC)*OrigGetProcAddress;
+      VirtualProtect(GetProcAddressIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
+#endif
 }
 
 /*** Wrapped COM object interface ***/
@@ -2715,6 +2752,55 @@ BOOL WINAPI PatchWinDVDBitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, i
   
   return bResult;
 }
+
+#if 0
+
+typedef HRESULT (STDAPICALLTYPE *WinDVDSpySetLibrary_t)(HINSTANCE hInst);
+
+FARPROC WINAPI PatchWinDVDGetProcAddress(HMODULE hModule, LPCSTR lpProcName)
+{
+  FARPROC pInner = OrigGetProcAddress(hModule, lpProcName);
+
+  if (strcmp(lpProcName, "DllGetClassObject"))
+    return pInner;
+
+  char szModulePathName[MAX_PATH];
+  GetModuleFileName(hModule, szModulePathName, sizeof(szModulePathName));
+  LPSTR psz = strrchr(szModulePathName, '\\');
+  if (NULL != psz)
+    psz++;                    // Remove directory.
+  else
+    psz = szModulePathName;
+  if (_stricmp(psz, "pbPlyr.ocx"))
+    return pInner;
+    
+  HINSTANCE hInst = GetModuleHandle("DisplaySpyHook.DLL");
+  if (NULL == hInst) 
+    return pInner;
+
+  GetModuleFileName(hInst, szModulePathName, sizeof(szModulePathName));
+  psz = strrchr(szModulePathName, '\\');
+  if (NULL != psz)
+    psz++;                    // Same directory.
+  else
+    psz = szModulePathName;
+  strcpy(psz, "WinDVDSpy.DLL");
+  hInst = LoadLibrary(szModulePathName);
+  if (NULL == hInst) 
+    return pInner;
+  
+  FARPROC pOuter = OrigGetProcAddress(hInst, "WinDVDSpySetInner");
+  if (NULL != pOuter)
+    ((HRESULT (STDAPICALLTYPE *)(FARPROC))pOuter)(pInner);
+  
+  pOuter = OrigGetProcAddress(hInst, lpProcName);  
+  if (NULL == pOuter)
+    return pInner;
+  else
+    return pOuter;
+}
+
+#endif
 
 LPCSTR _stristr(LPCSTR str, LPCSTR key)
 {
