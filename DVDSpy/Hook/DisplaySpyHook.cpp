@@ -95,6 +95,10 @@ const UINT PATCH_DRAWTEXT = 2;
 const UINT PATCH_TEXTIMAGE = 3;
 const UINT PATCH_POWERDVD_STRETCHDIBITS = 4;
 const UINT PATCH_WINDVD_GETIMAGE = 5;
+const UINT PATCH_WINDVD_BITBLT = 6;
+#if 0
+const UINT PATCH_WINDVD_GETPROCADDRESS = 7;
+#endif
 
 const UINT MS_FILTER_GRAPH = 1;
 const UINT MS_DVD_NAVIGATOR = 2;
@@ -125,6 +129,8 @@ static MatchEntry g_matches[] = {
 
   BEGIN_MODULE(WinDVD)
 
+#if 1
+
     BEGIN_NMATCH(Status)
       ENTRY_NUM(MATCH_MESSAGE, STM_SETIMAGE)
       ENTRY_NUM(MATCH_WPARAM, IMAGE_BITMAP)
@@ -153,6 +159,36 @@ static MatchEntry g_matches[] = {
       ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_GETIMAGE)
      BEGIN_EXTRACT()
     END_MATCH()
+
+    BEGIN_NMATCH(Elapsed)
+      ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_BITBLT)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_TIME)
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(TitleNo)
+      ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_BITBLT)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_TITLE)
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+    BEGIN_NMATCH(Chapter)
+      ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_BITBLT)
+      ENTRY_NUM(MATCH_WPARAM, SKINDVD_CHAPTER)
+     BEGIN_EXTRACT()
+      ENTRY0(EXTRACT_LPARAM_STR)
+    END_MATCH()
+
+#else
+
+    BEGIN_MATCH()
+      ENTRY_NUM(MATCH_PATCH, PATCH_WINDVD_GETPROCADDRESS)
+     BEGIN_EXTRACT()
+    END_MATCH()
+
+#endif
 
     BEGIN_NMATCH(Close)
       ENTRY_NUM(MATCH_MESSAGE, WM_DESTROY)
@@ -1545,6 +1581,35 @@ PROC *LoadImageIAT = NULL;
 HANDLE (WINAPI *OrigLoadImage)(HINSTANCE, LPCSTR, UINT, int, int, UINT) = NULL;
 HANDLE WINAPI PatchWinDVDLoadImage(HINSTANCE, LPCSTR, UINT, int, int, UINT);
 
+// No need to really include <gdiplus.h> since we don't look inside.
+typedef DWORD GpStatus;
+#define WINGDIPAPI __stdcall
+#define GDIPCONST const
+typedef PVOID GpImage;
+typedef GpImage GpBitmap;
+typedef DWORD ARGB;
+
+PROC *GdipCreateBitmapFromFileIAT = NULL;
+GpStatus (WINGDIPAPI *OrigGdipCreateBitmapFromFile)(GDIPCONST WCHAR*, GpBitmap **) = NULL;
+GpStatus WINGDIPAPI PatchWinDVDGdipCreateBitmapFromFile(GDIPCONST WCHAR*, GpBitmap **);
+
+PROC *GdipCreateHBITMAPFromBitmapIAT = NULL;
+GpStatus (WINGDIPAPI *OrigGdipCreateHBITMAPFromBitmap)(GpBitmap*, HBITMAP*, ARGB) = NULL;
+GpStatus WINGDIPAPI PatchWinDVDGdipCreateHBITMAPFromBitmap(GpBitmap*, HBITMAP*, ARGB);
+
+PROC *GdipDisposeImageIAT = NULL;
+GpStatus (WINGDIPAPI *OrigGdipDisposeImage)(GpImage *) = NULL;
+GpStatus WINGDIPAPI PatchWinDVDGdipDisposeImage(GpImage *);
+
+BOOL WINAPI PatchWinDVDBitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, 
+                              HDC hdcSrc, int nXSrc, int nYSrc, DWORD dwRop);
+
+#if 0
+PROC *GetProcAddressIAT = NULL;
+FARPROC (WINAPI *OrigGetProcAddress)(HMODULE, LPCSTR) = NULL;
+FARPROC WINGDIPAPI PatchWinDVDGetProcAddress(HMODULE, LPCSTR);
+#endif
+
 void InstallPatches()
 {
   if (NULL == g_pMatches)
@@ -1627,7 +1692,7 @@ void InstallPatches()
               szMod = "IVIPlayerX.ocx"; // Version 4 (WinDVD4)
               break;
             case 3:
-              szMod = "pbPlyr.ocx"; // Platinum (WinDVD4PR)
+              szMod = "pbPlyr.ocx"; // Platinum (WinDVD4PR, DVD5, DVD6)
               break;
             }
             if (PatchFunction("USER32.DLL", "LoadImageA", szMod,
@@ -1635,6 +1700,39 @@ void InstallPatches()
               break;
           }
         }
+        if (NULL == GdipCreateBitmapFromFileIAT) {
+          PatchFunction("GDIPLUS.DLL", "GdipCreateBitmapFromFile", "pbPlyr.ocx",
+                        (PROC)PatchWinDVDGdipCreateBitmapFromFile, 
+                        &GdipCreateBitmapFromFileIAT, 
+                        (PROC*)&OrigGdipCreateBitmapFromFile);
+        }
+        if (NULL == GdipCreateHBITMAPFromBitmapIAT) {
+          PatchFunction("GDIPLUS.DLL", "GdipCreateHBITMAPFromBitmap", "pbPlyr.ocx",
+                        (PROC)PatchWinDVDGdipCreateHBITMAPFromBitmap, 
+                        &GdipCreateHBITMAPFromBitmapIAT, 
+                        (PROC*)&OrigGdipCreateHBITMAPFromBitmap);
+        }
+        if (NULL == GdipDisposeImageIAT) {
+          PatchFunction("GDIPLUS.DLL", "GdipDisposeImage", "pbPlyr.ocx",
+                        (PROC)PatchWinDVDGdipDisposeImage, 
+                        &GdipDisposeImageIAT, 
+                        (PROC*)&OrigGdipDisposeImage);
+        }
+        break;
+      case PATCH_WINDVD_BITBLT:
+        if (NULL == BitBltIAT) {
+          PatchFunction("GDI32.DLL", "BitBlt", "pbPlyr.ocx",
+                        (PROC)PatchWinDVDBitBlt, &BitBltIAT, (PROC*)&OrigBitBlt);
+        }
+        break;
+#if 0
+      case PATCH_WINDVD_GETPROCADDRESS:
+        if (NULL == GetProcAddressIAT) {
+          PatchFunction("KERNEL32.DLL", "GetProcAddress", "OLE32.DLL",
+                        (PROC)PatchWinDVDGetProcAddress, &GetProcAddressIAT, (PROC*)&OrigGetProcAddress);
+        }
+        break;
+#endif
       }
     }
   }
@@ -1699,6 +1797,36 @@ void RemovePatches()
       VirtualProtect(LoadImageIAT, sizeof(PROC), dwOldProt, &dwOldProt);
     }
   }
+  if (NULL != GdipCreateBitmapFromFileIAT) {
+    DWORD dwOldProt;
+    if (VirtualProtect(GdipCreateBitmapFromFileIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *GdipCreateBitmapFromFileIAT = (PROC)*OrigGdipCreateBitmapFromFile;
+      VirtualProtect(GdipCreateBitmapFromFileIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
+  if (NULL != GdipCreateHBITMAPFromBitmapIAT) {
+    DWORD dwOldProt;
+    if (VirtualProtect(GdipCreateHBITMAPFromBitmapIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *GdipCreateHBITMAPFromBitmapIAT = (PROC)*OrigGdipCreateHBITMAPFromBitmap;
+      VirtualProtect(GdipCreateHBITMAPFromBitmapIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
+  if (NULL != GdipDisposeImageIAT) {
+    DWORD dwOldProt;
+    if (VirtualProtect(GdipDisposeImageIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *GdipDisposeImageIAT = (PROC)*OrigGdipDisposeImage;
+      VirtualProtect(GdipDisposeImageIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
+#if 0
+  if (NULL != GetProcAddressIAT) {
+    DWORD dwOldProt;
+    if (VirtualProtect(GetProcAddressIAT, sizeof(PROC), PAGE_EXECUTE_READWRITE, &dwOldProt)) {
+      *GetProcAddressIAT = (PROC)*OrigGetProcAddress;
+      VirtualProtect(GetProcAddressIAT, sizeof(PROC), dwOldProt, &dwOldProt);
+    }
+  }
+#endif
 }
 
 /*** Wrapped COM object interface ***/
@@ -2256,7 +2384,10 @@ struct WinDVDImage
 {
   const char *szName;
   const char *szValue;
-  HBITMAP hBitmap;
+  union {
+    HBITMAP hBitmap;
+    GpBitmap gpBitmap;
+  };
 } g_WinDVDImages[] = {
   { NULL, " ", },
   { "Number_0", "0" },
@@ -2317,6 +2448,88 @@ HANDLE WINAPI PatchWinDVDLoadImage(HINSTANCE hinst, LPCSTR lpszName, UINT uType,
   return hResult;
 }
 
+GpStatus WINGDIPAPI PatchWinDVDGdipCreateBitmapFromFile(GDIPCONST WCHAR* filename, 
+                                                        GpBitmap **bitmap)
+{
+  GpStatus gpResult = (*OrigGdipCreateBitmapFromFile)(filename, bitmap);
+  if (gpResult) return gpResult;
+
+  char szName[MAX_PATH];
+  LPSTR psz = szName;
+  LPSTR psdot = NULL;
+  LPCWSTR pwsz = filename;
+  while (TRUE) {
+    char ch = (char)*pwsz++;
+    if ('\0' == ch) 
+      break;
+    if ('\\' == ch) {
+      psz = szName;
+      continue;
+    }
+    if ('.' == ch)
+      psdot = psz;
+    *psz++ = ch;
+  }
+  *psz = '\0';
+  if (NULL != psdot)
+    *psdot = '\0';
+  
+#ifdef _TRACE
+  {
+    char szBuf[1024];
+    sprintf(szBuf, "WinDVD: GdipCreateBitmapFromFile %S => %X\n", filename, *bitmap);
+    OutputDebugString(szBuf);
+  }
+#endif
+
+  for (size_t i = 1; i < countof(g_WinDVDImages); i++) {
+    if (!_stricmp(g_WinDVDImages[i].szName, szName)) {
+      g_WinDVDImages[i].gpBitmap = *bitmap;
+      break;
+    }
+  }
+
+  return gpResult;
+}
+
+GpStatus WINGDIPAPI PatchWinDVDGdipCreateHBITMAPFromBitmap(GpBitmap* bitmap,
+                                                           HBITMAP* hbmReturn,
+                                                           ARGB background)
+{
+  GpStatus gpResult = (*OrigGdipCreateHBITMAPFromBitmap)(bitmap, hbmReturn, background);
+  if (gpResult) return gpResult;
+
+  for (size_t i = 1; i < countof(g_WinDVDImages); i++) {
+    if (g_WinDVDImages[i].gpBitmap == bitmap) {
+      g_WinDVDImages[i].gpBitmap = *hbmReturn;
+#ifdef _TRACE
+      {
+        char szBuf[1024];
+        sprintf(szBuf, "WinDVD: GdipCreateHBITMAPFromBitmap %X(%s) => %X\n", 
+                bitmap, g_WinDVDImages[i].szName, *hbmReturn);
+        OutputDebugString(szBuf);
+      }
+#endif
+      break;
+    }
+  }
+
+  return gpResult;
+}
+
+GpStatus WINGDIPAPI PatchWinDVDGdipDisposeImage(GpImage *image)
+{
+  for (size_t i = 1; i < countof(g_WinDVDImages); i++) {
+    if (g_WinDVDImages[i].gpBitmap == image) {
+      g_WinDVDImages[i].gpBitmap = NULL;
+      break;
+    }
+  }
+  return (*OrigGdipDisposeImage)(image);
+}
+
+POINT g_skinDVDLocationOffset;
+
 void WDVDLoadRegistry()
 {
   g_skinDVDRegistryLoaded = TRUE;
@@ -2337,6 +2550,11 @@ void WDVDLoadRegistry()
   g_skinDVDChapter100 = SkinDVDRegistryPoint(hkey, "Chapter_100_Display_Location");
   g_skinDVDChapter10 = SkinDVDRegistryPoint(hkey, "Chapter_10_Display_Location");
   g_skinDVDChapter1 = SkinDVDRegistryPoint(hkey, "Chapter_0_Display_Location");
+  g_skinDVDTitle10 = SkinDVDRegistryPoint(hkey, "Title_10_Display_Location");
+  g_skinDVDTitle1 = SkinDVDRegistryPoint(hkey, "Title_0_Display_Location");
+
+  // I don't think these really depend on the skin, but just in case.
+  g_skinDVDLocationOffset = SkinDVDRegistryPoint(hkey, "Location_Offset");
 
   RegCloseKey(hkey);
 }
@@ -2440,6 +2658,149 @@ void ExtractWinDVDSetImage(UINT nType, LPSTR szBuf, size_t nSize)
     break;
   }
 }
+
+BOOL WINAPI PatchWinDVDBitBlt(HDC hdcDest, int nXDest, int nYDest, int nWidth, int nHeight, 
+                              HDC hdcSrc, int nXSrc, int nYSrc, DWORD dwRop)
+{
+  BOOL bResult = OrigBitBlt(hdcDest, nXDest, nYDest, nWidth, nHeight, 
+                            hdcSrc, nXSrc, nYSrc, dwRop);
+  HBITMAP hbm = (HBITMAP)GetCurrentObject(hdcSrc, OBJ_BITMAP);
+  LPCSTR pszImage = NULL;
+  if (NULL != hbm) {
+    for (size_t i = 1; i < countof(g_WinDVDImages); i++) {
+      if (g_WinDVDImages[i].gpBitmap == hbm) {
+        pszImage = g_WinDVDImages[i].szValue;
+        break;
+      }
+    }
+  }
+
+#ifdef _TRACE
+  {
+    char szBuf[1024];
+    sprintf(szBuf, "WinDVD: BitBlt %X(%s) %d,%d => %d,%d\n",
+            hbm, pszImage, nXSrc, nYSrc, nXDest, nYDest);
+    OutputDebugString(szBuf);
+  }
+#endif
+
+  if (NULL == pszImage)
+    return bResult;
+
+  if (!g_skinDVDRegistryLoaded)
+    WDVDLoadRegistry();
+
+  char cDigit = pszImage[0];
+  POINT ptPos = { nXDest - g_skinDVDLocationOffset.x, 
+                  nYDest - g_skinDVDLocationOffset.y };
+    
+  if (ptPos == g_skinDVDHour10) {
+    g_skinDVDTime[0] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+  }
+  else if (ptPos == g_skinDVDHour1) {
+    g_skinDVDTime[1] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+  }
+  else if (ptPos == g_skinDVDMinute10) {
+    g_skinDVDTime[3] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+  }
+  else if (ptPos == g_skinDVDMinute1) {
+    g_skinDVDTime[4] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+  }
+  else if (ptPos == g_skinDVDSecond10) {
+    g_skinDVDTime[6] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+  }
+  else if (ptPos == g_skinDVDSecond1) {
+    g_skinDVDTime[7] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TIME, (LPARAM)g_skinDVDTime);
+  }
+  else if (ptPos == g_skinDVDTitle10) {
+    g_skinDVDTitle[1] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TITLE, (LPARAM)g_skinDVDTitle+1);
+  }
+  else if (ptPos == g_skinDVDTitle1) {
+    g_skinDVDTitle[2] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_TITLE, (LPARAM)g_skinDVDTitle+1);
+  }
+  else if (ptPos == g_skinDVDChapter100) {
+    g_skinDVDChapter[0] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_CHAPTER, (LPARAM)g_skinDVDChapter);
+  }
+  else if (ptPos == g_skinDVDChapter10) {
+    g_skinDVDChapter[1] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_CHAPTER, (LPARAM)g_skinDVDChapter);
+  }
+  else if (ptPos == g_skinDVDChapter1) {
+    g_skinDVDChapter[2] = cDigit;
+    DoMessage(CONTEXT_PATCH, NULL, PATCH_WINDVD_BITBLT, 
+              (WPARAM)SKINDVD_CHAPTER, (LPARAM)g_skinDVDChapter);
+  }
+  
+  return bResult;
+}
+
+#if 0
+
+typedef HRESULT (STDAPICALLTYPE *WinDVDSpySetLibrary_t)(HINSTANCE hInst);
+
+FARPROC WINAPI PatchWinDVDGetProcAddress(HMODULE hModule, LPCSTR lpProcName)
+{
+  FARPROC pInner = OrigGetProcAddress(hModule, lpProcName);
+
+  if (strcmp(lpProcName, "DllGetClassObject"))
+    return pInner;
+
+  char szModulePathName[MAX_PATH];
+  GetModuleFileName(hModule, szModulePathName, sizeof(szModulePathName));
+  LPSTR psz = strrchr(szModulePathName, '\\');
+  if (NULL != psz)
+    psz++;                    // Remove directory.
+  else
+    psz = szModulePathName;
+  if (_stricmp(psz, "pbPlyr.ocx"))
+    return pInner;
+    
+  HINSTANCE hInst = GetModuleHandle("DisplaySpyHook.DLL");
+  if (NULL == hInst) 
+    return pInner;
+
+  GetModuleFileName(hInst, szModulePathName, sizeof(szModulePathName));
+  psz = strrchr(szModulePathName, '\\');
+  if (NULL != psz)
+    psz++;                    // Same directory.
+  else
+    psz = szModulePathName;
+  strcpy(psz, "WinDVDSpy.DLL");
+  hInst = LoadLibrary(szModulePathName);
+  if (NULL == hInst) 
+    return pInner;
+  
+  FARPROC pOuter = OrigGetProcAddress(hInst, "WinDVDSpySetInner");
+  if (NULL != pOuter)
+    ((HRESULT (STDAPICALLTYPE *)(FARPROC))pOuter)(pInner);
+  
+  pOuter = OrigGetProcAddress(hInst, lpProcName);  
+  if (NULL == pOuter)
+    return pInner;
+  else
+    return pOuter;
+}
+
+#endif
 
 LPCSTR _stristr(LPCSTR str, LPCSTR key)
 {
