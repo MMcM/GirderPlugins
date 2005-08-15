@@ -362,7 +362,7 @@ P.serial.settings = {
 
 -- This is the configurable event stuff.
 -- The key is the event handler (defined below).  
--- The value is some options for it, typically a table.
+-- The value is some options for it.
 -- This is the part of this file that you are most likely to want to customize.
 P.girgps.Events = {
   -- Update Girder registry for the current position.
@@ -403,12 +403,14 @@ function P.serial:ReceiveResponse(data, code)
 
   if code ~= serial.RXCHAR then return end -- TODO: Supposed to log something?
 
+  local otime = self.gps.time
+
   -- Parse it.
   self.gps:Update(data)
 
-  -- If the message had a timestamp (many do), then update status window.
+  -- If the message had a timestamp (several do), then update status window.
   -- TODO: Does this cause too much traffic?
-  if self.gps.time then
+  if self.gps.time ~= otime then
     self.Status = "Received data at " .. os.date("%I:%M:%S %p", self.gps.time)
     self.Serial:UpdateStatus()
   end
@@ -419,7 +421,7 @@ end
 
 -- Make a new serial device instance.
 function P.device.New(port)    -- NB: no self
-  -- Make a new tables initialized to a copy of the class-specific
+  -- Make a new table initialized to a copy of the class-specific
   -- settings.  Most of the sample devices just use a local settings
   -- table and clobber it.  It seems to me that makes all instances of
   -- that device the same, which probably won't work.
@@ -475,9 +477,9 @@ end
 
 -- Actual event handlers
 
-P.girgps.PlugInID = 2000        -- TODO: Need a real one, right?
+P.girgps.PlugInID = 2228        -- TODO: Need a real one, right?
 
--- This doesn't actually send an event, but rather updates the event.
+-- This doesn't actually send an event, but rather updates the registry.
 function P.girgps:UpdateRegistry(options, state)
   if self.latitude and self.longitude then
     local KEY = "SOFTWARE\\Promixis\\Girder\\4"
@@ -500,7 +502,7 @@ function P.girgps:PositionEvent(options, state)
       state.lastLatitude = self.latitude
       state.lastLongitude = self.longitude
     end
-    gir.TriggerEvent("GPS.Position", self.PlugInID, 
+    gir.TriggerEvent(self.name .. ".Position", self.PlugInID, 
                      self.latitude, self.longitude, self.elevation)
     return true
   end
@@ -517,7 +519,7 @@ function P.girgps:CourseEvent(options, state)
       state.lastKnots = self.knots
       state.lastBearing = self.course
     end
-    gir.TriggerEvent("GPS.Course", self.PlugInID, 
+    gir.TriggerEvent(self.name .. ".Course", self.PlugInID, 
                      self[options.units or "mph"], 
                      self.course, self:Compass(self.course))
     return true
