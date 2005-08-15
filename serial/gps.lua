@@ -26,10 +26,14 @@ P.nmea = {
 }
 P.nmea.__index = P.nmea
 
--- No standard library function to XOR, get user contributed if available.
-if not bit then
-  local l = loadlib("bitlib", "luaopen_bit")
-  if l then l() end
+-- No standard library function to XOR, try to find it.
+local bxor = math.bxor
+if not bxor then
+  if not bit then
+    local l = loadlib("bitlib", "luaopen_bit")
+    if l then l() end
+  end
+  if bit then bxor = bit.bxor end
 end
 
 -- Parse a (mostly comma-delimited) sentence into a list of fields.
@@ -45,9 +49,9 @@ function P.nmea:ParseSentence(sent)
 
   local csum = tonumber(string.sub(sent, e+1, -1), 16)
   sent = string.sub(sent, 2, e-1)
-  if bit then
+  if bxor then
     for i = 1,string.len(sent) do
-      csum = bit.bxor(csum, string.byte(sent, i))
+      csum = bxor(csum, string.byte(sent, i))
     end
   end
 
@@ -63,7 +67,7 @@ function P.nmea:ParseSentence(sent)
     i = ni + 1
   end
 
-  return fields, bit and csum == 0
+  return fields, bxor and csum == 0
 end
 
 -- hhmmss.sss UTC to something os.time might return and that os.date likes.
@@ -477,7 +481,7 @@ end
 
 -- Actual event handlers
 
-P.girgps.PlugInID = 2228        -- TODO: Need a real one, right?
+P.girgps.PlugInID = 10000       -- TODO: Until Girder supports IDs not from plug-ins.
 
 -- This doesn't actually send an event, but rather updates the registry.
 function P.girgps:UpdateRegistry(options, state)
