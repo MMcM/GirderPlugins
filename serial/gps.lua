@@ -361,7 +361,7 @@ P.girgps.__index = P.girgps
 -- This is the part of this file that you are most likely to want to customize.
 P.girgps.Events = {
   -- Update Girder registry for the current position.
-  UpdateRegistry = { freq = "once" },
+  UpdateLocation = { freq = "once" },
 
   -- Send GPS.Position lat, long, elev
   PositionEvent = { freq = 5 * 60, onlyIfChanged = true },
@@ -455,14 +455,14 @@ end
 
 P.girgps.PlugInID = 10000       -- TODO: Until Girder supports IDs not from plug-ins.
 
--- This doesn't actually send an event, but rather updates the registry.
-function P.girgps:UpdateRegistry(options, state)
+-- This doesn't actually send an event, but rather updates Girder's location.
+function P.girgps:UpdateLocation(options, state)
   if self.latitude and self.longitude then
-    local KEY = "SOFTWARE\\Promixis\\Girder\\4"
-    win.RegSetStringValue("HKEY_LOCAL_MACHINE", KEY, "Latitude", self.latitude)
-    win.RegSetStringValue("HKEY_LOCAL_MACHINE", KEY, "Longitude", self.longitude)
-    self:Log(string.format("Updated position in registry to %.2f, %.2f", 
-                           self.latitude, self.longitude))
+    local l = gir.GetLocation()
+    l.Latitude, l.Longitude = self.latitude, self.longitude
+    gir.SetLocation(l)
+    self:Log(string.format("Updated geographical location to %.2f, %.2f", 
+                           l.Latitude, l.Longitude))
     return true
   end
 end
