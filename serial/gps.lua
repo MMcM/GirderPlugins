@@ -323,26 +323,15 @@ search down for events.
 --]]
 if gir then
 
--- Specialized serial class.
+-- Specialized device class.
 local super = serial.Classes.Simple
-P.serial = super:New()
-P.serial.__index = P.serial
-serial.Classes.GPS = P.serial
+P.device = super:New({
 
--- Device table entry.
-P.device = {
   Name = "GPS",
-  Description = "Global Positioning device using standard NMEA protocol."
-}
-serial.devices.GPS = P.device
-
--- Specialized GPS state for Girder.
-P.girgps = P.gps:New()
-P.girgps.__index = P.girgps
+  Description = "Global Positioning device using standard NMEA protocol.",
 
 -- There should not be any need to change this, the speed is part of
 -- the NMEA spec, although many devices may be able to change it.
-P.serial.settings = {
   BaudRate = 4800,
   Parity = 0,
   StopBits = 0,                 -- i.e., 1 stopbit.
@@ -359,10 +348,12 @@ P.serial.settings = {
 
   LogLevel = 1,
 
-  Name = P.device.Name,
-  Description = P.device.Description,
-  Global = true
-}
+  GlobalName = true
+})
+
+-- Specialized GPS state for Girder.
+P.girgps = P.gps:New()
+P.girgps.__index = P.girgps
 
 -- This is the configurable event stuff.
 -- The key is the event handler (defined below).  
@@ -380,7 +371,7 @@ P.girgps.Events = {
 }
 
 -- Initialize serial state.
-function P.serial:Initialize()
+function P.device:Initialize()
   -- Make a GPS parser / state holder.
   self.gps = P.girgps:New({ name = self.Name })
 
@@ -390,22 +381,22 @@ function P.serial:Initialize()
 
   self.Status = "Device open"
 
-  -- Setup simple callback.
+  -- Setup callback by calling inherited initialize.
   return super.Initialize(self)
 end
 
 -- Process line of serial text.
-function P.serial:ReceiveResponse(data, code)
+function P.device:ReceiveResponse(data, code)
   super.ReceiveResponse(self)
 
   if data == nil then return end
-  
-  if code == serial.ERR then
+
+  if math.band(code, serial.ERR) ~= 0 then
     gir.LogMessage(self.Name, "Communications Error", 3)
     return
   end
 
-  if code ~= serial.RXCHAR then return end -- TODO: Supposed to log something?
+  if math.band(code, serial.RXCHAR) == 0 then return end
 
   local otime = self.gps.time
 
@@ -421,25 +412,6 @@ function P.serial:ReceiveResponse(data, code)
 
   -- Now see whether there are any events to deal with.
   self.gps:TriggerEvents()
-end
-
--- Make a new serial device instance.
-function P.device.New(port)    -- NB: no self
-  -- Make a new table initialized to a copy of the class-specific
-  -- settings.  Most of the sample devices just use a local settings
-  -- table and clobber it.  It seems to me that makes all instances of
-  -- that device the same, which probably won't work.
-  local settings = {}
-  for k,v in P.serial.settings do
-    settings[k] = v
-  end
-  settings.ComPort = port
-
-  local device = P.serial:New(settings)
-  if device.Global then
-    rawset(_G, device.Name, device) -- export device to global namespace
-  end
-  return device
 end
 
 -- Make a new Girder-specific GPS state holder.
@@ -529,6 +501,8 @@ function P.girgps:CourseEvent(options, state)
     return true
   end
 end
+
+serial.AddDevice(P.device)
 
 -- End of huge Girder conditional.
 end
