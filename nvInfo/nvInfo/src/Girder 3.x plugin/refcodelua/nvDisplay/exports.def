@@ -1,9 +1,0 @@
-EXPORTS
-  gir_close
-  gir_open
-  gir_version
-  gir_name
-  gir_description
-  gir_devicenum
-  gir_requested_api
-  gir_info
