@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Girder><Group Name="Parse Nvidia Displays (doesnt work with ATI)" Identifier="2" Enabled="TRUE"><Command Name="nvInfo" Identifier="4" Enabled="TRUE"><StateCount>1</StateCount><StateBegin>1</StateBegin><StateCurrent>1</StateCurrent><StateInvert>FALSE</StateInvert><Binary Encoding="Base64">G0x1YUABBAQEIAYJCBLmW6GwubJBCAAAAD0obm9uZSkAAAAAAAAAAAAACgAAAAAAAAAAAAAACQAA&#xD;
+AAkAAABkaXNwbGF5cwAJAAAAbmV3aW5kZXgADAAAAGRpc3BsYXlsaXN0AAcAAABudkluZm8ABgAA&#xD;
+AGR1bW15AAYAAAB2YWx1ZQAIAAAAc3RyZmluZAACAAAAIwAHAAAAc3Ryc3ViAAAAAAAAAAAAJQAA&#xD;
+ABEAAAATAAAABgAAgFMAAADMAAAABwEAAEIAAACTAAAABgAAgIYAAIAGAACA7AUAgIwBAACMAAAA&#xD;
+xwEAAEwAAABCgAEAUwEAAEwBAACmAACAxQAAAGoDAIDEAAAADAAAAAsAAAAMAgAAjAAAAEwBAABM&#xD;
+AQAAWAAAgEKAAgDUgAEATAEAAFgAAIBTAAAA7fn/fwAAAAA=</Binary><OSD>FALSE</OSD><Submatch>FALSE</Submatch><Topmost>TRUE</Topmost><OneMatch>FALSE</OneMatch><UseVar>FALSE</UseVar><MatchHidden>FALSE</MatchHidden><MatchNum>1</MatchNum><ActionType>4</ActionType><ActionSubType>34</ActionSubType><sValue1>displays = {}
+newindex = 1
+
+--nvInfo returns an ACTIVE display list of the format:
+--#&lt;Display type&gt;,&lt;Display index&gt;
+--Display type = A (analog) or D (digital/DVI) or ? for TVout
+--Display index = diplay number..it will be A, B, C ...
+--Example with two active DVI monitors attached:
+--#DA,DB
+-- Noted limitation, If you have two analog CRT displays attached to your system
+-- and have one or the other active, I believe each will display #AA, which
+-- effectively makes this plugin useless.
+displaylist = nvInfo("dummy")
+
+for i = 1,3 do
+  value = strfind(displaylist, "#", newindex)
+  if value == nil then
+    break
+  end
+  --List of active displays will be stored in displays array
+  --they will be stored in #&lt;Display type&gt;&lt;Display Index&gt;
+  -- no commas.  Ex:  #DA
+  displays[i] = strsub(displaylist, value, value + 2)
+  newindex = value + 2
+--  print(displays[i])
+end
+</sValue1><bValue1>FALSE</bValue1><bValue2>FALSE</bValue2><bValue3>FALSE</bValue3></Command></Group></Girder>
