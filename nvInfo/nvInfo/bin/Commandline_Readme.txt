@@ -9,3 +9,5 @@ This code is just provided as a starting point to those who find it useful. Ther
 This code is based in part on ref code from Promixis (sdks) and nVidia...ref code at(specifically NVIDIA Control Panel API sample): http://download.nvidia.com/developer/SDK/Individual_Samples/samples.html
 
 Disclaimer: This software has no warranties expressed or implied.  Use at your own risk
+
+-Sundanse
