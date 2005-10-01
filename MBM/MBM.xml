@@ -3,6 +3,4 @@
 $Header$
 -->
 <DynamicUI>
-  <Group Name="MBM" GUID="{661DD303-90C5-45e9-8B20-D979D5E3ADFA}" ImageIndex="-1" Show="3">
-  </Group>
 </DynamicUI>

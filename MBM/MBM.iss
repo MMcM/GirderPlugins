@@ -3,18 +3,18 @@
 
 [Setup] 
 AppName=MBM
-AppVerName=MBM 2.0
+AppVerName=MBM 2.1
 AppID=MBM-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=2.0
+AppVersion=2.1
 DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\Promixis\Girder\plugins}
 DirExistsWarning=no 
 ;LicenseFile=license.txt
 OutputBaseFilename=MBM
 OutputDir=..\..
 SetupIconFile=src\plugin.ico
-UninstallDisplayName=Girder MBM 2.0
+UninstallDisplayName=Girder MBM 2.1
 
 [Types]
 Name: "compact"; Description: "Minimal installation"

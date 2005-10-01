@@ -108,24 +108,16 @@ gir_info(int message, int wparam, int lparam)
 #endif
 
 extern "C" void * WINAPI
-gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-               int val1, int val2, void *userdata)
+gir_dui(PFTree tree, PFTreeNode node, PBaseNode base, int duiIndex,
+        int msg, WPARAM wParam, LPARAM lParam, void *userData)
 {
-  switch (val1) {
+  switch (msg) {
   case duOnHookConfig:		
     DUIOpenConfig(tree);
     break;
 
   case duOnUnHookConfig:
     DUICloseConfig(tree);
-    break;
-
-  case duOnHookCommand:
-    DUIOpenCommand(tree);
-    break;
-
-  case duOnUnHookCommand:
-    DUICloseCommand(tree);
     break;
   }
   return NULL;

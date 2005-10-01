@@ -200,8 +200,10 @@ DWORD WINAPI MonitorThread(LPVOID lpParam)
 
 BOOL StartMonitor()
 {
-  if (!OpenSharedMemory())
+  if (!OpenSharedMemory()) {
+    GirderLogMessageEx(PLUGINNAME, "Could not open MBM shared memory.", GLM_ERROR_ICON);
     return FALSE;
+  }
 
   if (NULL != g_hMonitorThread)
     return TRUE;
@@ -212,9 +214,11 @@ BOOL StartMonitor()
   g_hMonitorThread = CreateThread(NULL, 0, MonitorThread, g_hMonitorEvent, 
                                   0, &dwThreadId);
   if (NULL == g_hMonitorThread) {
-    MessageBox(0, "Cannot create monitor thread.", "Error", MB_OK);
+    GirderLogMessageEx(PLUGINNAME, "Cannot create monitor thread.", GLM_ERROR_ICON);
     return FALSE;
   }
+  
+  GirderLogMessageEx(PLUGINNAME, "MBM monitor started.", GLM_GOOD_ICON);
   
   return TRUE;
 }

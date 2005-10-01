@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 46
 #define PLUGINNAME "Motherboard Monitor"
-#define PLUGINVERSION "2.0"
+#define PLUGINVERSION "2.1"
 
 extern HINSTANCE g_hInstance;
 extern sFunctions3 SF;
@@ -20,5 +20,3 @@ extern BOOL DUIOpen();
 extern void DUIClose();
 extern void DUIOpenConfig(PFTree tree);
 extern void DUICloseConfig(PFTree tree);
-extern void DUIOpenCommand(PFTree tree);
-extern void DUICloseCommand(PFTree tree);
