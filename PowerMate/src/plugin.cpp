@@ -69,12 +69,14 @@ gir_stop()
   return DeviceStop();
 }
 
+#if 0
 extern "C" int WINAPI
 gir_compare(PCHAR orig, PCHAR recv)
 {
   // Unlikely to need this.
   return strcmp(orig, recv);
 }
+#endif
 
 extern "C" int WINAPI
 gir_event(PFTreeNode node, CRITICAL_SECTION *cs, PEventElement event, 
@@ -140,6 +142,14 @@ gir_dui(PFTree tree, PFTreeNode node, PBaseNode base, int duiIndex,
 
   case duOnUnHookCommand:
     DUICloseCommand(tree);
+    break;
+
+  case duOnHookConfig:		
+    DUIOpenConfig(tree);
+    break;
+
+  case duOnUnHookConfig:
+    DUICloseConfig(tree);
     break;
   }
   return NULL;

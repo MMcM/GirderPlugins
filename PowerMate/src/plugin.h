@@ -21,3 +21,5 @@ extern BOOL DUIOpen();
 extern void DUIClose();
 extern void DUIOpenCommand(PFTree tree);
 extern void DUICloseCommand(PFTree tree);
+extern void DUIOpenConfig(PFTree tree);
+extern void DUICloseConfig(PFTree tree);
