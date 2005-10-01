@@ -3,6 +3,4 @@
 $Header$
 -->
 <DynamicUI>
-  <Group Name="DVDSpy" GUID="{0AA4874B-2EF5-447e-A7DD-AF4DFEBECE50}" ImageIndex="-1" Show="3">
-  </Group>
 </DynamicUI>

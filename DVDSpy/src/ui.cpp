@@ -6,18 +6,13 @@ $Header$
 #include "plugin.h"
 #include "resource.h"
 
-#define DVDSPY_GROUP_NAME "DVDSpy"
-#define DVDSPY_GROUP_GUID "{0AA4874A-2EF5-447e-A7DD-AF4DFEBECE50}"
-#define DVDSPY_DUI_GUID   "{0AA4874B-2EF5-447e-A7DD-AF4DFEBECE50}"
-
 PFTree g_DUI;
 
 BOOL DUIOpen()
 {
-  char path[MAX_PATH];
-  strcpy(path, SF.CoreVars->ExePath);
-  strcat(path, "plugins\\UI\\DVDSpy.xml");
-  g_DUI = LoadDUI(path);
+  PCHAR buf = PathExpand("%GIRDER%Plugins\\UI\\DVDSpy.xml");
+  g_DUI = LoadDUI(buf);
+  SafeFree(buf);
   if (NULL == g_DUI) {
     GirderLogMessageEx(PLUGINNAME, "Could not open DUI File (DVDSpy.xml).",
                        GLM_ERROR_ICON);
@@ -35,16 +30,14 @@ void DUIClose()
 
 void DUIOpenConfig(PFTree tree)
 {
+  LockTree(tree, TreeLockWrite);
+  MergeDUITrees(tree, g_DUI, duOnHookConfig);
+  UnlockTree(tree, TreeLockWrite);
 }
 
 void DUICloseConfig(PFTree tree)
 {
-}
-
-void DUIOpenCommand(PFTree tree)
-{
-}
-
-void DUICloseCommand(PFTree tree)
-{
+  LockTree(tree, TreeLockWrite);
+  UnmergeDUITrees(tree, g_DUI, duOnUnHookConfig);
+  UnlockTree(tree, TreeLockWrite);
 }
