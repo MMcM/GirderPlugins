@@ -153,18 +153,23 @@ HANDLE OpenViaHID()
 HANDLE OpenPowerMate()
 {
   HANDLE hPowerMate = OpenViaDriver();
-  if (NULL != hPowerMate) {
+  if (NULL != hPowerMate)
     g_bHID = FALSE;
-    return hPowerMate;
-  }
-
-  hPowerMate = OpenViaHID();
-  if (NULL != hPowerMate) {
-    g_bHID = TRUE;
-    return hPowerMate;
+  else {
+    hPowerMate = OpenViaHID();
+    if (NULL != hPowerMate)
+      g_bHID = TRUE;
   }
   
-  return NULL;
+  if (NULL == hPowerMate)
+    GirderLogMessageEx(PLUGINNAME, "Could not find PowerMate device.", GLM_ERROR_ICON);
+  else {
+    char buf[128];
+    _snprintf(buf, sizeof(buf), "Found PowerMate version %X.", g_wVersion);
+    GirderLogMessageEx(PLUGINNAME, buf, GLM_GOOD_ICON);
+  }
+
+  return hPowerMate;
 }
 
 /*** Control functions ***/

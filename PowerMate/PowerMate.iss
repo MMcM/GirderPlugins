@@ -3,18 +3,18 @@
 
 [Setup] 
 AppName=PowerMate
-AppVerName=PowerMate 3.0
+AppVerName=PowerMate 3.1
 AppID=PowerMate-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=3.0
+AppVersion=3.1
 DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\Promixis\Girder\plugins}
 DirExistsWarning=no 
 ;LicenseFile=license.txt
 OutputBaseFilename=PowerMate
 OutputDir=..\..
 SetupIconFile=src\plugin.ico
-UninstallDisplayName=Girder PowerMate 3.0
+UninstallDisplayName=Girder PowerMate 3.1
 
 [Types]
 Name: "compact"; Description: "Minimal installation"

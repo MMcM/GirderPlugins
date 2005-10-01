@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 44
 #define PLUGINNAME "PowerMate"
-#define PLUGINVERSION "3.0"
+#define PLUGINVERSION "3.1"
 
 extern HINSTANCE g_hInstance;
 extern sFunctions3 SF;
@@ -19,7 +19,5 @@ extern BOOL DeviceRequest(RequestType_t nReq, USHORT nVal);
 
 extern BOOL DUIOpen();
 extern void DUIClose();
-extern void DUIOpenConfig(PFTree tree);
-extern void DUICloseConfig(PFTree tree);
 extern void DUIOpenCommand(PFTree tree);
 extern void DUICloseCommand(PFTree tree);
