@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "4.0"
+#define PLUGINVERSION "4.1"
 
 extern HINSTANCE g_hInstance;
 extern sFunctions3 SF;
@@ -77,6 +77,8 @@ extern BOOL DUIOpen();
 extern void DUIClose();
 extern void DUIOpenCommand(PFTree tree);
 extern void DUICloseCommand(PFTree tree);
+extern void DUIOpenConfig(PFTree tree);
+extern void DUICloseConfig(PFTree tree);
 extern void DUIDevicesChanged();
 /** OLD STYLE **/
 extern void OpenConfigUI();

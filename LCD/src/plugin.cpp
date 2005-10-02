@@ -141,26 +141,24 @@ gir_info(int message, int wparam, int lparam)
 }
 
 extern "C" void * WINAPI
-gir_dynamic_ui(pLuaRec lua, PFTree tree, PFTreeNode node, PBaseNode baseNode,
-               int val1, int val2, void *userdata)
+gir_dui(PFTree tree, PFTreeNode node, PBaseNode base, int duiIndex,
+        int msg, WPARAM wParam, LPARAM lParam, void *userData)
 {
-  switch (val1) {
-#if 0
-  case duOnHookConfig:		
-    DUIOpenConfig(tree);
-    break;
-
-  case duOnUnHookConfig:
-    DUICloseConfig(tree);
-    break;
-#endif
-
+  switch (msg) {
   case duOnHookCommand:
     DUIOpenCommand(tree);
     break;
 
   case duOnUnHookCommand:
     DUICloseCommand(tree);
+    break;
+
+  case duOnHookConfig:		
+    DUIOpenConfig(tree);
+    break;
+
+  case duOnUnHookConfig:
+    DUICloseConfig(tree);
     break;
   }
   return NULL;
@@ -174,14 +172,12 @@ gir_eventstrings_advise()
 }
 #endif
 
-#if 1
 /** OLD STYLE **/
 extern "C" void WINAPI
 gir_config()
 {
   OpenConfigUI();
 }
-#endif
 
 /* Called by windows */
 BOOL WINAPI DllMain(HANDLE hModule, DWORD dwReason,  LPVOID lpReserved)

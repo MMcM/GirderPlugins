@@ -33,7 +33,10 @@ LCD_API void LCD_DECL DisplayWin32Error(DWORD dwErr, LPCSTR msg, ...)
     LocalFree(pMsgBuf);
 
   _vsnprintf(msgbuf + strlen(msgbuf), sizeof(msgbuf) - strlen(msgbuf), msg, args);
-  MessageBox(DisplayWindowParent(), msgbuf, "LCD Error", MB_OK | MB_ICONERROR);
+  if (FALSE)
+    MessageBox(DisplayWindowParent(), msgbuf, "LCD Error", MB_OK | MB_ICONERROR);
+  else
+    GirderLogMessageEx(PLUGINNAME, msgbuf, GLM_ERROR_ICON);
 }
 
 void LCD_DECL DisplaySendEvent(LPCSTR event, LPCSTR payload)

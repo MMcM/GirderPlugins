@@ -1,3 +1,5 @@
+4.1     10/01/2005      MMcM    DUI update.
+
 4.0     05/10/2005      MMcM    Girder 4.
 
 3.8     12/14/2004      Shura_k Update for newest LcdHype API.

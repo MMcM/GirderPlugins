@@ -3,134 +3,121 @@
 $Header$
 -->
 <DynamicUI>
-  <Group Name="LCD" GUID="{6F829807-2544-40E9-B150-A7655F93C906}" ImageIndex="-1" Show="3">
-    <Item Name="Display" Description="Fill display" GUID="{6F829809-2544-40E9-B150-A7655F93C906}" AType="118" ASType="1" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
-      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Default&#xD;
-</Values>
-      </Control>
-      <Control Name="Type:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Type" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="type" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>String&#xD;
+  <Group Name="Action Group" GUID="{BE45ACF0-172F-11DA-8CD6-0800200C9A66}" ImageIndex="-1" Show="3">
+    <Group Name="LCD" GUID="{6F829807-2544-40E9-B150-A7655F93C906}" ImageIndex="-1" Show="3">
+      <Item Name="Display" Description="Fill display" GUID="{6F829809-2544-40E9-B150-A7655F93C906}" AType="118" ASType="1" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+        <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Default&#xD;</Values>
+        </Control>
+        <Control Name="Type:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Type" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="type" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>String&#xD;
 Variable&#xD;
 Current Date/Time&#xD;
 Filename Variable&#xD;
 Character (numerical code)&#xD;
-Customer Character&#xD;
-</Values>
-        <Values2>s&#xD;
+Customer Character&#xD;</Values>
+          <Values2>s&#xD;
 v&#xD;
 t&#xD;
 f&#xD;
 *&#xD;
-$&#xD;
-</Values2>
-      </Control>
-      <Control Name="Value:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Value" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="1" ControlType="1" Width="200" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Row:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Row" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="row" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>0&#xD;
-3&#xD;
-</Values>
-      </Control>
-      <Control Name="Marquee" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee" Field="15" ControlType="8" Width="72" Height="24" Left="10" Top="136" Anchors="3" Event="-1" EventVal="1" LuaCode="" LuaEvent="0"/>
-      <Control Name="Column:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="columnCheck" Field="15" ControlType="8" Width="72" Height="24" Left="98" Top="136" Anchors="3" Event="-1" EventVal="2" LuaCode="" LuaEvent="0"/>
-      <Control Name="Column" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="column" Field="15" ControlType="18" Width="48" Height="24" Left="178" Top="136" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>0&#xD;
-19&#xD;
-</Values>
-      </Control>
-      <Control Name="Rest of line" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="rest" Field="15" ControlType="8" Width="72" Height="24" Left="10" Top="168" Anchors="3" Event="-1" EventVal="3" LuaCode="" LuaEvent="0"/>
-      <Control Name="Width:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="widthCheck" Field="15" ControlType="8" Width="72" Height="24" Left="98" Top="168" Anchors="3" Event="-1" EventVal="4" LuaCode="" LuaEvent="0"/>
-      <Control Name="Width" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="width" Field="15" ControlType="18" Width="48" Height="24" Left="178" Top="168" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>1&#xD;
-20&#xD;
-</Values>
-      </Control>
-    </Item>
+$&#xD;</Values2>
+        </Control>
+        <Control Name="Value:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Value" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="1" ControlType="1" Width="200" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Row:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Row" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="row" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>0&#xD;
+3&#xD;</Values>
+        </Control>
+        <Control Name="Marquee" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee" Field="15" ControlType="8" Width="72" Height="24" Left="10" Top="136" Anchors="3" Event="-1" EventVal="1" LuaCode="" LuaEvent="0"/>
+        <Control Name="Column:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="columnCheck" Field="15" ControlType="8" Width="72" Height="24" Left="98" Top="136" Anchors="3" Event="-1" EventVal="2" LuaCode="" LuaEvent="0"/>
+        <Control Name="Column" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="column" Field="15" ControlType="18" Width="48" Height="24" Left="178" Top="136" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>0&#xD;
+19&#xD;</Values>
+        </Control>
+        <Control Name="Rest of line" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="rest" Field="15" ControlType="8" Width="72" Height="24" Left="10" Top="168" Anchors="3" Event="-1" EventVal="3" LuaCode="" LuaEvent="0"/>
+        <Control Name="Width:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="widthCheck" Field="15" ControlType="8" Width="72" Height="24" Left="98" Top="168" Anchors="3" Event="-1" EventVal="4" LuaCode="" LuaEvent="0"/>
+        <Control Name="Width" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="width" Field="15" ControlType="18" Width="48" Height="24" Left="178" Top="168" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>1&#xD;
+20&#xD;</Values>
+        </Control>
+      </Item>
 
-    <Item Name="Control" Description="Control display" GUID="{6F82980A-2544-40E9-B150-A7655F93C906}" AType="118" ASType="2" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
-      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Default&#xD;
-All&#xD;
-</Values>
-      </Control>
-      <Control Name="Type:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="type" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Close Display&#xD;
-Clear Display&#xD;
-</Values>
-        <Values2>x&#xD;
-c&#xD;
-</Values2>
-      </Control>
-    </Item>
+      <Item Name="Control" Description="Control display" GUID="{6F82980A-2544-40E9-B150-A7655F93C906}" AType="118" ASType="2" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+        <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Default&#xD;
+All&#xD;</Values>
+        </Control>
+        <Control Name="Type:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="ComboBox" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="type" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Close Display&#xD;
+Clear Display&#xD;</Values>
+          <Values2>x&#xD;
+c&#xD;</Values2>
+        </Control>
+      </Item>
 
-    <Item Name="Screen" Description="Display whole screen" GUID="{6F82980B-2544-40E9-B150-A7655F93C906}" AType="118" ASType="3" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
-      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Default&#xD;
-</Values>
-      </Control>
-      <Control Name="Enabled                             Value                                   Marquee" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="304" Height="24" Left="10" Top="40" Anchors="7" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled1" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="72" Anchors="3" Event="-1" EventVal="1" LuaCode="" LuaEvent="0"/>
-      <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line1" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee1" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="72" Anchors="3" Event="-1" EventVal="2" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled2" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="104" Anchors="3" Event="-1" EventVal="3" LuaCode="" LuaEvent="0"/>
-      <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line2" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee2" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="104" Anchors="3" Event="-1" EventVal="4" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled3" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="136" Anchors="3" Event="-1" EventVal="5" LuaCode="" LuaEvent="0"/>
-      <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line3" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="136" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee3" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="136" Anchors="3" Event="-1" EventVal="6" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled4" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="168" Anchors="3" Event="-1" EventVal="7" LuaCode="" LuaEvent="0"/>
-      <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line4" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="168" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee4" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="168" Anchors="3" Event="-1" EventVal="8" LuaCode="" LuaEvent="0"/>
-    </Item>
+      <Item Name="Screen" Description="Display whole screen" GUID="{6F82980B-2544-40E9-B150-A7655F93C906}" AType="118" ASType="3" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+        <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Default&#xD;</Values>
+        </Control>
+        <Control Name="Enabled                             Value                                   Marquee" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="304" Height="24" Left="10" Top="40" Anchors="7" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled1" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="72" Anchors="3" Event="-1" EventVal="1" LuaCode="" LuaEvent="0"/>
+        <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line1" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee1" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="72" Anchors="3" Event="-1" EventVal="2" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled2" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="104" Anchors="3" Event="-1" EventVal="3" LuaCode="" LuaEvent="0"/>
+        <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line2" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="104" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee2" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="104" Anchors="3" Event="-1" EventVal="4" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled3" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="136" Anchors="3" Event="-1" EventVal="5" LuaCode="" LuaEvent="0"/>
+        <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line3" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="136" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee3" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="136" Anchors="3" Event="-1" EventVal="6" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="enabled4" Field="15" ControlType="8" Width="16" Height="24" Left="10" Top="168" Anchors="3" Event="-1" EventVal="7" LuaCode="" LuaEvent="0"/>
+        <Control Name="Edit" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="line4" Field="15" ControlType="1" Width="200" Height="24" Left="58" Top="168" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="marquee4" Field="15" ControlType="8" Width="16" Height="24" Left="282" Top="168" Anchors="3" Event="-1" EventVal="8" LuaCode="" LuaEvent="0"/>
+      </Item>
 
-    <Item Name="Keypad" Description="Set keypad legend" GUID="{6F82980C-2544-40E9-B150-A7655F93C906}" AType="118" ASType="4" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
-      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Default&#xD;
-</Values>
-      </Control>
-      <Control Name="Key:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Key" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="key" Field="15" ControlType="9" Width="200" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Legend:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Legend" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="legend" Field="15" ControlType="9" Width="200" Height="21" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-    </Item>
+      <Item Name="Keypad" Description="Set keypad legend" GUID="{6F82980C-2544-40E9-B150-A7655F93C906}" AType="118" ASType="4" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+        <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Default&#xD;</Values>
+        </Control>
+        <Control Name="Key:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Key" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="key" Field="15" ControlType="9" Width="200" Height="21" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Legend:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Legend" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="legend" Field="15" ControlType="9" Width="200" Height="21" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+      </Item>
 
-    <Item Name="General Purpose Output" Description="Set GPO state" GUID="{6F82980D-2544-40E9-B150-A7655F93C906}" AType="118" ASType="5" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
-      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Default&#xD;
-</Values>
-      </Control>
-      <Control Name="On" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="7" ControlType="8" Width="72" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="GPO:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="GPO" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="gpo" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>1&#xD;
-3&#xD;
-</Values>
-      </Control>
-    </Item>
+      <Item Name="General Purpose Output" Description="Set GPO state" GUID="{6F82980D-2544-40E9-B150-A7655F93C906}" AType="118" ASType="5" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+        <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Default&#xD;</Values>
+        </Control>
+        <Control Name="On" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="7" ControlType="8" Width="72" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="GPO:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="GPO" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="gpo" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>1&#xD;
+3&#xD;</Values>
+        </Control>
+      </Item>
 
-    <Item Name="Fan" Description="Set fan speed" GUID="{6F82980E-2544-40E9-B150-A7655F93C906}" AType="118" ASType="6" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
-      <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>Default&#xD;
-</Values>
-      </Control>
-      <Control Name="Value:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Value" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="1" ControlType="1" Width="200" Height="24" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Fan:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
-      <Control Name="Fan" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="fan" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
-        <Values>1&#xD;
-3&#xD;
-</Values>
-      </Control>
-    </Item>
+      <Item Name="Fan" Description="Set fan speed" GUID="{6F82980E-2544-40E9-B150-A7655F93C906}" AType="118" ASType="6" ImageIndex="-1" Show="0" LuaCode="" LuaEvent="0" ClassGUID="" EventGUID="" DispGUID="">
+        <Control Name="Display:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="displayLabel" Field="15" ControlType="2" Width="40" Height="24" Left="10" Top="8" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Display" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="display" Field="15" ControlType="5" Width="200" Height="21" Left="58" Top="8" Anchors="3" Event="-1" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>Default&#xD;</Values>
+        </Control>
+        <Control Name="Value:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Value" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="1" ControlType="1" Width="200" Height="24" Left="58" Top="40" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Fan:" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="" Field="0" ControlType="2" Width="40" Height="24" Left="10" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0"/>
+        <Control Name="Fan" GUID="{00000000-0000-0000-0000-000000000000}" Default="" LuaName="fan" Field="15" ControlType="18" Width="48" Height="24" Left="58" Top="72" Anchors="3" Event="0" EventVal="0" LuaCode="" LuaEvent="0">
+          <Values>1&#xD;
+3&#xD;</Values>
+        </Control>
+      </Item>
+    </Group>
   </Group>
 </DynamicUI>
