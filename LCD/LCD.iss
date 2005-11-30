@@ -43,6 +43,7 @@ Source: "cfontzlcd.dll"; DestDir: "{app}"; Components: crystalfontz; Flags: prom
 Source: "molcd.dll"; DestDir: "{app}"; Components: matrixorbital; Flags: promptifolder
 Source: "futabavfd.dll"; DestDir: "{app}"; Components: futaba; Flags: promptifolder
 Source: "noritakevfd.dll"; DestDir: "{app}"; Components: noritake; Flags: promptifolder
+Source: "noritakepvfd.dll"; DestDir: "{app}"; Components: noritake; Flags: promptifolder
 Source: "LcdHype.dll"; DestDir: "{app}"; Components: lcdhype; Flags: promptifolder
 Source: "vlsyslis.dll"; DestDir: "{app}"; Components: vlsyslis; Flags: promptifolder
 Source: "imonvfd.dll"; DestDir: "{app}"; Components: imonvfd; Flags: promptifolder
