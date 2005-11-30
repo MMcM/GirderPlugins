@@ -30,6 +30,7 @@ Name: "futaba"; Description: "Futaba Displays"; Types: full
 Name: "noritake"; Description: "Noritake Displays"; Types: full
 Name: "lcdhype"; Description: "LCDHype Driver Library"; Types: full
 Name: "vlsyslis"; Description: "VLSystem Displays"; Types: full
+Name: "imonvfd"; Description: "iMON VFD Displays"; Types: full
 Name: "parallel"; Description: "HD44780 Parallel Port Displays"; Types: full
 Name: "readme"; Description: "Readme File"; Types: full compact
 Name: "sample"; Description: "Samples"; Types: full
@@ -42,8 +43,10 @@ Source: "cfontzlcd.dll"; DestDir: "{app}"; Components: crystalfontz; Flags: prom
 Source: "molcd.dll"; DestDir: "{app}"; Components: matrixorbital; Flags: promptifolder
 Source: "futabavfd.dll"; DestDir: "{app}"; Components: futaba; Flags: promptifolder
 Source: "noritakevfd.dll"; DestDir: "{app}"; Components: noritake; Flags: promptifolder
+Source: "noritakepvfd.dll"; DestDir: "{app}"; Components: noritake; Flags: promptifolder
 Source: "LcdHype.dll"; DestDir: "{app}"; Components: lcdhype; Flags: promptifolder
 Source: "vlsyslis.dll"; DestDir: "{app}"; Components: vlsyslis; Flags: promptifolder
+Source: "imonvfd.dll"; DestDir: "{app}"; Components: imonvfd; Flags: promptifolder
 Source: "paralcd.dll"; DestDir: "{app}"; Components: parallel; Flags: promptifolder
 Source: "plugins\LCD.dll"; DestDir: "{app}\plugins"; Components: main; Flags: promptifolder
 Source: "plugins\LCD\LCD.xml"; DestDir: "{app}\plugins\UI"; Components: main; Flags: promptifolder

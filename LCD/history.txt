@@ -1,3 +1,5 @@
+4.2     11/30/2005      MMcM    Add Noritake parallel and iMON VFD support.
+
 4.1     10/01/2005      MMcM    DUI update.
 
 4.0     05/10/2005      MMcM    Girder 4.

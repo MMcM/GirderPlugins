@@ -51,6 +51,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "imonvfd"=".\imonvfd\imonvfd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "lcdrvr1"=".\lcdrvr1\lcdrvr1.dsp" - Package Owner=<4>
 
 Package=<5>
@@ -64,6 +76,18 @@ Package=<4>
 ###############################################################################
 
 Project: "molcd"=".\molcd\molcd.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "noritakepvfd"=".\noritakepvfd\noritakepvfd.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
