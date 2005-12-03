@@ -3,18 +3,18 @@
 
 [Setup] 
 AppName=LCD
-AppVerName=LCD 4.1
+AppVerName=LCD 4.2
 AppID=Girder_LCD-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=4.1
+AppVersion=4.2
 DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\Promixis\Girder\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=LCD
 OutputDir=.
 SetupIconFile=plugins\LCD\src\plugin.ico
 SourceDir=..\..
-UninstallDisplayName=Girder LCD 4.1
+UninstallDisplayName=Girder LCD 4.2
 
 [Types]
 Name: "full"; Description: "Full installation"
