@@ -3,18 +3,18 @@
 
 [Setup] 
 AppName=LCD
-AppVerName=LCD 3.9
+AppVerName=LCD 3.10
 AppID=Girder_LCD
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=3.9
+AppVersion=3.10
 DefaultDirName={reg:HKLM\SOFTWARE\girder3,PlugInDir|{pf}\girder\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=LCD
 OutputDir=.
 SetupIconFile=plugins\LCD\src\plugin.ico
 SourceDir=..\..
-UninstallDisplayName=Girder LCD 3.9
+UninstallDisplayName=Girder LCD 3.10
 
 [Types]
 Name: "full"; Description: "Full installation"

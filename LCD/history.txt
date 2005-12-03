@@ -1,3 +1,5 @@
+3.10    12/03/2005      MMcM    Add LCD_Raw function for non-portable extensions.
+
 3.9     11/29/2005      MMcM    Add Noritake parallel and iMON VFD support.
 
 3.8     12/14/2004      Shura_k Update for newest LcdHype API.

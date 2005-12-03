@@ -22,6 +22,7 @@ public:
   virtual BOOL DeviceHasContrast();
   virtual BOOL DeviceHasBrightness();
   virtual BOOL DeviceHasBacklight();
+  virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
 
 #if 0
   virtual void DeviceLoadSettings(HKEY hkey);

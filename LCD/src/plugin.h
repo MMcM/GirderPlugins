@@ -4,7 +4,7 @@ $Header$
 
 #define PLUGINNUM 118
 #define PLUGINNAME "LCD"
-#define PLUGINVERSION "3.9"
+#define PLUGINVERSION "3.10"
 
 extern HINSTANCE g_hInstance;
 extern s_functions_2 SF;
@@ -37,6 +37,7 @@ extern void DisplayString(int row, int col, int width, LPCSTR str, LPCSTR devnam
 extern void DisplayCustomCharacter(int row, int col, LPCSTR bits, LPCSTR devname = NULL);
 extern void DisplayGPO(int gpo, BOOL on, LPCSTR devname = NULL);
 extern void DisplayFanPower(int fan, double power, LPCSTR devname = NULL);
+extern void DisplayRaw(LPBYTE data, DWORD len, LPCSTR devname);
 extern int DisplayGetSetting(LPCSTR key, PVOID val, size_t vlen, LPCSTR devname = NULL);
 extern void DisplaySetSetting(LPCSTR key, PVOID val, int vlen, LPCSTR devname = NULL);
 

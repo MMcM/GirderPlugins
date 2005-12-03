@@ -2,6 +2,18 @@
 $Header$
 */
 
+struct DeviceEntry {
+  const char *devtype;
+  int cols;
+  int rows;
+} DeviceEntries[] = {
+  { "CU20025SCPB", 20, 2 },
+  { "CU20045SCPB", 20, 4 },
+  { "CU40026SCPB", 40, 2 },
+};
+
+#define countof(x) sizeof(x)/sizeof(x[0])
+
 class NoritakeVFDDisplay : public DisplayDevice
 {
 public:
@@ -15,7 +27,7 @@ public:
   virtual void DeviceClear();
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceHasBrightness();
-  virtual BOOL DeviceHasSetSize();
+  virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
 
   virtual BOOL Write(LPBYTE data, DWORD len) = 0;
 
@@ -26,17 +38,13 @@ protected:
 NoritakeVFDDisplay::NoritakeVFDDisplay(DisplayDeviceFactory *factory, LPCSTR devtype)
   : DisplayDevice(factory, devtype)
 {
-  if (!strcmp(devtype, "CU20025SCPB")) {
-    m_cols = 20;
-    m_rows = 2;
-  }
-  else if (!strcmp(devtype, "CU40026SCPB")) {
-    m_cols = 40;
-    m_rows = 2;
-  }
-  else {
-    m_cols = 20;
-    m_rows = 4;
+  for (int i = 0; i < countof(DeviceEntries); i++) {
+    DeviceEntry *entry = DeviceEntries + i;
+    if (!strcmp(devtype, entry->devtype)) {
+      m_cols = entry->cols;
+      m_rows = entry->rows;
+      break;
+    }
   }
   m_extraDelay = .001;
 }
@@ -144,7 +152,7 @@ BOOL NoritakeVFDDisplay::DeviceHasBrightness()
   return TRUE;
 }
 
-BOOL NoritakeVFDDisplay::DeviceHasSetSize()
+void NoritakeVFDDisplay::DeviceWriteRaw(LPBYTE data, DWORD len)
 {
-  return TRUE;
+  Write(data, len);
 }

@@ -25,6 +25,7 @@ public:
   virtual void DeviceClose();
   virtual void DeviceClear();
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
+  virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
 };
 
 LIS2Display::LIS2Display(DisplayDeviceFactory *factory, LPCSTR devtype)
@@ -107,6 +108,11 @@ void LIS2Display::DeviceDefineCustomCharacter(int index, const CustomCharacter& 
     buf[nb++] = cust.GetBits()[i];
   }
   WriteSerial(buf, nb);
+}
+
+void LIS2Display::DeviceWriteRaw(LPBYTE data, DWORD len)
+{
+  WriteSerial(data, len);
 }
 
 extern "C" __declspec(dllexport)

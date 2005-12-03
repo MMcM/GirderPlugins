@@ -9,7 +9,7 @@
 <body>
 
 <h1>Girder plug-in for LCD/VFD displays</h1>
-Version 3.9. &nbsp;MMcM 12/05
+Version 3.10. &nbsp;MMcM 12/05
 
 <h3>Supported displays</h3>
 These displays are believed to work with this plug-in.  Often similar displays
@@ -141,11 +141,11 @@ as well.
 
 <h3>Files</h3>
 The original download location for this plug-in's installer is 
-<a href="http://prdownloads.sourceforge.net/girderplugins/LCD-3.9.exe?download">
+<a href="http://prdownloads.sourceforge.net/girderplugins/LCD-3.10.exe?download">
 here</a>.  An archive containing the files for manual installations is
-<a href="http://prdownloads.sourceforge.net/girderplugins/LCD-3.9.zip?download">
+<a href="http://prdownloads.sourceforge.net/girderplugins/LCD-3.10.zip?download">
 here</a>; source is also available
-<a href="http://prdownloads.sourceforge.net/girderplugins/LCD-3.9-src.zip?download">
+<a href="http://prdownloads.sourceforge.net/girderplugins/LCD-3.10-src.zip?download">
 here</a>.<p>
 
 These are the files contained in the distribution and what purpose they serve.
@@ -411,6 +411,14 @@ Set the given GPO state.
 
 Set the given fan's power (PWM duty cycle).  <code>power</code> is a
 fraction: 0 for no power and 1 for full power.
+
+</li>
+
+<li><code>LCD_Raw(string)</code><br>
+
+Output the raw bytes of the given string without any regard to the
+state of the display.  The bytes are by definition not portable from
+one display device to another.
 
 </li>
 
