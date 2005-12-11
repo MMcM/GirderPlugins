@@ -28,6 +28,7 @@ public:
   virtual void DeviceClose();
   virtual void DeviceClear();
   virtual BOOL DeviceHasSetSize();
+  virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 
@@ -142,6 +143,13 @@ void ParallelLCD::DeviceDefineCustomCharacter(int index, const CustomCharacter& 
 BOOL ParallelLCD::DeviceHasSetSize()
 {
   return TRUE;
+}
+
+void ParallelLCD::DeviceWriteRaw(LPBYTE data, DWORD len)
+{
+  // Can only cover one register; take data.
+  for (DWORD i = 0; i < len; i++)
+    WriteDR(data[i], 0);
 }
 
 void ParallelLCD::DeviceLoadSettings(HKEY hkey)

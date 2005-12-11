@@ -1307,6 +1307,10 @@ void DisplayDevice::DeviceDetectSensors(LPCSTR prefix)
 {
 }
 
+void DisplayDevice::DeviceWriteRaw(LPBYTE data, DWORD len)
+{
+}
+
 void DisplayDevice::DeviceLoadSettings(HKEY hkey)
 {
 }

@@ -144,6 +144,7 @@ public:
   virtual BOOL DeviceHasSensors();
   virtual IntervalMode DeviceHasSensorInterval();
   virtual void DeviceDetectSensors(LPCSTR prefix);
+  virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 
@@ -643,6 +644,11 @@ void MatrixOrbitalDisplay::UpdateSensors(BOOL detect)
     }    
     free(drp);
   }
+}
+
+void MatrixOrbitalDisplay::DeviceWriteRaw(LPBYTE data, DWORD len)
+{
+  WriteSerial(data, len);
 }
 
 void MatrixOrbitalDisplay::DeviceLoadSettings(HKEY hkey)

@@ -481,6 +481,10 @@ public:
     DeviceDetectSensors(prefix);
   }
   
+  void WriteRaw(LPBYTE data, DWORD len) {
+    DeviceWriteRaw(data, len);
+  }
+
   BOOL EnableInput();
   void DisableInput();
 
@@ -532,6 +536,7 @@ protected:
   virtual BOOL DeviceHasSensors();
   virtual IntervalMode DeviceHasSensorInterval();
   virtual void DeviceDetectSensors(LPCSTR prefix);
+  virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
   virtual void DeviceLoadSettings(HKEY hkey);
   virtual void DeviceSaveSettings(HKEY hkey);
 

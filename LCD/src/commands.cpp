@@ -230,6 +230,14 @@ void DisplayFanPower(int fan, double power, LPCSTR devname)
     device->SetFanPower(fan, power);
 }
 
+void DisplayRaw(LPBYTE data, DWORD len, LPCSTR devname)
+{
+  DisplayCriticalSection cs;
+  DisplayDevice *device = DisplayOpen(devname);
+  if (NULL != device)
+    device->WriteRaw(data, len);
+}
+
 int DisplayGetSetting(LPCSTR key, PVOID val, size_t vlen, LPCSTR devname)
 {
   DisplayCriticalSection cs;

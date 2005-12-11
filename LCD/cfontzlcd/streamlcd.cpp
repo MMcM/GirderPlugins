@@ -204,6 +204,11 @@ BOOL CrystalfontzStreamLCD::DeviceHasBacklight()
   return (m_backlight != NOBACKLIGHT);
 }
 
+void CrystalfontzStreamLCD::DeviceWriteRaw(LPBYTE data, DWORD len)
+{
+  WriteSerial(data, len);
+}
+
 #if 0
 void CrystalfontzStreamLCD::DeviceLoadSettings(HKEY hkey)
 {

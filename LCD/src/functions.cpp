@@ -20,12 +20,12 @@ static BOOL GetOptionalDisplayDevice(lua_State *L, int argpos, LPCSTR& dev)
     return FALSE;
 }
 
-// LCD_Size([dev]) -> width, height
+// lcd.Size([dev]) -> width, height
 int luaSize(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 0, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_Width");
+    luaL_error(L, "incorrect number of arguments to lcd.Width");
     return 0;
   }
   lua_pushnumber(L, DisplayWidth(dev));
@@ -33,31 +33,31 @@ int luaSize(lua_State *L)
   return 2;
 }
 
-// LCD_Close([dev])
+// lcd.Close([dev])
 int luaClose(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 0, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_Close");
+    luaL_error(L, "incorrect number of arguments to lcd.Close");
     return 0;
   }
   DisplayClose(dev);
   return 0;
 }
 
-// LCD_String(row, col, width, str [, dev])
+// lcd.String(row, col, width, str [, dev])
 int luaString(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 4, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_Display");
+    luaL_error(L, "incorrect number of arguments to lcd.String");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         lua_isnumber(L, 2) &&
         lua_isnumber(L, 3) &&
         lua_isstring(L, 4))) {
-    luaL_error(L, "wrong type argument to LCD_Display");
+    luaL_error(L, "wrong type argument to lcd.String");
     return 0;
   }
   DisplayString((int)lua_tonumber(L, 1), 
@@ -68,18 +68,18 @@ int luaString(lua_State *L)
   return 0;
 }
 
-// LCD_CustomCharacter(row, col, defn [, dev])
+// lcd.CustomCharacter(row, col, defn [, dev])
 int luaCustomCharacter(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 3, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_CustomCharacter");
+    luaL_error(L, "incorrect number of arguments to lcd.CustomCharacter");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         lua_isnumber(L, 2) &&
         lua_isstring(L, 3))) {
-    luaL_error(L, "wrong type argument to LCD_CustomCharacter");
+    luaL_error(L, "wrong type argument to lcd.CustomCharacter");
     return 0;
   }
   DisplayCustomCharacter((int)lua_tonumber(L, 1), 
@@ -89,17 +89,17 @@ int luaCustomCharacter(lua_State *L)
   return 0;
 }
 
-// LCD_GPO(gpo, state [, dev])
+// lcd.GPO(gpo, state [, dev])
 int luaGPO(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 2, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_GPO");
+    luaL_error(L, "incorrect number of arguments to lcd.GPO");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         (lua_isnumber(L, 2) || lua_isnil(L, 2)))) {
-    luaL_error(L, "wrong type argument to LCD_GPO");
+    luaL_error(L, "wrong type argument to lcd.GPO");
     return 0;
   }
   DisplayGPO((int)lua_tonumber(L, 1), 
@@ -108,17 +108,17 @@ int luaGPO(lua_State *L)
   return 0;
 }
 
-// LCD_FanPower(fan, power [, dev])
+// lcd.FanPower(fan, power [, dev])
 int luaFanPower(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 2, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_FanPower");
+    luaL_error(L, "incorrect number of arguments to lcd.FanPower");
     return 0;
   }
   if (!(lua_isnumber(L, 1) &&
         lua_isnumber(L, 2))) {
-    luaL_error(L, "wrong type argument to LCD_FanPower");
+    luaL_error(L, "wrong type argument to lcd.FanPower");
     return 0;
   }
   DisplayFanPower((int)lua_tonumber(L, 1), 
@@ -127,16 +127,34 @@ int luaFanPower(lua_State *L)
   return 0;
 }
 
-// LCD_GetSetting(key [, dev]) -> value
+// lcd.Raw(str [, dev])
+int luaRaw(lua_State *L)
+{
+  LPCSTR dev;
+  if (!GetOptionalDisplayDevice(L, 1, dev)) {
+    luaL_error(L, "incorrect number of arguments to lcd.Raw");
+    return 0;
+  }
+  if (!lua_isstring(L, 1)) {
+    luaL_error(L, "wrong type argument to lcd.Raw");
+    return 0;
+  }
+  DisplayRaw((LPBYTE)lua_tostring(L, 1),
+             lua_strlen(L, 1),
+             dev);
+  return 0;
+}
+
+// lcd.GetSetting(key [, dev]) -> value
 int luaGetSetting(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 1, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_GetSetting");
+    luaL_error(L, "incorrect number of arguments to lcd.GetSetting");
     return 0;
   }
   if (!lua_isstring(L, 1)) {
-    luaL_error(L, "wrong type argument to LCD_GetSetting");
+    luaL_error(L, "wrong type argument to lcd.GetSetting");
     return 0;
   }
   LPCSTR key = lua_tostring(L, 1);
@@ -151,17 +169,17 @@ int luaGetSetting(lua_State *L)
   return 1;
 }
 
-// LCD_SetSetting(key, value [, dev])
+// lcd.SetSetting(key, value [, dev])
 int luaSetSetting(lua_State *L)
 {
   LPCSTR dev;
   if (!GetOptionalDisplayDevice(L, 2, dev)) {
-    luaL_error(L, "incorrect number of arguments to LCD_SetSetting");
+    luaL_error(L, "incorrect number of arguments to lcd.SetSetting");
     return 0;
   }
   if (!(lua_isstring(L, 1) &&
         (lua_isstring(L, 2) || lua_isnil(L, 2)))) {
-    luaL_error(L, "wrong type argument to LCD_SetSetting");
+    luaL_error(L, "wrong type argument to lcd.SetSetting");
     return 0;
   }
   LPCSTR key = lua_tostring(L, 1);
@@ -195,6 +213,7 @@ struct luaL_reg luaFunctions[] = {
   { "CustomCharacter", luaCustomCharacter },
   { "GPO", luaGPO },
   { "FanPower", luaFanPower },
+  { "Raw", luaRaw },
   { "GetSetting", luaGetSetting },
   { "SetSetting", luaSetSetting },
   { NULL, NULL }

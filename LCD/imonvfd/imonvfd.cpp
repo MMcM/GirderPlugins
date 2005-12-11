@@ -18,7 +18,6 @@ public:
   virtual BOOL DeviceOpen();
   virtual void DeviceClose();
   virtual void DeviceClear();
-  virtual int DeviceNCustomCharacters();
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
 };
 
@@ -51,11 +50,14 @@ BOOL iMONDisplay::DeviceOpen()
 
 void iMONDisplay::DeviceClose()
 {
+  iMONVFD_SetText("", "");
   iMONVFD_Uninit();
 }
 
 void iMONDisplay::DeviceClear()
 {
+  // I don't see anything else in the API to do this.
+  iMONVFD_SetText("", "");
 }
 
 void iMONDisplay::DeviceDisplay(int row, int col, LPCBYTE str, int length)
@@ -68,13 +70,9 @@ void iMONDisplay::DeviceDisplay(int row, int col, LPCBYTE str, int length)
   iMONVFD_SetText(line1, line2);
 }
 
-int iMONDisplay::DeviceNCustomCharacters()
-{
-  return 0;
-}
-
 void iMONDisplay::DeviceDefineCustomCharacter(int index, const CustomCharacter& cust)
 {
+  // I don't see anything in the API to do this.
 }
 
 extern "C" __declspec(dllexport)

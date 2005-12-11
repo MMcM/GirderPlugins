@@ -1,8 +1,12 @@
-4.2     11/30/2005      MMcM    Add Noritake parallel and iMON VFD support.
+4.2     11/30/2005      MMcM    Merge 3.9, 3.10.
 
 4.1     10/01/2005      MMcM    DUI update.
 
 4.0     05/10/2005      MMcM    Girder 4.
+
+3.10    12/03/2005      MMcM    Add LCD_Raw function for non-portable extensions.
+
+3.9     11/29/2005      MMcM    Add Noritake parallel and iMON VFD support.
 
 3.8     12/14/2004      Shura_k Update for newest LcdHype API.
 
