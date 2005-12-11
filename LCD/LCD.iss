@@ -47,6 +47,7 @@ Source: "noritakepvfd.dll"; DestDir: "{app}"; Components: noritake; Flags: promp
 Source: "LcdHype.dll"; DestDir: "{app}"; Components: lcdhype; Flags: promptifolder
 Source: "vlsyslis.dll"; DestDir: "{app}"; Components: vlsyslis; Flags: promptifolder
 Source: "imonvfd.dll"; DestDir: "{app}"; Components: imonvfd; Flags: promptifolder
+Source: "SG_VFD.dll"; DestDir: "{app}"; Components: imonvfd; Flags: promptifolder
 Source: "paralcd.dll"; DestDir: "{app}"; Components: parallel; Flags: promptifolder
 Source: "plugins\LCD.dll"; DestDir: "{app}\plugins"; Components: main; Flags: promptifolder
 Source: "plugins\LCD\readme.htm"; DestDir: "{app}\plugins\LCD"; Components: readme; Flags: isreadme
