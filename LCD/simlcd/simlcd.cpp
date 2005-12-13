@@ -486,7 +486,8 @@ BOOL SimulatedLCD::DeviceOpen()
   if (NULL == title) title = "Simulated LCD";
   m_hwnd = CreateWindowEx(exStyle, g_szWndClass, title, WS_OVERLAPPED | WS_SYSMENU,
                           CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-                          DisplayWindowParent(), NULL, g_hInstance, this);
+                          // Parenting to Girder 4 window causes display problems.
+                          NULL/*DisplayWindowParent()*/, NULL, g_hInstance, this);
   if (NULL == m_hwnd)
     return FALSE;
 
