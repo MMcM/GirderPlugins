@@ -1018,7 +1018,7 @@ void DisplayDevice::Test()
   CustomCharacter cust1("0b11110 0b10001 0b10001 0b11110 0b10100 0b10010 0b10001");
   CustomCharacter cust2("0b01111 0b10001 0b10001 0b01111 0b00101 0b01001 0b10001");
 
-  Display(0, 0, 10, "LCD 4.2");
+  Display(0, 0, 10, "LCD 4.3");
   Display(1, -1, -1, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   DisplayCustomCharacter(0, 10, cust1);
   DisplayCustomCharacter(0, 11, cust2);

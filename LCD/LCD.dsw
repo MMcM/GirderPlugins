@@ -123,6 +123,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "pertelian"=".\pertelian\pertelian.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "simlcd"=".\simlcd\simlcd.dsp" - Package Owner=<4>
 
 Package=<5>

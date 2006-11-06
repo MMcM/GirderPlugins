@@ -51,6 +51,7 @@ struct DisplayDeviceEntry {
   { "Noritake CU20045SCPB (20x4, vfd, parallel)", "NoritakePVFD", "CU20045SCPB" },
   { "Noritake CU40026SCPB (40x2, vfd, parallel)", "NoritakePVFD", "CU40026SCPB" },
   { "VLSystem L.I.S. (20x2, vfd)", "VLSysLIS", "LIS2" },
+  { "Pertelian X2040 (20x4)", "Pertelian", "X2040" },
   { "SoundGraph iMON (16x2, vfd)", "iMONVFD", "SG_VFD" },
   { "LCDHype LC7981 240x128", "LCDHYPE", "LC798124128" },
   { "LCDHype LC7981 240x64", "LCDHYPE", "LC798124064" },

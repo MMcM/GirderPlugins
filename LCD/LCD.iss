@@ -3,18 +3,18 @@
 
 [Setup] 
 AppName=LCD
-AppVerName=LCD 4.2
+AppVerName=LCD 4.3
 AppID=Girder_LCD-G4
 AppPublisherURL=http://www.promixis.com/products.php?section=girder
 AppSupportURL=http://www.promixis.com/phpBB2/
-AppVersion=4.2
+AppVersion=4.3
 DefaultDirName={reg:HKLM\SOFTWARE\Promixis\Girder\4,PlugInDir|{pf}\Promixis\Girder\plugins}\..
 DirExistsWarning=no 
 OutputBaseFilename=LCD
 OutputDir=.
 SetupIconFile=plugins\LCD\src\plugin.ico
 SourceDir=..\..
-UninstallDisplayName=Girder LCD 4.2
+UninstallDisplayName=Girder LCD 4.3
 
 [Types]
 Name: "full"; Description: "Full installation"
@@ -31,6 +31,7 @@ Name: "noritake"; Description: "Noritake Displays"; Types: full
 Name: "lcdhype"; Description: "LCDHype Driver Library"; Types: full
 Name: "vlsyslis"; Description: "VLSystem Displays"; Types: full
 Name: "imonvfd"; Description: "iMON VFD Displays"; Types: full
+Name: "pertelian"; Description: "Pertelian Displays"; Types: full
 Name: "parallel"; Description: "HD44780 Parallel Port Displays"; Types: full
 Name: "readme"; Description: "Readme File"; Types: full compact
 Name: "sample"; Description: "Samples"; Types: full
@@ -47,6 +48,7 @@ Source: "noritakepvfd.dll"; DestDir: "{app}"; Components: noritake; Flags: promp
 Source: "LcdHype.dll"; DestDir: "{app}"; Components: lcdhype; Flags: promptifolder
 Source: "vlsyslis.dll"; DestDir: "{app}"; Components: vlsyslis; Flags: promptifolder
 Source: "imonvfd.dll"; DestDir: "{app}"; Components: imonvfd; Flags: promptifolder
+Source: "pertelian.dll"; DestDir: "{app}"; Components: pertelian; Flags: promptifolder
 Source: "SG_VFD.dll"; DestDir: "{app}"; Components: imonvfd; Flags: promptifolder
 Source: "paralcd.dll"; DestDir: "{app}"; Components: parallel; Flags: promptifolder
 Source: "plugins\LCD.dll"; DestDir: "{app}\plugins"; Components: main; Flags: promptifolder
