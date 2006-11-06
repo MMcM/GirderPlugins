@@ -23,6 +23,12 @@ public:
   virtual void DeviceDefineCustomCharacter(int index, const CustomCharacter& cust);
   virtual BOOL DeviceHasBrightness();
   virtual void DeviceWriteRaw(LPBYTE data, DWORD len);
+
+protected:
+  void WriteIR(BYTE b);
+  void WriteDR(BYTE b);
+
+  Delay m_longDelay, m_shortDelay;
 };
 
 X2040Display::X2040Display(DisplayDeviceFactory *factory, LPCSTR devtype)
@@ -33,6 +39,8 @@ X2040Display::X2040Display(DisplayDeviceFactory *factory, LPCSTR devtype)
   m_portType = portSERIAL;
   strcpy(m_port, "COM3");
   m_portSpeed = CBR_19200;
+  m_longDelay = .00164;
+  m_shortDelay = 0;
 }
 
 X2040Display::X2040Display(const X2040Display& other)
@@ -54,76 +62,53 @@ BOOL X2040Display::DeviceOpen()
 {
   if (!OpenSerial())
     return FALSE;
-
-  BYTE buf[128];
-  int nb = 0;
-  buf[nb++] = 0xFE;             // Set instruction mode
-  buf[nb++] = 0x38;             // Function set with 8-bit, 2 lines, and 5x7 dots
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x06;             // Entry mode set
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x10;             // Cursor/display shift; cursor move
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x0C;             // Display On; cursor off; do not blink 
-  buf[nb++] = 0xFE;
-  buf[nb++] = (m_brightness > 0) ? 0x03 : 0x02; // Backlight on / off.
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x01;             // Clear display
-  WriteSerial(buf, nb);
+  
+  WriteIR(0x38);                // Function set with 8-bit, 2 lines, and 5x7 dots
+  WriteIR(0x06);                // Entry mode set
+  WriteIR(0x10);                // Cursor/display shift; cursor move
+  WriteIR(0x0C);                // Display On; cursor off; do not blink 
+  WriteIR((m_brightness > 0) ? 0x03 : 0x02); // Backlight on / off.
+  m_longDelay.Wait();
+  WriteIR(0x01);                // Clear display
+  m_longDelay.Wait();
 
   return TRUE;
 }
 
 void X2040Display::DeviceClose()
 {
-  BYTE buf[128];
-  int nb = 0;
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x01;             // Clear display
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x02;             // Backlight off.
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x08;             // Display Off
-  WriteSerial(buf, nb);
+  WriteIR(0x01);                // Clear display
+  m_longDelay.Wait();
+  WriteIR(0x02);                // Backlight off.
+  m_longDelay.Wait();
+  WriteIR(0x08);                // Display Off
 
   CloseSerial();
 }
 
 void X2040Display::DeviceClear()
 {
-  BYTE buf[128];
-  int nb = 0;
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x01;             // Clear display
-  WriteSerial(buf, nb);
+  WriteIR(0x01);                // Clear display
+  m_longDelay.Wait();
 }
 
 void X2040Display::DeviceDisplay(int row, int col, LPCBYTE str, int length)
 {
-  BYTE buf[128];
-  int nb = 0;
   int d = col + (row % 2) * 0x40;
   if (row >= 2)
     d += m_cols;                // 4x20 is folded: bottom rows take right cols.
   if (m_rows == 1)
     d += (col % 8) * (0x40 - 8);
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x80 + d;         // Set DDRAM address
-  memcpy(buf + nb, m_buffer->GetBuffer(row, 0), m_cols);
-  nb += m_cols;
-  buf[nb++] = 0;
-  WriteSerial(buf, nb);
+  WriteIR(0x80 + d);            // Set DDRAM address
+  for (int i = 0; i < length; i++)
+    WriteDR(str[i]);
 }
 
 void X2040Display::DeviceDefineCustomCharacter(int index, const CustomCharacter& cust)
 {
-  BYTE buf[128];
-  int nb = 0;
-  buf[nb++] = 0xFE;
-  buf[nb++] = 0x40 + (index * NCUSTROWS); // Set CGRAM address
+  WriteIR(0x40 + (index * NCUSTROWS)); // Set CGRAM address
   for (int i = 0; i < NCUSTROWS; i++)
-    buf[nb++] = cust.GetBits()[i];
-  WriteSerial(buf, nb);
+    WriteDR(cust.GetBits()[i]);
 }
 
 BOOL X2040Display::DeviceHasBrightness()
@@ -134,6 +119,22 @@ BOOL X2040Display::DeviceHasBrightness()
 void X2040Display::DeviceWriteRaw(LPBYTE data, DWORD len)
 {
   WriteSerial(data, len);
+}
+
+void X2040Display::WriteIR(BYTE b)
+{
+  BYTE buf[128];
+  int nb = 0;
+  buf[nb++] = 0xFE;
+  buf[nb++] = b;
+  WriteSerial(buf, nb);
+  m_longDelay.Wait();
+}
+
+void X2040Display::WriteDR(BYTE b)
+{
+  WriteSerial(&b, 1);
+  m_shortDelay.Wait();
 }
 
 extern "C" __declspec(dllexport)
