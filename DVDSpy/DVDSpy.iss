@@ -69,16 +69,14 @@ Source: "ShowShifterSpy.dll"; DestDir: "{pf}\Home Media Networks Limited\ShowShi
 Source: "TVSpy.exe"; DestDir: "{app}"; Components: ssf; Flags: promptifolder
 Source: "int_DVDSpy.dll"; DestDir: "{app}"; Components: mj; Flags: promptifolder regserver
 Source: "foo_girder_dvdspy.dll"; DestDir: "{reg:HKCU\Software\foobar2000,InstallDir|{pf}\foobar2000}\components"; Components: foobar; Flags: promptifolder
-Source: "DVDTitles.csv"; DestDir: "{app}"; Components: dvdtitles; Flags: promptifolder
-Source: "DVDData.vbs"; DestDir: "{app}"; Components: dvddata; Flags: promptifolder
-Source: "weather.js"; DestDir: "{app}"; Components: weather; Flags: promptifolder
-Source: "WeatherSettings.lua"; DestDir: "{app}"; Components: weather; Flags: promptifolder
+Source: "DVDTitles.csv"; DestDir: "{app}\plugins\DVDSpy"; Components: dvdtitles; Flags: promptifolder
+Source: "DVDData.vbs"; DestDir: "{app}\plugins\DVDSpy"; Components: dvddata; Flags: promptifolder
 Source: "plugins\DVDSpy\readme.htm"; DestDir: "{app}\plugins\DVDSpy"; Components: readme; Flags: isreadme
 Source: "plugins\DVDSpy\license.txt"; DestDir: "{app}\plugins\DVDSpy"; Components: readme
-Source: "DVDChars.lua"; DestDir: "{app}"; Components: sample; Flags: promptifolder
-Source: "DVD2LCD2.GML"; DestDir: "{app}"; Components: sample; Flags: promptifolder
-Source: "DVD2LCD4.GML"; DestDir: "{app}"; Components: sample; Flags: promptifolder
-Source: "DVD2OSD.GML"; DestDir: "{app}"; Components: sample; Flags: promptifolder
+Source: "DVDChars.lua"; DestDir: "{app}\plugins\DVDSpy"; Components: sample; Flags: promptifolder
+Source: "DVD2LCD2.GML"; DestDir: "{app}\plugins\DVDSpy"; Components: sample; Flags: promptifolder
+Source: "DVD2LCD4.GML"; DestDir: "{app}\plugins\DVDSpy"; Components: sample; Flags: promptifolder
+Source: "DVD2OSD.GML"; DestDir: "{app}\plugins\DVDSpy"; Components: sample; Flags: promptifolder
 Source: "plugins\DVDSpy\DVDInsert.GML"; DestDir: "{app}\plugins\DVDSpy"; Components: sample; Flags: promptifolder
 
 [Dirs]
