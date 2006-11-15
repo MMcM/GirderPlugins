@@ -21,7 +21,8 @@ Idle = true
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="Weather" Identifier="6" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Weather" Identifier="6" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Comments>*OFF*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -33,7 +34,8 @@ Idle = true
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="WMI" Identifier="7" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="WMI" Identifier="7" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Comments>*OFF*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -45,7 +47,8 @@ Idle = true
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="Mail" Identifier="8" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Mail" Identifier="8" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Comments>*OFF*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -267,7 +270,7 @@ end
           <bValue3>FALSE</bValue3>
           <iValue1>1</iValue1>
           <ActionType>118</ActionType>
-          <ActionSubType>1</ActionSubType>
+          <ActionSubType>3</ActionSubType>
         </Command>
         <Command Name="2 line" Identifier="28" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
@@ -280,7 +283,7 @@ end
           <bValue3>FALSE</bValue3>
           <iValue3>-1</iValue3>
           <ActionType>118</ActionType>
-          <ActionSubType>1</ActionSubType>
+          <ActionSubType>2</ActionSubType>
         </Command>
       </MultiGroup>
       <MultiGroup Name="Vol Insert" Identifier="29" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
@@ -1351,7 +1354,7 @@ return true</sValue1>
           <bValue3>FALSE</bValue3>
           <iValue1>13</iValue1>
           <ActionType>118</ActionType>
-          <ActionSubType>1</ActionSubType>
+          <ActionSubType>3</ActionSubType>
         </Command>
       </MultiGroup>
     </Group>
@@ -2635,7 +2638,7 @@ return true
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
               <sValue1>local idx, nidx, ndf;
-idx, nidx, ndf = strfind(pld1, "DF: (%d+)")
+idx, nidx, ndf = string.find(pld1, "DF: (%d+)")
 local changed
 if idx then
   ndf = tonumber(ndf)
@@ -2690,7 +2693,7 @@ if changed then return true end
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>local idx, nidx;
-idx, nidx, pld2, pld1 = strfind(pld1, "(.+): (.*)")
+idx, nidx, pld2, pld1 = string.find(pld1, "(.+): (.*)")
 if idx then return true end
 </sValue1>
             <bValue1>FALSE</bValue1>
@@ -2792,7 +2795,7 @@ if idx then return true end
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
               <sValue1>local idx, nidx;
-idx, nidx, PlayerLocation, pld1 = strfind(pld1, "(.*) ([%d:/]+)")
+idx, nidx, PlayerLocation, pld1 = string.find(pld1, "(.*) ([%d:/]+)")
 if idx then return true end
 </sValue1>
               <bValue1>FALSE</bValue1>
@@ -2825,7 +2828,7 @@ if idx then return true end
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
               <sValue1>local idx, nidx, title;
-idx, nidx, PlayerTime, pld1 = strfind(pld1, "([%d:/ ]*)\n(.*)")
+idx, nidx, PlayerTime, pld1 = string.find(pld1, "([%d:/ ]*)\n(.*)")
 pld1 = gsub(pld1, "\n", " - ")
 if (pld1 ~= PlayerTitle) then return true end
 </sValue1>
@@ -4262,7 +4265,7 @@ end
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
         <sValue1>local idx, nidx;
-idx, nidx, pld1 = strfind(pld1, "%[%d+%] (.*)")
+idx, nidx, pld1 = string.find(pld1, "%[%d+%] (.*)")
 if idx then return true end
 </sValue1>
         <bValue1>FALSE</bValue1>
@@ -4429,9 +4432,9 @@ if idx then return true end
   local result = {}
   local idx = 1, nidx1, nidx2
   repeat
-    nidx1, nidx2 = strfind(str, "%s+", idx)
+    nidx1, nidx2 = string.find(str, "%s+", idx)
     if nidx1 ~= 1 then
-      tinsert(result, 1, strsub(str, idx, (nidx1 or 0) - 1))
+      table.insert(result, 1, strsub(str, idx, (nidx1 or 0) - 1))
     end
     idx = nidx2 and (nidx2 + 1)
   until not idx
