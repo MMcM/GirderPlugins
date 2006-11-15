@@ -387,7 +387,7 @@ end
 
 -- Process line of serial text.
 function P.device:ReceiveResponse(data, code)
-  super.ReceiveResponse(self)
+  super.ReceiveResponse(self, data, code)
 
   if data == nil then return end
 
@@ -453,7 +453,8 @@ end
 
 -- Actual event handlers
 
-P.girgps.PlugInID = 10000       -- TODO: Until Girder supports IDs not from plug-ins.
+-- See http://www.promixis.com/forums/showthread.php?t=12038&highlight=gps
+P.girgps.PlugInID = 10000
 
 -- This doesn't actually send an event, but rather updates Girder's location.
 function P.girgps:UpdateLocation(options, state)
