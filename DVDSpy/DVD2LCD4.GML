@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Girder Version="400">
+<!-- DVD Spy to 4x20 LCD sample.
+$Header$
+--><Girder Version="400">
   <FileRoot Name="DVD2LCD4.gml" Identifier="1" Enabled="TRUE" FileGUID="{8E311444-0ED5-49B2-94B7-910B8D4DAED4}" TimeStamp="0" Locked="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
     <Group Name="Clock" Identifier="2" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Periodic display</Comments>
@@ -294,7 +296,7 @@ end
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
-          <sValue1>if string.len(pld3) &gt; 0 then return true end
+          <sValue1>if pld3 and string.len(pld3) &gt; 0 then return true end
 </sValue1>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
@@ -304,7 +306,8 @@ end
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="DVDData" Identifier="33" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="DVDData" Identifier="33" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Comments>*OFF*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -462,10 +465,12 @@ if not PlayerExtState then return true end
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local newval = (string.len(pld1) &gt; 0) and pld1
-local changed = (newval ~= PlayerPosition)
-PlayerPosition = newval
-if changed then return true end
+        <sValue1>local newval = pld1
+if newval and string.len(newval) == 0 then newval = nil end
+if (newval ~= PlayerPosition) then
+  PlayerPosition = newval
+  return true
+end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -480,10 +485,12 @@ if changed then return true end
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local newval = (string.len(pld1) &gt; 0) and pld1
-local changed = (newval ~= PlayerLength)
-PlayerLength = newval
-if changed then return true end
+        <sValue1>local newval = pld1
+if newval and string.len(newval) == 0 then newval = nil end
+if (newval ~= PlayerLength) then
+  PlayerLength = newval
+  return true
+end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -520,10 +527,12 @@ if not PlayerExtState then return true end
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local newval = (string.len(pld1) &gt; 0) and pld1
-local changed = (newval ~= PlayerTitleNo)
-PlayerTitleNo = newval
-if changed then return true end
+        <sValue1>local newval = pld1
+if newval and string.len(newval) == 0 then newval = nil end
+if (newval ~= PlayerTitleNo) then
+  PlayerTitleNo = newval
+  return true
+end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -562,7 +571,8 @@ if not PlayerExtState then return true end
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="DVDData" Identifier="52" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="DVDData" Identifier="52" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Comments>*OFF*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -579,10 +589,12 @@ if not PlayerExtState then return true end
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local newval = (string.len(pld1) &gt; 0) and pld1
-local changed = (newval ~= PlayerChapter)
-PlayerChapter = newval
-if changed then return true end
+        <sValue1>local newval = pld1
+if newval and string.len(newval) == 0 then newval = nil end
+if (newval ~= PlayerChapter) then
+  PlayerChapter = newval
+  return true
+end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -606,7 +618,8 @@ if changed then return true end
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="DVDData" Identifier="56" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="DVDData" Identifier="56" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Comments>*OFF*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -748,10 +761,12 @@ return not PlayerDomain
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local newval = (string.len(pld1) &gt; 0) and pld1
-local changed = (newval ~= PlayerElapsed)
-PlayerElapsed = newval
-if changed then return true end
+        <sValue1>local newval = pld1
+if newval and string.len(newval) == 0 then newval = nil end
+if (newval ~= PlayerElapsed) then
+  PlayerElapsed = newval
+  return true
+end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -766,10 +781,12 @@ if changed then return true end
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local newval = (string.len(pld1) &gt; 0) and pld1
-local changed = (newval ~= PlayerDuration)
-PlayerDuration = newval
-if changed then return true end
+        <sValue1>local newval = pld1
+if newval and string.len(newval) == 0 then newval = nil end
+if (newval ~= PlayerDuration) then
+  PlayerDuration = newval
+  return true
+end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -930,9 +947,10 @@ if PlayerFile and not TimeSuppressed then return true end
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <sValue1>-- Suppress time and reset timer unless already active with same display.
-local changed = (not TimeSuppressed) or (PlayerTitle ~= pld1)
-PlayerTitle = pld1
-if changed then return true end
+if (not TimeSuppressed) or (PlayerTitle ~= pld1) then
+  PlayerTitle = pld1
+  return true
+end
 </sValue1>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
@@ -1085,7 +1103,7 @@ return not TimeSuppressed
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>if string.len(pld7) == 0 then
+        <sValue1>if not pld7 or string.len(pld7) == 0 then
   DVDDiscId = nil
 else
   DVDDiscId = pld7
@@ -1140,7 +1158,7 @@ end
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
-        <sValue1>local gdir = GetDirectory("GIRDERDIR")
+        <sValue1>local gdir = win.GetDirectory("GIRDERDIR")
 DVDDataCommand = "\"" .. gdir .. "\\plugins\\DVDSpy\\DVDData.vbs\" " ..
   "-cache-directory \"" .. gdir .. "\\DVDData\" " ..
   "-girder-event DVDData " .. DVDDataCommand
@@ -1172,7 +1190,7 @@ return true
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
         <sValue1>DVDDataCommand = nil
-if string.len(pld1) &gt; 0 then return true end
+if pld1 and string.len(pld1) &gt; 0 then return true end
 </sValue1>
         <bValue1>FALSE</bValue1>
         <bValue2>FALSE</bValue2>
@@ -2638,14 +2656,15 @@ return true
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
               <sValue1>local idx, nidx, ndf;
-idx, nidx, ndf = string.find(pld1, "DF: (%d+)")
+idx, nidx, ndf = string.find(pld1 or "", "DF: (%d+)")
 local changed
 if idx then
   ndf = tonumber(ndf)
-  changed = (SSFPVRDF ~= ndf)
+  if (SSFPVRDF ~= ndf) then
+    SSFPVRDF = ndf
+    return true
+  end
 end
-SSFPVRDF = ndf
-if changed then return true end
 </sValue1>
               <bValue1>FALSE</bValue1>
               <bValue2>FALSE</bValue2>
@@ -2688,114 +2707,150 @@ if changed then return true end
           </MultiGroup>
         </Group>
         <Group Name="DVD" Identifier="301" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-          <Command Name="Decode info label" Identifier="302" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Command Name="Elapsed" Identifier="302" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <OSDTimeout>538970734</OSDTimeout>
+            <OSD>TRUE</OSD>
+            <Topmost>TRUE</Topmost>
+            <MatchNum>1</MatchNum>
+            <lValue1>68</lValue1>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <ActionType>4</ActionType>
+            <ActionSubType>10</ActionSubType>
+            <EventString Name="ShowShifter.UI.GeneralInfoOverlayMiddle" Identifier="303" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.GeneralInfoOverlayMiddle"/>
+            <EventString Name="ShowShifter.NoUI.GeneralInfoOverlayMiddle" Identifier="304" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.NoUI.GeneralInfoOverlayMiddle"/>
+          </Command>
+          <Command Name="Duration" Identifier="305" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <OSDTimeout>538970734</OSDTimeout>
+            <OSD>TRUE</OSD>
+            <Topmost>TRUE</Topmost>
+            <MatchNum>1</MatchNum>
+            <lValue1>69</lValue1>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <ActionType>4</ActionType>
+            <ActionSubType>10</ActionSubType>
+            <EventString Name="ShowShifter.UI.GeneralInfoOverlayEnd" Identifier="306" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.GeneralInfoOverlayEnd"/>
+            <EventString Name="ShowShifter.NoUI.GeneralInfoOverlayEnd" Identifier="307" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.NoUI.GeneralInfoOverlayEnd"/>
+          </Command>
+          <Command Name="Time" Identifier="308" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <OSD>FALSE</OSD>
+            <Topmost>TRUE</Topmost>
+            <MatchNum>1</MatchNum>
+            <lValue1>71</lValue1>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <ActionType>4</ActionType>
+            <ActionSubType>10</ActionSubType>
+            <EventString Name="ShowShifter.UI.StatusInfo1" Identifier="309" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.StatusInfo1"/>
+            <EventString Name="ShowShifter.NoUI.StatusInfo1" Identifier="310" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.NoUI.StatusInfo1"/>
+          </Command>
+          <Command Name="Decode info label" Identifier="311" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
             <OSD>FALSE</OSD>
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>local idx, nidx;
-idx, nidx, pld2, pld1 = string.find(pld1, "(.+): (.*)")
+idx, nidx, pld2, pld1 = string.find(pld1 or "", "(.+): (.*)")
 if idx then return true end
 </sValue1>
             <bValue1>FALSE</bValue1>
             <bValue2>FALSE</bValue2>
             <bValue3>FALSE</bValue3>
-            <lValue1>309</lValue1>
-            <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <lValue1>319</lValue1>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
             <ActionType>4</ActionType>
             <ActionSubType>34</ActionSubType>
-            <EventString Name="ShowShifter.UI.InfoLabel1" Identifier="303" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel1">
+            <EventString Name="ShowShifter.UI.InfoLabel1" Identifier="312" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel1">
               <Comments>Title:</Comments>
             </EventString>
-            <EventString Name="ShowShifter.UI.InfoLabel2" Identifier="304" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel2">
+            <EventString Name="ShowShifter.UI.InfoLabel2" Identifier="313" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel2">
               <Comments>Chapter:</Comments>
             </EventString>
-            <EventString Name="ShowShifter.UI.InfoLabel3" Identifier="305" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel3">
+            <EventString Name="ShowShifter.UI.InfoLabel3" Identifier="314" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel3">
               <Comments>Time:</Comments>
             </EventString>
-            <EventString Name="ShowShifter.UI.InfoLabel4" Identifier="306" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel4">
+            <EventString Name="ShowShifter.UI.InfoLabel4" Identifier="315" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel4">
               <Comments>State:</Comments>
             </EventString>
-            <EventString Name="ShowShifter.UI.InfoLabel5" Identifier="307" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel5">
+            <EventString Name="ShowShifter.UI.InfoLabel5" Identifier="316" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel5">
               <Comments>Angle:</Comments>
             </EventString>
-            <EventString Name="ShowShifter.UI.InfoLabel6" Identifier="308" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel6">
+            <EventString Name="ShowShifter.UI.InfoLabel6" Identifier="317" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.InfoLabel6">
               <Comments>Total:</Comments>
             </EventString>
+            <EventString Name="ShowShifter.UI.StatusInfo2" Identifier="318" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.StatusInfo2"/>
           </Command>
-          <Command Name="Title?" Identifier="309" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Command Name="Title?" Identifier="319" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
             <OSDTimeout>1970239776</OSDTimeout>
             <OSD>TRUE</OSD>
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>return pld2 == "Title"</sValue1>
             <lValue1>49</lValue1>
-            <lValue2>310</lValue2>
-            <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
-            <FileGUID2>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
+            <lValue2>320</lValue2>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <FileGUID2>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
             <ActionType>4</ActionType>
             <ActionSubType>34</ActionSubType>
           </Command>
-          <Command Name="Chapter?" Identifier="310" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Command Name="Chapter?" Identifier="320" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
             <OSDTimeout>1970239776</OSDTimeout>
             <OSD>TRUE</OSD>
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>return pld2 == "Chapter"</sValue1>
             <lValue1>53</lValue1>
-            <lValue2>311</lValue2>
-            <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
-            <FileGUID2>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
+            <lValue2>321</lValue2>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <FileGUID2>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
             <ActionType>4</ActionType>
             <ActionSubType>34</ActionSubType>
           </Command>
-          <Command Name="Time?" Identifier="311" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Command Name="Time?" Identifier="321" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
             <OSDTimeout>1970239776</OSDTimeout>
             <OSD>TRUE</OSD>
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>return pld2 == "Time"</sValue1>
             <lValue1>68</lValue1>
-            <lValue2>312</lValue2>
-            <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
-            <FileGUID2>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
+            <lValue2>322</lValue2>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <FileGUID2>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
             <ActionType>4</ActionType>
             <ActionSubType>34</ActionSubType>
           </Command>
-          <Command Name="State?" Identifier="312" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Command Name="State?" Identifier="322" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
             <OSDTimeout>1970239776</OSDTimeout>
             <OSD>TRUE</OSD>
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>return pld2 == "State"</sValue1>
             <lValue1>34</lValue1>
-            <lValue2>313</lValue2>
-            <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
-            <FileGUID2>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
+            <lValue2>323</lValue2>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <FileGUID2>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID2>
             <ActionType>4</ActionType>
             <ActionSubType>34</ActionSubType>
           </Command>
-          <Command Name="Total?" Identifier="313" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <Command Name="Total?" Identifier="323" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
             <OSDTimeout>1970239776</OSDTimeout>
             <OSD>TRUE</OSD>
             <Topmost>TRUE</Topmost>
             <MatchNum>1</MatchNum>
             <sValue1>if pld2 == "Total" then return true end</sValue1>
             <lValue1>69</lValue1>
-            <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
+            <FileGUID1>{8E311442-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
             <ActionType>4</ActionType>
             <ActionSubType>34</ActionSubType>
           </Command>
         </Group>
-        <Group Name="CD" Identifier="314" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-          <MultiGroup Name="Time from track time" Identifier="315" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-            <EventString Name="ShowShifter.UI.TrackTime" Identifier="316" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.TrackTime"/>
-            <EventString Name="ShowShifter.NoUI.TrackTime" Identifier="317" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.NoUI.TrackTime"/>
-            <Command Name="Decode" Identifier="318" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Group Name="CD" Identifier="324" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <MultiGroup Name="Time from track time" Identifier="325" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <EventString Name="ShowShifter.UI.TrackTime" Identifier="326" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.TrackTime"/>
+            <EventString Name="ShowShifter.NoUI.TrackTime" Identifier="327" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.NoUI.TrackTime"/>
+            <Command Name="Decode" Identifier="328" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
               <OSD>FALSE</OSD>
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
               <sValue1>local idx, nidx;
-idx, nidx, PlayerLocation, pld1 = string.find(pld1, "(.*) ([%d:/]+)")
+idx, nidx, PlayerLocation, pld1 = string.find(pld1 or "", "(.*) ([%d:/]+)")
 if idx then return true end
 </sValue1>
               <bValue1>FALSE</bValue1>
@@ -2806,7 +2861,7 @@ if idx then return true end
               <ActionType>4</ActionType>
               <ActionSubType>34</ActionSubType>
             </Command>
-            <Command Name="Time = pld1" Identifier="319" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <Command Name="Time = pld1" Identifier="329" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
               <OSD>FALSE</OSD>
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
@@ -2820,16 +2875,16 @@ if idx then return true end
             </Command>
           </MultiGroup>
         </Group>
-        <Group Name="JukeBox" Identifier="320" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-          <MultiGroup Name="Multi-line status" Identifier="321" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-            <EventString Name="ShowShifter.UI.StatusLabel" Identifier="322" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.StatusLabel"/>
-            <Command Name="Decode" Identifier="323" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Group Name="JukeBox" Identifier="330" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+          <MultiGroup Name="Multi-line status" Identifier="331" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <EventString Name="ShowShifter.UI.StatusLabel" Identifier="332" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.UI.StatusLabel"/>
+            <Command Name="Decode" Identifier="333" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
               <OSD>FALSE</OSD>
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
               <sValue1>local idx, nidx, title;
-idx, nidx, PlayerTime, pld1 = string.find(pld1, "([%d:/ ]*)\n(.*)")
-pld1 = gsub(pld1, "\n", " - ")
+idx, nidx, PlayerTime, pld1 = string.find(pld1 or "", "([%d:/ ]*)\n(.*)")
+if pld1 then pld1 = string.gsub(pld1, "\n", " - ") end
 if (pld1 ~= PlayerTitle) then return true end
 </sValue1>
               <bValue1>FALSE</bValue1>
@@ -2840,7 +2895,7 @@ if (pld1 ~= PlayerTitle) then return true end
               <ActionType>4</ActionType>
               <ActionSubType>34</ActionSubType>
             </Command>
-            <Command Name="Time changed" Identifier="324" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+            <Command Name="Time changed" Identifier="334" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
               <OSD>FALSE</OSD>
               <Topmost>TRUE</Topmost>
               <MatchNum>1</MatchNum>
@@ -2857,7 +2912,7 @@ if (pld1 ~= PlayerTitle) then return true end
           </MultiGroup>
         </Group>
       </Group>
-      <Command Name="Close" Identifier="325" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="335" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -2869,14 +2924,14 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="ShowShifter.Close" Identifier="326" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Close"/>
+        <EventString Name="ShowShifter.Close" Identifier="336" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Close"/>
       </Command>
     </Group>
-    <Group Name="TV Display" Identifier="327" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="TV Display" Identifier="337" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Proprietary TV control program events</Comments>
-      <MultiGroup Name="Chan" Identifier="328" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="TV.Chan" Identifier="329" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TV.Chan"/>
-        <Command Name="Open" Identifier="330" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Chan" Identifier="338" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="TV.Chan" Identifier="339" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TV.Chan"/>
+        <Command Name="Open" Identifier="340" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -2888,7 +2943,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="Chan (4 line)" Identifier="331" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Chan (4 line)" Identifier="341" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -2904,7 +2959,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Call (4 line)" Identifier="332" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Call (4 line)" Identifier="342" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -2920,7 +2975,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Call (2 line)" Identifier="333" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Call (2 line)" Identifier="343" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -2936,9 +2991,9 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionSubType>1</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Program" Identifier="334" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="TV.Program" Identifier="335" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TV.Program"/>
-        <Command Name="Title (4 line)" Identifier="336" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Program" Identifier="344" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="TV.Program" Identifier="345" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TV.Program"/>
+        <Command Name="Title (4 line)" Identifier="346" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -2954,7 +3009,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Time (4 line)" Identifier="337" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Time (4 line)" Identifier="347" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -2969,7 +3024,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Title (2 line)" Identifier="338" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Title (2 line)" Identifier="348" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -2985,7 +3040,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Time (2 line)" Identifier="339" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Time (2 line)" Identifier="349" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3002,11 +3057,11 @@ if (pld1 ~= PlayerTitle) then return true end
         </Command>
       </MultiGroup>
     </Group>
-    <Group Name="accessDTV Display" Identifier="340" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="accessDTV Display" Identifier="350" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>accessDTV live and playback state</Comments>
-      <MultiGroup Name="Channel" Identifier="341" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="accessDTV.Channel" Identifier="342" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
-        <Command Name="Open" Identifier="343" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Channel" Identifier="351" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="accessDTV.Channel" Identifier="352" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
+        <Command Name="Open" Identifier="353" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3018,7 +3073,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="Prefix 1 (4 line)" Identifier="344" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Prefix 1 (4 line)" Identifier="354" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3033,7 +3088,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Prefix 2 (4 line)" Identifier="345" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Prefix 2 (4 line)" Identifier="355" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3049,7 +3104,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Chan (4 line)" Identifier="346" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Chan (4 line)" Identifier="356" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3065,7 +3120,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Clear Text (4 line)" Identifier="347" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Clear Text (4 line)" Identifier="357" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3079,7 +3134,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Prefix 1 (2 line)" Identifier="348" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Prefix 1 (2 line)" Identifier="358" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3093,7 +3148,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Prefix 2 (2 line)" Identifier="349" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Prefix 2 (2 line)" Identifier="359" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3108,7 +3163,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Chan (2 line)" Identifier="350" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Chan (2 line)" Identifier="360" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3123,7 +3178,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Clear Text (2 line)" Identifier="351" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Clear Text (2 line)" Identifier="361" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3138,9 +3193,9 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionSubType>1</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Channel PSIP" Identifier="352" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="accessDTV.ChannelPSIP" Identifier="353" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChannelPSIP"/>
-        <Command Name="4 line" Identifier="354" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Channel PSIP" Identifier="362" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="accessDTV.ChannelPSIP" Identifier="363" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChannelPSIP"/>
+        <Command Name="4 line" Identifier="364" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3155,7 +3210,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="2 line" Identifier="355" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="2 line" Identifier="365" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3171,7 +3226,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionSubType>1</ActionSubType>
         </Command>
       </MultiGroup>
-      <Command Name="Duration" Identifier="356" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="366" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3184,9 +3239,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="accessDTV.ProgramLength" Identifier="357" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ProgramLength"/>
+        <EventString Name="accessDTV.ProgramLength" Identifier="367" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ProgramLength"/>
       </Command>
-      <Command Name="Elapsed" Identifier="358" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="368" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3199,12 +3254,12 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="accessDTV.PlaybackPosition" Identifier="359" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.PlaybackPosition"/>
-        <EventString Name="accessDTV.RecordElapsed" Identifier="360" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.RecordElapsed"/>
+        <EventString Name="accessDTV.PlaybackPosition" Identifier="369" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.PlaybackPosition"/>
+        <EventString Name="accessDTV.RecordElapsed" Identifier="370" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.RecordElapsed"/>
       </Command>
-      <MultiGroup Name="Signal Meter" Identifier="361" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="accessDTV.SignalMeter" Identifier="362" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.SignalMeter"/>
-        <Command Name="Format" Identifier="363" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Signal Meter" Identifier="371" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="accessDTV.SignalMeter" Identifier="372" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.SignalMeter"/>
+        <Command Name="Format" Identifier="373" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3216,7 +3271,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="4 line" Identifier="364" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="4 line" Identifier="374" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3232,7 +3287,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="2 line" Identifier="365" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="2 line" Identifier="375" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -3249,7 +3304,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionSubType>1</ActionSubType>
         </Command>
       </MultiGroup>
-      <Command Name="Close" Identifier="366" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="376" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3261,12 +3316,12 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="accessDTV.Close" Identifier="367" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Close"/>
+        <EventString Name="accessDTV.Close" Identifier="377" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Close"/>
       </Command>
     </Group>
-    <Group Name="Media Player Display" Identifier="368" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Media Player Display" Identifier="378" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Windows Media Player state</Comments>
-      <Command Name="PlayState" Identifier="369" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="PlayState" Identifier="379" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3277,9 +3332,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.PlayState" Identifier="370" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.PlayState"/>
+        <EventString Name="WMP.PlayState" Identifier="380" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.PlayState"/>
       </Command>
-      <Command Name="Status" Identifier="371" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Status" Identifier="381" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3290,9 +3345,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.Status" Identifier="372" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
+        <EventString Name="WMP.Status" Identifier="382" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
       </Command>
-      <Command Name="Duration" Identifier="373" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="383" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3305,9 +3360,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.Duration" Identifier="374" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
+        <EventString Name="WMP.Duration" Identifier="384" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="375" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="385" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3320,9 +3375,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.Elapsed" Identifier="376" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
+        <EventString Name="WMP.Elapsed" Identifier="386" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
       </Command>
-      <Command Name="URL" Identifier="377" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="URL" Identifier="387" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3335,9 +3390,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.URL" Identifier="378" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
+        <EventString Name="WMP.URL" Identifier="388" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
       </Command>
-      <Command Name="Title" Identifier="379" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Title" Identifier="389" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3350,9 +3405,9 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.Title" Identifier="380" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
+        <EventString Name="WMP.Title" Identifier="390" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
       </Command>
-      <Command Name="Close" Identifier="381" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="391" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3364,14 +3419,14 @@ if (pld1 ~= PlayerTitle) then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="WMP.Close" Identifier="382" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Close"/>
+        <EventString Name="WMP.Close" Identifier="392" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Close"/>
       </Command>
     </Group>
-    <Group Name="RealOne Display" Identifier="383" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="RealOne Display" Identifier="393" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Windows Media Player state</Comments>
-      <MultiGroup Name="State" Identifier="384" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="Real.State" Identifier="385" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.State"/>
-        <Command Name="Clear Extended State" Identifier="386" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="State" Identifier="394" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Real.State" Identifier="395" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.State"/>
+        <Command Name="Clear Extended State" Identifier="396" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3383,7 +3438,7 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="Display" Identifier="387" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Display" Identifier="397" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3396,9 +3451,9 @@ if (pld1 ~= PlayerTitle) then return true end
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Contacting" Identifier="388" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="Real.Contacting" Identifier="389" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Contacting"/>
-        <Command Name="Extended State" Identifier="390" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Contacting" Identifier="398" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Real.Contacting" Identifier="399" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Contacting"/>
+        <Command Name="Extended State" Identifier="400" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3413,7 +3468,7 @@ return true
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="State" Identifier="391" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="State" Identifier="401" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3429,9 +3484,9 @@ return true
           <ActionSubType>34</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Buffering" Identifier="392" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="Real.Buffering" Identifier="393" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Buffering"/>
-        <Command Name="Extended State" Identifier="394" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Buffering" Identifier="402" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Real.Buffering" Identifier="403" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Buffering"/>
+        <Command Name="Extended State" Identifier="404" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3452,7 +3507,7 @@ end
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="State" Identifier="395" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="State" Identifier="405" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3472,7 +3527,7 @@ return true
           <ActionSubType>34</ActionSubType>
         </Command>
       </MultiGroup>
-      <Command Name="Elapsed" Identifier="396" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="406" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3485,9 +3540,9 @@ return true
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Real.Elapsed" Identifier="397" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Elapsed"/>
+        <EventString Name="Real.Elapsed" Identifier="407" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Elapsed"/>
       </Command>
-      <Command Name="URL" Identifier="398" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="URL" Identifier="408" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3500,9 +3555,9 @@ return true
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Real.URL" Identifier="399" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.URL"/>
+        <EventString Name="Real.URL" Identifier="409" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.URL"/>
       </Command>
-      <Command Name="Title" Identifier="400" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Title" Identifier="410" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3519,9 +3574,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <EventString Name="Real.Title" Identifier="401" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Title"/>
+        <EventString Name="Real.Title" Identifier="411" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Title"/>
       </Command>
-      <Command Name="Close" Identifier="402" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="412" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3533,11 +3588,11 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Real.Close" Identifier="403" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Close"/>
+        <EventString Name="Real.Close" Identifier="413" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Close"/>
       </Command>
-      <MultiGroup Name="Duration" Identifier="404" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="Real.Duration" Identifier="405" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Duration"/>
-        <Command Name="Open" Identifier="406" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Duration" Identifier="414" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Real.Duration" Identifier="415" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Real.Duration"/>
+        <Command Name="Open" Identifier="416" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3549,7 +3604,7 @@ end
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="Display" Identifier="407" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Display" Identifier="417" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -3565,9 +3620,9 @@ end
         </Command>
       </MultiGroup>
     </Group>
-    <Group Name="Winamp Display" Identifier="408" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Winamp Display" Identifier="418" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Winamp 2.x/5.x player state *ON*</Comments>
-      <Command Name="Status" Identifier="409" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Status" Identifier="419" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3579,9 +3634,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Status" Identifier="410" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
+        <EventString Name="Winamp.Status" Identifier="420" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
       </Command>
-      <Command Name="Length" Identifier="411" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Length" Identifier="421" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3593,9 +3648,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Length" Identifier="412" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
+        <EventString Name="Winamp.Length" Identifier="422" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
       </Command>
-      <Command Name="Position" Identifier="413" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Position" Identifier="423" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3607,9 +3662,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Position" Identifier="414" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
+        <EventString Name="Winamp.Position" Identifier="424" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
       </Command>
-      <Command Name="Duration" Identifier="415" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="425" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3622,9 +3677,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Duration" Identifier="416" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
+        <EventString Name="Winamp.Duration" Identifier="426" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="417" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="427" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3637,9 +3692,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Elapsed" Identifier="418" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
+        <EventString Name="Winamp.Elapsed" Identifier="428" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
       </Command>
-      <Command Name="File" Identifier="419" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="File" Identifier="429" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3652,9 +3707,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.File" Identifier="420" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
+        <EventString Name="Winamp.File" Identifier="430" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
       </Command>
-      <Command Name="Title" Identifier="421" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Title" Identifier="431" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3667,9 +3722,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Title" Identifier="422" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
+        <EventString Name="Winamp.Title" Identifier="432" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
       </Command>
-      <Command Name="Close" Identifier="423" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="433" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3681,12 +3736,12 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Close" Identifier="424" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Close"/>
+        <EventString Name="Winamp.Close" Identifier="434" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Close"/>
       </Command>
     </Group>
-    <Group Name="Winamp3 Display" Identifier="425" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Winamp3 Display" Identifier="435" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Winamp 3.x player state</Comments>
-      <Command Name="Status" Identifier="426" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Status" Identifier="436" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3698,13 +3753,13 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Start" Identifier="427" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Start"/>
-        <EventString Name="Winamp3.Stop" Identifier="428" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Stop"/>
-        <EventString Name="Winamp3.Pause" Identifier="429" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Pause"/>
-        <EventString Name="Winamp3.Resume" Identifier="430" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Resume"/>
-        <EventString Name="Winamp3.Playing" Identifier="431" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Playing"/>
+        <EventString Name="Winamp3.Start" Identifier="437" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Start"/>
+        <EventString Name="Winamp3.Stop" Identifier="438" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Stop"/>
+        <EventString Name="Winamp3.Pause" Identifier="439" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Pause"/>
+        <EventString Name="Winamp3.Resume" Identifier="440" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Resume"/>
+        <EventString Name="Winamp3.Playing" Identifier="441" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Playing"/>
       </Command>
-      <Command Name="Length" Identifier="432" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Length" Identifier="442" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3716,9 +3771,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Length" Identifier="433" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Length"/>
+        <EventString Name="Winamp3.Length" Identifier="443" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Length"/>
       </Command>
-      <Command Name="Position" Identifier="434" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Position" Identifier="444" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3730,9 +3785,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Position" Identifier="435" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Position"/>
+        <EventString Name="Winamp3.Position" Identifier="445" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Position"/>
       </Command>
-      <Command Name="Duration" Identifier="436" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="446" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3745,9 +3800,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Duration" Identifier="437" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Duration"/>
+        <EventString Name="Winamp3.Duration" Identifier="447" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="438" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="448" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3760,9 +3815,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Elapsed" Identifier="439" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Elapsed"/>
+        <EventString Name="Winamp3.Elapsed" Identifier="449" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Elapsed"/>
       </Command>
-      <Command Name="Playstring" Identifier="440" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Playstring" Identifier="450" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3775,9 +3830,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp.Playstring" Identifier="441" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp.Playstring"/>
+        <EventString Name="Winamp.Playstring" Identifier="451" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp.Playstring"/>
       </Command>
-      <Command Name="Name" Identifier="442" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Name" Identifier="452" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3790,9 +3845,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Name" Identifier="443" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Name"/>
+        <EventString Name="Winamp3.Name" Identifier="453" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Name"/>
       </Command>
-      <Command Name="Close" Identifier="444" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="454" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3804,12 +3859,12 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Winamp3.Close" Identifier="445" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Close"/>
+        <EventString Name="Winamp3.Close" Identifier="455" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Close"/>
       </Command>
     </Group>
-    <Group Name="CinePlayer Display" Identifier="446" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="CinePlayer Display" Identifier="456" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>CinePlayer player state *ON*</Comments>
-      <Command Name="State" Identifier="447" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="State" Identifier="457" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3821,9 +3876,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.State" Identifier="448" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.State"/>
+        <EventString Name="CinePlayer.State" Identifier="458" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.State"/>
       </Command>
-      <Command Name="Domain" Identifier="449" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Domain" Identifier="459" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3834,9 +3889,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.Domain" Identifier="450" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Domain"/>
+        <EventString Name="CinePlayer.Domain" Identifier="460" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Domain"/>
       </Command>
-      <Command Name="TitleNo" Identifier="451" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="TitleNo" Identifier="461" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3849,9 +3904,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.TitleNo" Identifier="452" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.TitleNo"/>
+        <EventString Name="CinePlayer.TitleNo" Identifier="462" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.TitleNo"/>
       </Command>
-      <Command Name="Chapter" Identifier="453" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Chapter" Identifier="463" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3864,9 +3919,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.Chapter" Identifier="454" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Chapter"/>
+        <EventString Name="CinePlayer.Chapter" Identifier="464" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Chapter"/>
       </Command>
-      <Command Name="Duration" Identifier="455" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="465" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3879,9 +3934,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.Duration" Identifier="456" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Duration"/>
+        <EventString Name="CinePlayer.Duration" Identifier="466" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="457" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="467" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3894,9 +3949,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.Elapsed" Identifier="458" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Elapsed"/>
+        <EventString Name="CinePlayer.Elapsed" Identifier="468" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Elapsed"/>
       </Command>
-      <Command Name="Close" Identifier="459" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="469" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3908,12 +3963,12 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="CinePlayer.Close" Identifier="460" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Close"/>
+        <EventString Name="CinePlayer.Close" Identifier="470" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Close"/>
       </Command>
     </Group>
-    <Group Name="BSPlayer Display" Identifier="461" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="BSPlayer Display" Identifier="471" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>BSPlayer state *ON*</Comments>
-      <Command Name="State" Identifier="462" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="State" Identifier="472" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3925,9 +3980,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="BSPlayer.State" Identifier="463" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.State"/>
+        <EventString Name="BSPlayer.State" Identifier="473" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.State"/>
       </Command>
-      <Command Name="Duration" Identifier="464" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="474" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3940,9 +3995,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="BSPlayer.Duration" Identifier="465" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
+        <EventString Name="BSPlayer.Duration" Identifier="475" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="466" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="476" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3955,9 +4010,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="BSPlayer.Elapsed" Identifier="467" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
+        <EventString Name="BSPlayer.Elapsed" Identifier="477" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
       </Command>
-      <Command Name="File" Identifier="468" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="File" Identifier="478" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3970,9 +4025,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="BSPlayer.File" Identifier="469" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
+        <EventString Name="BSPlayer.File" Identifier="479" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
       </Command>
-      <Command Name="Close" Identifier="470" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="480" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -3984,12 +4039,12 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="BSPlayer.Close" Identifier="471" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Close"/>
+        <EventString Name="BSPlayer.Close" Identifier="481" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Close"/>
       </Command>
     </Group>
-    <Group Name="Media Jukebox Display" Identifier="472" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Media Jukebox Display" Identifier="482" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Media Jukebox player state *ON*</Comments>
-      <Command Name="State" Identifier="473" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="State" Identifier="483" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4001,9 +4056,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.Playback.State" Identifier="474" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
+        <EventString Name="MediaJukebox.Playback.State" Identifier="484" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
       </Command>
-      <Command Name="Length" Identifier="475" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Length" Identifier="485" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4015,9 +4070,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.Playlist.Length" Identifier="476" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Length"/>
+        <EventString Name="MediaJukebox.Playlist.Length" Identifier="486" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Length"/>
       </Command>
-      <Command Name="Position" Identifier="477" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Position" Identifier="487" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4029,9 +4084,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.Playlist.Position" Identifier="478" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Position"/>
+        <EventString Name="MediaJukebox.Playlist.Position" Identifier="488" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Position"/>
       </Command>
-      <Command Name="Duration" Identifier="479" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="489" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4044,9 +4099,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.Playback.Duration" Identifier="480" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Duration"/>
+        <EventString Name="MediaJukebox.Playback.Duration" Identifier="490" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="481" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="491" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4059,9 +4114,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.Playback.Elapsed" Identifier="482" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Elapsed"/>
+        <EventString Name="MediaJukebox.Playback.Elapsed" Identifier="492" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Elapsed"/>
       </Command>
-      <Command Name="File" Identifier="483" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="File" Identifier="493" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4074,9 +4129,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.File.Filename" Identifier="484" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Filename"/>
+        <EventString Name="MediaJukebox.File.Filename" Identifier="494" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Filename"/>
       </Command>
-      <Command Name="Title" Identifier="485" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Title" Identifier="495" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4089,9 +4144,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.File.Name" Identifier="486" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Name"/>
+        <EventString Name="MediaJukebox.File.Name" Identifier="496" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Name"/>
       </Command>
-      <Command Name="Close" Identifier="487" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="497" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4103,12 +4158,12 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MediaJukebox.Close" Identifier="488" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Close"/>
+        <EventString Name="MediaJukebox.Close" Identifier="498" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Close"/>
       </Command>
     </Group>
-    <Group Name="PowerDivX Display" Identifier="489" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="PowerDivX Display" Identifier="499" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>PowerDivX player state *ON*</Comments>
-      <Command Name="State" Identifier="490" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="State" Identifier="500" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4120,9 +4175,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="PowerDivX.State" Identifier="491" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.State"/>
+        <EventString Name="PowerDivX.State" Identifier="501" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.State"/>
       </Command>
-      <Command Name="Duration" Identifier="492" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="502" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4135,9 +4190,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="PowerDivX.Duration" Identifier="493" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
+        <EventString Name="PowerDivX.Duration" Identifier="503" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="494" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="504" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4150,9 +4205,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="PowerDivX.Elapsed" Identifier="495" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
+        <EventString Name="PowerDivX.Elapsed" Identifier="505" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
       </Command>
-      <Command Name="File" Identifier="496" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="File" Identifier="506" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4165,9 +4220,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="PowerDivX.File" Identifier="497" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
+        <EventString Name="PowerDivX.File" Identifier="507" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
       </Command>
-      <Command Name="Close" Identifier="498" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="508" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4179,12 +4234,12 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="PowerDivX.Close" Identifier="499" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Close"/>
+        <EventString Name="PowerDivX.Close" Identifier="509" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Close"/>
       </Command>
     </Group>
-    <Group Name="RadLight Display" Identifier="500" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="RadLight Display" Identifier="510" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>RadLight player state *ON*</Comments>
-      <Command Name="State" Identifier="501" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="State" Identifier="511" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4196,9 +4251,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="RadLight.State" Identifier="502" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.State"/>
+        <EventString Name="RadLight.State" Identifier="512" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.State"/>
       </Command>
-      <Command Name="Duration" Identifier="503" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="513" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4211,9 +4266,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="RadLight.Duration" Identifier="504" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Duration"/>
+        <EventString Name="RadLight.Duration" Identifier="514" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="505" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="515" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4226,9 +4281,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="RadLight.Elapsed" Identifier="506" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Elapsed"/>
+        <EventString Name="RadLight.Elapsed" Identifier="516" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Elapsed"/>
       </Command>
-      <Command Name="File" Identifier="507" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="File" Identifier="517" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4241,9 +4296,9 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="RadLight.File" Identifier="508" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.File"/>
+        <EventString Name="RadLight.File" Identifier="518" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.File"/>
       </Command>
-      <Command Name="Close" Identifier="509" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="519" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4255,17 +4310,17 @@ end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="RadLight.Close" Identifier="510" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Close"/>
+        <EventString Name="RadLight.Close" Identifier="520" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Close"/>
       </Command>
     </Group>
-    <Group Name="Digital CD Player Display" Identifier="511" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Digital CD Player Display" Identifier="521" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>*ON*</Comments>
-      <Command Name="Time" Identifier="512" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Time" Identifier="522" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
         <sValue1>local idx, nidx;
-idx, nidx, pld1 = string.find(pld1, "%[%d+%] (.*)")
+idx, nidx, pld1 = string.find(pld1 or "", "%[%d+%] (.*)")
 if idx then return true end
 </sValue1>
         <bValue1>FALSE</bValue1>
@@ -4275,9 +4330,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <EventString Name="cdplayer.Time" Identifier="513" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Time"/>
+        <EventString Name="cdplayer.Time" Identifier="523" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Time"/>
       </Command>
-      <Command Name="Track" Identifier="514" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Track" Identifier="524" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4288,9 +4343,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="cdplayer.Track" Identifier="515" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Track"/>
+        <EventString Name="cdplayer.Track" Identifier="525" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Track"/>
       </Command>
-      <Command Name="Close" Identifier="516" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="526" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4301,12 +4356,12 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="cdplayer.Close" Identifier="517" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Close"/>
+        <EventString Name="cdplayer.Close" Identifier="527" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="cdplayer.Close"/>
       </Command>
     </Group>
-    <Group Name="Eugene's Display" Identifier="518" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Eugene's Display" Identifier="528" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Eugene's DVD player state *ON*</Comments>
-      <Command Name="Name" Identifier="519" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Name" Identifier="529" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4318,9 +4373,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Eugenes.Name" Identifier="520" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Name"/>
+        <EventString Name="Eugenes.Name" Identifier="530" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Name"/>
       </Command>
-      <Command Name="TitleNo" Identifier="521" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="TitleNo" Identifier="531" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4333,9 +4388,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Eugenes.TitleNo" Identifier="522" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.TitleNo"/>
+        <EventString Name="Eugenes.TitleNo" Identifier="532" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.TitleNo"/>
       </Command>
-      <Command Name="Chapter" Identifier="523" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Chapter" Identifier="533" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4348,9 +4403,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Eugenes.Chapter" Identifier="524" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Chapter"/>
+        <EventString Name="Eugenes.Chapter" Identifier="534" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Chapter"/>
       </Command>
-      <Command Name="Duration" Identifier="525" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="535" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4363,9 +4418,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Eugenes.Duration" Identifier="526" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Duration"/>
+        <EventString Name="Eugenes.Duration" Identifier="536" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="527" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="537" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4378,9 +4433,9 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Eugenes.Elapsed" Identifier="528" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Elapsed"/>
+        <EventString Name="Eugenes.Elapsed" Identifier="538" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Elapsed"/>
       </Command>
-      <Command Name="Close" Identifier="529" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="539" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4392,14 +4447,14 @@ if idx then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Eugenes.Close" Identifier="530" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Close"/>
+        <EventString Name="Eugenes.Close" Identifier="540" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Close"/>
       </Command>
     </Group>
-    <Group Name="DVD Station Display" Identifier="531" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="DVD Station Display" Identifier="541" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Hollywood+ DVD Station player *ON*</Comments>
-      <MultiGroup Name="Title #1" Identifier="532" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="DVDStation.Title.1" Identifier="533" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Title.1"/>
-        <Command Name="Open" Identifier="534" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Title #1" Identifier="542" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="DVDStation.Title.1" Identifier="543" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Title.1"/>
+        <Command Name="Open" Identifier="544" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -4409,7 +4464,7 @@ if idx then return true end
           <ActionType>1</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Domain" Identifier="535" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Domain" Identifier="545" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -4422,9 +4477,9 @@ if idx then return true end
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Title #2" Identifier="536" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="DVDStation.Title.2" Identifier="537" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Title.2"/>
-        <Command Name="Split" Identifier="538" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Title #2" Identifier="546" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="DVDStation.Title.2" Identifier="547" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Title.2"/>
+        <Command Name="Split" Identifier="548" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -4443,10 +4498,11 @@ end
 
 local flds = split(pld1)
 PlayerElapsed = flds[1]
-local changed = (PlayerChapter ~= flds[2]) or (PlayerTitleNo ~= flds[3])
-PlayerChapter = flds[2]
-PlayerTitleNo = flds[3]
-if changed then return true end
+if (PlayerChapter ~= flds[2]) or (PlayerTitleNo ~= flds[3]) then
+  PlayerChapter = flds[2]
+  PlayerTitleNo = flds[3]
+  return true
+end
 </sValue1>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
@@ -4456,7 +4512,7 @@ if changed then return true end
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="Time" Identifier="539" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Time" Identifier="549" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -4469,7 +4525,7 @@ if changed then return true end
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <Command Name="Close" Identifier="540" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="550" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4481,12 +4537,12 @@ if changed then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="DVDStation.Close" Identifier="541" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Close"/>
+        <EventString Name="DVDStation.Close" Identifier="551" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="DVDStation.Close"/>
       </Command>
     </Group>
-    <Group Name="Foobar Display" Identifier="542" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="Foobar Display" Identifier="552" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>Foobar2000 player state *ON*</Comments>
-      <Command Name="Status" Identifier="543" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Status" Identifier="553" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4498,9 +4554,9 @@ if changed then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Foobar.Status" Identifier="544" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Status"/>
+        <EventString Name="Foobar.Status" Identifier="554" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Status"/>
       </Command>
-      <Command Name="Duration" Identifier="545" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Duration" Identifier="555" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4513,9 +4569,9 @@ if changed then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Foobar.Duration" Identifier="546" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Duration"/>
+        <EventString Name="Foobar.Duration" Identifier="556" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Duration"/>
       </Command>
-      <Command Name="Elapsed" Identifier="547" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="557" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4528,9 +4584,9 @@ if changed then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Foobar.Elapsed" Identifier="548" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Elapsed"/>
+        <EventString Name="Foobar.Elapsed" Identifier="558" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Elapsed"/>
       </Command>
-      <Command Name="Title" Identifier="549" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Title" Identifier="559" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4543,9 +4599,9 @@ if changed then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Foobar.Title" Identifier="550" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Title"/>
+        <EventString Name="Foobar.Title" Identifier="560" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Title"/>
       </Command>
-      <Command Name="Close" Identifier="551" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="561" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4557,15 +4613,15 @@ if changed then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="Foobar.Close" Identifier="552" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Close"/>
+        <EventString Name="Foobar.Close" Identifier="562" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Close"/>
       </Command>
     </Group>
-    <Group Name="MyHD Display" Identifier="553" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+    <Group Name="MyHD Display" Identifier="563" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
       <Comments>MyHD channel state *ON*</Comments>
-      <MultiGroup Name="Channel" Identifier="554" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="MyHD.Channel" Identifier="555" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Channel"/>
-        <EventString Name="MyHD.File" Identifier="556" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.File"/>
-        <Command Name="Open" Identifier="557" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Channel" Identifier="564" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="MyHD.Channel" Identifier="565" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Channel"/>
+        <EventString Name="MyHD.File" Identifier="566" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.File"/>
+        <Command Name="Open" Identifier="567" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -4577,7 +4633,7 @@ if changed then return true end
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
-        <Command Name="4 line" Identifier="558" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="4 line" Identifier="568" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*4L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -4592,7 +4648,7 @@ if changed then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="2 line" Identifier="559" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="2 line" Identifier="569" Enabled="FALSE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <Comments>*2L*</Comments>
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
@@ -4606,7 +4662,7 @@ if changed then return true end
           <ActionType>118</ActionType>
           <ActionSubType>1</ActionSubType>
         </Command>
-        <Command Name="Clear Time" Identifier="560" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <Command Name="Clear Time" Identifier="570" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -4623,7 +4679,7 @@ return true
           <ActionSubType>34</ActionSubType>
         </Command>
       </MultiGroup>
-      <Command Name="Elapsed" Identifier="561" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Elapsed" Identifier="571" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4638,9 +4694,9 @@ if (strsub(pld1,1,2) ~= "- ") then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>34</ActionSubType>
-        <EventString Name="MyHD.Elapsed" Identifier="562" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Elapsed"/>
+        <EventString Name="MyHD.Elapsed" Identifier="572" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Elapsed"/>
       </Command>
-      <Command Name="Shift" Identifier="563" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Shift" Identifier="573" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4651,9 +4707,9 @@ if (strsub(pld1,1,2) ~= "- ") then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MyHD.Shift" Identifier="564" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Shift"/>
+        <EventString Name="MyHD.Shift" Identifier="574" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Shift"/>
       </Command>
-      <Command Name="Close" Identifier="565" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="Close" Identifier="575" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
         <MatchNum>1</MatchNum>
@@ -4665,7 +4721,7 @@ if (strsub(pld1,1,2) ~= "- ") then return true end
         <FileGUID1>{8E311444-0ED5-49B2-94B7-910B8D4DAED4}</FileGUID1>
         <ActionType>4</ActionType>
         <ActionSubType>10</ActionSubType>
-        <EventString Name="MyHD.Close" Identifier="566" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Close"/>
+        <EventString Name="MyHD.Close" Identifier="576" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MyHD.Close"/>
       </Command>
     </Group>
   </FileRoot>

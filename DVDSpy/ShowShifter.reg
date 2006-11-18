@@ -64,6 +64,14 @@ REGEDIT4
 "ShowShifter.NoUI.ToChannelsButton"=""
 "ShowShifter.UI.ToVideoFilesButton"=""
 "ShowShifter.NoUI.ToVideoFilesButton"=""
+"ShowShifter.UI.OverlayFastScanSpeed"=""
+"ShowShifter.NoUI.OverlayFastScanSpeed"=""
+"ShowShifter.UI.FastScanSpeed"=""
+"ShowShifter.NoUI.FastScanSpeed"=""
+"ShowShifter.UI.StatusInfo1"=""
+"ShowShifter.NoUI.StatusInfo1"=""
+"ShowShifter.UI.StatusInfo2"=""
+"ShowShifter.NoUI.StatusInfo2"=""
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Promixis\Girder\4\Plugins\DVDSpy\ShowShifter\ControlIdents]
 "ChannelNumberOverlay"=""
@@ -97,3 +105,7 @@ REGEDIT4
 "TVGoToTVButton"="visible"
 "ToChannelsButton"="visible"
 "ToVideoFilesButton"="visible"
+"OverlayFastScanSpeed"=""
+"FastScanSpeed"=""
+"StatusInfo1"=""
+"StatusInfo2"=""
