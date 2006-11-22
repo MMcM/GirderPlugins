@@ -3,9 +3,9 @@
 $Header$
 -->
 <Girder Version="400">
-  <FileRoot Name="C:\Program Files\Promixis\Girder\plugins\DVDSpy\DVD2OSD.GML" Identifier="-1" Enabled="TRUE" FileGUID="{423FE647-3A84-440F-B854-ED4A62AA301F}" TimeStamp="0" Locked="FALSE">
-    <Group Name="Display" Identifier="1" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-      <Command Name="OSD" Identifier="2" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+  <FileRoot Name="C:\Program Files\Promixis\Girder\plugins\DVDSpy\DVD2OSD.GML" Identifier="1" Enabled="TRUE" FileGUID="{423FE647-3A84-440F-B854-ED4A62AA301F}" TimeStamp="0" Locked="FALSE">
+    <Group Name="Display" Identifier="2" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <Command Name="OSD" Identifier="3" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
         <OSDTimeout>1500</OSDTimeout>
         <OSD>FALSE</OSD>
         <Topmost>TRUE</Topmost>
@@ -20,24 +20,24 @@ $Header$
         <ActionType>4</ActionType>
         <ActionSubType>9</ActionSubType>
       </Command>
-      <MultiGroup Name="Title" Identifier="3" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="Disc.Insert.I" Identifier="4" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Disc.Insert.I"/>
-        <EventString Name="ZoomPlayer.Media.File" Identifier="5" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
-        <EventString Name="ATI.MMC.File" Identifier="6" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.File"/>
-        <EventString Name="ShowShifter.Media.File" Identifier="7" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.File"/>
-        <EventString Name="WMP.URL" Identifier="8" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
-        <EventString Name="WMP.Title" Identifier="9" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
-        <EventString Name="Winamp.File" Identifier="10" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
-        <EventString Name="Winamp.Title" Identifier="11" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
-        <EventString Name="Winamp3.Playstring" Identifier="12" Enabled="FALSE" Invert="FALSE" Device="49" IrStr="Winamp3.Playstring"/>
-        <EventString Name="Winamp3.Name" Identifier="13" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Name"/>
-        <EventString Name="BSPlayer.File" Identifier="14" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
-        <EventString Name="PowerDivX.File" Identifier="15" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
-        <EventString Name="MediaJukebox.File.Name" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Name"/>
-        <EventString Name="RadLight.File" Identifier="17" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.File"/>
-        <EventString Name="Eugenes.Name" Identifier="18" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Name"/>
-        <EventString Name="Foobar.Title" Identifier="19" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Title"/>
-        <Command Name="Set Variable" Identifier="20" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Title" Identifier="4" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Disc.Insert.I" Identifier="5" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Disc.Insert.I"/>
+        <EventString Name="ZoomPlayer.Media.File" Identifier="6" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.File"/>
+        <EventString Name="ATI.MMC.File" Identifier="7" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.File"/>
+        <EventString Name="ShowShifter.Media.File" Identifier="8" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.File"/>
+        <EventString Name="WMP.URL" Identifier="9" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="WMP.URL"/>
+        <EventString Name="WMP.Title" Identifier="10" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Title"/>
+        <EventString Name="Winamp.File" Identifier="11" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="Winamp.File"/>
+        <EventString Name="Winamp.Title" Identifier="12" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Title"/>
+        <EventString Name="Winamp3.Playstring" Identifier="13" Enabled="FALSE" Invert="FALSE" Device="49" IrStr="Winamp3.Playstring"/>
+        <EventString Name="Winamp3.Name" Identifier="14" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Name"/>
+        <EventString Name="BSPlayer.File" Identifier="15" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.File"/>
+        <EventString Name="PowerDivX.File" Identifier="16" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.File"/>
+        <EventString Name="MediaJukebox.File.Name" Identifier="17" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.File.Name"/>
+        <EventString Name="RadLight.File" Identifier="18" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.File"/>
+        <EventString Name="Eugenes.Name" Identifier="19" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Name"/>
+        <EventString Name="Foobar.Title" Identifier="20" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Title"/>
+        <Command Name="Set Variable" Identifier="21" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -48,24 +48,24 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="21" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="22" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Position 1" Identifier="22" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="accessDTV.Channel" Identifier="23" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
-        <EventString Name="Winamp.Position" Identifier="24" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
-        <EventString Name="Winamp3.Position" Identifier="25" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Position"/>
-        <EventString Name="MediaJukebox.Playlist.Position" Identifier="26" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Position"/>
-        <Command Name="Set Variable" Identifier="27" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Position 1" Identifier="23" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="accessDTV.Channel" Identifier="24" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.Channel"/>
+        <EventString Name="Winamp.Position" Identifier="25" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Position"/>
+        <EventString Name="Winamp3.Position" Identifier="26" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Position"/>
+        <EventString Name="MediaJukebox.Playlist.Position" Identifier="27" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Position"/>
+        <Command Name="Set Variable" Identifier="28" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -76,21 +76,21 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="28" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="29" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Position 2" Identifier="29" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="accessDTV.ChannelPSIP" Identifier="30" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChannelPSIP"/>
-        <Command Name="Set Variable" Identifier="31" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Position 2" Identifier="30" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="accessDTV.ChannelPSIP" Identifier="31" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ChannelPSIP"/>
+        <Command Name="Set Variable" Identifier="32" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -101,26 +101,27 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="32" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="33" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="TitleNo" Identifier="33" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="PowerDVD.TitleNo" Identifier="34" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.TitleNo"/>
-        <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="35" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.TitleNo"/>
-        <EventString Name="TheaterTek.TitleNo" Identifier="36" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.TitleNo"/>
-        <EventString Name="CinePlayer.TitleNo" Identifier="37" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.TitleNo"/>
-        <EventString Name="ATI.DVD.TitleNo" Identifier="38" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.TitleNo"/>
-        <EventString Name="Eugenes.TitleNo" Identifier="39" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.TitleNo"/>
-        <Command Name="Set Variable" Identifier="40" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="TitleNo" Identifier="34" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="WinDVD.TitleNo" Identifier="35" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.TitleNo"/>
+        <EventString Name="PowerDVD.TitleNo" Identifier="36" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.TitleNo"/>
+        <EventString Name="ZoomPlayer.DVD.TitleNo" Identifier="37" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.TitleNo"/>
+        <EventString Name="TheaterTek.TitleNo" Identifier="38" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.TitleNo"/>
+        <EventString Name="CinePlayer.TitleNo" Identifier="39" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.TitleNo"/>
+        <EventString Name="ATI.DVD.TitleNo" Identifier="40" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.TitleNo"/>
+        <EventString Name="Eugenes.TitleNo" Identifier="41" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.TitleNo"/>
+        <Command Name="Set Variable" Identifier="42" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -131,27 +132,27 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="41" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="43" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Chapter" Identifier="42" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="WinDVD.Chapter" Identifier="43" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Chapter"/>
-        <EventString Name="PowerDVD.Chapter" Identifier="44" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Chapter"/>
-        <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="45" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Chapter"/>
-        <EventString Name="TheaterTek.Chapter" Identifier="46" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Chapter"/>
-        <EventString Name="CinePlayer.Chapter" Identifier="47" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Chapter"/>
-        <EventString Name="ATI.DVD.Chapter" Identifier="48" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Chapter"/>
-        <EventString Name="Eugenes.Chapter" Identifier="49" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Chapter"/>
-        <Command Name="Set Variable" Identifier="50" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Chapter" Identifier="44" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="WinDVD.Chapter" Identifier="45" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Chapter"/>
+        <EventString Name="PowerDVD.Chapter" Identifier="46" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Chapter"/>
+        <EventString Name="ZoomPlayer.DVD.Chapter" Identifier="47" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Chapter"/>
+        <EventString Name="TheaterTek.Chapter" Identifier="48" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Chapter"/>
+        <EventString Name="CinePlayer.Chapter" Identifier="49" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Chapter"/>
+        <EventString Name="ATI.DVD.Chapter" Identifier="50" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Chapter"/>
+        <EventString Name="Eugenes.Chapter" Identifier="51" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Chapter"/>
+        <Command Name="Set Variable" Identifier="52" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -162,23 +163,23 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="51" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="53" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Length" Identifier="52" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="Winamp.Length" Identifier="53" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
-        <EventString Name="Winamp3.Length" Identifier="54" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Length"/>
-        <EventString Name="MediaJukebox.Playlist.Length" Identifier="55" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Length"/>
-        <Command Name="Set Variable" Identifier="56" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Length" Identifier="54" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="Winamp.Length" Identifier="55" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Length"/>
+        <EventString Name="Winamp3.Length" Identifier="56" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Length"/>
+        <EventString Name="MediaJukebox.Playlist.Length" Identifier="57" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playlist.Length"/>
+        <Command Name="Set Variable" Identifier="58" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -190,40 +191,40 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="57" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="59" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Elapsed" Identifier="58" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="WinDVD.Elapsed" Identifier="59" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Elapsed"/>
-        <EventString Name="PowerDVD.Elapsed" Identifier="60" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Elapsed"/>
-        <EventString Name="accessDTV.PlaybackPosition" Identifier="61" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.PlaybackPosition"/>
-        <EventString Name="accessDTV.RecordElapsed" Identifier="62" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.RecordElapsed"/>
-        <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="63" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Elapsed"/>
-        <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="64" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Elapsed"/>
-        <EventString Name="TheaterTek.Elapsed" Identifier="65" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Elapsed"/>
-        <EventString Name="CinePlayer.Elapsed" Identifier="66" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Elapsed"/>
-        <EventString Name="ATI.DVD.Elapsed" Identifier="67" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Elapsed"/>
-        <EventString Name="ATI.MMC.Elapsed" Identifier="68" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Elapsed"/>
-        <EventString Name="ShowShifter.Media.Elapsed" Identifier="69" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.Elapsed"/>
-        <EventString Name="WMP.Elapsed" Identifier="70" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
-        <EventString Name="Winamp.Elapsed" Identifier="71" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
-        <EventString Name="Winamp3.Elapsed" Identifier="72" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Elapsed"/>
-        <EventString Name="BSPlayer.Elapsed" Identifier="73" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
-        <EventString Name="PowerDivX.Elapsed" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
-        <EventString Name="MediaJukebox.Playback.Elapsed" Identifier="75" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Elapsed"/>
-        <EventString Name="RadLight.Elapsed" Identifier="76" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Elapsed"/>
-        <EventString Name="Eugenes.Elapsed" Identifier="77" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Elapsed"/>
-        <EventString Name="Foobar.Elapsed" Identifier="78" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Elapsed"/>
-        <Command Name="Set Variable" Identifier="79" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Elapsed" Identifier="60" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="WinDVD.Elapsed" Identifier="61" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WinDVD.Elapsed"/>
+        <EventString Name="PowerDVD.Elapsed" Identifier="62" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDVD.Elapsed"/>
+        <EventString Name="accessDTV.PlaybackPosition" Identifier="63" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.PlaybackPosition"/>
+        <EventString Name="accessDTV.RecordElapsed" Identifier="64" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.RecordElapsed"/>
+        <EventString Name="ZoomPlayer.DVD.Elapsed" Identifier="65" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Elapsed"/>
+        <EventString Name="ZoomPlayer.Media.Elapsed" Identifier="66" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Elapsed"/>
+        <EventString Name="TheaterTek.Elapsed" Identifier="67" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Elapsed"/>
+        <EventString Name="CinePlayer.Elapsed" Identifier="68" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Elapsed"/>
+        <EventString Name="ATI.DVD.Elapsed" Identifier="69" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Elapsed"/>
+        <EventString Name="ATI.MMC.Elapsed" Identifier="70" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Elapsed"/>
+        <EventString Name="ShowShifter.Media.Elapsed" Identifier="71" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.Elapsed"/>
+        <EventString Name="WMP.Elapsed" Identifier="72" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Elapsed"/>
+        <EventString Name="Winamp.Elapsed" Identifier="73" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Elapsed"/>
+        <EventString Name="Winamp3.Elapsed" Identifier="74" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Elapsed"/>
+        <EventString Name="BSPlayer.Elapsed" Identifier="75" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Elapsed"/>
+        <EventString Name="PowerDivX.Elapsed" Identifier="76" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Elapsed"/>
+        <EventString Name="MediaJukebox.Playback.Elapsed" Identifier="77" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Elapsed"/>
+        <EventString Name="RadLight.Elapsed" Identifier="78" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Elapsed"/>
+        <EventString Name="Eugenes.Elapsed" Identifier="79" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Elapsed"/>
+        <EventString Name="Foobar.Elapsed" Identifier="80" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Elapsed"/>
+        <Command Name="Set Variable" Identifier="81" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -234,37 +235,37 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="80" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="82" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Duration" Identifier="81" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="accessDTV.ProgramLength" Identifier="82" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ProgramLength"/>
-        <EventString Name="ZoomPlayer.DVD.Duration" Identifier="83" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Duration"/>
-        <EventString Name="ZoomPlayer.Media.Duration" Identifier="84" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Duration"/>
-        <EventString Name="TheaterTek.Duration" Identifier="85" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Duration"/>
-        <EventString Name="CinePlayer.Duration" Identifier="86" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Duration"/>
-        <EventString Name="ATI.DVD.Duration" Identifier="87" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Duration"/>
-        <EventString Name="ATI.MMC.Duration" Identifier="88" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Duration"/>
-        <EventString Name="ShowShifter.Media.Duration" Identifier="89" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.Duration"/>
-        <EventString Name="WMP.Duration" Identifier="90" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
-        <EventString Name="Winamp.Duration" Identifier="91" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
-        <EventString Name="Winamp3.Duration" Identifier="92" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Duration"/>
-        <EventString Name="BSPlayer.Duration" Identifier="93" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
-        <EventString Name="PowerDivX.Duration" Identifier="94" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
-        <EventString Name="MediaJukebox.Playback.Duration" Identifier="95" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Duration"/>
-        <EventString Name="RadLight.Duration" Identifier="96" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Duration"/>
-        <EventString Name="Eugenes.Duration" Identifier="97" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Duration"/>
-        <EventString Name="Foobar.Duration" Identifier="98" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Duration"/>
-        <Command Name="Set Variable" Identifier="99" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Duration" Identifier="83" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="accessDTV.ProgramLength" Identifier="84" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="accessDTV.ProgramLength"/>
+        <EventString Name="ZoomPlayer.DVD.Duration" Identifier="85" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Duration"/>
+        <EventString Name="ZoomPlayer.Media.Duration" Identifier="86" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.Duration"/>
+        <EventString Name="TheaterTek.Duration" Identifier="87" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Duration"/>
+        <EventString Name="CinePlayer.Duration" Identifier="88" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Duration"/>
+        <EventString Name="ATI.DVD.Duration" Identifier="89" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Duration"/>
+        <EventString Name="ATI.MMC.Duration" Identifier="90" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.Duration"/>
+        <EventString Name="ShowShifter.Media.Duration" Identifier="91" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ShowShifter.Media.Duration"/>
+        <EventString Name="WMP.Duration" Identifier="92" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Duration"/>
+        <EventString Name="Winamp.Duration" Identifier="93" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Duration"/>
+        <EventString Name="Winamp3.Duration" Identifier="94" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Duration"/>
+        <EventString Name="BSPlayer.Duration" Identifier="95" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.Duration"/>
+        <EventString Name="PowerDivX.Duration" Identifier="96" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.Duration"/>
+        <EventString Name="MediaJukebox.Playback.Duration" Identifier="97" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.Duration"/>
+        <EventString Name="RadLight.Duration" Identifier="98" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.Duration"/>
+        <EventString Name="Eugenes.Duration" Identifier="99" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Eugenes.Duration"/>
+        <EventString Name="Foobar.Duration" Identifier="100" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Duration"/>
+        <Command Name="Set Variable" Identifier="101" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -275,42 +276,42 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="100" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="102" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
       </MultiGroup>
-      <MultiGroup Name="Status" Identifier="101" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
-        <EventString Name="ZoomPlayer.DVD.Domain" Identifier="102" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Domain"/>
-        <EventString Name="ZoomPlayer.DVD.State" Identifier="103" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.State"/>
-        <EventString Name="ZoomPlayer.Media.State" Identifier="104" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.State"/>
-        <EventString Name="TheaterTek.Domain" Identifier="105" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Domain"/>
-        <EventString Name="TheaterTek.State" Identifier="106" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="TheaterTek.State"/>
-        <EventString Name="CinePlayer.Domain" Identifier="107" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Domain"/>
-        <EventString Name="CinePlayer.State" Identifier="108" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="CinePlayer.State"/>
-        <EventString Name="ATI.DVD.Domain" Identifier="109" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Domain"/>
-        <EventString Name="ATI.DVD.State" Identifier="110" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ATI.DVD.State"/>
-        <EventString Name="ATI.MMC.State" Identifier="111" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.State"/>
-        <EventString Name="ZoomPlayer.OSD" Identifier="112" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
-        <EventString Name="WMP.Status" Identifier="113" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
-        <EventString Name="Winamp.Status" Identifier="114" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
-        <EventString Name="Winamp3.Start" Identifier="115" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Start"/>
-        <EventString Name="Winamp3.Stop" Identifier="116" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Stop"/>
-        <EventString Name="Winamp3.Pause" Identifier="117" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Pause"/>
-        <EventString Name="Winamp3.Resume" Identifier="118" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Resume"/>
-        <EventString Name="BSPlayer.State" Identifier="119" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.State"/>
-        <EventString Name="PowerDivX.Duration" Identifier="120" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.State"/>
-        <EventString Name="MediaJukebox.Playback.State" Identifier="121" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
-        <EventString Name="RadLight.State" Identifier="122" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.State"/>
-        <EventString Name="Foobar.Status" Identifier="123" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Status"/>
-        <Command Name="Set Variable" Identifier="124" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+      <MultiGroup Name="Status" Identifier="103" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
+        <EventString Name="ZoomPlayer.DVD.Domain" Identifier="104" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.Domain"/>
+        <EventString Name="ZoomPlayer.DVD.State" Identifier="105" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.DVD.State"/>
+        <EventString Name="ZoomPlayer.Media.State" Identifier="106" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.Media.State"/>
+        <EventString Name="TheaterTek.Domain" Identifier="107" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="TheaterTek.Domain"/>
+        <EventString Name="TheaterTek.State" Identifier="108" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="TheaterTek.State"/>
+        <EventString Name="CinePlayer.Domain" Identifier="109" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="CinePlayer.Domain"/>
+        <EventString Name="CinePlayer.State" Identifier="110" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="CinePlayer.State"/>
+        <EventString Name="ATI.DVD.Domain" Identifier="111" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.DVD.Domain"/>
+        <EventString Name="ATI.DVD.State" Identifier="112" Enabled="FALSE" Invert="FALSE" Device="215" IrStr="ATI.DVD.State"/>
+        <EventString Name="ATI.MMC.State" Identifier="113" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ATI.MMC.State"/>
+        <EventString Name="ZoomPlayer.OSD" Identifier="114" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="ZoomPlayer.OSD"/>
+        <EventString Name="WMP.Status" Identifier="115" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="WMP.Status"/>
+        <EventString Name="Winamp.Status" Identifier="116" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Winamp.Status"/>
+        <EventString Name="Winamp3.Start" Identifier="117" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Start"/>
+        <EventString Name="Winamp3.Stop" Identifier="118" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Stop"/>
+        <EventString Name="Winamp3.Pause" Identifier="119" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Pause"/>
+        <EventString Name="Winamp3.Resume" Identifier="120" Enabled="TRUE" Invert="FALSE" Device="49" IrStr="Winamp3.Resume"/>
+        <EventString Name="BSPlayer.State" Identifier="121" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="BSPlayer.State"/>
+        <EventString Name="PowerDivX.Duration" Identifier="122" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="PowerDivX.State"/>
+        <EventString Name="MediaJukebox.Playback.State" Identifier="123" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="MediaJukebox.Playback.State"/>
+        <EventString Name="RadLight.State" Identifier="124" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="RadLight.State"/>
+        <EventString Name="Foobar.Status" Identifier="125" Enabled="TRUE" Invert="FALSE" Device="215" IrStr="Foobar.Status"/>
+        <Command Name="Set Variable" Identifier="126" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
@@ -321,14 +322,14 @@ $Header$
           <ActionType>4</ActionType>
           <ActionSubType>34</ActionSubType>
         </Command>
-        <Command Name="OSD" Identifier="125" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
+        <Command Name="OSD" Identifier="127" Enabled="TRUE" ErrorBreak="FALSE" ErrorJump="FALSE" ErrorEmail="FALSE" ErrorGirderLog="FALSE" ErrorSystemLog="FALSE" lFileGUID1="{423FE647-3A84-440F-B854-ED4A62AA301F}">
           <OSD>FALSE</OSD>
           <Topmost>TRUE</Topmost>
           <MatchNum>1</MatchNum>
           <bValue1>FALSE</bValue1>
           <bValue2>FALSE</bValue2>
           <bValue3>FALSE</bValue3>
-          <lValue1>2</lValue1>
+          <lValue1>3</lValue1>
           <ActionType>4</ActionType>
           <ActionSubType>10</ActionSubType>
         </Command>
